@@ -6,6 +6,7 @@ import {
   UPLOAD_PRODUCT_REQUEST, UPLOAD_PRODUCT_SUCCESS, UPLOAD_PRODUCT_FAILURE,
   UPLOAD_IMAGE_REQUEST, UPLOAD_IMAGE_SUCCESS, UPLOAD_IMAGE_FAILURE,
   LOAD_PRODUCT_DETAILS_REQUEST, LOAD_PRODUCT_DETAILS_SUCCESS, LOAD_PRODUCT_DETAILS_FAILURE,
+  SET_ALL_FILTERS_INFO,
 } from '../reducers/types'
 
 function loadProductsAPI(data) {
@@ -94,7 +95,7 @@ function* loadProductDetails(action) {
 }
 
 function* watchLoadProducts() {
-  yield takeLatest([LOAD_PRODUCTS_REQUEST], loadProducts)
+  yield takeLatest([LOAD_PRODUCTS_REQUEST, SET_ALL_FILTERS_INFO], loadProducts)
 }
 
 function* watchUploadImage() {

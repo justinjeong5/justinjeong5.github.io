@@ -4,6 +4,7 @@ import {
   UPLOAD_IMAGE_REQUEST, UPLOAD_IMAGE_SUCCESS, UPLOAD_IMAGE_FAILURE,
   REMOVE_UPLOADED_IMAGE, RESET_UPLOAD_IMAGE,
   LOAD_PRODUCT_DETAILS_REQUEST, LOAD_PRODUCT_DETAILS_SUCCESS, LOAD_PRODUCT_DETAILS_FAILURE,
+  RESET_PRODUCTS, SET_ALL_FILTERS_INFO,
 } from './types'
 
 const initialState = {
@@ -14,6 +15,9 @@ const initialState = {
   limit: 8,
   noMoreProducts: false,
   fileData: [],
+  filters: {},
+  orderBy: '',
+  sortBy: '',
 
   loadProductsLoading: false,
   loadProductsDone: false,
@@ -137,6 +141,24 @@ const jaymall = (state = initialState, action) => {
         loadProductDetailsLoading: false,
         loadProductDetailsError: action.error.code,
         message: action.error.message,
+      }
+    case RESET_PRODUCTS:
+      return {
+        ...state,
+        productData: [],
+        noMoreProducts: false,
+        message: '상품목록이 초기회되었습니다.',
+      }
+    case SET_ALL_FILTERS_INFO:
+      return {
+        ...state,
+        productData: [],
+        skip: action.payload.skip,
+        limit: action.payload.limit,
+        orderBy: action.payload.orderBy,
+        sortBy: action.payload.sortBy,
+        filters: action.payload.filters,
+        message: '삼품 검색 필터가 적용되었습니다.',
       }
     default:
       return state;

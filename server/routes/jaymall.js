@@ -30,8 +30,28 @@ var upload = multer({ storage: storage }).single('file')
 router.post('/products', (req, res) => {
   const limit = parseInt(req.body.limit);
   const skip = parseInt(req.body.skip);
+  const orderBy = req.body.orderBy ? req.body.orderBy : 'desc';
+  const sortBy = req.body.sortBy ? req.body.sortBy : '_id';
 
-  Jaymall.find()
+  const findArgs = {}
+  if (req.body.filters?.sort) {
+    findArgs['sort'] = req.body.filters.sort
+  }
+  if (req.body.filters?.price) {
+    findArgs['price'] = {
+      $gte: req.body.filters.price[0],
+      $lte: req.body.filters.price[1],
+    }
+  }
+  if (req.body.filters?.word) {
+    findArgs['$text'] = {
+      '$search': req.body.filters.word
+    }
+  }
+
+  Jaymall.find(findArgs)
+    .populate('writer')
+    .sort([[sortBy, orderBy]])
     .skip(skip)
     .limit(limit)
     .exec((error, products) => {
@@ -77,6 +97,19 @@ router.get('/product_by_id', (req, res) => {
 
   if (req.query.id === '') {
     return res.status(200).json({ message: '상품목록을 정상적으로 가져왔습니다.', productDetails: [] });
+  }
+
+  if (req.query.type === 'array') {
+    findArgs['_id'] = { $in: [...req.query.id.split(',')] }
+    Jaymall.find(findArgs)
+      .populate('writer')
+      .exec((error, productDetails) => {
+        if (error) {
+          console.error(error)
+          return res.status(400).json({ code: 'DatabaseError', message: '사용자를 데이터베이스에서 찾을 수 없습니다.', error })
+        }
+        res.status(200).json({ message: '상품목록을 정상적으로 가져왔습니다.', productDetails });
+      })
   }
 
   Jaymall.findByIdAndUpdate(findArgs,

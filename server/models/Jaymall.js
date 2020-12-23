@@ -29,7 +29,20 @@ const jaymallSchema = mongoose.Schema({
     type: Number,
     default: 0,
   },
+  sort: {
+    type: String,
+  },
 }, { timestamp: true })
+
+jaymallSchema.index({
+  title: 'text',
+  description: 'text',
+}, {
+  weight: {
+    title: 5,
+    description: 1,
+  }
+})
 
 const Jaymall = mongoose.model('Jaymall', jaymallSchema)
 
