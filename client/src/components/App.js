@@ -11,6 +11,7 @@ import EditPage from './User/EditPage'
 
 import MoviePage from './MovieTrend/MoviePage'
 import MovieDetailPage from './MovieTrend/MovieDetailPage'
+import FavoritePage from './MovieTrend/FavoritePage'
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route exact path='/edit' component={Auth(EditPage, true)} />
         <Route exact path='/movieTrend/' component={Auth(MoviePage, null)} />
         <Route exact path="/movieTrend/movie/:movieId" component={Auth(MovieDetailPage, true)} />
+        <Route exact path="/movieTrend/favorite" component={Auth(FavoritePage, true)} />
       </Switch>
       <Footer />
     </div>

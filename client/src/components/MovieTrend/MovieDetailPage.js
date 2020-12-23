@@ -11,6 +11,7 @@ import MovieDescription from './Detail/MovieDescription'
 import MovieCasting from './Detail/MovieCasting'
 import MovieMaker from './Detail/MovieMaker'
 import MovieReview from './Detail/MovieReview'
+import MovieFavorite from './Favorite/MovieFavorite'
 
 const { TabPane } = Tabs;
 
@@ -21,9 +22,7 @@ function MovieDetailPage(props) {
   const { currentMovie, loadMovieDetailDone, loadMovieTrailerDone } = useSelector(state => state.movie)
 
   useEffect(() => {
-    if (movieDetailsPageFrontRef) {
-      movieDetailsPageFrontRef.scrollIntoView();
-    }
+    movieDetailsPageFrontRef.scrollIntoView();
     dispatch({
       type: LOAD_MOVIE_DETAIL_REQUEST,
       payload: props.match.params.movieId
@@ -74,10 +73,11 @@ function MovieDetailPage(props) {
         <div style={{ width: '80%', margin: '1rem auto' }}>
           <PageHeader
             className="site-page-header-responsive"
-            onBack={() => props.history.goBack()}
+            onBack={() => window.history.back()}
             title={currentMovie.title}
             subTitle={currentMovie.original_title}
             footer={renderPageHeader}
+            extra={[<MovieFavorite />]}
           >
             <Divider />
             <MovieDescription />

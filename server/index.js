@@ -23,6 +23,7 @@ app.use(cors({
 }));
 
 app.use('/api/user', require('./routes/user'));
+app.use('/api/movie/favorite', require('./routes/movieFavorite'));
 
 
 app.get('/', (req, res) => {
