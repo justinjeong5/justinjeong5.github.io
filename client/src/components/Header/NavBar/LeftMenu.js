@@ -1,6 +1,7 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Menu } from 'antd';
+import { Menu, Badge } from 'antd';
 import styled from 'styled-components'
 
 const Title = styled.span`
@@ -8,6 +9,8 @@ const Title = styled.span`
 `
 
 function LeftMenu(props) {
+
+  const { currentUser } = useSelector(state => state.user)
 
   return (
     <Menu mode={props.mode}>
@@ -33,9 +36,20 @@ function LeftMenu(props) {
         </Menu.Item>
       </Menu.SubMenu>
 
-      <Menu.SubMenu title={<Title>쇼핑</Title>}>
+      <Menu.SubMenu
+        title={currentUser?.cart?.length
+          ? <Badge dot showZero={false} offset={[-13, 0]}>
+            <Title>쇼핑</Title>
+          </Badge>
+          : <Title>쇼핑</Title>}
+      >
         <Menu.Item key="jaymall">
           {<Link to='/jaymall'>제이몰</Link>}
+        </Menu.Item>
+        <Menu.Item key="cart">
+          <Link to='/jaymall/cart'>
+            <Badge size='small' count={currentUser?.cart?.length} showZero={false} offset={[7, 0]}>장바구니</Badge>
+          </Link>
         </Menu.Item>
         <Menu.Item key="product">
           {<Link to='/jaymall/upload'>상품등록</Link>}

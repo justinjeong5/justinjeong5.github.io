@@ -16,6 +16,7 @@ import FavoritePage from './MovieTrend/FavoritePage'
 import ProductPage from './Jaymall/ProductPage'
 import UploadProductPage from './Jaymall/UploadProductPage'
 import DetailProductPage from './Jaymall/DetailProductPage'
+import CartPage from './Jaymall/CartPage'
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
         <Route exact path="/jaymall/" component={Auth(ProductPage, null)} />
         <Route exact path="/jaymall/upload" component={Auth(UploadProductPage, true)} />
         <Route exact path="/jaymall/product/:productId" component={Auth(DetailProductPage, null)} />
+        <Route exact path="/jaymall/cart" component={Auth(CartPage, true)} />
       </Switch>
       <Footer />
     </div>

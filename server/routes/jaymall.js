@@ -110,26 +110,26 @@ router.get('/product_by_id', (req, res) => {
         }
         res.status(200).json({ message: '상품목록을 정상적으로 가져왔습니다.', productDetails });
       })
+  } else {
+    Jaymall.findOneAndUpdate(findArgs,
+      { $inc: { 'views': 1 } },
+      { new: true },
+      (error, doc) => {
+        if (error) {
+          console.error(error);
+          return res.status(400).json({ code: 'DatabaseError', message: '조회수를 증가하는 과정에서 문제가 발생했습니다.', error });
+        }
+        Jaymall.find(findArgs)
+          .populate('writer')
+          .exec((error, productDetails) => {
+            if (error) {
+              console.error(error)
+              return res.status(400).json({ code: 'DatabaseError', message: '사용자를 데이터베이스에서 찾을 수 없습니다.', error })
+            }
+            res.status(200).json({ message: '상품목록을 정상적으로 가져왔습니다.', productDetails });
+          })
+      })
   }
-
-  Jaymall.findByIdAndUpdate(findArgs,
-    { $inc: { 'views': 1 } },
-    { new: true },
-    (error, doc) => {
-      if (error) {
-        console.error(error);
-        return res.status(400).json({ code: 'DatabaseError', message: '조회수를 증가하는 과정에서 문제가 발생했습니다.', error });
-      }
-      Jaymall.find(findArgs)
-        .populate('writer')
-        .exec((error, productDetails) => {
-          if (error) {
-            console.error(error)
-            return res.status(400).json({ code: 'DatabaseError', message: '사용자를 데이터베이스에서 찾을 수 없습니다.', error })
-          }
-          res.status(200).json({ message: '상품목록을 정상적으로 가져왔습니다.', productDetails });
-        })
-    })
 })
 
 module.exports = router

@@ -20,6 +20,7 @@ router.get('/auth', auth, (req, res) => {
     lastname: req.user.lastname,
     image: req.user.image,
     role: req.user.role,
+    cart: req.user.cart,
     isAdmin: isAdmin(req.user.role),
     isAuth: true,
     message: '정상적으로 사용자가 인증되었습니다.'
@@ -124,6 +125,88 @@ router.post('/edit', auth, (req, res) => {
         return res.status(400).json({ code: 'NoSuchUser', message: '존재하지 않는 사용자입니다.' });
       }
       res.status(200).json({ message: '회원정보가 정상적으로 변경되었습니다.' });
+    })
+})
+
+router.post('/addToCart', auth, (req, res) => {
+  User.findOne({ '_id': req.user._id },
+    (error, user) => {
+      if (error) {
+        console.error(error)
+        return res.status(400).json({ code: 'DatabaseError', message: '회원정보를 찾는 과정에서 문제가 발생했습니다.', error });
+      }
+
+      let duplicated = user.cart.filter(value => {
+        return value.id === req.body.productId;
+      }).length;
+
+      if (duplicated) {
+        User.findOneAndUpdate({ '_id': req.user._id, 'cart.id': req.body.productId },
+          { $inc: { 'cart.$.quantity': 1 } },
+          { new: true },
+          (error, doc) => {
+            if (error) {
+              console.error(error);
+              return res.status(400).json({ code: 'DatabaseError', message: '카트에 담는 과정에서 문제가 발생했습니다.', error });
+            }
+            return res.status(200).json({ message: '상품을 카트에 정상적으로 담았습니다.', cart: doc.cart });
+          }
+        )
+      } else {
+        User.findOneAndUpdate({ '_id': req.user._id }, {
+          $push: {
+            cart: {
+              id: req.body.productId,
+              quantity: 1,
+              date: Date.now(),
+            }
+          }
+        },
+          { new: true },
+          (error, doc) => {
+            if (error) {
+              console.error(error);
+              return res.status(400).json({ code: 'DatabaseError', message: '카트에 담는 과정에서 문제가 발생했습니다.', error });
+            }
+            return res.status(200).json({ message: '상품을 카트에 정상적으로 담았습니다.', cart: doc.cart });
+          }
+        )
+      }
+    })
+})
+
+router.post('/removeFromCart', auth, (req, res) => {
+  User.findOne({ '_id': req.user._id },
+    (error, user) => {
+      if (error) {
+        console.error(error)
+        return res.status(400).json({ code: 'DatabaseError', message: '회원정보를 찾는 과정에서 문제가 발생했습니다.', error });
+      }
+      const removeTargetItem = user.cart.filter(item => { return item.id === req.body.productId })[0];
+      if (removeTargetItem.quantity > 1) {
+        User.findOneAndUpdate({ '_id': req.user._id, 'cart.id': req.body.productId },
+          { $inc: { 'cart.$.quantity': -1 } },
+          { new: true },
+          (error, doc) => {
+            if (error) {
+              console.error(error);
+              return res.status(400).json({ code: 'DatabaseError', message: '카트에서 제거하는 과정에서 문제가 발생했습니다.', error });
+            }
+            return res.status(200).json({ message: '상품을 카트에서 정상적으로 꺼냇습니다.', cart: doc.cart });
+          }
+        )
+      } else {
+        User.findOneAndUpdate({ '_id': req.user._id },
+          { '$pull': { 'cart': { id: req.body.productId } } },
+          { new: true },
+          (error, doc) => {
+            if (error) {
+              console.error(error)
+              return res.status(400).json({ code: 'DatabaseError', message: '상품을 데이터베이스에서 찾을 수 없습니다.', error })
+            }
+            return res.status(200).json({ message: '상품을 카트에서 정상적으로 꺼냇습니다.', cart: doc.cart });
+          })
+      }
     })
 })
 

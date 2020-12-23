@@ -1,11 +1,20 @@
 import React from 'react'
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Button, Descriptions, Tabs, } from 'antd';
 import NumberFormat from 'react-number-format';
+import { ADD_TO_CART_REQUEST } from '../../../reducers/types'
 
 function ProductInfo() {
 
+  const dispatch = useDispatch();
   const { currentProduct } = useSelector(state => state.jaymall)
+
+  const handleAddToCart = () => {
+    dispatch({
+      type: ADD_TO_CART_REQUEST,
+      payload: { productId: currentProduct._id }
+    })
+  }
 
   return (
     <div>
@@ -24,6 +33,7 @@ function ProductInfo() {
               size='large'
               shape='round'
               type='danger'
+              onClick={handleAddToCart}
             >장바구니에 담기</Button>
           </div>
         </Tabs.TabPane>

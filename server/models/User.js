@@ -28,6 +28,10 @@ const userSchema = mongoose.Schema({
   image: {
     type: String,
   },
+  cart: {
+    type: Array,
+    default: [],
+  },
   token: {
     type: String,
   },

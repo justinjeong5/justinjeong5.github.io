@@ -26,7 +26,9 @@ function FavoritePage() {
   let movieDetailsPageFrontRef = React.createRef();
 
   useEffect(() => {
-    movieDetailsPageFrontRef.scrollIntoView();
+    if (movieDetailsPageFrontRef) {
+      movieDetailsPageFrontRef.scrollIntoView();
+    }
     if (currentUser || changeFavoriteDone) {
       dispatch({
         type: LOAD_FAVORITED_LIST_REQUEST,

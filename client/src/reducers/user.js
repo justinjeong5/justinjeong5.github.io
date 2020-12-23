@@ -5,10 +5,14 @@ import {
   AUTHENTICATE_USER_REQUEST, AUTHENTICATE_USER_SUCCESS, AUTHENTICATE_USER_FAILURE,
   EDIT_USER_REQUEST, EDIT_USER_SUCCESS, EDIT_USER_FAILURE,
   CONFIRM_USER_REQUEST, CONFIRM_USER_SUCCESS, CONFIRM_USER_FAILURE,
+  ADD_TO_CART_REQUEST, ADD_TO_CART_SUCCESS, ADD_TO_CART_FAILURE,
+  LOAD_CART_ITEMS_REQUEST, LOAD_CART_ITEMS_SUCCESS, LOAD_CART_ITEMS_FAILURE,
+  REMOVE_CART_ITEM_REQUEST, REMOVE_CART_ITEM_SUCCESS, REMOVE_CART_ITEM_FAILURE,
 } from './types'
 
 const initialState = {
   currentUser: null,
+  cartWithDetail: [],
   message: '',
 
   registerUserLoading: false,
@@ -29,6 +33,15 @@ const initialState = {
   editUserLoading: false,
   editUserDone: false,
   editUserError: null,
+  addToCartLoading: false,
+  addToCartDone: false,
+  addToCartError: null,
+  loadCartItemsLoading: false,
+  loadCartItemsDone: false,
+  loadCartItemsError: null,
+  removeCartItemLoading: false,
+  removeCartItemDone: false,
+  removeCartItemError: null,
 }
 
 const user = (state = initialState, action) => {
@@ -121,6 +134,7 @@ const user = (state = initialState, action) => {
           lastname: action.payload.lastname,
           image: action.payload.image,
           role: action.payload.role,
+          cart: action.payload.cart,
           isAdmin: action.payload.isAdmin,
           isAuth: action.payload.isAuth,
         },
@@ -193,6 +207,91 @@ const user = (state = initialState, action) => {
         ...state,
         editUserLoading: false,
         editUserError: action.error.code,
+        message: action.error.message,
+      }
+    case ADD_TO_CART_REQUEST:
+      return {
+        ...state,
+        addToCartLoading: true,
+        addToCartDone: false,
+        addToCartError: null,
+      }
+    case ADD_TO_CART_SUCCESS:
+      return {
+        ...state,
+        addToCartLoading: false,
+        addToCartDone: true,
+        currentUser: {
+          ...state.currentUser,
+          cart: action.payload.cart,
+        },
+        message: action.payload.message,
+      }
+    case ADD_TO_CART_FAILURE:
+      return {
+        ...state,
+        addToCartLoading: false,
+        addToCartError: action.error.code,
+        message: action.error.message,
+      }
+    case LOAD_CART_ITEMS_REQUEST:
+      return {
+        ...state,
+        loadCartItemsLoading: true,
+        loadCartItemsDone: false,
+        loadCartItemsError: null,
+      }
+    case LOAD_CART_ITEMS_SUCCESS:
+      const data = action.payload.productDetails.map((item, index) => {
+        return {
+          key: item._id,
+          title: item.title,
+          price: item.price,
+          quantity: state.currentUser.cart[index].quantity,
+          totalPrice: state.currentUser.cart[index].quantity * item.price,
+          image: item.images[0].image,
+          tags: [item.sort],
+        }
+      })
+      return {
+        ...state,
+        loadCartItemsLoading: false,
+        loadCartItemsDone: true,
+        cartWithDetail: data,
+        message: action.payload.message,
+        removeCartItemLoading: false,
+        removeCartItemDone: false,
+      }
+    case LOAD_CART_ITEMS_FAILURE:
+      return {
+        ...state,
+        loadCartItemsLoading: false,
+        loadCartItemsError: action.error.code,
+        message: action.error.message,
+      }
+    case REMOVE_CART_ITEM_REQUEST:
+      return {
+        ...state,
+        removeCartItemLoading: true,
+        removeCartItemDone: false,
+        removeCartItemError: null,
+      }
+    case REMOVE_CART_ITEM_SUCCESS:
+      return {
+        ...state,
+        removeCartItemLoading: false,
+        removeCartItemDone: true,
+        currentUser: {
+          ...state.currentUser,
+          cart: action.payload.cart
+        },
+        message: action.payload.message,
+      }
+    case REMOVE_CART_ITEM_FAILURE:
+      return {
+        ...state,
+        removeCartItemLoading: false,
+        removeCartItemError: action.error.code,
         message: action.error.message,
       }
     default:
