@@ -6,7 +6,7 @@ import { CloseOutlined } from '@ant-design/icons'
 
 import { REMOVE_CART_ITEM_REQUEST } from '../../../reducers/types'
 import { ProductAccessorySort, ProductClothesSort } from '../utils/ProductSort'
-import { SERVER_URL } from '../../../config/config'
+import { SERVER_URL } from '../../../config/key'
 
 function CartDetails() {
 

@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import { v4 as uuidv4 } from 'uuid'
 import { Row, Col, Card, Empty } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
-import { IMAGE_URL } from '../../../config/config';
+import { IMAGE_URL } from '../../../config/key';
 
 function MovieMaker() {
 

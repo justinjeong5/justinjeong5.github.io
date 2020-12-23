@@ -1,4 +1,4 @@
-export const SERVER_URL = 'http://localhost:5000'
+export const SERVER_URL = 'https://immense-thicket-09423.herokuapp.com/'
 
 //=======================================
 //                 MOVIE

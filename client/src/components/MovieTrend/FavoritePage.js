@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { List, Space, Avatar, Typography, Divider, Card } from 'antd'
 import { StarOutlined, MessageOutlined, HeartTwoTone, LoadingOutlined } from '@ant-design/icons'
 import { LOAD_FAVORITED_LIST_REQUEST, CHANGE_FAVORITE_REQUEST } from '../../reducers/types';
-import { IMAGE_URL } from '../../config/config'
+import { IMAGE_URL } from '../../config/key'
 
 const { Title } = Typography;
 

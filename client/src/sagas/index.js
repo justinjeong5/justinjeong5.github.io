@@ -1,7 +1,7 @@
 import { all, fork } from 'redux-saga/effects'
 import axios from 'axios'
 
-import { SERVER_URL } from '../config/config'
+import { SERVER_URL } from '../config/key'
 import userSaga from './user'
 import movieSaga from './movie'
 import movieFavoriteSaga from './movieFavorite'

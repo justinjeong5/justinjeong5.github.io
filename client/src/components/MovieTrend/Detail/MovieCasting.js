@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { Card, Row, Col, Empty } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
 import { LOAD_MOVIE_CASTING_REQUEST } from '../../../reducers/types'
-import { IMAGE_URL } from '../../../config/config';
+import { IMAGE_URL } from '../../../config/key';
 
 function MovieCasting() {
 

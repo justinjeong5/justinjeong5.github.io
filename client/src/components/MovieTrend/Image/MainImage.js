@@ -1,7 +1,7 @@
 import React from 'react'
 import { Typography } from 'antd'
 
-import { IMAGE_URL } from '../../../config/config'
+import { IMAGE_URL } from '../../../config/key'
 const { Title } = Typography
 
 function MainImage(props) {

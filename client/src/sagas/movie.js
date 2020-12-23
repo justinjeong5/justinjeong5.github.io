@@ -1,6 +1,6 @@
 import { all, fork, put, call, takeLatest } from 'redux-saga/effects'
 import axios from 'axios';
-import { API_URL, API_KEY } from '../config/config'
+import { API_URL, API_KEY } from '../config/key'
 
 import {
   LOAD_MOVIES_REQUEST, LOAD_MOVIES_SUCCESS, LOAD_MOVIES_FAILURE,

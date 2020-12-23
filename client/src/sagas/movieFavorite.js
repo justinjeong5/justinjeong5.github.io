@@ -1,6 +1,6 @@
 import { all, fork, put, call, takeLatest } from 'redux-saga/effects'
 import axios from 'axios';
-import { SERVER_URL } from '../config/config'
+import { SERVER_URL } from '../config/key'
 
 import {
   LOAD_FAVORITE_NUMBER_REQUEST, LOAD_FAVORITE_NUMBER_SUCCESS, LOAD_FAVORITE_NUMBER_FAILURE,

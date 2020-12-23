@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import ImageGallery from 'react-image-gallery';
-import { SERVER_URL } from '../../../config/config'
+import { SERVER_URL } from '../../../config/key'
 
 function ProductImage() {
 

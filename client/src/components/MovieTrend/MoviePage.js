@@ -6,7 +6,7 @@ import { LoadingOutlined } from '@ant-design/icons'
 import { v4 as uuidv4 } from 'uuid'
 
 import { LOAD_MOVIES_REQUEST } from '../../reducers/types';
-import { IMAGE_URL } from '../../config/config'
+import { IMAGE_URL } from '../../config/key'
 import MainImage from './Image/MainImage';
 
 const { Title } = Typography
