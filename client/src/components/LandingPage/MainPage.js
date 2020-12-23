@@ -1,15 +1,14 @@
 import React from 'react'
+import { GithubOutlined } from '@ant-design/icons'
 
-function LandingPage() {
+function MainPage() {
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100vw', height: 'calc(100vh - 80px)' }}>
-        <div>
-          <h2>mern stack boilerplate created by justinjeong5</h2>
-        </div>
+        <GithubOutlined style={{ fontSize: '10rem' }} />
       </div>
     </div>
   )
 }
 
-export default LandingPage
+export default MainPage

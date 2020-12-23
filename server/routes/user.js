@@ -14,16 +14,14 @@ router.get('/auth', auth, (req, res) => {
     }
   }
   res.status(200).json({
-    payload: {
-      userId: req.user._id,
-      email: req.user.email,
-      name: req.user.name,
-      lastname: req.user.lastname,
-      image: req.user.image,
-      role: req.user.role,
-      isAdmin: isAdmin(req.user.role),
-      isAuth: true,
-    },
+    userId: req.user._id,
+    email: req.user.email,
+    name: req.user.name,
+    lastname: req.user.lastname,
+    image: req.user.image,
+    role: req.user.role,
+    isAdmin: isAdmin(req.user.role),
+    isAuth: true,
     message: '정상적으로 사용자가 인증되었습니다.'
   })
 })
@@ -31,6 +29,7 @@ router.get('/auth', auth, (req, res) => {
 router.post('/register', (req, res) => {
   User.findOne({ email: req.body.email }, (error, alreadyExistUser) => {
     if (error) {
+      console.error(error);
       return res.status(400).json({ code: 'DatabaseFindError', message: '기존 유저를 찾는 과정에서 문제가 발생했습니다.', error });
     }
     if (alreadyExistUser) {
@@ -40,6 +39,7 @@ router.post('/register', (req, res) => {
     const user = new User(req.body);
     user.save((error, doc) => {
       if (error) {
+        console.error(error);
         return res.status(400).json({ code: 'DatabaseSaveError', message: '유저 정보를 저장하는 과정에서 문제가 발생했습니다.', error });
       }
       return res.status(200).json({ message: '회원가입이 정상적으로 완료되었습니다.' })
@@ -53,10 +53,12 @@ router.post('/login', (req, res) => {
       return res.status(400).json({ code: 'NoSuchUser', message: '존재하지 않는 사용자입니다.' });
     }
     if (error) {
+      console.error(error);
       return res.status(400).json({ code: 'DatabaseFindError', message: '기존 유저를 찾는 과정에서 문제가 발생했습니다.', error });
     }
     user.comparePassword(req.body.password, (error, isMatch) => {
       if (error) {
+        console.error(error);
         return res.status(400).json({ code: 'DatabaseFindError', message: '비밀번호를 검증하는 과정에서 문제가 발생했습니다.', error });
       }
       if (!isMatch) {
@@ -64,10 +66,11 @@ router.post('/login', (req, res) => {
       }
       user.generateToken((error, user) => {
         if (error) {
+          console.error(error);
           return res.status(400).json({ code: 'JsonWebTokenError', message: '토큰을 생성하는 과정에서 문제가 발생했습니다.', error });
         }
         res.cookie('x_auth', user.token).status(200)
-          .json({ message: '로그인이 정상적으로 완료되었습니다.', payload: { userId: user._id } });
+          .json({ message: '로그인이 정상적으로 완료되었습니다.', userId: user._id });
       })
     })
   })
@@ -77,6 +80,7 @@ router.get('/logout', auth, (req, res) => {
   User.findOneAndUpdate({ _id: req.user._id, },
     { token: '' }, (error, user) => {
       if (error) {
+        console.error(error);
         return res.status(400).json({ code: 'DatabaseError', message: '로그아웃하는 과정에서 문제가 발생했습니다.', error });
       }
       if (!user) {
@@ -93,10 +97,12 @@ router.post('/confirm', auth, (req, res) => {
       return res.status(400).json({ code: 'NoSuchUser', message: '존재하지 않는 사용자입니다.' });
     }
     if (error) {
+      console.error(error);
       return res.status(400).json({ code: 'DatabaseFindError', message: '기존 유저를 찾는 과정에서 문제가 발생했습니다.', error });
     }
     user.comparePassword(req.body.password, (error, isMatch) => {
       if (error) {
+        console.error(error);
         return res.status(400).json({ code: 'DatabaseFindError', message: '비밀번호를 검증하는 과정에서 문제가 발생했습니다.', error });
       }
       if (!isMatch) {
@@ -111,6 +117,7 @@ router.post('/edit', auth, (req, res) => {
   User.findOneAndUpdate({ _id: req.user._id, },
     { name: req.body.name }, (error, user) => {
       if (error) {
+        console.error(error);
         return res.status(400).json({ code: 'DatabaseError', message: '회원정보를 찾는 과정에서 문제가 발생했습니다.', error });
       }
       if (!user) {

@@ -166,3 +166,5 @@ sketch
 # End of https://www.toptal.com/developers/gitignore/api/vscode,macos,react,node
 
 dev.js
+build
+uploads

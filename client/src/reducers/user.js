@@ -66,7 +66,10 @@ const user = (state = initialState, action) => {
         ...state,
         loginUserLoading: false,
         loginUserDone: true,
-        currentUser: { ...action.payload.payload },
+        currentUser: {
+          ...state.currentUser,
+          userId: action.payload.userId,
+        },
         message: action.payload.message,
       }
     case LOGIN_USER_FAILURE:
@@ -110,7 +113,17 @@ const user = (state = initialState, action) => {
         ...state,
         authenticateUserLoading: false,
         authenticateUserDone: true,
-        currentUser: { ...action.payload.payload },
+        currentUser: {
+          ...state.currentUser,
+          userId: action.payload.userId,
+          email: action.payload.email,
+          name: action.payload.name,
+          lastname: action.payload.lastname,
+          image: action.payload.image,
+          role: action.payload.role,
+          isAdmin: action.payload.isAdmin,
+          isAuth: action.payload.isAuth,
+        },
         message: action.payload.message,
 
         registerUserLoading: false,
@@ -169,7 +182,10 @@ const user = (state = initialState, action) => {
         ...state,
         editUserLoading: false,
         editUserDone: true,
-        currentUser: { isAuth: true },
+        currentUser: {
+          ...state.currentUser,
+          isAuth: true,
+        },
         message: action.payload.message,
       }
     case EDIT_USER_FAILURE:
