@@ -12,7 +12,7 @@ function MainImage(props) {
         <div style={{
           background: `linear-gradient(to bottom, rgba(0,0,0,0) 39%, rgba(0,0,0,0) 41%, rgba(0,0,0,0.65) 100%), 
         url(${IMAGE_URL}/w1280${props.movie.backdrop_path}), #1c1c1c`,
-          backgroundSize: '100% cover',
+          backgroundSize: '100%',
           backgroundPosition: 'center, center',
           width: '100%',
           height: 500,

@@ -10,6 +10,7 @@ import LoginPage from './User/LoginPage'
 import EditPage from './User/EditPage'
 
 import MoviePage from './MovieTrend/MoviePage'
+import MovieDetailPage from './MovieTrend/MovieDetailPage'
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route exact path='/login' component={Auth(LoginPage, false)} />
         <Route exact path='/edit' component={Auth(EditPage, true)} />
         <Route exact path='/movieTrend/' component={Auth(MoviePage, null)} />
+        <Route exact path="/movieTrend/movie/:movieId" component={Auth(MovieDetailPage, true)} />
       </Switch>
       <Footer />
     </div>
