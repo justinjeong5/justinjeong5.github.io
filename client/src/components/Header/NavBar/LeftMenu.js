@@ -35,7 +35,10 @@ function LeftMenu(props) {
 
       <Menu.SubMenu title={<Title>쇼핑</Title>}>
         <Menu.Item key="jaymall">
-          {<Link to='/jaymall'>쇼핑</Link>}
+          {<Link to='/jaymall'>제이몰</Link>}
+        </Menu.Item>
+        <Menu.Item key="product">
+          {<Link to='/jaymall/upload'>상품등록</Link>}
         </Menu.Item>
       </Menu.SubMenu>
 
