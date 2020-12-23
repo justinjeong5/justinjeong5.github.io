@@ -5,6 +5,7 @@ import {
   LOAD_PRODUCTS_REQUEST, LOAD_PRODUCTS_SUCCESS, LOAD_PRODUCTS_FAILURE,
   UPLOAD_PRODUCT_REQUEST, UPLOAD_PRODUCT_SUCCESS, UPLOAD_PRODUCT_FAILURE,
   UPLOAD_IMAGE_REQUEST, UPLOAD_IMAGE_SUCCESS, UPLOAD_IMAGE_FAILURE,
+  LOAD_PRODUCT_DETAILS_REQUEST, LOAD_PRODUCT_DETAILS_SUCCESS, LOAD_PRODUCT_DETAILS_FAILURE,
 } from '../reducers/types'
 
 function loadProductsAPI(data) {
@@ -72,6 +73,26 @@ function* uploadImage(action) {
   }
 }
 
+function loadProductDetailsAPI(data) {
+  return axios.get(`/api/jaymall/product_by_id?id=${data}&type=single`)
+}
+
+function* loadProductDetails(action) {
+  try {
+    const result = yield call(loadProductDetailsAPI, action.payload);
+    yield put({
+      type: LOAD_PRODUCT_DETAILS_SUCCESS,
+      payload: result.data,
+    })
+  } catch (error) {
+    console.error(error)
+    yield put({
+      type: LOAD_PRODUCT_DETAILS_FAILURE,
+      error: error.response.data,
+    })
+  }
+}
+
 function* watchLoadProducts() {
   yield takeLatest([LOAD_PRODUCTS_REQUEST], loadProducts)
 }
@@ -84,11 +105,16 @@ function* watchUploadProduct() {
   yield takeLatest(UPLOAD_PRODUCT_REQUEST, uploadProduct)
 }
 
+function* watchLoadProductDetail() {
+  yield takeLatest(LOAD_PRODUCT_DETAILS_REQUEST, loadProductDetails)
+}
+
 
 export default function* jaymallSaga() {
   yield all([
     fork(watchLoadProducts),
     fork(watchUploadProduct),
     fork(watchUploadImage),
+    fork(watchLoadProductDetail),
   ])
 }

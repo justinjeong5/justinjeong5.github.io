@@ -39,7 +39,7 @@ router.post('/products', (req, res) => {
         console.error(error)
         return res.status(400).json({ code: 'DatabaseError', message: '상품 목록을 가져오는 과정에서 문제가 발생했습니다.', error })
       }
-      res.status(200).json({ message: '상품목록을 성공적으로 가져왔습니다.', products });
+      res.status(200).json({ message: '상품목록을 정상적으로 가져왔습니다.', products });
     })
 })
 
@@ -49,7 +49,7 @@ router.post('/uploadImage', auth, (req, res) => {
       console.error(error)
       return res.status(400).json({ code: 'MulterError', message: '이미지를 업로드하는 과정에서 문제가 발생했습니다.', error })
     }
-    res.status(200).json({ message: '이미지를 성공적으로 업로드하였습니다.', image: { image: res.req.file.path, fileName: res.req.file.filename } });
+    res.status(200).json({ message: '이미지를 정상적으로 업로드하였습니다.', image: { image: res.req.file.path, fileName: res.req.file.filename } });
   })
 })
 
@@ -66,8 +66,36 @@ router.post('/uploadProduct', auth, (req, res) => {
           console.error(error)
           return res.status(400).json({ code: 'DatabaseError', message: '상품을 등록하는 과정에서 문제가 발생했습니다.', error })
         }
-        res.status(200).json({ message: '상품을 성공적으로 업로드하였습니다.', product });
+        res.status(200).json({ message: '상품을 정상적으로 업로드하였습니다.', product });
       })
+    })
+})
+
+
+router.get('/product_by_id', (req, res) => {
+  const findArgs = { '_id': req.query.id }
+
+  if (req.query.id === '') {
+    return res.status(200).json({ message: '상품목록을 정상적으로 가져왔습니다.', productDetails: [] });
+  }
+
+  Jaymall.findByIdAndUpdate(findArgs,
+    { $inc: { 'views': 1 } },
+    { new: true },
+    (error, doc) => {
+      if (error) {
+        console.error(error);
+        return res.status(400).json({ code: 'DatabaseError', message: '조회수를 증가하는 과정에서 문제가 발생했습니다.', error });
+      }
+      Jaymall.find(findArgs)
+        .populate('writer')
+        .exec((error, productDetails) => {
+          if (error) {
+            console.error(error)
+            return res.status(400).json({ code: 'DatabaseError', message: '사용자를 데이터베이스에서 찾을 수 없습니다.', error })
+          }
+          res.status(200).json({ message: '상품목록을 정상적으로 가져왔습니다.', productDetails });
+        })
     })
 })
 

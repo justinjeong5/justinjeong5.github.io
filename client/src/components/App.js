@@ -15,6 +15,7 @@ import FavoritePage from './MovieTrend/FavoritePage'
 
 import ProductPage from './Jaymall/ProductPage'
 import UploadProductPage from './Jaymall/UploadProductPage'
+import DetailProductPage from './Jaymall/DetailProductPage'
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
         <Route exact path="/movieTrend/favorite" component={Auth(FavoritePage, true)} />
         <Route exact path="/jaymall/" component={Auth(ProductPage, null)} />
         <Route exact path="/jaymall/upload" component={Auth(UploadProductPage, true)} />
+        <Route exact path="/jaymall/product/:productId" component={Auth(DetailProductPage, null)} />
       </Switch>
       <Footer />
     </div>

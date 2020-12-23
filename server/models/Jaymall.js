@@ -21,6 +21,14 @@ const jaymallSchema = mongoose.Schema({
     type: Array,
     default: []
   },
+  views: {
+    type: Number,
+    default: 0,
+  },
+  sold: {
+    type: Number,
+    default: 0,
+  },
 }, { timestamp: true })
 
 const Jaymall = mongoose.model('Jaymall', jaymallSchema)

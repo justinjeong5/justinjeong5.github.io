@@ -3,9 +3,11 @@ import {
   UPLOAD_PRODUCT_REQUEST, UPLOAD_PRODUCT_SUCCESS, UPLOAD_PRODUCT_FAILURE,
   UPLOAD_IMAGE_REQUEST, UPLOAD_IMAGE_SUCCESS, UPLOAD_IMAGE_FAILURE,
   REMOVE_UPLOADED_IMAGE, RESET_UPLOAD_IMAGE,
+  LOAD_PRODUCT_DETAILS_REQUEST, LOAD_PRODUCT_DETAILS_SUCCESS, LOAD_PRODUCT_DETAILS_FAILURE,
 } from './types'
 
 const initialState = {
+  currentProduct: {},
   productData: [],
   message: '',
   skip: 0,
@@ -22,6 +24,9 @@ const initialState = {
   uploadProductLoading: false,
   uploadProductDone: false,
   uploadProductError: null,
+  loadProductDetailsLoading: false,
+  loadProductDetailsDone: false,
+  loadProductDetailsError: null,
 }
 
 const jaymall = (state = initialState, action) => {
@@ -96,13 +101,13 @@ const jaymall = (state = initialState, action) => {
     case REMOVE_UPLOADED_IMAGE:
       return {
         ...state,
-        message: '선택한 이미지를 성공적으로 제거하였습니다.',
+        message: '선택한 이미지를 정상적으로 제거하였습니다.',
         fileData: state.fileData.filter((v, i) => (i !== action.payload))
       }
     case RESET_UPLOAD_IMAGE:
       return {
         ...state,
-        message: '등록한 상품의 이미지 목록을 성공적으로 비웠습니다.',
+        message: '등록한 상품의 이미지 목록을 정상적으로 비웠습니다.',
         uploadImageLoading: false,
         uploadImageDone: false,
         uploadImageError: null,
@@ -110,6 +115,28 @@ const jaymall = (state = initialState, action) => {
         uploadProductDone: false,
         uploadProductError: null,
         fileData: [],
+      }
+    case LOAD_PRODUCT_DETAILS_REQUEST:
+      return {
+        ...state,
+        loadProductDetailsLoading: true,
+        loadProductDetailsDone: false,
+        loadProductDetailsError: null,
+      }
+    case LOAD_PRODUCT_DETAILS_SUCCESS:
+      return {
+        ...state,
+        loadProductDetailsLoading: false,
+        loadProductDetailsDone: true,
+        message: action.payload.message,
+        currentProduct: action.payload.productDetails[0],
+      }
+    case LOAD_PRODUCT_DETAILS_FAILURE:
+      return {
+        ...state,
+        loadProductDetailsLoading: false,
+        loadProductDetailsError: action.error.code,
+        message: action.error.message,
       }
     default:
       return state;
