@@ -13,6 +13,8 @@ import MoviePage from './MovieTrend/MoviePage'
 import MovieDetailPage from './MovieTrend/MovieDetailPage'
 import FavoritePage from './MovieTrend/FavoritePage'
 
+import ProductPage from './Jaymall/ProductPage'
+
 function App() {
   return (
     <div>
@@ -25,6 +27,7 @@ function App() {
         <Route exact path='/movieTrend/' component={Auth(MoviePage, null)} />
         <Route exact path="/movieTrend/movie/:movieId" component={Auth(MovieDetailPage, true)} />
         <Route exact path="/movieTrend/favorite" component={Auth(FavoritePage, true)} />
+        <Route exact path="/jaymall/" component={Auth(ProductPage, null)} />
       </Switch>
       <Footer />
     </div>

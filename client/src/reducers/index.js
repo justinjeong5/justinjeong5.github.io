@@ -3,12 +3,14 @@ import { combineReducers } from 'redux'
 import user from './user'
 import movie from './movie'
 import movieFavorite from './movieFavorite'
+import jaymall from './jaymall'
 
 const rootReducer = (state, action) => {
   const combineReducer = combineReducers({
     user,
     movie,
     movieFavorite,
+    jaymall,
   })
   return combineReducer(state, action);
 };

@@ -24,6 +24,8 @@ app.use(cors({
 
 app.use('/api/user', require('./routes/user'));
 app.use('/api/movie/favorite', require('./routes/movieFavorite'));
+app.use('/api/jaymall', require('./routes/jaymall'));
+app.use('/uploads', express.static('uploads'));
 
 
 app.get('/', (req, res) => {

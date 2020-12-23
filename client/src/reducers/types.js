@@ -64,3 +64,11 @@ export const LOAD_IS_FAVORITED_FAILURE = 'LOAD_IS_FAVORITED_FAILURE';
 export const LOAD_FAVORITED_LIST_REQUEST = 'LOAD_FAVORITED_LIST_REQUEST';
 export const LOAD_FAVORITED_LIST_SUCCESS = 'LOAD_FAVORITED_LIST_SUCCESS';
 export const LOAD_FAVORITED_LIST_FAILURE = 'LOAD_FAVORITED_LIST_FAILURE';
+
+
+//=========================================
+//                 Jaymall
+//=========================================
+export const LOAD_PRODUCTS_REQUEST = 'LOAD_PRODUCTS_REQUEST';
+export const LOAD_PRODUCTS_SUCCESS = 'LOAD_PRODUCTS_SUCCESS';
+export const LOAD_PRODUCTS_FAILURE = 'LOAD_PRODUCTS_FAILURE';
