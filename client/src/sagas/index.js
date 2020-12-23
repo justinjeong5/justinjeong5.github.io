@@ -3,6 +3,7 @@ import axios from 'axios'
 
 import { SERVER_URL } from '../config/config'
 import userSaga from './user'
+import movieSaga from './movie'
 
 
 axios.defaults.baseURL = SERVER_URL;
@@ -11,5 +12,6 @@ axios.defaults.withCredentials = true;
 export default function* rootSaga() {
   yield all([
     fork(userSaga),
+    fork(movieSaga),
   ]);
 }

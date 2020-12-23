@@ -24,3 +24,11 @@ export const CONFIRM_USER_FAILURE = 'CONFIRM_USER_FAILURE'
 export const EDIT_USER_REQUEST = 'EDIT_USER_REQUEST'
 export const EDIT_USER_SUCCESS = 'EDIT_USER_SUCCESS'
 export const EDIT_USER_FAILURE = 'EDIT_USER_FAILURE'
+
+
+//============================================
+//                   Movie
+//============================================
+export const LOAD_MOVIES_REQUEST = 'LOAD_MOVIES_REQUEST'
+export const LOAD_MOVIES_SUCCESS = 'LOAD_MOVIES_SUCCESS'
+export const LOAD_MOVIES_FAILURE = 'LOAD_MOVIES_FAILURE'

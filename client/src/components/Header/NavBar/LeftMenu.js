@@ -19,8 +19,8 @@ function LeftMenu(props) {
       </Menu.SubMenu>
 
       <Menu.SubMenu title={<Title>영화</Title>}>
-        <Menu.Item key="favorite" disabled>
-          {<Link to='/movieTrend'>영화</Link>}
+        <Menu.Item key="movieTrend">
+          {<Link to='/movieTrend'>트렌드</Link>}
         </Menu.Item>
       </Menu.SubMenu>
 

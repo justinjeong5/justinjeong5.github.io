@@ -9,6 +9,8 @@ import RegisterPage from './User/RegisterPage'
 import LoginPage from './User/LoginPage'
 import EditPage from './User/EditPage'
 
+import MoviePage from './MovieTrend/MoviePage'
+
 function App() {
   return (
     <div>
@@ -18,6 +20,7 @@ function App() {
         <Route exact path='/register' component={Auth(RegisterPage, false)} />
         <Route exact path='/login' component={Auth(LoginPage, false)} />
         <Route exact path='/edit' component={Auth(EditPage, true)} />
+        <Route exact path='/movieTrend/' component={Auth(MoviePage, null)} />
       </Switch>
       <Footer />
     </div>
