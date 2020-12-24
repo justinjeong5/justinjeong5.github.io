@@ -4,6 +4,7 @@ import Dropzone from 'react-dropzone'
 import { v4 as uuidv4 } from 'uuid'
 import { PlusSquareOutlined, LoadingOutlined } from '@ant-design/icons'
 import { UPLOAD_IMAGE_REQUEST, REMOVE_UPLOADED_IMAGE } from '../../../reducers/types'
+import { SERVER_URL } from '../../../config/key'
 
 function FileUploader() {
 
@@ -62,7 +63,7 @@ function FileUploader() {
         {uploadImageDone && fileData.map((file, index) => {
           return (
             <div onClick={handleRemove(index)} key={uuidv4()}>
-              <img src={`http://localhost:5000/${file.image}`} alt={file.fileName} style={{ height: 240, marginRight: 10 }} />
+              <img src={`${SERVER_URL}/${file.image}`} alt={file.fileName} style={{ height: 240, marginRight: 10 }} />
             </div>
           )
 
