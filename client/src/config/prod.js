@@ -1,4 +1,4 @@
-export const SERVER_URL = 'https://immense-thicket-09423.herokuapp.com/'
+export const SERVER_URL = 'https://immense-thicket-09423.herokuapp.com'
 
 //=======================================
 //                 MOVIE
