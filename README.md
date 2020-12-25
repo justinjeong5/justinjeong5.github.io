@@ -5,10 +5,14 @@
   - Registration
   - Login/out
   - Editing Information
+- Movie
+  - Trending
+  - Favorite
+- Shopping
+  - Products
+  - Cart
 
 ## ⌨️ Futureworks
-- Movie Review page
-- Shopping mall
 - Chatting
 - Blog
 - Youtube
