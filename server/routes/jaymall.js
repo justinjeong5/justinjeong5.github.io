@@ -1,10 +1,18 @@
 const express = require('express');
 const multer = require('multer');
+const fs = require('fs')
 const { auth } = require('../middleware/auth');
 const { User } = require('../models/User')
 const { Jaymall } = require('../models/Jaymall')
 
 const router = express.Router();
+
+try {
+  fs.accessSync('uploads')
+} catch (error) {
+  console.log('/uploads 폴더가 존재하지 않습니다. 동작을 위해 생성합니다.')
+  fs.mkdirSync('uploads')
+}
 
 var storage = multer.diskStorage({
   destination: (req, file, callback) => {

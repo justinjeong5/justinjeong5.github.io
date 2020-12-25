@@ -4,6 +4,7 @@ const config = require('./config/key')
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cors = require('cors')
+const path = require('path')
 
 const mongoose = require('mongoose');
 mongoose.connect(config.mongoURI, {
@@ -22,10 +23,10 @@ app.use(cors({
   credentials: true,  // for cookie
 }));
 
+app.use('/', express.static(path.join(__dirname, 'uploads')));
 app.use('/api/user', require('./routes/user'));
 app.use('/api/movie/favorite', require('./routes/movieFavorite'));
 app.use('/api/jaymall', require('./routes/jaymall'));
-app.use('/uploads', express.static('uploads'));
 
 
 app.get('/', (req, res) => {
