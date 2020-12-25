@@ -35,7 +35,7 @@ function UploadProductPage(props) {
         props.history.push('/jaymall')
       }, 2000)
     }
-  }, [uploadProductDone, props.history])
+  }, [uploadProductDone, props.history, mesasge, uploadProductError])
 
   const onFinish = (values) => {
     const payload = {
