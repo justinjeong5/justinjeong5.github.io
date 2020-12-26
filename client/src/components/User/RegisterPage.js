@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link, withRouter } from 'react-router-dom';
 import { Form, Input, Button, Typography, message as Message, Space } from 'antd';
 import { UserOutlined, MailOutlined, LockOutlined, CheckSquareOutlined } from '@ant-design/icons';
+import md5 from 'md5'
 import { REGISTER_USER_REQUEST } from '../../reducers/types';
 const { Title } = Typography;
 
@@ -34,7 +35,8 @@ function RegisterPage(props) {
       payload: {
         email: values.email,
         name: values.userName,
-        password: values.password
+        password: values.password,
+        image: `http://gravatar.com/avatar/${md5(values.email)}?d=identicon`
       }
     })
   };
