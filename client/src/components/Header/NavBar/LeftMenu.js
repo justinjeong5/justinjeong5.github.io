@@ -25,7 +25,7 @@ function LeftMenu(props) {
         <Menu.Item key="movieTrend">
           {<Link to='/movieTrend'>트렌드</Link>}
         </Menu.Item>
-        <Menu.Item key="movieTrend/favorite">
+        <Menu.Item key="movieTrend/favorite" disabled={!currentUser?.isAuth} >
           {<Link to='/movieTrend/favorite'>즐겨찾기</Link>}
         </Menu.Item>
       </Menu.SubMenu>
@@ -46,12 +46,12 @@ function LeftMenu(props) {
         <Menu.Item key="jaymall">
           {<Link to='/jaymall'>제이몰</Link>}
         </Menu.Item>
-        <Menu.Item key="cart">
+        <Menu.Item key="cart" disabled={!currentUser?.isAuth} >
           <Link to='/jaymall/cart'>
-            <Badge size='small' count={currentUser?.cart?.length} showZero={false} offset={[7, 0]}>장바구니</Badge>
+            장바구니<Badge size='small' count={currentUser?.cart?.length} showZero={false} offset={[0, -10]} />
           </Link>
         </Menu.Item>
-        <Menu.Item key="product">
+        <Menu.Item key="product" disabled={!currentUser?.isAuth} >
           {<Link to='/jaymall/upload'>상품등록</Link>}
         </Menu.Item>
       </Menu.SubMenu>
