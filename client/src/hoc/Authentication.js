@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AUTHENTICATE_USER_REQUEST } from '../reducers/types'
+import { message } from 'antd'
 
 export default function auth(SpecificComponent, option, adminRoute = null) {
 
@@ -27,11 +28,13 @@ export default function auth(SpecificComponent, option, adminRoute = null) {
         if (currentUser.isAuth) {
           if (!option) {
             // 로그인이 된 사용자 && 로그인을 안한 사용자만 사용하는 페이지
+            message.warning('로그인하지 않은 사용자만 접근할 수 있습니다.')
             return props.history.push('/')
           }
           if (!currentUser.isAdmin) {
             if (adminRoute) {
               // 어드민이 아닌 사용자 && 어드민 권한이 필요한 페이지
+              message.warning('관리자 사용자만 접근할 수 있습니다.')
               props.history.push('/')
             }
           }
