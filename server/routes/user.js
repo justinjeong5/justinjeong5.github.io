@@ -71,7 +71,7 @@ router.post('/login', (req, res) => {
           console.error(error);
           return res.status(400).json({ code: 'JsonWebTokenError', message: '토큰을 생성하는 과정에서 문제가 발생했습니다.', error });
         }
-        if (process.env.COOKIE_SAME_SITE === 'none') {
+        if (process.env.NODE_ENV === 'production') {
           res.cookie('x_auth', user.token, {
             sameSite: 'none',
             secure: true,
