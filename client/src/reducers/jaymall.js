@@ -93,7 +93,7 @@ const jaymall = (state = initialState, action) => {
         uploadImageLoading: false,
         uploadImageDone: true,
         message: action.payload.message,
-        fileData: [...state.fileData, action.payload.image],
+        fileData: [...state.fileData, ...action.payload.images],
       }
     case UPLOAD_IMAGE_FAILURE:
       return {

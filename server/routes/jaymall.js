@@ -1,6 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const fs = require('fs')
+const path = require('path')
 const { auth } = require('../middleware/auth');
 const { User } = require('../models/User')
 const { Jaymall } = require('../models/Jaymall')
@@ -8,18 +9,21 @@ const { Jaymall } = require('../models/Jaymall')
 const router = express.Router();
 
 try {
+  console.log('Multer: 이미지를 disk storage에 저장합니다.')
   fs.accessSync('uploads')
 } catch (error) {
   console.log('/uploads 폴더가 존재하지 않습니다. 동작을 위해 생성합니다.')
   fs.mkdirSync('uploads')
 }
 
-var storage = multer.diskStorage({
+const storage = multer.diskStorage({
   destination: (req, file, callback) => {
-    callback(null, 'uploads/')
+    callback(null, 'uploads')
   },
   filename: (req, file, callback) => {
-    callback(null, `${Date.now()}_${file.originalname}`)
+    const ext = path.extname(file.originalname)
+    const baseName = path.basename(file.originalname, ext)
+    callback(null, baseName + new Date().getTime() + ext)
   },
   fileFilter: (req, file, callback) => {
     const ext = path.extname(file.originalname)
@@ -29,7 +33,13 @@ var storage = multer.diskStorage({
     callback(null, true)
   },
 })
-var upload = multer({ storage: storage }).single('file')
+
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 10 * 1024 * 1024    //10 MB
+  }
+}).array('file')
 
 //=====================================
 //                Jaymall
@@ -77,7 +87,11 @@ router.post('/uploadImage', auth, (req, res) => {
       console.error(error)
       return res.status(400).json({ code: 'MulterError', message: '이미지를 업로드하는 과정에서 문제가 발생했습니다.', error })
     }
-    res.status(200).json({ message: '이미지를 정상적으로 업로드하였습니다.', image: { image: res.req.file.path, fileName: res.req.file.filename } });
+
+    const images = req.files.map(value => {
+      return { image: value.path, fileName: value.filename }
+    })
+    res.status(200).json({ message: '이미지를 정상적으로 업로드하였습니다.', images });
   })
 })
 

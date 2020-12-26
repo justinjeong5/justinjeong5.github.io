@@ -16,7 +16,8 @@ function FileUploader() {
     const config = {
       header: { 'content-type': 'multipart/form-data' }
     }
-    formData.append('file', files[0])
+
+    files.map(value => formData.append('file', value))
     dispatch({
       type: UPLOAD_IMAGE_REQUEST,
       payload: {
@@ -37,7 +38,7 @@ function FileUploader() {
     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
       <Dropzone
         onDrop={handleOnDrop}
-        multiple={false}
+        multiple
         maxSize={10 * 1024 * 1024}
       >
         {({ getRootProps, getInputProps }) => {
