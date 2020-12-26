@@ -55,23 +55,20 @@ function FileUploader() {
           )
         }}
       </Dropzone>
-      <div style={{ display: 'flex', width: 500, height: 240, overflowX: 'scroll' }}>
-        {uploadImageLoading &&
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100vw', height: 'calc(100vh - 80px)' }}>
-            <LoadingOutlined style={{ fontSize: '10rem' }} />
-          </div>
-        }
+      <div style={{ display: 'flex', alignItems: 'center', width: 500, height: 240, overflowX: 'scroll' }}>
+        {uploadImageLoading && <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 500, height: 240 }}>
+          <LoadingOutlined style={{ fontSize: '3rem' }} />
+        </div>}
         {uploadImageDone && fileData.map((file, index) => {
           return (
             <div onClick={handleRemove(index)} key={uuidv4()}>
               <img src={`${SERVER_URL}/${file.image}`} alt={file.fileName} style={{ height: 240, marginRight: 10 }} />
             </div>
           )
-
         })}
       </div>
 
-    </div>
+    </div >
   )
 }
 

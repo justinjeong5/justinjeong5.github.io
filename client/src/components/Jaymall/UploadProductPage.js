@@ -19,7 +19,7 @@ const layout = {
 function UploadProductPage(props) {
 
   const { currentUser } = useSelector(state => state.user)
-  const { fileData, uploadProductDone, uploadProductLoading, uploadProductError, mesasge } = useSelector(state => state.jaymall)
+  const { fileData, uploadProductDone, uploadProductLoading, uploadProductError, uploadImageLoading, mesasge } = useSelector(state => state.jaymall)
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -122,7 +122,7 @@ function UploadProductPage(props) {
 
           <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
             <Space>
-              <Button type="primary" htmlType="submit" disabled={uploadProductLoading}>
+              <Button type="primary" htmlType="submit" disabled={uploadProductLoading || uploadImageLoading}>
                 상품 등록
               </Button>
               <Button onClick={() => { props.history.goBack() }}>
