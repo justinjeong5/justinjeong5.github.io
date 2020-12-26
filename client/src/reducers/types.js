@@ -102,3 +102,13 @@ export const LOAD_PRODUCT_DETAILS_FAILURE = 'LOAD_PRODUCT_DETAILS_FAILURE';
 
 export const SET_ALL_FILTERS_INFO = 'SET_ALL_FILTERS_INFO';
 export const RESET_PRODUCTS = 'RESET_PRODUCTS';
+
+
+//=========================================
+//                 Blog
+//=========================================
+export const CREATE_BLOG_POST_REQUEST = 'CREATE_BLOG_POST_REQUEST';
+export const CREATE_BLOG_POST_SUCCESS = 'CREATE_BLOG_POST_SUCCESS';
+export const CREATE_BLOG_POST_FAILURE = 'CREATE_BLOG_POST_FAILURE';
+
+export const RESET_CREATE_BLOG_POST = 'RESET_CREATE_BLOG_POST';

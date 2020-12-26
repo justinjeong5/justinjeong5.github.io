@@ -6,6 +6,7 @@ import userSaga from './user'
 import movieSaga from './movie'
 import movieFavoriteSaga from './movieFavorite'
 import jaymallSaga from './jaymall'
+import blogSaga from './blog'
 
 
 axios.defaults.baseURL = SERVER_URL;
@@ -17,5 +18,6 @@ export default function* rootSaga() {
     fork(movieSaga),
     fork(movieFavoriteSaga),
     fork(jaymallSaga),
+    fork(blogSaga),
   ]);
 }

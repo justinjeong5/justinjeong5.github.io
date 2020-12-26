@@ -16,7 +16,7 @@ function LeftMenu(props) {
     <Menu mode={props.mode}>
       <Menu.Item><Link to='/'>HOME</Link></Menu.Item>
       <Menu.SubMenu title={<Title>블로그</Title>}>
-        <Menu.Item key="blog" disabled>
+        <Menu.Item key="blog" >
           {<Link to='/blog'>블로그</Link>}
         </Menu.Item>
       </Menu.SubMenu>

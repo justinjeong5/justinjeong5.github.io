@@ -28,6 +28,7 @@ app.use('/uploads', express.static('uploads'));
 app.use('/api/user', require('./routes/user'));
 app.use('/api/movie/favorite', require('./routes/movieFavorite'));
 app.use('/api/jaymall', require('./routes/jaymall'));
+app.use('/api/blog', require('./routes/blog'));
 
 
 app.get('/', (req, res) => {
