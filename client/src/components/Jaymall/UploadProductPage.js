@@ -89,7 +89,7 @@ function UploadProductPage(props) {
           >
             <InputNumber
               style={{ width: 140, alignItems: 'end' }}
-              formatter={value => `${value}원`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+              formatter={value => value.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
               parser={value => value.replace(/\원\s?|(,*)/g, '')}
               placeholder='가격'
             />
