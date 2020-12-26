@@ -4,7 +4,8 @@ import axios from 'axios';
 import {
   CREATE_BLOG_POST_REQUEST, CREATE_BLOG_POST_SUCCESS, CREATE_BLOG_POST_FAILURE,
   LOAD_BLOG_POSTS_REQUEST, LOAD_BLOG_POSTS_SUCCESS, LOAD_BLOG_POSTS_FAILURE,
-  RESET_LOAD_BLOG_POSTS
+  RESET_LOAD_BLOG_POSTS,
+  LOAD_BLOG_POST_REQUEST, LOAD_BLOG_POST_SUCCESS, LOAD_BLOG_POST_FAILURE,
 } from '../reducers/types'
 
 function createPostAPI(data) {
@@ -52,6 +53,26 @@ function* loadPosts(action) {
   }
 }
 
+function loadPostAPI(data) {
+  return axios.get(`/api/blog/blog/${data}`)
+}
+
+function* loadPost(action) {
+  try {
+    const result = yield call(loadPostAPI, action.payload);
+    yield put({
+      type: LOAD_BLOG_POST_SUCCESS,
+      payload: result.data,
+    })
+  } catch (error) {
+    console.error(error)
+    yield put({
+      type: LOAD_BLOG_POST_FAILURE,
+      error: error.response.data,
+    })
+  }
+}
+
 function* watchCreatePost() {
   yield takeLatest(CREATE_BLOG_POST_REQUEST, createPost)
 }
@@ -60,10 +81,15 @@ function* watchLoadPosts() {
   yield takeLatest([LOAD_BLOG_POSTS_REQUEST, RESET_LOAD_BLOG_POSTS], loadPosts)
 }
 
+function* watchLoadPost() {
+  yield takeLatest(LOAD_BLOG_POST_REQUEST, loadPost)
+}
+
 
 export default function* blogSaga() {
   yield all([
     fork(watchCreatePost),
     fork(watchLoadPosts),
+    fork(watchLoadPost),
   ])
 }

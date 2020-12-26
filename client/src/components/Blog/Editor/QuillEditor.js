@@ -356,7 +356,7 @@ class QuillEditor extends React.Component {
 
             let range = quill.getSelection();
             let position = range ? range.index : 0;
-            quill.insertEmbed(position, "file", response.data.fileName);
+            quill.insertEmbed(position, "file", `${SERVER_URL}/uploads/${response.data.fileName}`);
             quill.setSelection(position + 1);
 
             if (this._isMounted) {

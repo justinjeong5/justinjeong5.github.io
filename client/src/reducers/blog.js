@@ -2,10 +2,12 @@ import {
   CREATE_BLOG_POST_REQUEST, CREATE_BLOG_POST_SUCCESS, CREATE_BLOG_POST_FAILURE,
   RESET_CREATE_BLOG_POST,
   LOAD_BLOG_POSTS_REQUEST, LOAD_BLOG_POSTS_SUCCESS, LOAD_BLOG_POSTS_FAILURE,
-  RESET_LOAD_BLOG_POSTS
+  RESET_LOAD_BLOG_POSTS,
+  LOAD_BLOG_POST_REQUEST, LOAD_BLOG_POST_SUCCESS, LOAD_BLOG_POST_FAILURE,
 } from './types'
 
 const initialState = {
+  currentBlogPost: null,
   blogPosts: [],
   message: '',
   noMorePosts: false,
@@ -18,6 +20,9 @@ const initialState = {
   loadBlogPostsLoading: false,
   loadBlogPostsDone: false,
   loadBlogPostsError: null,
+  loadBlogPostLoading: false,
+  loadBlogPostDone: false,
+  loadBlogPostError: null,
 }
 
 const blog = (state = initialState, action) => {
@@ -87,6 +92,36 @@ const blog = (state = initialState, action) => {
         skip: 0,
         limit: 6,
         message: '블로그 목록이 정상적으로 초기화되었습니다.',
+      }
+    case LOAD_BLOG_POST_REQUEST:
+      return {
+        ...state,
+        loadBlogPostLoading: true,
+        loadBlogPostDone: false,
+        loadBlogPostError: null,
+      }
+    case LOAD_BLOG_POST_SUCCESS:
+      return {
+        ...state,
+        loadBlogPostLoading: false,
+        loadBlogPostDone: true,
+        message: action.payload.message,
+        currentBlogPost: {
+          ...action.payload.blog,
+          writer: {
+            userId: action.payload.blog.writer._id,
+            name: action.payload.blog.writer.name,
+            email: action.payload.blog.writer.email,
+            image: action.payload.blog.writer.image,
+          }
+        },
+      }
+    case LOAD_BLOG_POST_FAILURE:
+      return {
+        ...state,
+        loadBlogPostLoading: false,
+        loadBlogPostError: action.error.code,
+        message: action.error.message,
       }
     default:
       return state

@@ -20,6 +20,7 @@ import CartPage from './Jaymall/CartPage'
 
 import BlogPage from './Blog/BlogPage'
 import CreatePage from './Blog/CreatePage'
+import PostPage from './Blog/PostPage'
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
         <Route exact path="/jaymall/cart" component={Auth(CartPage, true)} />
         <Route exact path="/blog/" component={Auth(BlogPage, null)} />
         <Route exact path="/blog/create" component={Auth(CreatePage, true)} />
+        <Route exact path="/blog/post/:postId" component={Auth(PostPage, null)} />
       </Switch>
       <Footer />
     </div>
