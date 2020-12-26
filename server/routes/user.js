@@ -71,12 +71,16 @@ router.post('/login', (req, res) => {
           console.error(error);
           return res.status(400).json({ code: 'JsonWebTokenError', message: '토큰을 생성하는 과정에서 문제가 발생했습니다.', error });
         }
-        res.cookie('x_auth', user.token, {
-          sameSite: 'none',
-          secure: true,
-          maxAge: 1000 * 60 * 60 * 24 * 2, // Cookie expiration 2days (same with jsonwebtoken expire duration)
-          httpOnly: true,
-        }).status(200).json({ message: '로그인이 정상적으로 완료되었습니다.', userId: user._id });
+        if (process.env.COOKIE_SAME_SITE === 'none') {
+          res.cookie('x_auth', user.token, {
+            sameSite: 'none',
+            secure: true,
+            maxAge: 1000 * 60 * 60 * 24 * 2, // Cookie expiration 2days (same with jsonwebtoken expire duration)
+            httpOnly: true,
+          }).status(200).json({ message: '로그인이 정상적으로 완료되었습니다.', userId: user._id });
+        } else {
+          res.cookie('x_auth', user.token).status(200).json({ message: '로그인이 정상적으로 완료되었습니다.', userId: user._id });
+        }
       })
     })
   })

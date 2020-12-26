@@ -1,13 +1,14 @@
 const express = require('express');
 const app = express();
-const config = require('./config/key')
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cors = require('cors')
-const path = require('path')
+require('dotenv').config()
 
 const mongoose = require('mongoose');
-mongoose.connect(config.mongoURI, {
+
+const uri = process.env.MONGO_URI
+mongoose.connect(uri, {
   useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true, useFindAndModify: false
 }).then(() => {
   console.log('successfully connected to database')
@@ -23,7 +24,7 @@ app.use(cors({
   credentials: true,  // for cookie
 }));
 
-app.use('/', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static('uploads'));
 app.use('/api/user', require('./routes/user'));
 app.use('/api/movie/favorite', require('./routes/movieFavorite'));
 app.use('/api/jaymall', require('./routes/jaymall'));

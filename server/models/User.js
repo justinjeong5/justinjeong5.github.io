@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken')
-const { secretOrPrivateKey } = require('../config/key')
 
 const userSchema = mongoose.Schema({
   name: {
@@ -76,7 +75,7 @@ userSchema.methods.generateToken = function (callback) {
   var token = jwt.sign({
     exp: Math.floor(Date.now() / 1000) + (60 * 60 * 2), // 2days for expiration
     data: user._id.toHexString()
-  }, secretOrPrivateKey);
+  }, process.env.SECRET_OR_PRIVATE_KEY);
   user.token = token;
   user.save(function (err, user) {
     if (err) return callback(err);
@@ -86,7 +85,7 @@ userSchema.methods.generateToken = function (callback) {
 
 userSchema.statics.findByToken = function (token, callback) {
   var user = this;
-  jwt.verify(token, secretOrPrivateKey, function (err, decoded) {
+  jwt.verify(token, process.env.SECRET_OR_PRIVATE_KEY, function (err, decoded) {
     if (err) return callback(err);
     user.findOne({
       "_id": decoded.data,
