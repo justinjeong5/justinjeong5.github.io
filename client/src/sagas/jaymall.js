@@ -17,7 +17,7 @@ function* loadProducts(action) {
   try {
     const result = yield call(loadProductsAPI, action.payload);
     let noMore = false;
-    if (result.data.products.length % 8) {
+    if (result.data.products.length % 8 || result.data.products.length === 0) {
       noMore = true;
     }
     yield put({

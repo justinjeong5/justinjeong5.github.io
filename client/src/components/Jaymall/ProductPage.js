@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { withRouter } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid'
-import { Row, Col, Typography, Skeleton } from 'antd';
+import { Row, Col, Typography, Skeleton, Empty } from 'antd';
 
 import { LOAD_PRODUCTS_REQUEST, SET_ALL_FILTERS_INFO } from '../../reducers/types'
 import ProductCard from './Product/ProductCard'
@@ -13,7 +13,7 @@ const { Title } = Typography;
 function ProductPage() {
 
   const dispatch = useDispatch();
-  const { productData, loadProductsLoading, noMoreProducts, skip, limit, orderBy, sortBy, filters } = useSelector(state => state.jaymall)
+  const { productData, loadProductsLoading, loadProductsDone, noMoreProducts, skip, limit, orderBy, sortBy, filters } = useSelector(state => state.jaymall)
 
   useEffect(() => {
     function onScroll() {
@@ -73,10 +73,13 @@ function ProductPage() {
         </div>
         {productData && <ProductFilter onFilterChange={onFilterChange} />}
         <Row gutter={[24, 32]}>
-          {loadProductsLoading && productData?.length === 0 && renderSkeleton}
+          {loadProductsLoading && renderSkeleton}
           {productData?.map(product => (
             <ProductCard key={uuidv4()} product={product} />
           ))}
+          {loadProductsDone && productData?.length === 0 && <div style={{ margin: '200px auto' }}>
+            <Empty description='필터 조건에 맞는 상품이 없습니다.' />
+          </div>}
         </Row>
       </div>
     </>
