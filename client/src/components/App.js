@@ -18,6 +18,7 @@ import UploadProductPage from './Jaymall/UploadProductPage'
 import DetailProductPage from './Jaymall/DetailProductPage'
 import CartPage from './Jaymall/CartPage'
 
+import BlogPage from './Blog/BlogPage'
 import CreatePage from './Blog/CreatePage'
 
 function App() {
@@ -36,6 +37,7 @@ function App() {
         <Route exact path="/jaymall/upload" component={Auth(UploadProductPage, true)} />
         <Route exact path="/jaymall/product/:productId" component={Auth(DetailProductPage, null)} />
         <Route exact path="/jaymall/cart" component={Auth(CartPage, true)} />
+        <Route exact path="/blog/" component={Auth(BlogPage, null)} />
         <Route exact path="/blog/create" component={Auth(CreatePage, true)} />
       </Switch>
       <Footer />

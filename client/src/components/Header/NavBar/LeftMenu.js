@@ -19,6 +19,9 @@ function LeftMenu(props) {
         <Menu.Item key="blog" >
           {<Link to='/blog'>블로그</Link>}
         </Menu.Item>
+        <Menu.Item key="blog/create" disabled={!currentUser?.isAuth} >
+          {<Link to='/blog/create'>작성하기</Link>}
+        </Menu.Item>
       </Menu.SubMenu>
 
       <Menu.SubMenu title={<Title>영화</Title>}>

@@ -64,5 +64,22 @@ router.post('/uploadDataset', auth, (req, res) => {
   })
 })
 
+router.post('/blogs', (req, res) => {
+  const skip = req.body.skip;
+  const limit = req.body.limit;
+
+  Blog.find()
+    .populate('writer')
+    .skip(skip)
+    .limit(limit)
+    .exec((error, blogs) => {
+      if (error) {
+        console.error(error);
+        return res.status(400).json({ code: 'DatabaseError', message: '블로그 글을 불러오는 과정에서 문제가 발생했습니다.', error });
+      }
+      return res.status(200).json({ message: '블로그 목록을 정상적으로 가져왔습니다.', blogs })
+    })
+})
+
 
 module.exports = router
