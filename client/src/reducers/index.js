@@ -5,6 +5,7 @@ import movie from './movie'
 import movieFavorite from './movieFavorite'
 import jaymall from './jaymall'
 import blog from './blog'
+import chat from './chat'
 
 const rootReducer = (state, action) => {
   const combineReducer = combineReducers({
@@ -13,6 +14,7 @@ const rootReducer = (state, action) => {
     movieFavorite,
     jaymall,
     blog,
+    chat,
   })
   return combineReducer(state, action);
 };

@@ -4,8 +4,9 @@ import { Link, withRouter } from 'react-router-dom';
 import { Form, Input, Button, Typography, message as Message, Space } from 'antd';
 import { UserOutlined, MailOutlined, LockOutlined, CheckSquareOutlined } from '@ant-design/icons';
 import md5 from 'md5'
-import { REGISTER_USER_REQUEST } from '../../reducers/types';
+import { REGISTER_CHAT_USER_REQUEST, REGISTER_USER_REQUEST } from '../../reducers/types';
 const { Title } = Typography;
+
 
 const layout = {
   labelCol: { span: 8 },
@@ -19,25 +20,35 @@ function RegisterPage(props) {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
   const { registerUserLoading, registerUserDone, registerUserError, message } = useSelector(state => state.user)
+  const { registerChatUserLoading, registerChatUserDone, registerChatUserError, messageFromChat } = useSelector(state => state.chat)
 
   useEffect(() => {
-    if (registerUserDone) {
+    if (registerUserDone && registerChatUserDone) {
       props.history.push('/login')
     }
     if (registerUserError) {
       Message.error({ content: message, duration: 2 });
     }
-  }, [registerUserDone, registerUserError, props.history, message])
+    if (registerChatUserError) {
+      Message.error({ content: messageFromChat, duration: 2 });
+    }
+  }, [registerUserDone, registerUserError, props.history, message,
+    registerChatUserDone, registerChatUserError, messageFromChat])
 
-  const onFinish = (values) => {
+  const onFinish = async (values) => {
+    const payload = {
+      email: values.email,
+      name: values.userName,
+      password: values.password,
+      image: `http://gravatar.com/avatar/${md5(values.email)}?d=identicon`,
+    }
     dispatch({
       type: REGISTER_USER_REQUEST,
-      payload: {
-        email: values.email,
-        name: values.userName,
-        password: values.password,
-        image: `http://gravatar.com/avatar/${md5(values.email)}?d=identicon`
-      }
+      payload
+    })
+    dispatch({
+      type: REGISTER_CHAT_USER_REQUEST,
+      payload
     })
   };
 
@@ -104,7 +115,9 @@ function RegisterPage(props) {
 
         <Form.Item {...tailLayout}>
           <Space >
-            <Button type="primary" htmlType="submit" loading={registerUserLoading} disabled={registerUserLoading}>
+            <Button type="primary" htmlType="submit"
+              loading={registerUserLoading || registerChatUserLoading}
+              disabled={registerUserLoading || registerChatUserLoading}>
               회원가입
             </Button>
             <Button onClick={() => { props.history.goBack() }} >
