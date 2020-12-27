@@ -1,10 +1,11 @@
 import {
   REGISTER_CHAT_USER_REQUEST, REGISTER_CHAT_USER_SUCCESS, REGISTER_CHAT_USER_FAILURE,
   LOGIN_CHAT_USER_REQUEST, LOGIN_CHAT_USER_SUCCESS, LOGIN_CHAT_USER_FAILURE,
+  LOGOUT_CHAT_USER_REQUEST, LOGOUT_CHAT_USER_SUCCESS, LOGOUT_CHAT_USER_FAILURE,
 } from './types'
 
 const initialState = {
-  currentUserFromChat: {},
+  currentChatUser: null,
   messageFromChat: '',
 
   registerChatUserLoading: false,
@@ -13,6 +14,9 @@ const initialState = {
   loginChatUserLoading: false,
   loginChatUserDone: false,
   loginChatUserError: null,
+  logoutChatUserLoading: false,
+  logoutChatUserDone: false,
+  logoutChatUserError: null,
 }
 
 const chat = (state = initialState, action) => {
@@ -50,8 +54,8 @@ const chat = (state = initialState, action) => {
         ...state,
         loginChatUserLoading: false,
         loginChatUserDone: true,
-        currentUserFromChat: {
-          ...state.currentUserFromChat,
+        currentChatUser: {
+          ...state.currentChatUser,
           userId: action.payload.userId,
           image: action.payload.image,
           email: action.payload.email,
@@ -64,6 +68,34 @@ const chat = (state = initialState, action) => {
         ...state,
         loginChatUserLoading: false,
         loginChatUserError: action.error.code,
+        messageFromChat: action.error.message,
+      }
+    case LOGOUT_CHAT_USER_REQUEST:
+      return {
+        ...state,
+        logoutChatUserLoading: true,
+        logoutChatUserDone: false,
+        logoutChatUserError: null,
+      }
+    case LOGOUT_CHAT_USER_SUCCESS:
+      return {
+        ...state,
+        logoutChatUserLoading: false,
+        logoutChatUserDone: true,
+        currentChatUser: null,
+        messageFromChat: action.payload,
+        registerChatUserLoading: false,
+        registerChatUserDone: false,
+        registerChatUserError: null,
+        loginChatUserLoading: false,
+        loginChatUserDone: false,
+        loginChatUserError: null,
+      }
+    case LOGOUT_CHAT_USER_FAILURE:
+      return {
+        ...state,
+        logoutChatUserLoading: false,
+        logoutChatUserError: action.error.code,
         messageFromChat: action.error.message,
       }
     default:

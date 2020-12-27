@@ -4,6 +4,7 @@ import firebase from '../config/firebase'
 import {
   REGISTER_CHAT_USER_REQUEST, REGISTER_CHAT_USER_SUCCESS, REGISTER_CHAT_USER_FAILURE,
   LOGIN_CHAT_USER_REQUEST, LOGIN_CHAT_USER_SUCCESS, LOGIN_CHAT_USER_FAILURE,
+  LOGOUT_CHAT_USER_REQUEST, LOGOUT_CHAT_USER_SUCCESS, LOGOUT_CHAT_USER_FAILURE,
 } from '../reducers/types'
 
 async function registerChatAPI(data) {
@@ -81,6 +82,35 @@ function* loginFirebase(action) {
   }
 }
 
+async function logoutChatAPI() {
+  try {
+    await firebase.auth().signOut();
+    return 'Firebase에서 정상적으로 로그아웃되었습니다.';
+  } catch (error) {
+    throw error;
+  }
+}
+
+function* logoutFirebase() {
+  try {
+    const result = yield call(logoutChatAPI);
+    yield put({
+      type: LOGOUT_CHAT_USER_SUCCESS,
+      payload: result,
+    })
+  } catch (error) {
+    console.error(error)
+    yield put({
+      type: LOGOUT_CHAT_USER_FAILURE,
+      error: {
+        code: 'FirebaseError',
+        message: 'Firebase에 로그아웃 하는 과정에서 문제가 발생했습니다.',
+        error,
+      }
+    })
+  }
+}
+
 function* watchRegisterChat() {
   yield takeLatest(REGISTER_CHAT_USER_REQUEST, registerChat)
 }
@@ -89,10 +119,15 @@ function* watchLoginChat() {
   yield takeLatest(LOGIN_CHAT_USER_REQUEST, loginFirebase)
 }
 
+function* watchLogoutChat() {
+  yield takeLatest(LOGOUT_CHAT_USER_REQUEST, logoutFirebase)
+}
+
 
 export default function* chatSaga() {
   yield all([
     fork(watchRegisterChat),
     fork(watchLoginChat),
+    fork(watchLogoutChat),
   ])
 }

@@ -3,13 +3,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation, withRouter } from 'react-router-dom'
 import { Menu, message as Message } from 'antd';
 import { LogoutOutlined, LoginOutlined, UserAddOutlined, UserOutlined } from '@ant-design/icons'
-import { LOGOUT_USER_REQUEST } from '../../../reducers/types';
+import { LOGOUT_USER_REQUEST, LOGOUT_CHAT_USER_REQUEST } from '../../../reducers/types';
 import { routerPathList } from '../../utils/RouterPathList'
 
 function RightMenu(props) {
 
   const dispatch = useDispatch();
   const { currentUser, logoutUserError, message } = useSelector(state => state.user)
+  const { currentChatUser, logoutChatUserError, messageFromChat } = useSelector(state => state.chat)
   const [prevLocation, setPrevLocation] = useState('/')
   const currentLocation = useLocation();
 
@@ -24,18 +25,24 @@ function RightMenu(props) {
     if (logoutUserError) {
       Message.error({ content: message, duration: 2 });
     }
-  }, [logoutUserError, message])
+    if (logoutChatUserError) {
+      Message.error({ content: messageFromChat, duration: 2 });
+    }
+  }, [logoutUserError, message, logoutChatUserError, messageFromChat])
 
   const handleLogout = () => {
     props.history.push(prevLocation);
     dispatch({
       type: LOGOUT_USER_REQUEST
     })
+    dispatch({
+      type: LOGOUT_CHAT_USER_REQUEST
+    })
   }
 
   return (
     <>
-      {currentUser?.isAuth
+      {currentUser?.isAuth || currentChatUser
         ? <Menu mode={props.mode}>
           <Menu.Item key="logout"
             onClick={handleLogout} >
