@@ -1,10 +1,59 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Container, Row, Col, Image, Spinner } from 'react-bootstrap'
+import { AiFillStar, AiOutlineStar } from 'react-icons/ai'
+import firebase from '../../../config/firebase'
 
 function MessageHeader() {
 
-  const { currentChatRoom } = useSelector(state => state.chat)
+  const [isFavorited, setIsFavorite] = useState(false)
+  const { currentChatRoom, currentChatUser } = useSelector(state => state.chat)
+  const userRef = firebase.database().ref('users');
+
+  useEffect(() => {
+    if (currentChatRoom && currentChatUser) {
+      addFavoriteListener(currentChatRoom.id, currentChatUser.userId);
+    }
+  }, [currentChatRoom, currentChatUser])
+
+  const addFavoriteListener = (roomId, userId) => {
+    userRef
+      .child(userId)
+      .child('favorited')
+      .once('value')
+      .then((data) => {
+        if (data.val()) {
+          const chatRoomIds = Object.keys(data.val());
+          const isAlreadyFavorited = chatRoomIds.includes(roomId);
+          setIsFavorite(isAlreadyFavorited);
+        }
+      })
+  }
+
+  const handleFavorite = () => {
+    if (isFavorited) {
+      userRef.child(`${currentChatUser.userId}/favorited`)
+        .child(currentChatRoom.id)
+        .remove(error => {
+          if (error) {
+            console.error(error);
+          }
+        })
+    } else {
+      userRef.child(`${currentChatUser.userId}/favorited`)
+        .update({
+          [currentChatRoom.id]: {
+            name: currentChatRoom.name,
+            description: currentChatRoom.description,
+            createdBy: {
+              name: currentChatRoom.createdBy.name,
+              image: currentChatRoom.createdBy.image
+            }
+          }
+        })
+    }
+    setIsFavorite(prevFavorited => !prevFavorited);
+  }
 
   return (
     <div style={{
@@ -20,7 +69,16 @@ function MessageHeader() {
         : <Container>
           <Row>
             <Col >
-              <h3>{currentChatRoom?.name}</h3>
+              <h3 style={{ display: 'flex', justifyContent: 'space-between' }}>
+                {` ${currentChatRoom?.name} `}
+                <div>
+                  <span style={{ cursor: 'pointer' }} onClick={handleFavorite}>
+                    {isFavorited
+                      ? < AiFillStar style={{ marginBottom: 5 }} />
+                      : < AiOutlineStar style={{ marginBottom: 5 }} />}
+                  </span>
+                </div>
+              </h3>
               <p>{currentChatRoom?.description}</p>
             </Col>
             <Col lg={3}>

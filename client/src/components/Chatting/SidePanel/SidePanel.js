@@ -1,6 +1,7 @@
 import React from 'react'
 import ChatRooms from './ChatRooms'
 import UserPanel from './UserPanel'
+import Favorited from './Favorited'
 
 function SidePanel() {
   return (
@@ -14,6 +15,8 @@ function SidePanel() {
       }}
     >
       <UserPanel />
+      <hr />
+      <Favorited />
       <hr />
       <ChatRooms />
     </div>
