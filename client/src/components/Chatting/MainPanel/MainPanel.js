@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
+import { v4 as uuidv4 } from 'uuid'
 import Message from './Message'
 import MessageForm from './MessageForm'
 import MessageHeader from './MessageHeader'
@@ -12,6 +13,7 @@ export class MainPanel extends Component {
   state = {
     messages: [],
     messagesRef: firebase.database().ref('messages'),
+    typingRef: firebase.database().ref('typing'),
     typingUsers: [],
     listenerList: [],
   }
@@ -20,6 +22,7 @@ export class MainPanel extends Component {
     const { currentChatRoom } = this.props;
     if (currentChatRoom) {
       this.addMessagesListeners(currentChatRoom.id);
+      this.addTypingListeners(currentChatRoom.id)
     }
   }
 
@@ -38,6 +41,32 @@ export class MainPanel extends Component {
     listeners.forEach(listener => {
       listener.ref.child(listener.id).off(listener.event);
     })
+  }
+
+  addTypingListeners = (chatRoomId) => {
+    let typingUsers = [];
+    // typing이 새로 들어올때
+    this.state.typingRef.child(chatRoomId).on('child_added', (DataSnapShot) => {
+      if (DataSnapShot.key !== this.props.currentChatUser.uid) {
+        typingUsers.push({ id: DataSnapShot.key, name: DataSnapShot.val() })
+        this.setState({ typingUsers })
+      }
+    })
+    // listenersList state에 위에서 등록한 리스너 넣기
+    this.addToListenerLists(chatRoomId, this.state.typingRef, 'child_added');
+
+    // typing을 제거할 때
+    this.state.typingRef.child(chatRoomId).on('child_removed', (DataSnapShot) => {
+      const index = typingUsers.findIndex(user => {
+        return user.id === DataSnapShot.key;
+      })
+      if (index > -1) {
+        typingUsers.splice(index, 1);
+        this.setState({ typingUsers })
+      }
+    })
+    // listenersList state에 위에서 등록한 리스너 넣기
+    this.addToListenerLists(chatRoomId, this.state.typingRef, 'child_removed');
   }
 
   addToListenerLists = (id, ref, event) => {
@@ -68,6 +97,14 @@ export class MainPanel extends Component {
     })
   }
 
+  renderTypingUsers = (typingUsers) => {
+    if (typingUsers.length > 0) {
+      return typingUsers.map((user) => {
+        return <span key={uuidv4()}>{user.name}님이 채팅을 입력하고 있습니다.</span>
+      })
+    }
+  }
+
   render() {
     return (
       <div style={{ padding: '2rem 2rem 0 2rem' }}>
@@ -85,6 +122,7 @@ export class MainPanel extends Component {
           <Message
             messages={this.state.messages}
           />
+          {this.renderTypingUsers(this.state.typingUsers)}
           {/* Ref를 이용한 DOM선택 */}
           <div ref={node => (this.messageEndRef = node)} />
         </div>

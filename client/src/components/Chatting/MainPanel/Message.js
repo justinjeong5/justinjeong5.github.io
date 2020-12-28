@@ -3,11 +3,12 @@ import { useSelector } from 'react-redux'
 import { Media, Image } from 'react-bootstrap'
 import moment from 'moment'
 import { v4 as uuidv4 } from 'uuid';
+import { Skeleton } from '@material-ui/lab';
 import { Empty } from 'antd'
 
 function Message({ messages }) {
 
-  const { currentChatUser } = useSelector(state => state.chat)
+  const { currentChatRoom, currentChatUser } = useSelector(state => state.chat)
 
   const timeFromNow = (timestamp) => {
     return moment(timestamp).fromNow();
@@ -16,6 +17,21 @@ function Message({ messages }) {
   const isMessageMine = (message, currentChatUser) => {
     if (!message || !currentChatUser) return false;
     return message.user.id === currentChatUser.userId
+  }
+
+  if (!currentChatRoom) {
+    return (<>
+      {Array.from(Array(7)).map(_ => (
+        <Media key={uuidv4()} style={{ marginTop: 5 }}>
+          <Skeleton variant="circle" width={48} height={48} style={{ marginRight: 5 }} />
+          <Media.Body >
+            <Skeleton width={200} />
+            <Skeleton />
+          </Media.Body>
+        </Media>
+      )
+      )}
+    </>);
   }
 
   if (messages.length === 0) {
@@ -40,7 +56,14 @@ function Message({ messages }) {
                   {message.user.name}
                 </span>
               </h6>
-              <p>{message.content}</p>
+              {message.content
+                ? <p> {message.content} </p>
+                : <img
+                  style={{ maxWidth: '300px' }}
+                  src={message.image}
+                  alt={'이미지를 찾을 수 없습니다.'}
+                />
+              }
             </Media.Body>
             <Image
               roundedCircle
@@ -63,7 +86,14 @@ function Message({ messages }) {
                   {timeFromNow(message.timestamp)}
                 </span>
               </h6>
-              <p>{message.content}</p>
+              {message.content
+                ? <p> {message.content} </p>
+                : <img
+                  style={{ maxWidth: '300px' }}
+                  src={message.image}
+                  alt={'이미지를 찾을 수 없습니다.'}
+                />
+              }
             </Media.Body>
           </>
         }
