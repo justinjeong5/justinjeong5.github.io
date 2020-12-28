@@ -11,7 +11,7 @@ export default function auth(SpecificComponent, option, adminRoute = null) {
   function AuthenticationCheck(props) {
 
     const dispatch = useDispatch();
-    const { currentUser } = useSelector(state => state.user)
+    const { currentUser, logoutUserLoading } = useSelector(state => state.user)
 
     useEffect(() => {
       dispatch({
@@ -20,6 +20,9 @@ export default function auth(SpecificComponent, option, adminRoute = null) {
     }, [])
 
     useEffect(() => {
+      if (logoutUserLoading) {
+        return;
+      }
       if (option === null) {
         // 로그인 여부와 관계없이 접근 가능한 페이지
         return;
@@ -28,7 +31,6 @@ export default function auth(SpecificComponent, option, adminRoute = null) {
         if (currentUser.isAuth) {
           if (!option) {
             // 로그인이 된 사용자 && 로그인을 안한 사용자만 사용하는 페이지
-            message.warning('로그인하지 않은 사용자만 접근할 수 있습니다.')
             return props.history.push('/')
           }
           if (!currentUser.isAdmin) {
@@ -45,7 +47,7 @@ export default function auth(SpecificComponent, option, adminRoute = null) {
           }
         }
       }
-    }, [currentUser, props.history])
+    }, [currentUser, logoutUserLoading, props.history])
 
     return (
       <SpecificComponent />
