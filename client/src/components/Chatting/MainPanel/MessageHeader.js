@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Container, Row, Col, Image, Spinner } from 'react-bootstrap'
+import { FaLock, FaUnlock } from 'react-icons/fa'
 import { AiFillStar, AiOutlineStar } from 'react-icons/ai'
 import firebase from '../../../config/firebase'
 
 function MessageHeader() {
 
   const [isFavorited, setIsFavorite] = useState(false)
-  const { currentChatRoom, currentChatUser } = useSelector(state => state.chat)
+  const { currentChatRoom, currentChatUser, isPrivateChatRoom } = useSelector(state => state.chat)
   const userRef = firebase.database().ref('users');
 
   useEffect(() => {
@@ -72,11 +73,15 @@ function MessageHeader() {
               <h3 style={{ display: 'flex', justifyContent: 'space-between' }}>
                 {` ${currentChatRoom?.name} `}
                 <div>
-                  <span style={{ cursor: 'pointer' }} onClick={handleFavorite}>
-                    {isFavorited
-                      ? < AiFillStar style={{ marginBottom: 5 }} />
-                      : < AiOutlineStar style={{ marginBottom: 5 }} />}
-                  </span>
+                  {!isPrivateChatRoom &&
+                    <span style={{ cursor: 'pointer' }} onClick={handleFavorite}>
+                      {isFavorited
+                        ? < AiFillStar style={{ marginBottom: 5 }} />
+                        : < AiOutlineStar style={{ marginBottom: 5 }} />}
+                    </span>}
+                  {isPrivateChatRoom
+                    ? <FaLock style={{ marginBottom: 5 }} />
+                    : <FaUnlock style={{ marginBottom: 5 }} />}
                 </div>
               </h3>
               <p>{currentChatRoom?.description}</p>

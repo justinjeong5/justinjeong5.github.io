@@ -4,6 +4,7 @@ import {
   LOGOUT_CHAT_USER_REQUEST, LOGOUT_CHAT_USER_SUCCESS, LOGOUT_CHAT_USER_FAILURE,
   SET_CURRENT_CHAT_ROOM,
   SET_CHAT_USER,
+  SET_PRIVATE_CHAT_ROOM,
 } from './types'
 
 const initialState = {
@@ -118,6 +119,11 @@ const chat = (state = initialState, action) => {
           name: action.payload.displayName,
         },
         messageFromChat: 'Firebase에서 사용자가 정상적으로 인증되었습니다.',
+      }
+    case SET_PRIVATE_CHAT_ROOM:
+      return {
+        ...state,
+        isPrivateChatRoom: action.payload,
       }
     default:
       return state;

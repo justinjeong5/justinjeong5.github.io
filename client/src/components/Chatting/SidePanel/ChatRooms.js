@@ -6,7 +6,7 @@ import { FaPlusSquare } from 'react-icons/fa'
 import { v4 as uuidv4 } from 'uuid'
 
 import firebase from '../../../config/firebase'
-import { SET_CURRENT_CHAT_ROOM } from '../../../reducers/types'
+import { SET_CURRENT_CHAT_ROOM, SET_PRIVATE_CHAT_ROOM } from '../../../reducers/types'
 
 export class ChatRooms extends Component {
   state = {
@@ -103,6 +103,10 @@ export class ChatRooms extends Component {
     this.props.dispatch({
       type: SET_CURRENT_CHAT_ROOM,
       payload: room,
+    });
+    this.props.dispatch({
+      type: SET_PRIVATE_CHAT_ROOM,
+      payload: false,
     });
     this.setState({ activeChatRoomId: room.id })
   }

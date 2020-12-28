@@ -2,6 +2,7 @@ import React from 'react'
 import ChatRooms from './ChatRooms'
 import UserPanel from './UserPanel'
 import Favorited from './Favorited'
+import DirectMessage from './DirectMessage'
 
 function SidePanel() {
   return (
@@ -19,6 +20,8 @@ function SidePanel() {
       <Favorited />
       <hr />
       <ChatRooms />
+      <hr />
+      <DirectMessage />
     </div>
   )
 }

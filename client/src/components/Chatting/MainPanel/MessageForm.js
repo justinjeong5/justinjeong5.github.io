@@ -10,7 +10,7 @@ function MessageForm() {
   const [errors, setErrors] = useState([]);
   const [loading, setLoading] = useState(false)
   const [percentage, setPercentage] = useState(0);
-  const { currentChatRoom, currentChatUser } = useSelector(state => state.chat)
+  const { currentChatRoom, currentChatUser, isPrivateChatRoom } = useSelector(state => state.chat)
   const inputOpenImageRef = useRef();
 
   const messagesRef = firebase.database().ref('messages');
@@ -64,6 +64,9 @@ function MessageForm() {
   }
 
   const getPath = (fileName) => {
+    if (isPrivateChatRoom) {
+      return `/private/${currentChatRoom.id}/${fileName}`;
+    }
     return `/public/${fileName}`;
   }
 
