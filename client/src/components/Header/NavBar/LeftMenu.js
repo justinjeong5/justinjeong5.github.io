@@ -34,8 +34,8 @@ function LeftMenu(props) {
       </Menu.SubMenu>
 
       <Menu.SubMenu title={<Title>채팅</Title>}>
-        <Menu.Item key="justinTalk" disabled>
-          {<Link to='/justinTalk'>채팅</Link>}
+        <Menu.Item key="talkative" >
+          {<Link to='/talkative'>토커팁</Link>}
         </Menu.Item>
       </Menu.SubMenu>
 

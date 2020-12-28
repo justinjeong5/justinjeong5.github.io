@@ -22,6 +22,7 @@ import BlogPage from './Blog/BlogPage'
 import CreatePage from './Blog/CreatePage'
 import PostPage from './Blog/PostPage'
 
+import ChatPage from './Chatting/ChatPage'
 
 function App() {
   return (
@@ -42,7 +43,7 @@ function App() {
         <Route exact path="/blog/" component={Auth(BlogPage, null)} />
         <Route exact path="/blog/create" component={Auth(CreatePage, true)} />
         <Route exact path="/blog/post/:postId" component={Auth(PostPage, null)} />
-
+        <Route exact path="/talkative" component={Auth(ChatPage, null)} />
       </Switch>
       <Footer />
     </div>
