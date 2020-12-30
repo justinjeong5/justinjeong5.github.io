@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
-import { Modal, Button, Form, ListGroup } from 'react-bootstrap'
+import { Modal, Button, Form, ListGroup, Badge } from 'react-bootstrap'
 import { RiChatSmile3Fill } from 'react-icons/ri'
 import { FaPlusSquare } from 'react-icons/fa'
 import { v4 as uuidv4 } from 'uuid'
@@ -18,6 +18,7 @@ export class ChatRooms extends Component {
     chatRooms: [],
     firstLoad: true,
     activeChatRoomId: '',
+    notifications: [],
   }
 
   componentDidMount() {
@@ -53,7 +54,50 @@ export class ChatRooms extends Component {
         chatRooms: chatRoomsArray,
       })
       this.setFirstChatRoom();
+      this.addNotificationListener(DataSnapshot.key);
     })
+  }
+
+  addNotificationListener = (chatRoomId) => {
+    this.state.messagesRef.child(chatRoomId).on('value', (DataSnapshot) => {
+      if (this.props.currentChatRoom) {
+        this.handleNotification(chatRoomId, this.props.currentChatRoom.id, this.state.notifications, DataSnapshot)
+      }
+    })
+  }
+
+  handleNotification = (chatRoomId, currentChatRoomId, notifications, DataSnapshot) => {
+    // TODO: 각 방에 맞는 알림 갯수를 state의 notifications에 넣기
+
+    // 이미 state의 notifications에 알림 정보가 들어있는 채팅방과 그렇지 않은 채팅방을 나누어주기.
+    let index = notifications.findIndex(notification => {
+      return notification.id === chatRoomId
+    })
+
+    if (index === -1) {
+      notifications.push({
+        id: chatRoomId,
+        total: DataSnapshot.numChildren(),
+        lastKnownTotal: DataSnapshot.numChildren(),
+        count: 0,
+      })
+    } else {
+      // 대화상대가 채팅방에 없을 때
+      if (chatRoomId !== currentChatRoomId) {
+
+        // 현제까지 상대방이 확인한 메세지의 개수
+        const lastTotal = notifications[index].lastKnownTotal;
+
+        // 카운드 알림으로 보여줄 숫자
+        // 현재 메세지 갯수 - 이전에 확인한 메세지 갯수
+        if (DataSnapshot.numChildren() - lastTotal >= 0) {
+          notifications[index].count = DataSnapshot.numChildren() - lastTotal;
+        }
+      }
+      notifications[index].total = DataSnapshot.numChildren();
+    }
+
+    this.setState({ notifications })
   }
 
   handleClose = () => {
@@ -109,6 +153,30 @@ export class ChatRooms extends Component {
       payload: false,
     });
     this.setState({ activeChatRoomId: room.id })
+    this.clearNotifications(room.id)
+  }
+
+  clearNotifications = (chatRoomId) => {
+    let index = this.state.notifications.findIndex((notification) => {
+      return notification.id === chatRoomId
+    })
+
+    if (index > -1) {
+      let updatedNotifications = [...this.state.notifications];
+      updatedNotifications[index].lastKnownTotal = this.state.notifications[index].total;
+      updatedNotifications[index].count = 0;
+      this.setState({ notifications: updatedNotifications });
+    }
+  }
+
+  getNotificationCount = (room) => {
+    let count = 0;
+    this.state.notifications.forEach(notification => {
+      if (notification.id === room.id) {
+        count = notification.count;
+      }
+    });
+    if (count > 0) return count;
   }
 
   renderChatRooms = () => {
@@ -123,6 +191,7 @@ export class ChatRooms extends Component {
           }}
         >
           # {room.name}
+          <Badge style={{ float: 'right', marginTop: 4 }} variant='danger' >{this.getNotificationCount(room)}</Badge>
         </ListGroup.Item>
       )
     })
