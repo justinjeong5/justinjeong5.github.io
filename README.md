@@ -1,19 +1,23 @@
 <h1 align="center">JUSTINJEONG5</h1>
 
 ## ✨ Features
-- User
+- 🧸User
   - Registration
   - Login/out
   - Editing Information
-- Movie
+- 🍿Movie
   - Trending
   - Favorite
-- Shopping
+- 🛒Shopping
   - Products
   - Cart
+- 📓Blog
+  - Post Blog with Image, Video, Link, and Files
+- 💬Chatting
+  - Public/Private Mode
+  - Message Search by Keyword
+  - Favorited Chat Room
 
 ## ⌨️ Futureworks
-- Chatting
-- Blog
 - Youtube
 - Tweet
