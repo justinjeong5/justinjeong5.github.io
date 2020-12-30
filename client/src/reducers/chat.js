@@ -5,12 +5,14 @@ import {
   SET_CURRENT_CHAT_ROOM,
   SET_CHAT_USER,
   SET_PRIVATE_CHAT_ROOM,
+  SET_USER_POSTS,
 } from './types'
 
 const initialState = {
   currentChatRoom: null,
   isPrivateChatRoom: false,
   currentChatUser: null,
+  userPosts: [],
   messageFromChat: '',
 
   registerChatUserLoading: false,
@@ -124,6 +126,11 @@ const chat = (state = initialState, action) => {
       return {
         ...state,
         isPrivateChatRoom: action.payload,
+      }
+    case SET_USER_POSTS:
+      return {
+        ...state,
+        userPosts: action.payload,
       }
     default:
       return state;

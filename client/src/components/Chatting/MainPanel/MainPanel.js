@@ -16,6 +16,9 @@ export class MainPanel extends Component {
     typingRef: firebase.database().ref('typing'),
     typingUsers: [],
     listenerList: [],
+    searchTerm: '',
+    searchResults: [],
+    searchLoading: false,
   }
 
   componentDidMount = () => {
@@ -105,6 +108,27 @@ export class MainPanel extends Component {
     }
   }
 
+  handleSearchChange = (event) => {
+    this.setState({
+      searchTerm: event.target.value,
+      searchLoading: true,
+    }, () => {
+      this.handleSearchMessages();
+    })
+  }
+
+  handleSearchMessages = () => {
+    const chatRoomMessages = [...this.state.messages];
+    const regex = new RegExp(this.state.searchTerm, 'gi');
+    const searchResults = chatRoomMessages.reduce((acc, message) => {
+      if ((message.content && message.content.match(regex)) || message.user.name.match(regex)) {
+        acc.push(message);
+      }
+      return acc;
+    }, [])
+    this.setState({ searchResults });
+  }
+
   render() {
     return (
       <div style={{ padding: '2rem 2rem 0 2rem' }}>
@@ -120,7 +144,11 @@ export class MainPanel extends Component {
             overflowY: 'auto'
           }}>
           <Message
-            messages={this.state.messages}
+            messages={
+              this.state.searchTerm
+                ? this.state.searchResults
+                : this.state.messages
+            }
           />
           {this.renderTypingUsers(this.state.typingUsers)}
           {/* Ref를 이용한 DOM선택 */}

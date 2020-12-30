@@ -1,15 +1,20 @@
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
-import { Container, Row, Col, Image, Spinner } from 'react-bootstrap'
+import { useDispatch, useSelector } from 'react-redux'
+import { Container, Row, Col, Image, Spinner, InputGroup, FormControl, DropdownButton, Dropdown, Media } from 'react-bootstrap'
 import { FaLock, FaUnlock } from 'react-icons/fa'
 import { AiFillStar, AiOutlineStar } from 'react-icons/ai'
+import { BsSearch } from 'react-icons/bs'
+import { v4 as uuidv4 } from 'uuid'
 import firebase from '../../../config/firebase'
+import { SET_USER_POSTS } from '../../../reducers/types'
 
-function MessageHeader() {
+function MessageHeader({ handleSearchChange }) {
 
   const [isFavorited, setIsFavorite] = useState(false)
-  const { currentChatRoom, currentChatUser, isPrivateChatRoom } = useSelector(state => state.chat)
+  const { currentChatRoom, currentChatUser, isPrivateChatRoom, userPosts } = useSelector(state => state.chat)
   const userRef = firebase.database().ref('users');
+  const messagesRef = firebase.database().ref('messages');
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (currentChatRoom && currentChatUser) {
@@ -56,6 +61,51 @@ function MessageHeader() {
     setIsFavorite(prevFavorited => !prevFavorited);
   }
 
+  const renderUserPosts = (userPosts) => {
+    return Object.entries(userPosts)
+      .sort((a, b) => { return b[1].count - a[1].count })
+      .map(([_, user]) => {
+        return (<Dropdown.Item key={uuidv4()}>
+          <Media >
+            <Image
+              roundedCircle
+              style={{ width: 20, height: 20, marginRight: 7 }}
+              src={user.image}
+              alt={user.name} />
+            <Media.Body>
+              <h6>{`${user.name} ${user.count}개`}</h6>
+            </Media.Body>
+          </Media>
+        </Dropdown.Item>)
+      })
+  }
+
+  const handleUserPosts = () => {
+    messagesRef.child(currentChatRoom.id).on('value', (DataSnapShot) => {
+      userPostsCount(Object.entries(DataSnapShot.val()));
+    })
+  }
+
+  const userPostsCount = (messages) => {
+    let usersPosts = messages.reduce((acc, message) => {
+      if (message[1].user.id in acc) {
+        acc[message[1].user.id].count += 1;
+      }
+      else {
+        acc[message[1].user.id] = {
+          image: message[1].user.image,
+          name: message[1].user.name,
+          count: 1,
+        }
+      }
+      return acc;
+    }, {})
+    dispatch({
+      type: SET_USER_POSTS,
+      payload: usersPosts,
+    })
+  }
+
   return (
     <div style={{
       width: '100%',
@@ -100,6 +150,31 @@ function MessageHeader() {
               </div>
             </Col>
           </Row>
+          <Row>
+            <Col >
+              <InputGroup className="mb-3">
+                <InputGroup.Prepend>
+                  <InputGroup.Text id="basic-addon1"> <BsSearch /></InputGroup.Text>
+                </InputGroup.Prepend>
+                <FormControl
+                  onChange={handleSearchChange}
+                  placeholder="메세지 검색"
+                  aria-label="search"
+                  aria-describedby="basic-addon1"
+                />
+              </InputGroup>
+            </Col>
+            <Col lg={3}>
+              <DropdownButton style={{ padding: '0 1rem' }} menuAlign="right" title="대화 개수" variant="secondary" onClick={handleUserPosts}>
+                {userPosts && renderUserPosts(userPosts)}
+                <Dropdown.Divider />
+                {userPosts &&
+                  <Dropdown.Item key={uuidv4()}>{`총 ${Object.entries(userPosts).length}명`}</Dropdown.Item>
+                }
+              </DropdownButton>
+            </Col>
+          </Row>
+
         </Container>
       }
     </div >)
