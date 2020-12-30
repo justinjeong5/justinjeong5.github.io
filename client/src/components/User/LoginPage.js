@@ -5,6 +5,7 @@ import { Form, Button, Checkbox, Space, Typography, message as Message } from 'a
 import { LOGIN_USER_REQUEST, LOGIN_CHAT_USER_REQUEST } from '../../reducers/types';
 import EmailForm from './LoginForm/EmailForm';
 import PasswordForm from './LoginForm/PasswordForm';
+import firebase from '../../config/firebase'
 
 const { Title } = Typography;
 
@@ -20,10 +21,12 @@ function LoginPage(props) {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
   const { loginUserLoading, loginUserDone, loginUserError, message } = useSelector(state => state.user)
-  const { loginChatUserLoading, loginChatUserDone, loginChatUserError, messageFromChat } = useSelector(state => state.chat)
+  const { currentChatUser, loginChatUserLoading, loginChatUserDone, loginChatUserError, messageFromChat } = useSelector(state => state.chat)
+  const chatUserRef = firebase.database().ref('presence');
 
   useEffect(() => {
     if (loginUserDone && loginChatUserDone) {
+      chatUserRef.child(currentChatUser.userId).set(currentChatUser.name)
       props.history.push('/')
     }
     if (loginUserError) {

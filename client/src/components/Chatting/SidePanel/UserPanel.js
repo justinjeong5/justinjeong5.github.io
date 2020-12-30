@@ -10,6 +10,7 @@ function UserPanel() {
 
   const dispatch = useDispatch();
   const { currentChatUser } = useSelector(state => state.chat);
+  const chatUserPresenceRef = firebase.database().ref('presence');
 
   const handleLogout = () => {
     firebase.auth().signOut();
@@ -19,6 +20,7 @@ function UserPanel() {
     dispatch({
       type: LOGOUT_USER_REQUEST,
     });
+    chatUserPresenceRef.child(currentChatUser.userId).remove()
   }
 
   return (

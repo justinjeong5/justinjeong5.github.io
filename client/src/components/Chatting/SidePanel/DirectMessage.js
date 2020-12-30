@@ -12,16 +12,30 @@ export class DirectMessage extends Component {
 
   state = {
     usersRef: firebase.database().ref('users'),
+    presenceRef: firebase.database().ref('presence'),
     users: [],
+    usersPresence: [],
+    userListenserList: [],
     activeChatRoom: ''
   }
 
   componentDidMount = () => {
     if (this.props.currentChatUser) {
       this.addUserListeners(this.props.currentChatUser.userId);
+      this.addPresentListeners(this.props.currentChatUser.userId)
     }
   }
 
+  componentWillUnmount = () => {
+    this.removeListeners(this.state.userListenserList);
+    this.state.presenceRef.off();
+  }
+
+  removeListeners = (listeners) => {
+    listeners.forEach(listener => {
+      listener.ref.child(listener.userId).off(listener.event);
+    })
+  }
 
   addUserListeners = (currentUserId) => {
     let usersArray = [];
@@ -36,6 +50,50 @@ export class DirectMessage extends Component {
         })
       }
     }))
+  }
+
+  addPresentListeners = (userId) => {
+    let usersPresence = [];
+    // presence이 새로 들어올때
+    this.state.presenceRef.on('child_added', (DataSnapShot) => {
+      if (DataSnapShot.key !== userId) {
+        usersPresence.push({ userId: DataSnapShot.key })
+        this.setState({ usersPresence })
+        // listenersList state에 위에서 등록한 리스너 넣기
+        this.addToListenerLists(DataSnapShot.key, this.state.presenceRef, 'child_added');
+      }
+    })
+
+    // presence을 제거할 때
+    this.state.presenceRef.on('child_removed', (DataSnapShot) => {
+      const index = usersPresence.findIndex(user => {
+        return user.userId === DataSnapShot.key;
+      })
+      if (index > -1) {
+        usersPresence.splice(index, 1);
+        this.setState({ usersPresence })
+        // listenersList state에 위에서 등록한 리스너 넣기
+        this.addToListenerLists(DataSnapShot.key, this.state.presenceRef, 'child_removed');
+      }
+    })
+  }
+
+  addToListenerLists = (userId, ref, event) => {
+    // 이미 등록된 리스너인지 확인
+    const index = this.state.userListenserList?.findIndex(listener => {
+      return (
+        listener.userId === userId &&
+        listener.ref === ref &&
+        listener.event === event
+      )
+    })
+
+    if (index === -1) {
+      const newListener = { userId, ref, event }
+      this.setState({
+        userListenserList: [...this.state.userListenserList, newListener]
+      })
+    }
   }
 
   changeChatRoom = (currentChatUser) => {
@@ -75,12 +133,24 @@ export class DirectMessage extends Component {
         <ListGroup.Item
           key={uuidv4()}
           onClick={() => this.changeChatRoom(currentChatUser)}
-          style={{ backgroundColor: this.state.activeChatRoom === currentChatUser.userId ? '#ffffff45' : '#415972', border: 'none', padding: '5px' }}
+          style={{
+            backgroundColor: this.state.activeChatRoom === currentChatUser.userId ? '#ffffff45' : '#415972',
+            border: 'none', padding: '5px', display: 'flex', justifyContent: 'space-between',
+          }}
         >
-          {currentChatUser.name}
+          <span>{`# ${currentChatUser.name}`} </span>
+          {this.renderPresence(currentChatUser.userId)}
+
         </ListGroup.Item >
       )
     })
+  }
+
+  renderPresence = (userId) => {
+    const index = this.state.usersPresence?.findIndex((value, index) => {
+      return value.userId === userId
+    })
+    return <GoPrimitiveDot color={index > -1 ? '#22d100' : 'gray'} style={{ margin: '5px 0px' }} />
   }
 
   render() {

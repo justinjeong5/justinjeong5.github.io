@@ -5,6 +5,7 @@ import { Menu, message as Message } from 'antd';
 import { LogoutOutlined, LoginOutlined, UserAddOutlined, UserOutlined, LoadingOutlined } from '@ant-design/icons'
 import { LOGOUT_USER_REQUEST, LOGOUT_CHAT_USER_REQUEST } from '../../../reducers/types';
 import { routerPathList } from '../../utils/RouterPathList'
+import firebase from '../../../config/firebase'
 
 function RightMenu(props) {
 
@@ -13,6 +14,7 @@ function RightMenu(props) {
   const { currentChatUser, logoutChatUserLoading, logoutChatUserDone, logoutChatUserError, messageFromChat } = useSelector(state => state.chat)
   const [prevLocation, setPrevLocation] = useState('/')
   const currentLocation = useLocation();
+  const chatUserPresenceRef = firebase.database().ref('presence');
 
   useEffect(() => {
     const router = routerPathList.filter((path) => {
@@ -46,6 +48,7 @@ function RightMenu(props) {
     dispatch({
       type: LOGOUT_CHAT_USER_REQUEST
     })
+    chatUserPresenceRef.child(currentChatUser.userId).remove()
   }
 
   return (
