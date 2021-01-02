@@ -20,7 +20,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(cors({
-  origin: 'https://justinjeong5.github.io',
+  origin: true,
   credentials: true,
 }));
 
