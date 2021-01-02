@@ -62,7 +62,7 @@ function FileUploader() {
         {uploadImageDone && fileData.map((file, index) => {
           return (
             <div onClick={handleRemove(index)} key={uuidv4()}>
-              <img src={`${SERVER_URL}/${file.image}`} alt={file.fileName} style={{ height: 240, marginRight: 10 }} />
+              <img src={file.image} alt={file.fileName} style={{ height: 240, marginRight: 10 }} />
             </div>
           )
         })}

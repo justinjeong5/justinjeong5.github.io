@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import ImageGallery from 'react-image-gallery';
-import { SERVER_URL } from '../../../config/key'
 
 function ProductImage() {
 
@@ -12,8 +11,8 @@ function ProductImage() {
     if (currentProduct) {
       const imagesMapper = currentProduct.images.map((value) => {
         return ({
-          original: `${SERVER_URL}/${value.image}`,
-          thumbnail: `${SERVER_URL}/${value.image}`
+          original: value.image,
+          thumbnail: value.image
         })
       })
       setImages(imagesMapper);

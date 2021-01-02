@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid'
 import { Card, Col, Carousel, Descriptions } from 'antd';
 import NumberFormat from 'react-number-format';
-import { SERVER_URL } from '../../../config/key'
 
 function ProductCard(props) {
 
@@ -21,7 +20,7 @@ function ProductCard(props) {
               {product?.images?.map((img) => {
                 return (
                   <div key={uuidv4()}>
-                    <img src={`${SERVER_URL}/${img.image}`} alt={img.fileName} style={{ width: '100%' }} />
+                    <img src={img.image} alt={img.fileName} style={{ width: '100%' }} />
                   </div>
                 )
               })}

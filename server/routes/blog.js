@@ -5,27 +5,23 @@ const { Blog } = require('../models/Blog')
 const { auth } = require('../middleware/auth')
 
 const multer = require('multer')
+const multerS3 = require('multer-s3');
+const AWS = require('aws-sdk');
 
-const storage = multer.diskStorage({
-  destination: (req, file, callback) => {
-    callback(null, 'uploads')
-  },
-  filename: (req, file, callback) => {
-    const ext = path.extname(file.originalname)
-    const baseName = path.basename(file.originalname, ext)
-    callback(null, baseName + new Date().getTime() + ext)
-  },
-  fileFilter: (req, file, callback) => {
-    const ext = path.extname(file.originalname)
-    if (!['.jpeg', '.jpg', '.png'].includes(ext)) {
-      return callback(res.status(400).json({ code: 'MulterError', message: 'jpg, jpeg, png 파일만 업로드 가능합니다.' }), false)
-    }
-    callback(null, true)
-  },
+AWS.config.update({
+  accessKeyId: process.env.S3_ACCESS_KEY_ID,
+  secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+  region: 'ap-northeast-2'
 })
 
 const upload = multer({
-  storage: storage,
+  storage: multerS3({
+    s3: new AWS.S3(),
+    bucket: 'justinjeong5.github.io',
+    key(req, file, callback) {
+      callback(null, `blog/${Date.now()}_${path.basename(file.originalname)}`)
+    }
+  }),
   limits: {
     fileSize: 30 * 1024 * 1024    //30 MB
   }
@@ -60,7 +56,7 @@ router.post('/uploadDataset', auth, (req, res) => {
       console.error(error);
       return res.status(400).json({ code: 'MulterError', message: '파일을 업로드하는 과정에서 문제가 발생했습니다.', error });
     }
-    return res.status(200).json({ message: '파일을 정상적으로 등록했습니다.', url: res.req.file.path, fileName: res.req.file.filename });
+    return res.status(200).json({ message: '파일을 정상적으로 등록했습니다.', url: req.file.location, fileName: req.file.originalname });
   })
 })
 

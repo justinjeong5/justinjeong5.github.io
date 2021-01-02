@@ -20,9 +20,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(cors({
-  origin: true,
-  credentials: true,  // for cookie
+  origin: 'https://justinjeong5.github.io',
+  credentials: true,
 }));
+
 
 app.use('/uploads', express.static('uploads'));
 app.use('/api/user', require('./routes/user'));

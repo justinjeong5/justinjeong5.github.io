@@ -1,41 +1,28 @@
 const express = require('express');
-const multer = require('multer');
-const fs = require('fs')
+const router = express.Router();
 const path = require('path')
 const { auth } = require('../middleware/auth');
 const { User } = require('../models/User')
 const { Jaymall } = require('../models/Jaymall')
 
-const router = express.Router();
+const multer = require('multer');
+const multerS3 = require('multer-s3');
+const AWS = require('aws-sdk')
 
-try {
-  console.log('Multer: 이미지를 disk storage에 저장합니다.')
-  fs.accessSync('uploads')
-} catch (error) {
-  console.log('/uploads 폴더가 존재하지 않습니다. 동작을 위해 생성합니다.')
-  fs.mkdirSync('uploads')
-}
-
-const storage = multer.diskStorage({
-  destination: (req, file, callback) => {
-    callback(null, 'uploads')
-  },
-  filename: (req, file, callback) => {
-    const ext = path.extname(file.originalname)
-    const baseName = path.basename(file.originalname, ext)
-    callback(null, baseName + new Date().getTime() + ext)
-  },
-  fileFilter: (req, file, callback) => {
-    const ext = path.extname(file.originalname)
-    if (!['.jpeg', '.jpg', '.png'].includes(ext)) {
-      return callback(res.status(400).json({ code: 'MulterError', message: 'jpg, jpeg, png 파일만 업로드 가능합니다.' }), false)
-    }
-    callback(null, true)
-  },
+AWS.config.update({
+  accessKeyId: process.env.S3_ACCESS_KEY_ID,
+  secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+  region: 'ap-northeast-2'
 })
 
 const upload = multer({
-  storage: storage,
+  storage: multerS3({
+    s3: new AWS.S3(),
+    bucket: 'justinjeong5.github.io',
+    key(req, file, callback) {
+      callback(null, `jaymall/${Date.now()}_${path.basename(file.originalname)}`)
+    }
+  }),
   limits: {
     fileSize: 10 * 1024 * 1024    //10 MB
   }
@@ -89,7 +76,7 @@ router.post('/uploadImage', auth, (req, res) => {
     }
 
     const images = req.files.map(value => {
-      return { image: value.path, fileName: value.filename }
+      return { image: value.location, fileName: value.originalname }
     })
     res.status(200).json({ message: '이미지를 정상적으로 업로드하였습니다.', images });
   })
