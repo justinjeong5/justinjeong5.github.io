@@ -21,7 +21,7 @@ function PostPage(props) {
 
   return (
     <>
-      {loadBlogPostLoading && <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100vw', height: 'calc(100vh-80px)' }}>
+      {loadBlogPostLoading && <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100vw', height: 'calc(100vh - 128px)' }}>
         <LoadingOutlined style={{ fontSize: '5rem' }} />
       </div>}
       {loadBlogPostDone && <>
