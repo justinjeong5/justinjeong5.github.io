@@ -17,7 +17,7 @@ function MessageHeader({ handleSearchChange }) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (currentChatRoom && currentChatUser) {
+    if (currentChatRoom?.id && currentChatUser?.userId) {
       addFavoriteListener(currentChatRoom.id, currentChatUser.userId);
     }
   }, [currentChatRoom, currentChatUser])

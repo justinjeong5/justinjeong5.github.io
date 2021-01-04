@@ -14,13 +14,13 @@ export class Favorited extends Component {
   }
 
   componentDidMount() {
-    if (this.props.currentChatUser) {
+    if (this.props.currentChatUser?.userId) {
       this.addListeners(this.props.currentChatUser.userId);
     }
   }
 
   componentWillUnmount() {
-    if (this.props.currentChatUser) {
+    if (this.props.currentChatUser?.userId) {
       this.removeListener(this.props.currentChatUser.userId);
     }
   }

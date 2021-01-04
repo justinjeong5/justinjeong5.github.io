@@ -20,7 +20,7 @@ export class DirectMessage extends Component {
   }
 
   componentDidMount = () => {
-    if (this.props.currentChatUser) {
+    if (this.props.currentChatUser?.userId) {
       this.addUserListeners(this.props.currentChatUser.userId);
       this.addPresentListeners(this.props.currentChatUser.userId)
     }

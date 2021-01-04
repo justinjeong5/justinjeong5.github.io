@@ -48,7 +48,9 @@ function RightMenu(props) {
     dispatch({
       type: LOGOUT_CHAT_USER_REQUEST
     })
-    chatUserPresenceRef.child(currentChatUser.userId).remove()
+    if (currentChatUser?.userId) {
+      chatUserPresenceRef.child(currentChatUser.userId).remove()
+    }
   }
 
   return (
@@ -58,7 +60,7 @@ function RightMenu(props) {
           <LoadingOutlined style={{ fontSize: '10rem' }} />
         </div>
       }
-      {currentUser?.isAuth || currentChatUser
+      {currentUser?.isAuth || currentChatUser?.userId
         ? <Menu mode={props.mode}>
           <Menu.Item key="logout"
             onClick={handleLogout} >

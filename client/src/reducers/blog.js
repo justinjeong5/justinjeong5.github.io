@@ -1,3 +1,5 @@
+import produce from 'immer'
+
 import {
   CREATE_BLOG_POST_REQUEST, CREATE_BLOG_POST_SUCCESS, CREATE_BLOG_POST_FAILURE,
   RESET_CREATE_BLOG_POST,
@@ -9,7 +11,9 @@ import {
 } from './types'
 
 const initialState = {
-  currentBlogPost: null,
+  currentBlogPost: {
+    writer: {}
+  },
   blogPosts: [],
   uploadDataset: {
     files: [],
@@ -34,139 +38,107 @@ const initialState = {
 }
 
 const blog = (state = initialState, action) => {
-  switch (action.type) {
-    case CREATE_BLOG_POST_REQUEST:
-      return {
-        ...state,
-        createBlogPostLoading: true,
-        createBlogPostDone: false,
-        createBlogPostError: null,
-      }
-    case CREATE_BLOG_POST_SUCCESS:
-      return {
-        ...state,
-        createBlogPostLoading: false,
-        createBlogPostDone: true,
-        blogPosts: [...state.blogPosts, action.payload.blog],
-        message: action.payload.message,
-      }
-    case CREATE_BLOG_POST_FAILURE:
-      return {
-        ...state,
-        createBlogPostLoading: false,
-        createBlogPostError: action.error.code,
-        message: action.error.message,
-      }
-    case RESET_CREATE_BLOG_POST:
-      return {
-        ...state,
-        createBlogPostLoading: false,
-        createBlogPostDone: false,
-        createBlogPostError: null,
-        message: '블로그 작성이 정상적으로 초기화되었습니다.',
-      }
-    case LOAD_BLOG_POSTS_REQUEST:
-      return {
-        ...state,
-        loadBlogPostsLoading: true,
-        loadBlogPostsDone: false,
-        loadBlogPostsError: null,
-      }
-    case LOAD_BLOG_POSTS_SUCCESS:
-      return {
-        ...state,
-        loadBlogPostsLoading: false,
-        loadBlogPostsDone: true,
-        message: action.payload.message,
-        blogPosts: [...state.blogPosts, ...action.payload.blogs],
-        noMorePosts: action.noMorePosts,
-        skip: state.skip + state.limit,
-      }
-    case LOAD_BLOG_POSTS_FAILURE:
-      return {
-        ...state,
-        loadBlogPostsLoading: false,
-        loadBlogPostsError: action.error.code,
-        message: action.error.message,
-      }
-    case RESET_LOAD_BLOG_POSTS:
-      return {
-        ...state,
-        loadBlogPostsLoading: false,
-        loadBlogPostsDone: false,
-        loadBlogPostsError: null,
-        blogPosts: [],
-        noMorePosts: false,
-        skip: 0,
-        limit: 6,
-        message: '블로그 목록이 정상적으로 초기화되었습니다.',
-      }
-    case LOAD_BLOG_POST_REQUEST:
-      return {
-        ...state,
-        loadBlogPostLoading: true,
-        loadBlogPostDone: false,
-        loadBlogPostError: null,
-      }
-    case LOAD_BLOG_POST_SUCCESS:
-      return {
-        ...state,
-        loadBlogPostLoading: false,
-        loadBlogPostDone: true,
-        message: action.payload.message,
-        currentBlogPost: {
-          ...action.payload.blog,
-          writer: {
-            userId: action.payload.blog.writer._id,
-            name: action.payload.blog.writer.name,
-            email: action.payload.blog.writer.email,
-            image: action.payload.blog.writer.image,
-          }
-        },
-      }
-    case LOAD_BLOG_POST_FAILURE:
-      return {
-        ...state,
-        loadBlogPostLoading: false,
-        loadBlogPostError: action.error.code,
-        message: action.error.message,
-      }
-    case UPLOAD_BLOG_DATASET_REQUEST:
-      return {
-        ...state,
-        uploadBlogDatasetLoading: true,
-        uploadBlogDatasetDone: false,
-        uploadBlogDatasetError: null,
-      }
-    case UPLOAD_BLOG_DATASET_SUCCESS:
-      return {
-        ...state,
-        uploadBlogDatasetLoading: false,
-        uploadBlogDatasetDone: true,
-        uploadDataset: {
-          url: action.payload.url,
-          fileName: action.payload.fileName,
-          dataType: action.payload.dataType,
-          files: [...state.uploadDataset.files, action.payload.file]
-        },
-        message: action.payload.message,
-      }
-    case UPLOAD_BLOG_DATASET_FAILURE:
-      return {
-        ...state,
-        uploadBlogDatasetLoading: false,
-        uploadBlogDatasetError: action.error.code,
-        message: action.error.message,
-      }
-    case RESET_UPLOAD_BLOG_DATASET:
-      return {
-        ...state,
-        uploadBlogDatasetLoading: false,
-        uploadBlogDatasetDone: false,
-      }
-    default:
-      return state
-  }
+  return produce(state, (draft) => {
+    switch (action.type) {
+      case CREATE_BLOG_POST_REQUEST:
+        draft.createBlogPostLoading = true;
+        draft.createBlogPostDone = false;
+        draft.createBlogPostError = null;
+        break;
+      case CREATE_BLOG_POST_SUCCESS:
+        draft.createBlogPostLoading = false;
+        draft.createBlogPostDone = true;
+        draft.blogPosts.push(action.payload.blog);
+        draft.message = action.payload.message;
+        break;
+      case CREATE_BLOG_POST_FAILURE:
+        draft.createBlogPostLoading = false;
+        draft.createBlogPostError = action.error.code;
+        draft.message = action.error.message;
+        break;
+      case RESET_CREATE_BLOG_POST:
+        draft.createBlogPostLoading = false;
+        draft.createBlogPostDone = false;
+        draft.createBlogPostError = null;
+        draft.message = '블로그 작성이 정상적으로 초기화되었습니다.';
+        break;
+      case LOAD_BLOG_POSTS_REQUEST:
+        draft.loadBlogPostsLoading = true;
+        draft.loadBlogPostsDone = false;
+        draft.loadBlogPostsError = null;
+        break;
+      case LOAD_BLOG_POSTS_SUCCESS:
+        draft.loadBlogPostsLoading = false;
+        draft.loadBlogPostsDone = true;
+        draft.message = action.payload.message;
+        draft.blogPosts = draft.blogPosts.concat(action.payload.blogs);
+        draft.noMorePosts = action.noMorePosts;
+        draft.skip += draft.limit;
+        break;
+      case LOAD_BLOG_POSTS_FAILURE:
+        draft.loadBlogPostsLoading = false;
+        draft.loadBlogPostsError = action.error.code;
+        draft.message = action.error.message;
+        break;
+      case RESET_LOAD_BLOG_POSTS:
+        draft.loadBlogPostsLoading = false;
+        draft.loadBlogPostsDone = false;
+        draft.loadBlogPostsError = null;
+        draft.blogPosts = [];
+        draft.noMorePosts = false;
+        draft.skip = 0;
+        draft.limit = 6;
+        draft.message = '블로그 목록이 정상적으로 초기화되었습니다.';
+        break;
+      case LOAD_BLOG_POST_REQUEST:
+        draft.loadBlogPostLoading = true;
+        draft.loadBlogPostDone = false;
+        draft.loadBlogPostError = null;
+        break;
+      case LOAD_BLOG_POST_SUCCESS:
+        draft.loadBlogPostLoading = false;
+        draft.loadBlogPostDone = true;
+        draft.message = action.payload.message;
+        draft.currentBlogPost.title = action.payload.blog.title;
+        draft.currentBlogPost.content = action.payload.blog.content;
+        draft.currentBlogPost.createdAt = action.payload.blog.createdAt;
+        draft.currentBlogPost.writer.userId = action.payload.blog.writer._id;
+        draft.currentBlogPost.writer.name = action.payload.blog.writer.name;
+        draft.currentBlogPost.writer.email = action.payload.blog.writer.email;
+        draft.currentBlogPost.writer.image = action.payload.blog.writer.image;
+        break;
+      case LOAD_BLOG_POST_FAILURE:
+        draft.loadBlogPostLoading = false;
+        draft.loadBlogPostError = action.error.code;
+        draft.message = action.error.message;
+        break;
+      case UPLOAD_BLOG_DATASET_REQUEST:
+        draft.uploadBlogDatasetLoading = true;
+        draft.uploadBlogDatasetDone = false;
+        draft.uploadBlogDatasetError = null;
+        break;
+      case UPLOAD_BLOG_DATASET_SUCCESS:
+        draft.uploadBlogDatasetLoading = false;
+        draft.uploadBlogDatasetDone = true;
+        draft.uploadDataset.url = action.payload.url;
+        draft.uploadDataset.fileName = action.payload.fileName;
+        draft.uploadDataset.dataType = action.payload.dataType;
+        draft.uploadDataset.files.push(action.payload.file);
+        draft.message = action.payload.message;
+        break;
+      case UPLOAD_BLOG_DATASET_FAILURE:
+        draft.uploadBlogDatasetLoading = false;
+        draft.uploadBlogDatasetError = action.error.code;
+        draft.message = action.error.message;
+        break;
+      case RESET_UPLOAD_BLOG_DATASET:
+        draft.uploadBlogDatasetLoading = false;
+        draft.uploadBlogDatasetDone = false;
+        break;
+      default:
+        break;
+    }
+  })
 }
 
 export default blog;

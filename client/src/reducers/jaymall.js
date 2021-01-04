@@ -1,3 +1,5 @@
+import produce from 'immer'
+
 import {
   LOAD_PRODUCTS_REQUEST, LOAD_PRODUCTS_SUCCESS, LOAD_PRODUCTS_FAILURE,
   UPLOAD_PRODUCT_REQUEST, UPLOAD_PRODUCT_SUCCESS, UPLOAD_PRODUCT_FAILURE,
@@ -34,135 +36,105 @@ const initialState = {
 }
 
 const jaymall = (state = initialState, action) => {
-  switch (action.type) {
-    case LOAD_PRODUCTS_REQUEST:
-      return {
-        ...state,
-        loadProductsLoading: true,
-        loadProductsDone: false,
-        loadProductsError: null,
-      }
-    case LOAD_PRODUCTS_SUCCESS:
-      return {
-        ...state,
-        loadProductsLoading: false,
-        loadProductsDone: true,
-        message: action.payload.message,
-        productData: [...state.productData, ...action.payload.products],
-        noMoreProducts: action.noMoreProducts,
-        skip: state.limit + state.skip,
-      }
-    case LOAD_PRODUCTS_FAILURE:
-      return {
-        ...state,
-        loadProductsLoading: false,
-        loadProductsError: action.error.code,
-        message: action.error.message,
-      }
-    case UPLOAD_PRODUCT_REQUEST:
-      return {
-        ...state,
-        uploadProductLoading: true,
-        uploadProductDone: false,
-        uploadProductError: null,
-      }
-    case UPLOAD_PRODUCT_SUCCESS:
-      return {
-        ...state,
-        uploadProductLoading: false,
-        uploadProductDone: true,
-        message: action.payload.message,
-      }
-    case UPLOAD_PRODUCT_FAILURE:
-      return {
-        ...state,
-        uploadProductLoading: false,
-        uploadProductError: action.error.code,
-        message: action.error.message,
-      }
-    case UPLOAD_IMAGE_REQUEST:
-      return {
-        ...state,
-        uploadImageLoading: true,
-        uploadImageDone: false,
-        uploadImageError: null,
-      }
-    case UPLOAD_IMAGE_SUCCESS:
-      return {
-        ...state,
-        uploadImageLoading: false,
-        uploadImageDone: true,
-        message: action.payload.message,
-        fileData: [...state.fileData, ...action.payload.images],
-      }
-    case UPLOAD_IMAGE_FAILURE:
-      return {
-        ...state,
-        uploadImageLoading: false,
-        uploadImageError: action.error.code,
-        message: action.error.message,
-      }
-    case REMOVE_UPLOADED_IMAGE:
-      return {
-        ...state,
-        message: '선택한 이미지를 정상적으로 제거하였습니다.',
-        fileData: state.fileData.filter((v, i) => (i !== action.payload))
-      }
-    case RESET_UPLOAD_IMAGE:
-      return {
-        ...state,
-        message: '등록한 상품의 이미지 목록을 정상적으로 비웠습니다.',
-        uploadImageLoading: false,
-        uploadImageDone: false,
-        uploadImageError: null,
-        uploadProductLoading: false,
-        uploadProductDone: false,
-        uploadProductError: null,
-        fileData: [],
-      }
-    case LOAD_PRODUCT_DETAILS_REQUEST:
-      return {
-        ...state,
-        loadProductDetailsLoading: true,
-        loadProductDetailsDone: false,
-        loadProductDetailsError: null,
-      }
-    case LOAD_PRODUCT_DETAILS_SUCCESS:
-      return {
-        ...state,
-        loadProductDetailsLoading: false,
-        loadProductDetailsDone: true,
-        message: action.payload.message,
-        currentProduct: action.payload.productDetails[0],
-      }
-    case LOAD_PRODUCT_DETAILS_FAILURE:
-      return {
-        ...state,
-        loadProductDetailsLoading: false,
-        loadProductDetailsError: action.error.code,
-        message: action.error.message,
-      }
-    case RESET_PRODUCTS:
-      return {
-        ...state,
-        productData: [],
-        noMoreProducts: false,
-        message: '상품목록이 초기회되었습니다.',
-      }
-    case SET_ALL_FILTERS_INFO:
-      return {
-        ...state,
-        productData: [],
-        skip: action.payload.skip,
-        limit: action.payload.limit,
-        orderBy: action.payload.orderBy,
-        sortBy: action.payload.sortBy,
-        filters: action.payload.filters,
-        message: '삼품 검색 필터가 적용되었습니다.',
-      }
-    default:
-      return state;
-  }
+  return produce(state, (draft) => {
+    switch (action.type) {
+      case LOAD_PRODUCTS_REQUEST:
+        draft.loadProductsLoading = true;
+        draft.loadProductsDone = false;
+        draft.loadProductsError = null;
+        break;
+      case LOAD_PRODUCTS_SUCCESS:
+        draft.loadProductsLoading = false;
+        draft.loadProductsDone = true;
+        draft.message = action.payload.message;
+        draft.productData = draft.productData.concat(action.payload.products);
+        draft.noMoreProducts = action.noMoreProducts;
+        draft.skip += draft.limit;
+        break;
+      case LOAD_PRODUCTS_FAILURE:
+        draft.loadProductsLoading = false;
+        draft.loadProductsError = action.error.code;
+        draft.message = action.error.message;
+        break;
+      case UPLOAD_PRODUCT_REQUEST:
+        draft.uploadProductLoading = true;
+        draft.uploadProductDone = false;
+        draft.uploadProductError = null;
+        break;
+      case UPLOAD_PRODUCT_SUCCESS:
+        draft.uploadProductLoading = false;
+        draft.uploadProductDone = true;
+        draft.message = action.payload.message;
+        break;
+      case UPLOAD_PRODUCT_FAILURE:
+        draft.uploadProductLoading = false;
+        draft.uploadProductError = action.error.code;
+        draft.message = action.error.message;
+        break;
+      case UPLOAD_IMAGE_REQUEST:
+        draft.uploadImageLoading = true;
+        draft.uploadImageDone = false;
+        draft.uploadImageError = null;
+        break;
+      case UPLOAD_IMAGE_SUCCESS:
+        draft.uploadImageLoading = false;
+        draft.uploadImageDone = true;
+        draft.message = action.payload.message;
+        draft.fileData = draft.fileData.concat(action.payload.images)
+        break;
+      case UPLOAD_IMAGE_FAILURE:
+        draft.uploadImageLoading = false;
+        draft.uploadImageError = action.error.code;
+        draft.message = action.error.message;
+        break;
+      case REMOVE_UPLOADED_IMAGE:
+        draft.message = '선택한 이미지를 정상적으로 제거하였습니다.';
+        draft.fileData = draft.fileData.filter((v, i) => (i !== action.payload));
+        break;
+      case RESET_UPLOAD_IMAGE:
+        draft.message = '등록한 상품의 이미지 목록을 정상적으로 비웠습니다.';
+        draft.uploadImageLoading = false;
+        draft.uploadImageDone = false;
+        draft.uploadImageError = null;
+        draft.uploadProductLoading = false;
+        draft.uploadProductDone = false;
+        draft.uploadProductError = null;
+        draft.fileData = [];
+        break;
+      case LOAD_PRODUCT_DETAILS_REQUEST:
+        draft.loadProductDetailsLoading = true;
+        draft.loadProductDetailsDone = false;
+        draft.loadProductDetailsError = null;
+        break;
+      case LOAD_PRODUCT_DETAILS_SUCCESS:
+        draft.loadProductDetailsLoading = false;
+        draft.loadProductDetailsDone = true;
+        draft.message = action.payload.message;
+        draft.currentProduct = action.payload.productDetails[0];
+        break;
+      case LOAD_PRODUCT_DETAILS_FAILURE:
+        draft.loadProductDetailsLoading = false;
+        draft.loadProductDetailsError = action.error.code;
+        draft.message = action.error.message;
+        break;
+      case RESET_PRODUCTS:
+        draft.productData = [];
+        draft.noMoreProducts = false;
+        draft.message = '상품목록이 초기회되었습니다.';
+        break;
+      case SET_ALL_FILTERS_INFO:
+        draft.productData = [];
+        draft.skip = action.payload.skip;
+        draft.limit = action.payload.limit;
+        draft.orderBy = action.payload.orderBy;
+        draft.sortBy = action.payload.sortBy;
+        draft.filters = action.payload.filters;
+        draft.message = '삼품 검색 필터가 적용되었습니다.';
+        break;
+      default:
+        break;
+    }
+  })
 }
 
 export default jaymall;

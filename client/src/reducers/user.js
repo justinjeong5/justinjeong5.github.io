@@ -1,3 +1,4 @@
+import produce from 'immer'
 import {
   REGISTER_USER_REQUEST, REGISTER_USER_SUCCESS, REGISTER_USER_FAILURE,
   LOGIN_USER_REQUEST, LOGIN_USER_SUCCESS, LOGIN_USER_FAILURE,
@@ -11,7 +12,7 @@ import {
 } from './types'
 
 const initialState = {
-  currentUser: null,
+  currentUser: {},
   cartWithDetail: [],
   message: '',
 
@@ -45,258 +46,191 @@ const initialState = {
 }
 
 const user = (state = initialState, action) => {
-  switch (action.type) {
-    case REGISTER_USER_REQUEST:
-      return {
-        ...state,
-        registerUserLoading: true,
-        registerUserDone: false,
-        registerUserError: null,
-      }
-    case REGISTER_USER_SUCCESS:
-      return {
-        ...state,
-        registerUserLoading: false,
-        registerUserDone: true,
-        message: action.payload.message,
-      }
-    case REGISTER_USER_FAILURE:
-      return {
-        ...state,
-        registerUserLoading: false,
-        registerUserError: action.error.code,
-        message: action.error.message,
-      }
-    case LOGIN_USER_REQUEST:
-      return {
-        ...state,
-        loginUserLoading: true,
-        loginUserDone: false,
-        loginUserError: null,
-      }
-    case LOGIN_USER_SUCCESS:
-      return {
-        ...state,
-        loginUserLoading: false,
-        loginUserDone: true,
-        currentUser: {
-          ...state.currentUser,
-          userId: action.payload.userId,
-        },
-        message: action.payload.message,
-      }
-    case LOGIN_USER_FAILURE:
-      return {
-        ...state,
-        loginUserLoading: false,
-        loginUserError: action.error.code,
-        message: action.error.message,
-      }
-    case LOGOUT_USER_REQUEST:
-      return {
-        ...state,
-        logoutUserLoading: true,
-        logoutUserDone: false,
-        logoutUserError: null,
-      }
-    case LOGOUT_USER_SUCCESS:
-      return {
-        ...state,
-        logoutUserLoading: false,
-        logoutUserDone: true,
-        currentUser: null,
-        message: action.payload.message,
-      }
-    case LOGOUT_USER_FAILURE:
-      return {
-        ...state,
-        logoutUserLoading: false,
-        logoutUserError: action.error.code,
-        message: action.error.message,
-      }
-    case AUTHENTICATE_USER_REQUEST:
-      return {
-        ...state,
-        authenticateUserLoading: true,
-        authenticateUserDone: false,
-        authenticateUserError: null,
-      }
-    case AUTHENTICATE_USER_SUCCESS:
-      return {
-        ...state,
-        authenticateUserLoading: false,
-        authenticateUserDone: true,
-        currentUser: {
-          ...state.currentUser,
-          userId: action.payload.userId,
-          email: action.payload.email,
-          name: action.payload.name,
-          lastname: action.payload.lastname,
-          image: action.payload.image,
-          role: action.payload.role,
-          cart: action.payload.cart,
-          isAdmin: action.payload.isAdmin,
-          isAuth: action.payload.isAuth,
-        },
-        message: action.payload.message,
+  return produce(state, (draft) => {
+    switch (action.type) {
+      case REGISTER_USER_REQUEST:
+        draft.registerUserLoading = true;
+        draft.registerUserDone = false;
+        draft.registerUserError = null;
+        break;
+      case REGISTER_USER_SUCCESS:
+        draft.registerUserLoading = false;
+        draft.registerUserDone = true;
+        draft.message = action.payload.message;
+        break;
+      case REGISTER_USER_FAILURE:
+        draft.registerUserLoading = false;
+        draft.registerUserError = action.error.code;
+        draft.message = action.error.message;
+        break;
+      case LOGIN_USER_REQUEST:
+        draft.loginUserLoading = true;
+        draft.loginUserDone = false;
+        draft.loginUserError = null;
+        break;
+      case LOGIN_USER_SUCCESS:
+        draft.loginUserLoading = false;
+        draft.loginUserDone = true;
+        draft.currentUser.userId = action.payload.userId;
+        draft.message = action.payload.message;
+        break;
+      case LOGIN_USER_FAILURE:
+        draft.loginUserLoading = false;
+        draft.loginUserError = action.error.code;
+        draft.message = action.error.message;
+        break;
+      case LOGOUT_USER_REQUEST:
+        draft.logoutUserLoading = true;
+        draft.logoutUserDone = false;
+        draft.logoutUserError = null;
+        break;
+      case LOGOUT_USER_SUCCESS:
+        draft.logoutUserLoading = false;
+        draft.logoutUserDone = true;
+        draft.currentUser = {};
+        draft.message = action.payload.message;
+        break;
+      case LOGOUT_USER_FAILURE:
+        draft.logoutUserLoading = false;
+        draft.logoutUserError = action.error.code;
+        draft.message = action.error.message;
+        break;
+      case AUTHENTICATE_USER_REQUEST:
+        draft.authenticateUserLoading = true;
+        draft.authenticateUserDone = false;
+        draft.authenticateUserError = null;
+        break;
+      case AUTHENTICATE_USER_SUCCESS:
+        draft.authenticateUserLoading = false;
+        draft.authenticateUserDone = true;
 
-        registerUserLoading: false,
-        registerUserDone: false,
-        registerUserError: null,
-        loginUserLoading: false,
-        loginUserDone: false,
-        loginUserError: null,
-        logoutUserLoading: false,
-        logoutUserDone: false,
-        logoutUserError: null,
-        confirmUserLoading: false,
-        confirmUserDone: false,
-        confirmUserError: null,
-        editUserLoading: false,
-        editUserDone: false,
-        editUserError: null,
-      }
-    case AUTHENTICATE_USER_FAILURE:
-      return {
-        ...state,
-        authenticateUserLoading: false,
-        authenticateUserError: action.error.code,
-        message: action.error.message,
-      }
-    case CONFIRM_USER_REQUEST:
-      return {
-        ...state,
-        confirmUserLoading: true,
-        confirmUserDone: false,
-        confirmUserError: null,
-      }
-    case CONFIRM_USER_SUCCESS:
-      return {
-        ...state,
-        confirmUserLoading: false,
-        confirmUserDone: true,
-        message: action.payload.message,
-      }
-    case CONFIRM_USER_FAILURE:
-      return {
-        ...state,
-        confirmUserLoading: false,
-        confirmUserError: action.error.code,
-        message: action.error.message,
-      }
-    case EDIT_USER_REQUEST:
-      return {
-        ...state,
-        editUserLoading: true,
-        editUserDone: false,
-        editUserError: null,
-      }
-    case EDIT_USER_SUCCESS:
-      return {
-        ...state,
-        editUserLoading: false,
-        editUserDone: true,
-        currentUser: {
-          ...state.currentUser,
-          isAuth: true,
-        },
-        message: action.payload.message,
-      }
-    case EDIT_USER_FAILURE:
-      return {
-        ...state,
-        editUserLoading: false,
-        editUserError: action.error.code,
-        message: action.error.message,
-      }
-    case ADD_TO_CART_REQUEST:
-      return {
-        ...state,
-        addToCartLoading: true,
-        addToCartDone: false,
-        addToCartError: null,
-      }
-    case ADD_TO_CART_SUCCESS:
-      return {
-        ...state,
-        addToCartLoading: false,
-        addToCartDone: true,
-        currentUser: {
-          ...state.currentUser,
-          cart: action.payload.cart,
-        },
-        message: action.payload.message,
-      }
-    case ADD_TO_CART_FAILURE:
-      return {
-        ...state,
-        addToCartLoading: false,
-        addToCartError: action.error.code,
-        message: action.error.message,
-      }
-    case LOAD_CART_ITEMS_REQUEST:
-      return {
-        ...state,
-        loadCartItemsLoading: true,
-        loadCartItemsDone: false,
-        loadCartItemsError: null,
-      }
-    case LOAD_CART_ITEMS_SUCCESS:
-      const data = action.payload.productDetails.map((item, index) => {
-        return {
+        draft.currentUser.userId = action.payload.userId;
+        draft.currentUser.email = action.payload.email;
+        draft.currentUser.name = action.payload.name;
+        draft.currentUser.lastname = action.payload.lastname;
+        draft.currentUser.image = action.payload.image;
+        draft.currentUser.role = action.payload.role;
+        draft.currentUser.cart = action.payload.cart;
+        draft.currentUser.isAdmin = action.payload.isAdmin;
+        draft.currentUser.isAuth = action.payload.isAuth;
+        draft.currentUser.message = action.payload.message;
+
+        draft.registerUserLoading = false;
+        draft.registerUserDone = false;
+        draft.registerUserError = null;
+        draft.loginUserLoading = false;
+        draft.loginUserDone = false;
+        draft.loginUserError = null;
+        draft.logoutUserLoading = false;
+        draft.logoutUserDone = false;
+        draft.logoutUserError = null;
+        draft.confirmUserLoading = false;
+        draft.confirmUserDone = false;
+        draft.confirmUserError = null;
+        draft.editUserLoading = false;
+        draft.editUserDone = false;
+        draft.editUserError = null;
+        break;
+      case AUTHENTICATE_USER_FAILURE:
+        draft.authenticateUserLoading = false;
+        draft.authenticateUserError = action.error.code;
+        draft.message = action.error.message;
+        break;
+      case CONFIRM_USER_REQUEST:
+        draft.confirmUserLoading = true;
+        draft.confirmUserDone = false;
+        draft.confirmUserError = null;
+        break;
+      case CONFIRM_USER_SUCCESS:
+        draft.confirmUserLoading = false;
+        draft.confirmUserDone = true;
+        draft.message = action.payload.message;
+        break;
+      case CONFIRM_USER_FAILURE:
+        draft.confirmUserLoading = false;
+        draft.confirmUserError = action.error.code;
+        draft.message = action.error.message;
+        break;
+      case EDIT_USER_REQUEST:
+        draft.editUserLoading = true;
+        draft.editUserDone = false;
+        draft.editUserError = null;
+        break;
+      case EDIT_USER_SUCCESS:
+        draft.editUserLoading = false;
+        draft.editUserDone = true;
+        draft.currentUser.isAuth = true;
+        draft.message = action.payload.message;
+        break;
+      case EDIT_USER_FAILURE:
+        draft.editUserLoading = false;
+        draft.editUserError = action.error.code;
+        draft.message = action.error.message;
+        break;
+      case ADD_TO_CART_REQUEST:
+        draft.addToCartLoading = true;
+        draft.addToCartDone = false;
+        draft.addToCartError = null;
+        break;
+      case ADD_TO_CART_SUCCESS:
+        draft.addToCartLoading = false;
+        draft.addToCartDone = true;
+        draft.currentUser.cart = action.payload.cart;
+        draft.message = action.payload.message;
+        break;
+      case ADD_TO_CART_FAILURE:
+        draft.addToCartLoading = false;
+        draft.addToCartError = action.error.code;
+        draft.message = action.error.message;
+        break;
+      case LOAD_CART_ITEMS_REQUEST:
+        draft.loadCartItemsLoading = true;
+        draft.loadCartItemsDone = false;
+        draft.loadCartItemsError = null;
+        break;
+      case LOAD_CART_ITEMS_SUCCESS:
+        const data = action.payload.productDetails.map((item, index) => ({
           key: item._id,
           title: item.title,
           price: item.price,
-          quantity: state.currentUser.cart[index].quantity,
-          totalPrice: state.currentUser.cart[index].quantity * item.price,
+          quantity: draft.currentUser.cart[index].quantity,
+          totalPrice: draft.currentUser.cart[index].quantity * item.price,
           image: item.images[0].image,
-          tags: [item.sort],
-        }
-      })
-      return {
-        ...state,
-        loadCartItemsLoading: false,
-        loadCartItemsDone: true,
-        cartWithDetail: data,
-        message: action.payload.message,
-        removeCartItemLoading: false,
-        removeCartItemDone: false,
-      }
-    case LOAD_CART_ITEMS_FAILURE:
-      return {
-        ...state,
-        loadCartItemsLoading: false,
-        loadCartItemsError: action.error.code,
-        message: action.error.message,
-      }
-    case REMOVE_CART_ITEM_REQUEST:
-      return {
-        ...state,
-        removeCartItemLoading: true,
-        removeCartItemDone: false,
-        removeCartItemError: null,
-      }
-    case REMOVE_CART_ITEM_SUCCESS:
-      return {
-        ...state,
-        removeCartItemLoading: false,
-        removeCartItemDone: true,
-        currentUser: {
-          ...state.currentUser,
-          cart: action.payload.cart
-        },
-        message: action.payload.message,
-      }
-    case REMOVE_CART_ITEM_FAILURE:
-      return {
-        ...state,
-        removeCartItemLoading: false,
-        removeCartItemError: action.error.code,
-        message: action.error.message,
-      }
-    default:
-      return state;
-  }
+          tags: [item.sort]
+        }));
+
+        draft.loadCartItemsLoading = false;
+        draft.loadCartItemsDone = true;
+        draft.cartWithDetail = data;
+        draft.message = action.payload.message;
+        draft.removeCartItemLoading = false;
+        draft.removeCartItemDone = false;
+        break;
+      case LOAD_CART_ITEMS_FAILURE:
+        draft.loadCartItemsLoading = false;
+        draft.loadCartItemsError = action.error.code;
+        draft.message = action.error.message;
+        break;
+      case REMOVE_CART_ITEM_REQUEST:
+        draft.removeCartItemLoading = true;
+        draft.removeCartItemDone = false;
+        draft.removeCartItemError = null;
+        break;
+      case REMOVE_CART_ITEM_SUCCESS:
+        draft.removeCartItemLoading = false;
+        draft.removeCartItemDone = true;
+        draft.currentUser.cart = action.payload.cart;
+        draft.message = action.payload.message;
+        break;
+      case REMOVE_CART_ITEM_FAILURE:
+        draft.removeCartItemLoading = false;
+        draft.removeCartItemError = action.error.code;
+        draft.message = action.error.message;
+        break;
+      default:
+        break;
+    }
+  });
 }
 
 export default user;

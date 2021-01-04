@@ -23,7 +23,7 @@ export class MainPanel extends Component {
 
   componentDidMount = () => {
     const { currentChatRoom } = this.props;
-    if (currentChatRoom) {
+    if (currentChatRoom?.id) {
       this.addMessagesListeners(currentChatRoom.id);
       this.addTypingListeners(currentChatRoom.id)
     }
