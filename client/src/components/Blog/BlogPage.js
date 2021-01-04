@@ -38,7 +38,7 @@ function BlogPage() {
   }, [])
 
   const renderCards = blogPosts.map((blog) => {
-    return (<>
+    return (
       <Col key={uuidv4()} xl={8} lg={12} md={12} xs={24}>
         <Card
           hoverable
@@ -61,7 +61,7 @@ function BlogPage() {
           </StyledLink>
         </Card>
       </Col>
-    </>)
+    )
   })
 
   const renderSkeleton = Array.from(Array(6)).map(_ => {
