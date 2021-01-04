@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { withRouter } from 'react-router-dom';
 import { SET_CHAT_USER } from '../../reducers/types';
@@ -8,9 +8,24 @@ import SidePanel from './SidePanel/SidePanel'
 import firebase from '../../config/firebase'
 
 function ChatPage(props) {
-  const { currentChatRoom, currentChatUser } = useSelector(state => state.chat);
 
+  const { currentChatRoom, currentChatUser } = useSelector(state => state.chat);
   const dispatch = useDispatch();
+  const [showViewport, setShowViewport] = useState(true)
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      console.log(window.innerWidth)
+      if (window.innerWidth < 992) {
+        setShowViewport(false)
+      } else {
+        setShowViewport(true)
+      }
+    }, 1000)
+    return () => {
+      clearInterval(timer)
+    }
+  }, [])
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged(user => {
@@ -26,14 +41,21 @@ function ChatPage(props) {
   }, []);
 
   return (
-    <div style={{ position: 'absolute', display: 'flex', marginTop: 48, height: 'calc(100vh - 128px)' }}>
-      <div style={{ width: '300px' }}>
-        <SidePanel key={currentChatUser?.userId} />
-      </div>
-      <div style={{ width: '100%' }}>
-        <MainPanel key={currentChatRoom?.id} />
-      </div>
-    </div>
+    <>
+      {showViewport
+        ? <div style={{ position: 'absolute', display: 'flex', marginTop: 48, height: 'calc(100vh - 128px)' }}>
+          <div style={{ width: '300px' }}>
+            <SidePanel key={currentChatUser?.userId} />
+          </div>
+          <div style={{ width: '100%' }}>
+            <MainPanel key={currentChatRoom?.id} />
+          </div>
+        </div >
+        : <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 48, height: 'calc(100vh - 128px)', backgroundColor: '#415972' }}>
+          <h2> 너비가 992px보다 작은 화면에서는 <br />Talk-A-Tive가 지원되지 않습니다. </h2>
+        </div>
+      }
+    </>
   )
 }
 
