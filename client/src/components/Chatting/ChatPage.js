@@ -15,7 +15,6 @@ function ChatPage(props) {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      console.log(window.innerWidth)
       if (window.innerWidth < 992) {
         setShowViewport(false)
       } else {

@@ -1,6 +1,5 @@
 import { all, fork, put, call, takeLatest } from 'redux-saga/effects'
 import axios from 'axios';
-import { SERVER_URL } from '../config/key'
 
 import {
   LOAD_FAVORITE_NUMBER_REQUEST, LOAD_FAVORITE_NUMBER_SUCCESS, LOAD_FAVORITE_NUMBER_FAILURE,
@@ -10,7 +9,7 @@ import {
 } from '../reducers/types'
 
 function LoadFavoriteNumberAPI(data) {
-  return axios.post(`${SERVER_URL}/api/movie/favorite/favoriteNumber`, data)
+  return axios.post('/api/movie/favorite/favoriteNumber', data)
 }
 
 function* loadFavoriteNumber(action) {
@@ -30,7 +29,7 @@ function* loadFavoriteNumber(action) {
 }
 
 function changeFavoriteAPI(data) {
-  return axios.post(`${SERVER_URL}/api/movie/favorite/changeFavorited`, data)
+  return axios.post('/api/movie/favorite/changeFavorited', data)
 }
 
 function* changeFavorite(action) {
@@ -50,7 +49,7 @@ function* changeFavorite(action) {
 }
 
 function isFavoritedAPI(data) {
-  return axios.post(`${SERVER_URL}/api/movie/favorite/isFavorited`, data)
+  return axios.post('/api/movie/favorite/isFavorited', data)
 }
 
 function* isFavorited(action) {
@@ -70,7 +69,7 @@ function* isFavorited(action) {
 }
 
 function loadFavoritedListAPI(data) {
-  return axios.post(`${SERVER_URL}/api/movie/favorite/favoritedList`, data)
+  return axios.post('/api/movie/favorite/favoritedList', data)
 }
 
 function* loadFavoritedList(action) {

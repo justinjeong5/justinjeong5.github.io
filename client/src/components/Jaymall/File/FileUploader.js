@@ -4,7 +4,6 @@ import Dropzone from 'react-dropzone'
 import { v4 as uuidv4 } from 'uuid'
 import { PlusSquareOutlined, LoadingOutlined } from '@ant-design/icons'
 import { UPLOAD_IMAGE_REQUEST, REMOVE_UPLOADED_IMAGE } from '../../../reducers/types'
-import { SERVER_URL } from '../../../config/key'
 
 function FileUploader() {
 

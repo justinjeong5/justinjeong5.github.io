@@ -6,7 +6,6 @@ import { CloseOutlined } from '@ant-design/icons'
 
 import { REMOVE_CART_ITEM_REQUEST } from '../../../reducers/types'
 import { ProductAccessorySort, ProductClothesSort } from '../utils/ProductSort'
-import { SERVER_URL } from '../../../config/key'
 
 function CartDetails() {
 
@@ -36,7 +35,7 @@ function CartDetails() {
       title: '',
       dataIndex: 'image',
       key: 'image',
-      render: (item) => (<img height={150} src={`${SERVER_URL}/${item}`} alt='product' />)
+      render: (item) => (<img height={150} src={item} alt='product' />)
     },
     {
       title: '상품명',
