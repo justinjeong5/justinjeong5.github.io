@@ -6,6 +6,7 @@ import {
   LOAD_BLOG_POSTS_REQUEST, LOAD_BLOG_POSTS_SUCCESS, LOAD_BLOG_POSTS_FAILURE,
   RESET_LOAD_BLOG_POSTS,
   LOAD_BLOG_POST_REQUEST, LOAD_BLOG_POST_SUCCESS, LOAD_BLOG_POST_FAILURE,
+  UPLOAD_BLOG_DATASET_REQUEST, UPLOAD_BLOG_DATASET_SUCCESS, UPLOAD_BLOG_DATASET_FAILURE,
 } from '../reducers/types'
 
 function createPostAPI(data) {
@@ -73,6 +74,30 @@ function* loadPost(action) {
   }
 }
 
+function uploadDatasetAPI(data) {
+  return axios.post(`/api/blog/uploadDataset`, data.formData, data.config)
+}
+
+function* uploadDataset(action) {
+  try {
+    const result = yield call(uploadDatasetAPI, action.payload);
+    yield put({
+      type: UPLOAD_BLOG_DATASET_SUCCESS,
+      payload: {
+        ...result.data,
+        file: action.payload.file,
+        dataType: action.payload.dataType,
+      },
+    })
+  } catch (error) {
+    console.error(error)
+    yield put({
+      type: UPLOAD_BLOG_DATASET_FAILURE,
+      error: error.response.data,
+    })
+  }
+}
+
 function* watchCreatePost() {
   yield takeLatest(CREATE_BLOG_POST_REQUEST, createPost)
 }
@@ -85,11 +110,16 @@ function* watchLoadPost() {
   yield takeLatest(LOAD_BLOG_POST_REQUEST, loadPost)
 }
 
+function* watchUploadDataset() {
+  yield takeLatest(UPLOAD_BLOG_DATASET_REQUEST, uploadDataset)
+}
+
 
 export default function* blogSaga() {
   yield all([
     fork(watchCreatePost),
     fork(watchLoadPosts),
     fork(watchLoadPost),
+    fork(watchUploadDataset),
   ])
 }

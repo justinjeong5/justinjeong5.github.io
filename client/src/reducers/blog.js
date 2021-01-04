@@ -4,11 +4,16 @@ import {
   LOAD_BLOG_POSTS_REQUEST, LOAD_BLOG_POSTS_SUCCESS, LOAD_BLOG_POSTS_FAILURE,
   RESET_LOAD_BLOG_POSTS,
   LOAD_BLOG_POST_REQUEST, LOAD_BLOG_POST_SUCCESS, LOAD_BLOG_POST_FAILURE,
+  UPLOAD_BLOG_DATASET_REQUEST, UPLOAD_BLOG_DATASET_SUCCESS, UPLOAD_BLOG_DATASET_FAILURE,
+  RESET_UPLOAD_BLOG_DATASET,
 } from './types'
 
 const initialState = {
   currentBlogPost: null,
   blogPosts: [],
+  uploadDataset: {
+    files: [],
+  },
   message: '',
   noMorePosts: false,
   skip: 0,
@@ -23,6 +28,9 @@ const initialState = {
   loadBlogPostLoading: false,
   loadBlogPostDone: false,
   loadBlogPostError: null,
+  uploadBlogDatasetLoading: false,
+  uploadBlogDatasetDone: false,
+  uploadBlogDatasetError: null,
 }
 
 const blog = (state = initialState, action) => {
@@ -122,6 +130,39 @@ const blog = (state = initialState, action) => {
         loadBlogPostLoading: false,
         loadBlogPostError: action.error.code,
         message: action.error.message,
+      }
+    case UPLOAD_BLOG_DATASET_REQUEST:
+      return {
+        ...state,
+        uploadBlogDatasetLoading: true,
+        uploadBlogDatasetDone: false,
+        uploadBlogDatasetError: null,
+      }
+    case UPLOAD_BLOG_DATASET_SUCCESS:
+      return {
+        ...state,
+        uploadBlogDatasetLoading: false,
+        uploadBlogDatasetDone: true,
+        uploadDataset: {
+          url: action.payload.url,
+          fileName: action.payload.fileName,
+          dataType: action.payload.dataType,
+          files: [...state.uploadDataset.files, action.payload.file]
+        },
+        message: action.payload.message,
+      }
+    case UPLOAD_BLOG_DATASET_FAILURE:
+      return {
+        ...state,
+        uploadBlogDatasetLoading: false,
+        uploadBlogDatasetError: action.error.code,
+        message: action.error.message,
+      }
+    case RESET_UPLOAD_BLOG_DATASET:
+      return {
+        ...state,
+        uploadBlogDatasetLoading: false,
+        uploadBlogDatasetDone: false,
       }
     default:
       return state

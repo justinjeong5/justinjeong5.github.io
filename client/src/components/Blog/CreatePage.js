@@ -14,7 +14,7 @@ function CreatePage(props) {
   const [files, setFiles] = useState([]);
 
   const { currentUser } = useSelector(state => state.user)
-  const { createBlogPostLoading, createBlogPostDone } = useSelector(state => state.blog)
+  const { createBlogPostLoading, createBlogPostDone, uploadDataset, uploadBlogDatasetLoading } = useSelector(state => state.blog)
 
 
   useEffect(() => {
@@ -39,7 +39,7 @@ function CreatePage(props) {
         content: content,
         title: title,
         writer: currentUser.userId,
-        files: files
+        files: uploadDataset.files
       },
     })
 
@@ -80,7 +80,7 @@ function CreatePage(props) {
                 type='primary'
                 onSubmit={onSubmit}
                 disabled={createBlogPostLoading}
-                loading={createBlogPostLoading}
+                loading={createBlogPostLoading || uploadBlogDatasetLoading}
               >글쓰기</Button>
               <Button
                 onClick={() => window.history.back()}

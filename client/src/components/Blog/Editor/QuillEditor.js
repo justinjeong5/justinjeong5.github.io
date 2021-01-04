@@ -1,10 +1,12 @@
 import "react-quill/dist/quill.snow.css";
 
 import React from 'react';
+import { connect } from 'react-redux'
 import ReactQuill, { Quill } from 'react-quill';
 import axios from 'axios';
 import { message as Message } from 'antd'
 import { FileImageOutlined, FileAddOutlined, VideoCameraAddOutlined } from '@ant-design/icons'
+import { UPLOAD_BLOG_DATASET_REQUEST, RESET_UPLOAD_BLOG_DATASET } from '../../../reducers/types'
 
 const __ISMSIE__ = navigator.userAgent.match(/Trident/i) ? true : false;
 
@@ -73,13 +75,14 @@ class ImageBlot extends BlockEmbed {
   static create(value) {
     const imgTag = super.create();
     imgTag.setAttribute('src', value.src);
-    imgTag.setAttribute('alt', value.alt);
-    imgTag.setAttribute('width', '100%');
+    imgTag.setAttribute('alt', value.title);
+    imgTag.setAttribute('width', '65%');
+    imgTag.setAttribute('maxWidth', '400px')
     return imgTag;
   }
 
   static value(node) {
-    return { src: node.getAttribute('src'), alt: node.getAttribute('alt') };
+    return { src: node.getAttribute('src'), title: node.getAttribute('alt') };
   }
 
 }
@@ -95,7 +98,8 @@ class VideoBlot extends BlockEmbed {
       const videoTag = super.create();
       videoTag.setAttribute('src', value.src);
       videoTag.setAttribute('title', value.title);
-      videoTag.setAttribute('width', '100%');
+      videoTag.setAttribute('width', '65%');
+      videoTag.setAttribute('maxWidth', '400px');
       videoTag.setAttribute('controls', '');
 
       return videoTag;
@@ -104,18 +108,18 @@ class VideoBlot extends BlockEmbed {
       iframeTag.setAttribute('src', value);
       iframeTag.setAttribute('frameborder', '0');
       iframeTag.setAttribute('allowfullscreen', true);
-      iframeTag.setAttribute('width', '100%');
+      iframeTag.setAttribute('width', '65%');
+      iframeTag.setAttribute('maxWidth', '400px');
       return iframeTag;
     }
   }
 
   static value(node) {
     if (node.getAttribute('title')) {
-      return { src: node.getAttribute('src'), alt: node.getAttribute('title') };
+      return { src: node.getAttribute('src'), title: node.getAttribute('title') };
     } else {
       return node.getAttribute('src');
     }
-    // return { src: node.getAttribute('src'), alt: node.getAttribute('title') };
   }
 
 }
@@ -127,15 +131,16 @@ Quill.register(VideoBlot);
 class FileBlot extends BlockEmbed {
 
   static create(value) {
+    console.log(value, 'fileBlot, fileINfo')
     const prefixTag = document.createElement('span');
     prefixTag.innerText = "첨부파일 - ";
 
     const bTag = document.createElement('b');
     //위에 첨부파일 글자 옆에  파일 이름이 b 태그를 사용해서 나온다.
-    bTag.innerText = value;
+    bTag.innerText = value.title;
 
     const linkTag = document.createElement('a');
-    linkTag.setAttribute('href', value);
+    linkTag.setAttribute('href', value.src);
     linkTag.setAttribute("target", "_blank");
     linkTag.setAttribute("className", "file-link-inner-post");
     linkTag.appendChild(bTag);
@@ -146,11 +151,11 @@ class FileBlot extends BlockEmbed {
     node.appendChild(linkTag);
 
     return node;
+
   }
 
   static value(node) {
-    const linkTag = node.querySelector('a');
-    return linkTag.getAttribute('href');
+    return { src: node.querySelector('a').getAttribute('href'), title: node.querySelector('b').innerText };
   }
 
 }
@@ -198,14 +203,12 @@ class QuillEditor extends React.Component {
   onEditorChange;
   onFilesChange;
   onPollsChange;
-  _isMounted;
 
   constructor(props) {
     super(props);
 
     this.state = {
       editorHtml: __ISMSIE__ ? "<p>&nbsp;</p>" : "",
-      files: [],
     };
 
     this.reactQuillRef = null;
@@ -215,12 +218,25 @@ class QuillEditor extends React.Component {
     this.inputOpenFileRef = React.createRef();
   }
 
-  componentDidMount() {
-    this._isMounted = true;
-  }
+  componentDidUpdate() {
+    if (this.props.blog.uploadBlogDatasetError) {
+      Message.error('파일을 업로드 하는 과정에서 문제가 발생했습니다.')
+    }
 
-  componentWillUnmount() {
-    this._isMounted = false;
+    if (this.props.blog.uploadBlogDatasetDone) {
+      const quill = this.reactQuillRef.getEditor();
+      quill.focus();
+
+      let range = quill.getSelection();
+      let position = range ? range.index : 0;
+      quill.insertEmbed(position, this.props.blog.uploadDataset.dataType, {
+        src: this.props.blog.uploadDataset.url,
+        title: this.props.blog.uploadDataset.fileName
+      });
+      quill.setSelection(position + 1);
+
+      this.props.dispatchResetDataset();
+    }
   }
 
   handleChange = (html) => {
@@ -255,39 +271,16 @@ class QuillEditor extends React.Component {
     e.stopPropagation();
     e.preventDefault();
 
-    if (e.currentTarget && e.currentTarget.files && e.currentTarget.files.length > 0) {
+    if (e.currentTarget && e.currentTarget.files?.length > 0) {
       const file = e.currentTarget.files[0];
       let formData = new FormData();
+      formData.append("file", file);
+
       const config = {
         header: { 'Content-Type': 'multipart/form-data' },
       }
-      formData.append("file", file);
 
-      axios.post('/api/blog/uploadDataset', formData, config)
-        .then(response => {
-          if (!response.data.error) {
-            const quill = this.reactQuillRef.getEditor();
-            quill.focus();
-
-            let range = quill.getSelection();
-            let position = range ? range.index : 0;
-
-            //먼저 노드 서버에다가 이미지를 넣은 다음에   여기 아래에 src에다가 그걸 넣으면 그게 
-            //이미지 블롯으로 가서  크리에이트가 이미지를 형성 하며 그걸 발류에서     src 랑 alt 를 가져간후에  editorHTML에 다가 넣는다.
-            quill.insertEmbed(position, "image", { src: response.data.url, alt: response.data.fileName });
-            quill.setSelection(position + 1);
-            if (this._isMounted) {
-              this.setState({
-                files: [...this.state.files, file.name]
-              }, () => { this.props.onFilesChange(this.state.files) });
-            }
-          } else {
-            console.error(response.data.error)
-            return Message.error('이미지를 업로드 하는 과정에서 문제가 발생했습니다.')
-          }
-        }).catch((error) => {
-          console.error(error)
-        })
+      this.props.dispatchDataset({ formData, config, dataType: 'image', file })
     }
   };
 
@@ -295,39 +288,17 @@ class QuillEditor extends React.Component {
     e.stopPropagation();
     e.preventDefault();
 
-    if (e.currentTarget && e.currentTarget.files && e.currentTarget.files.length > 0) {
+    if (e.currentTarget && e.currentTarget.files?.length > 0) {
       const file = e.currentTarget.files[0];
 
       let formData = new FormData();
+      formData.append("file", file);
+
       const config = {
         header: { 'Content-Type': 'multipart/form-data' }
       }
-      formData.append("file", file);
 
-      axios.post('/api/blog/uploadDataset', formData, config)
-        .then(response => {
-          if (!response.data.error) {
-
-            const quill = this.reactQuillRef.getEditor();
-            quill.focus();
-
-            let range = quill.getSelection();
-            let position = range ? range.index : 0;
-            quill.insertEmbed(position, "video", { src: response.data.url, title: response.data.fileName });
-            quill.setSelection(position + 1);
-
-            if (this._isMounted) {
-              this.setState({
-                files: [...this.state.files, file]
-              }, () => { this.props.onFilesChange(this.state.files) });
-            }
-          } else {
-            console.error(response.data.error)
-            return Message.error('비디오를 업로드 하는 과정에서 문제가 발생했습니다.')
-          }
-        }).catch((error) => {
-          console.error(error)
-        })
+      this.props.dispatchDataset({ formData, config, dataType: 'video', file })
     }
   }
 
@@ -335,40 +306,17 @@ class QuillEditor extends React.Component {
     e.stopPropagation();
     e.preventDefault();
 
-    if (e.currentTarget && e.currentTarget.files && e.currentTarget.files.length > 0) {
+    if (e.currentTarget && e.currentTarget.files?.length > 0) {
       const file = e.currentTarget.files[0];
-      console.log(file);
 
       let formData = new FormData();
+      formData.append("file", file);
+
       const config = {
         header: { 'Content-Type': 'multipart/form-data' }
       }
-      formData.append("file", file);
 
-      axios.post('/api/blog/uploadDataset', formData, config)
-        .then(response => {
-          if (!response.data.error) {
-
-            const quill = this.reactQuillRef.getEditor();
-            quill.focus();
-
-            let range = quill.getSelection();
-            let position = range ? range.index : 0;
-            quill.insertEmbed(position, "file", response.data.url);
-            quill.setSelection(position + 1);
-
-            if (this._isMounted) {
-              this.setState({
-                files: [...this.state.files, file]
-              }, () => { this.props.onFilesChange(this.state.files) });
-            }
-          } else {
-            console.error(response.data.error)
-            return Message.error('파일을 업로드 하는 과정에서 문제가 발생했습니다.')
-          }
-        }).catch((error) => {
-          console.error(error)
-        })
+      this.props.dispatchDataset({ formData, config, dataType: 'file', file })
     }
   };
 
@@ -438,4 +386,19 @@ class QuillEditor extends React.Component {
   ];
 }
 
-export default QuillEditor;
+const mapStateToProps = (state) => ({
+  blog: state.blog,
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  dispatchDataset: (payload) => dispatch({
+    type: UPLOAD_BLOG_DATASET_REQUEST,
+    payload
+  }),
+  dispatchResetDataset: () => dispatch({
+    type: RESET_UPLOAD_BLOG_DATASET,
+  })
+
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(QuillEditor);
