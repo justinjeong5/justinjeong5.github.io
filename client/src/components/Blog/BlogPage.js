@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom'
+import StyledLink from '../utils/StyledLink'
 import { v4 as uuidv4 } from 'uuid'
 import { Card, Avatar, Col, Row, Typography, Skeleton, Empty } from 'antd'
 import { SettingOutlined, EditOutlined, EllipsisOutlined } from '@ant-design/icons'
@@ -49,7 +49,7 @@ function BlogPage() {
             <EllipsisOutlined />
           ]}
         >
-          <Link to={`/blog/post/${blog._id}`}>
+          <StyledLink to={`/blog/post/${blog._id}`}>
             <Card.Meta
               avatar={<Avatar src={blog.writer.image} />}
               title={blog.title.slice(0, 20)}
@@ -58,7 +58,7 @@ function BlogPage() {
             <div style={{ height: 400, overflowY: 'scroll', marginTop: 10, color: 'black' }}>
               <div dangerouslySetInnerHTML={{ __html: blog.content }} />
             </div>
-          </Link>
+          </StyledLink>
         </Card>
       </Col>
     </>)

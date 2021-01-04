@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom';
+import StyledLink from '../../utils/StyledLink'
 import { v4 as uuidv4 } from 'uuid'
 import { Card, Col, Carousel, Descriptions } from 'antd';
 import NumberFormat from 'react-number-format';
@@ -15,7 +15,7 @@ function ProductCard(props) {
           hoverable={true}
           style={{ width: '100%' }}
         >
-          <Link to={`/jaymall/product/${product._id}`} style={{ color: 'black' }}>
+          <StyledLink to={`/jaymall/product/${product._id}`} style={{ color: 'black' }}>
             <Carousel autoplay >
               {product?.images?.map((img) => {
                 return (
@@ -33,7 +33,7 @@ function ProductCard(props) {
                 </Descriptions.Item>
               </Descriptions>
             </div>
-          </Link>
+          </StyledLink>
         </Card>
       </Col>
     </>

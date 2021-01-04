@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router-dom';
+import StyledLink from '../utils/StyledLink'
 import { v4 as uuidv4 } from 'uuid'
 import { List, Space, Avatar, Typography, Divider, Card } from 'antd'
 import { StarOutlined, MessageOutlined, HeartTwoTone, LoadingOutlined } from '@ant-design/icons'
@@ -86,14 +86,14 @@ function FavoritePage() {
                     />} />
                 }
               >
-                <Link to={`/movieTrend/movie/${item.movieId}`}>
+                <StyledLink to={`/movieTrend/movie/${item.movieId}`}>
                   <List.Item.Meta
                     key={uuidv4()}
                     avatar={<Avatar size='large' src={`${IMAGE_URL}/w500${item.movieImage}`} />}
                     title={item.movieTitle}
                     description={item.movieOriginalTitle}
                   />
-                </Link>
+                </StyledLink>
                 {item.movieDescription}
               </List.Item >
             )}

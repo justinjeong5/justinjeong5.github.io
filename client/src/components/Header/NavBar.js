@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom'
+import StyledLink from '../utils/StyledLink'
 import { Drawer, Button } from 'antd';
 import { MenuOutlined } from '@ant-design/icons'
 import './NavBar/NavBar.css';
@@ -27,7 +27,7 @@ function NavBar() {
           <RightMenu mode="horizontal" />
         </div>
         <div className="menu__mobile-title">
-          <Link to='/'>HOME</Link>
+          <StyledLink to='/'>HOME</StyledLink>
         </div>
         <Button
           className="menu__mobile-button"
