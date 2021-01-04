@@ -19,7 +19,7 @@ function MovieDetailPage(props) {
 
   let movieDetailsPageFrontRef = React.createRef();
   const dispatch = useDispatch();
-  const { currentMovie, loadMovieDetailDone, loadMovieTrailerDone } = useSelector(state => state.movie)
+  const { currentMovie, loadMovieDetailDone, loadMovieTrailerDone, loadMovieTrailerLoading } = useSelector(state => state.movie)
 
   useEffect(() => {
     movieDetailsPageFrontRef.scrollIntoView();
@@ -67,7 +67,9 @@ function MovieDetailPage(props) {
   return (
     <div>
       <div ref={node => (movieDetailsPageFrontRef = node)} />
-
+      {loadMovieTrailerLoading && <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100vw', height: 'calc(100vh - 128px)' }}>
+        <LoadingOutlined style={{ fontSize: '5rem' }} />
+      </div>}
       {loadMovieTrailerDone && <>
         <MainImage movie={currentMovie} />
         <div style={{ width: '80%', margin: '1rem auto' }}>
