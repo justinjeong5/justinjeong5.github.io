@@ -5,7 +5,7 @@ import { Menu, Badge } from 'antd';
 import styled from 'styled-components'
 
 const Title = styled.span`
-  margin: 0 15px
+  margin: 0 5px
 `
 
 function LeftMenu(props) {
