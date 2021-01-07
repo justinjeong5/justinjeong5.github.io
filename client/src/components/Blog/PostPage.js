@@ -25,7 +25,7 @@ function PostPage(props) {
         <LoadingOutlined style={{ fontSize: '5rem' }} />
       </div>}
       {loadBlogPostDone && <>
-        <div style={{ width: '80%', padding: 24, margin: '3rem auto' }}>
+        <div style={{ width: '80%', maxWidth: '1000px', padding: 24, margin: '3rem auto' }}>
           <PageHeader
             ghost={false}
             onBack={() => window.history.back()}
