@@ -6,6 +6,8 @@ import { LogoutOutlined, LoginOutlined, UserAddOutlined, UserOutlined, LoadingOu
 import { LOGOUT_USER_REQUEST } from '../../../reducers/types';
 import { routerPathList } from '../../utils/RouterPathList'
 
+const { Item } = Menu;
+
 function RightMenu(props) {
 
   const dispatch = useDispatch();
@@ -51,21 +53,21 @@ function RightMenu(props) {
       }
       {currentUser?.isAuth
         ? <Menu mode={props.mode}>
-          <Menu.Item key="logout"
+          <Item key="logout"
             onClick={handleLogout} >
             <Link to='#'><LogoutOutlined />{props.mode === 'inline' ? '로그아웃' : ''}</Link>
-          </Menu.Item >
-          <Menu.Item key="edit" >
+          </Item >
+          <Item key="edit" >
             <Link to='/edit'><UserOutlined />{props.mode === 'inline' ? '정보수정' : ''}</Link>
-          </Menu.Item>
+          </Item>
         </Menu >
         : <Menu mode={props.mode}>
-          <Menu.Item key="login" >
+          <Item key="login" >
             <Link to='/login'><LoginOutlined />{props.mode === 'inline' ? '로그인' : ''}</Link>
-          </Menu.Item>
-          <Menu.Item key="register" >
+          </Item>
+          <Item key="register" >
             <Link to='/register'><UserAddOutlined />{props.mode === 'inline' ? '회원가입' : ''}</Link>
-          </Menu.Item>
+          </Item>
         </Menu>
       }
     </>
