@@ -2,7 +2,7 @@ const { User } = require("../models/User");
 
 const auth = (req, res, next) => {
   let token = req.cookies.x_auth;
-  if (!token) return res.status(400).json({
+  if (!token) return res.status(200).json({
     payload: { isAuth: false },
     code: 'NoUserTokenAtCookie',
     message: '로그인 되지 않은 사용자입니다.',
