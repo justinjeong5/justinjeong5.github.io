@@ -97,7 +97,7 @@ router.get('/logout', auth, (req, res) => {
         return res.status(400).json({ code: 'NoSuchUser', message: '존재하지 않는 사용자입니다.' });
       }
       res.cookie('x_auth', '').status(200)
-        .json({ message: '로그아웃이 정상적으로 완료되었습니다.' });
+        .json({ message: '로그아웃이 정상적으로 완료되었습니다.', userId: user._id });
     })
 })
 
@@ -216,6 +216,16 @@ router.post('/removeFromCart', auth, (req, res) => {
             return res.status(200).json({ message: '상품을 카트에서 정상적으로 꺼냇습니다.', cart: doc.cart });
           })
       }
+    })
+})
+
+router.get('/users', auth, (req, res) => {
+  User.find()
+    .exec((error, users) => {
+      if (error) {
+        return res.status(400).json({ code: 'DatabaseError', message: '전체 사용자 목록을 호출하는 과정에서 문제가 발생했습니다.', error });
+      }
+      return res.status(200).json({ message: '전체 사용자 목록을 정상적으로 가져왔습니다.', users, userId: req.user._id })
     })
 })
 
