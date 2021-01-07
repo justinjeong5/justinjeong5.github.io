@@ -76,8 +76,7 @@ class ImageBlot extends BlockEmbed {
     const imgTag = super.create();
     imgTag.setAttribute('src', value.src);
     imgTag.setAttribute('alt', value.title);
-    imgTag.setAttribute('width', '65%');
-    imgTag.setAttribute('maxWidth', '400px')
+    imgTag.setAttribute('style', 'width: 70%; max-width: 400px;');
     return imgTag;
   }
 
@@ -98,8 +97,7 @@ class VideoBlot extends BlockEmbed {
       const videoTag = super.create();
       videoTag.setAttribute('src', value.src);
       videoTag.setAttribute('title', value.title);
-      videoTag.setAttribute('width', '65%');
-      videoTag.setAttribute('maxWidth', '400px');
+      videoTag.setAttribute('style', 'width: 70%; max-width: 400px;');
       videoTag.setAttribute('controls', '');
 
       return videoTag;
@@ -108,8 +106,7 @@ class VideoBlot extends BlockEmbed {
       iframeTag.setAttribute('src', value);
       iframeTag.setAttribute('frameborder', '0');
       iframeTag.setAttribute('allowfullscreen', true);
-      iframeTag.setAttribute('width', '65%');
-      iframeTag.setAttribute('maxWidth', '400px');
+      iframeTag.setAttribute('style', 'width: 70%; max-width: 400px;');
       return iframeTag;
     }
   }
