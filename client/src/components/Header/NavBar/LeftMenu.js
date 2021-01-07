@@ -34,14 +34,14 @@ function LeftMenu(props) {
       </Menu.SubMenu>
 
       <Menu.SubMenu title={<Title>채팅</Title>}>
-        <Menu.Item key="talkative" >
+        <Menu.Item key="talkative" disabled={!currentUser?.isAuth} >
           {<StyledLink to='/talkative'>토커팁</StyledLink>}
         </Menu.Item>
       </Menu.SubMenu>
 
       <Menu.SubMenu
         title={currentUser?.cart?.length
-          ? <Badge dot showZero={false} offset={[-13, 0]}>
+          ? <Badge dot showZero={false} offset={[0, 0]}>
             <Title>쇼핑</Title>
           </Badge>
           : <Title>쇼핑</Title>}

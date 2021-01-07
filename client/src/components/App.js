@@ -43,7 +43,7 @@ function App() {
         <Route exact path="/blog/" component={Auth(BlogPage, null)} />
         <Route exact path="/blog/create" component={Auth(CreatePage, true)} />
         <Route exact path="/blog/post/:postId" component={Auth(PostPage, null)} />
-        <Route exact path="/talkative" component={Auth(ChatPage, null)} />
+        <Route exact path="/talkative" component={Auth(ChatPage, true)} />
       </Switch>
       <Footer />
     </div>
