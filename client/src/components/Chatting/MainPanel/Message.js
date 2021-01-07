@@ -1,40 +1,37 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
-import { Media, Image } from 'react-bootstrap'
-import moment from 'moment'
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { Comment, Avatar, Skeleton, Empty } from 'antd'
 import { v4 as uuidv4 } from 'uuid';
-import { Skeleton } from '@material-ui/lab';
-import { Empty } from 'antd'
+import moment from 'moment'
+import { LOAD_CHATS_REQUEST } from '../../../reducers/types'
 
-function Message({ messages }) {
+function Message() {
 
-  const { currentChatRoom, currentChatUser } = useSelector(state => state.chat)
+  const dispatch = useDispatch();
+  const { currentUser } = useSelector(state => state.user)
+  const { chatList, currentChatRoom, loadChatsDone, loadChatsLoading } = useSelector(state => state.chat)
+
+  useEffect(() => {
+    if (currentChatRoom?._id) {
+      dispatch({
+        type: LOAD_CHATS_REQUEST,
+        payload: currentChatRoom._id,
+      })
+    }
+  }, [currentChatRoom])
 
   const timeFromNow = (timestamp) => {
     return moment(timestamp).fromNow();
   }
 
-  const isMessageMine = (message, currentChatUser) => {
-    if (!message || !currentChatUser) return false;
-    return message.user.id === currentChatUser.userId
+  const isMessageMine = (message) => {
+    if (!message || !currentUser) return false;
+    return message.writer._id === currentUser.userId
   }
 
-  if (!currentChatRoom) {
-    return (<>
-      {Array.from(Array(7)).map(_ => (
-        <Media key={uuidv4()} style={{ marginTop: 5 }}>
-          <Skeleton variant="circle" width={48} height={48} style={{ marginRight: 5 }} />
-          <Media.Body >
-            <Skeleton width={200} />
-            <Skeleton />
-          </Media.Body>
-        </Media>
-      )
-      )}
-    </>);
-  }
+  const renderSkeleton = Array.from(Array(4)).map(_ => <Skeleton key={uuidv4()} avatar />)
 
-  if (messages.length === 0) {
+  if (chatList.length === 0) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: 'calc(100vh - 500px)' }}>
         <Empty description='대화기록이 없습니다. 말을 걸어보세요.' />
@@ -43,62 +40,39 @@ function Message({ messages }) {
   }
 
   return (<>
-    {messages.map((message) => (
-      < Media key={uuidv4()} style={{ marginTop: 5 }}>
-        { isMessageMine(message, currentChatUser)
-          ? <>
-            <Media.Body style={{ textAlign: 'end', marginRight: 10 }}>
-              <h6 style={{ marginRight: 'auto' }}>
-                <span style={{ fontSize: 10, color: 'gray', marginRight: 10 }}>
-                  {timeFromNow(message.timestamp)}
-                </span>
-                <span >
-                  {message.user.name}
-                </span>
-              </h6>
-              {message.content
-                ? <p> {message.content} </p>
-                : <img
-                  style={{ maxWidth: '300px' }}
-                  src={message.image}
-                  alt={'이미지를 찾을 수 없습니다.'}
-                />
-              }
-            </Media.Body>
-            <Image
-              roundedCircle
-              style={{ width: 48, height: 48, marginBottom: 5, marginRight: 7 }}
-              src={message.user.image}
-              alt={message.user.name}
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
+      {loadChatsLoading && renderSkeleton}
+      {loadChatsDone && chatList.map(message => {
+        if (isMessageMine(message)) {
+          return (
+            <div key={uuidv4()} style={{ marginLeft: 'auto', padding: '16px 0', display: 'flex' }}>
+              <div >
+                <div style={{ textAlign: 'end', marginBottom: 4 }}>
+                  <span style={{ fontSize: 12, color: '#CCC', marginRight: 8 }}>{timeFromNow(message.createdAt)}</span>
+                  <span style={{ fontSize: 12 }}>{message.writer?.name}</span>
+                </div>
+                <div className="ant-comment-content-detail">
+                  <p style={{ textAlign: 'end' }}>{message.content}</p>
+                </div>
+              </div>
+              <div>
+                <Avatar style={{ cursor: 'default', margin: '3px 10px' }} src={message.writer?.image} alt={message.writer?.name} />
+              </div>
+            </div>
+          )
+        } else {
+          return (
+            <Comment
+              key={uuidv4()}
+              author={<span style={{ color: 'black' }}>{message.writer?.name}</span>}
+              avatar={<Avatar style={{ cursor: 'default' }} src={message.writer?.image} alt={message.writer?.name} />}
+              content={<p>{message.content}</p>}
+              datetime={<span>{timeFromNow(message.createdAt)}</span>}
             />
-          </>
-          : <>
-            <Image
-              roundedCircle
-              style={{ width: 48, height: 48, marginBottom: 5, marginRight: 7 }}
-              src={message.user.image}
-              alt={message.user.name}
-            />
-            <Media.Body>
-              <h6>
-                {message.user.name}{' '}
-                <span style={{ fontSize: 10, color: 'gray' }}>
-                  {timeFromNow(message.timestamp)}
-                </span>
-              </h6>
-              {message.content
-                ? <p> {message.content} </p>
-                : <img
-                  style={{ maxWidth: '300px' }}
-                  src={message.image}
-                  alt={'이미지를 찾을 수 없습니다.'}
-                />
-              }
-            </Media.Body>
-          </>
+          )
         }
-      </Media>
-    ))}
+      })}
+    </div>
   </>)
 }
 

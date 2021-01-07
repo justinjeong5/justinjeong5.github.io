@@ -4,7 +4,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { Form, Input, Button, Typography, message as Message, Space } from 'antd';
 import { UserOutlined, MailOutlined, LockOutlined, CheckSquareOutlined } from '@ant-design/icons';
 import md5 from 'md5'
-import { REGISTER_CHAT_USER_REQUEST, REGISTER_USER_REQUEST } from '../../reducers/types';
+import { REGISTER_USER_REQUEST } from '../../reducers/types';
 const { Title } = Typography;
 
 
@@ -20,20 +20,15 @@ function RegisterPage(props) {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
   const { registerUserLoading, registerUserDone, registerUserError, message } = useSelector(state => state.user)
-  const { registerChatUserLoading, registerChatUserDone, registerChatUserError, messageFromChat } = useSelector(state => state.chat)
 
   useEffect(() => {
-    if (registerUserDone && registerChatUserDone) {
+    if (registerUserDone) {
       props.history.push('/login')
     }
     if (registerUserError) {
       Message.error({ content: message, duration: 2 });
     }
-    if (registerChatUserError) {
-      Message.error({ content: messageFromChat, duration: 2 });
-    }
-  }, [registerUserDone, registerUserError, props.history, message,
-    registerChatUserDone, registerChatUserError, messageFromChat])
+  }, [registerUserDone, registerUserError, props.history, message])
 
   const onFinish = async (values) => {
     const payload = {
@@ -44,10 +39,6 @@ function RegisterPage(props) {
     }
     dispatch({
       type: REGISTER_USER_REQUEST,
-      payload
-    })
-    dispatch({
-      type: REGISTER_CHAT_USER_REQUEST,
       payload
     })
   };
@@ -116,8 +107,8 @@ function RegisterPage(props) {
         <Form.Item {...tailLayout}>
           <Space >
             <Button type="primary" htmlType="submit"
-              loading={registerUserLoading || registerChatUserLoading}
-              disabled={registerUserLoading || registerChatUserLoading}>
+              loading={registerUserLoading}
+              disabled={registerUserLoading}>
               회원가입
             </Button>
             <Button onClick={() => { props.history.goBack() }} >

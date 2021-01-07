@@ -1,4 +1,5 @@
 import React from 'react'
+import { Divider } from 'antd'
 import ChatRooms from './ChatRooms'
 import UserPanel from './UserPanel'
 import Favorited from './Favorited'
@@ -12,15 +13,16 @@ function SidePanel() {
         padding: '2rem',
         height: 'calc(100vh - 48px)',
         color: 'white',
-        width: '275px'
+        width: '275px',
+        overflowX: 'scroll',
       }}
     >
       <UserPanel />
-      <hr />
+      <Divider />
       <Favorited />
-      <hr />
+      <Divider />
       <ChatRooms />
-      <hr />
+      <Divider />
       <DirectMessage />
     </div>
   )

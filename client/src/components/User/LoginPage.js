@@ -2,10 +2,9 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, withRouter } from 'react-router-dom';
 import { Form, Button, Checkbox, Space, Typography, message as Message } from 'antd';
-import { LOGIN_USER_REQUEST, LOGIN_CHAT_USER_REQUEST } from '../../reducers/types';
+import { LOGIN_USER_REQUEST } from '../../reducers/types';
 import EmailForm from './LoginForm/EmailForm';
 import PasswordForm from './LoginForm/PasswordForm';
-import firebase from '../../config/firebase'
 
 const { Title } = Typography;
 
@@ -21,22 +20,15 @@ function LoginPage(props) {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
   const { loginUserLoading, loginUserDone, loginUserError, message } = useSelector(state => state.user)
-  const { currentChatUser, loginChatUserLoading, loginChatUserDone, loginChatUserError, messageFromChat } = useSelector(state => state.chat)
-  const chatUserRef = firebase.database().ref('presence');
 
   useEffect(() => {
-    if (loginUserDone && loginChatUserDone) {
-      chatUserRef.child(currentChatUser.userId).set(currentChatUser.name)
+    if (loginUserDone) {
       props.history.push('/')
     }
     if (loginUserError) {
       Message.error({ content: message, duration: 2 });
     }
-    if (loginChatUserError) {
-      Message.error({ content: messageFromChat, duration: 2 });
-    }
-  }, [loginUserDone, loginUserError, props.history, message,
-    loginChatUserDone, loginChatUserError, messageFromChat])
+  }, [loginUserDone, loginUserError, props.history, message])
 
   const initialValues = {
     rememberMe: true,
@@ -47,17 +39,12 @@ function LoginPage(props) {
     if (values.rememberMe) {
       localStorage.setItem('rememberMe', values.email);
     }
-    const payload = {
-      email: values.email,
-      password: values.password,
-    }
     dispatch({
       type: LOGIN_USER_REQUEST,
-      payload
-    })
-    dispatch({
-      type: LOGIN_CHAT_USER_REQUEST,
-      payload
+      payload: {
+        email: values.email,
+        password: values.password,
+      }
     })
   };
 
@@ -87,13 +74,13 @@ function LoginPage(props) {
         <Form.Item {...tailLayout}>
           <Space>
             <Button type="primary" htmlType="submit"
-              loading={loginUserLoading || loginChatUserLoading}
-              disabled={loginUserLoading || loginChatUserLoading}>
+              loading={loginUserLoading}
+              disabled={loginUserLoading}>
               로그인
               </Button>
             <Button onClick={() => { props.history.goBack() }}>
               취소
-              </Button>
+            </Button>
           </Space>
         </Form.Item>
 

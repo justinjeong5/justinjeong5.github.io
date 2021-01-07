@@ -1,107 +1,174 @@
 import produce from 'immer';
 
 import {
-  REGISTER_CHAT_USER_REQUEST, REGISTER_CHAT_USER_SUCCESS, REGISTER_CHAT_USER_FAILURE,
-  LOGIN_CHAT_USER_REQUEST, LOGIN_CHAT_USER_SUCCESS, LOGIN_CHAT_USER_FAILURE,
-  LOGOUT_CHAT_USER_REQUEST, LOGOUT_CHAT_USER_SUCCESS, LOGOUT_CHAT_USER_FAILURE,
+  SOCKET_CONNECT, SOCKET_DISCONNECT,
+  SOCKET_SUBSCRIBE_SUCCESS, SOCKET_SUBSCRIBE_FAILURE,
+  LOAD_CHATS_REQUEST, LOAD_CHATS_SUCCESS, LOAD_CHATS_FAILURE,
+  LOAD_CHAT_ROOMS_REQUEST, LOAD_CHAT_ROOMS_SUCCESS, LOAD_CHAT_ROOMS_FAILURE,
+  CREATE_CHAT_ROOM_SUCCESS, CREATE_CHAT_ROOM_FAILURE,
   SET_CURRENT_CHAT_ROOM,
-  SET_CHAT_USER,
-  SET_PRIVATE_CHAT_ROOM,
-  SET_USER_POSTS,
+  TOGGLE_CHAT_ROOM_FAVORITE_REQUEST, TOGGLE_CHAT_ROOM_FAVORITE_SUCCESS, TOGGLE_CHAT_ROOM_FAVORITE_FAILURE,
+  LOAD_CHAT_USERS_REQUEST, LOAD_CHAT_USERS_SUCCESS, LOAD_CHAT_USERS_FAILURE,
+  SET_CURRENT_DIRECT_ROOM,
 } from './types'
 
 const initialState = {
+  chatList: [],
+  chatRooms: [],
+  chatUsers: [],
   currentChatRoom: {},
-  isPrivateChatRoom: false,
-  currentChatUser: {},
-  userPosts: [],
-  messageFromChat: '',
+  readCounts: [],
+  message: '',
 
-  registerChatUserLoading: false,
-  registerChatUserDone: false,
-  registerChatUserError: null,
-  loginChatUserLoading: false,
-  loginChatUserDone: false,
-  loginChatUserError: null,
-  logoutChatUserLoading: false,
-  logoutChatUserDone: false,
-  logoutChatUserError: null,
+  socketConnected: null,
+  socketError: null,
+  socketSubscribe: null,
+  loadChatsLoading: false,
+  loadChatsDone: false,
+  loadChatsError: null,
+  loadChatRoomsLoading: false,
+  loadChatRoomsDone: false,
+  loadChatRoomsError: null,
+  createChatRoomLoading: false,
+  createChatRoomDone: false,
+  createChatRoomError: null,
+  toggleChatRoomFavoriteLoading: false,
+  toggleChatRoomFavoriteDone: false,
+  toggleChatRoomFavoriteError: null,
+  loadChatUsersLoading: false,
+  loadChatUsersDone: false,
+  loadChatUsersError: null,
 }
 
 const chat = (state = initialState, action) => {
   return produce(state, (draft) => {
     switch (action.type) {
-      case REGISTER_CHAT_USER_REQUEST:
-        draft.registerChatUserLoading = true;
-        draft.registerChatUserDone = false;
-        draft.registerChatUserError = null;
+      case SOCKET_CONNECT:
+        draft.socketConnected = true;
+        draft.socketError = null;
+        draft.loadChatsLoading = false;
+        draft.loadChatsDone = false;
+        draft.loadChatsError = null;
         break;
-      case REGISTER_CHAT_USER_SUCCESS:
-        draft.registerChatUserLoading = false;
-        draft.registerChatUserDone = true;
-        draft.messageFromChat = action.payload;
+      case SOCKET_DISCONNECT:
+        draft.socketConnected = false;
+        draft.socketError = null;
+        draft.loadChatsLoading = false;
+        draft.loadChatsDone = false;
+        draft.loadChatsError = null;
         break;
-      case REGISTER_CHAT_USER_FAILURE:
-        draft.registerChatUserLoading = false;
-        draft.registerChatUserError = action.error.code;
-        draft.messageFromChat = action.error.message;
+      case SOCKET_SUBSCRIBE_SUCCESS:
+        draft.socketSubscribe = true;
+        if (action.payload.chat.chatRoom === draft.currentChatRoom._id) {
+          draft.chatList.push(action.payload.chat);
+        }
+        draft.message = action.payload.message;
         break;
-      case LOGIN_CHAT_USER_REQUEST:
-        draft.loginChatUserLoading = true;
-        draft.loginChatUserDone = false;
-        draft.loginChatUserError = null;
+      case SOCKET_SUBSCRIBE_FAILURE:
+        draft.socketSubscribe = false;
+        draft.socketError = action.error.code;
+        draft.message = action.error.message;
         break;
-      case LOGIN_CHAT_USER_SUCCESS:
-        draft.loginChatUserLoading = false;
-        draft.loginChatUserDone = true;
-        draft.currentChatUser.userId = action.payload.userId;
-        draft.currentChatUser.image = action.payload.image;
-        draft.currentChatUser.email = action.payload.email;
-        draft.currentChatUser.name = action.payload.name;
-        draft.messageFromChat = action.payload.message;
+      case LOAD_CHATS_REQUEST:
+        draft.loadChatsLoading = true;
+        draft.loadChatsDone = false;
+        draft.loadChatsError = null;
         break;
-      case LOGIN_CHAT_USER_FAILURE:
-        draft.loginChatUserLoading = false;
-        draft.loginChatUserError = action.error.code;
-        draft.messageFromChat = action.error.message;
+      case LOAD_CHATS_SUCCESS:
+        draft.loadChatsLoading = false;
+        draft.loadChatsDone = true;
+        draft.chatList = action.payload.chats;
+        draft.message = action.payload.message;
         break;
-      case LOGOUT_CHAT_USER_REQUEST:
-        draft.logoutChatUserLoading = true;
-        draft.logoutChatUserDone = false;
-        draft.logoutChatUserError = null;
+      case LOAD_CHATS_FAILURE:
+        draft.loadChatsLoading = false;
+        draft.loadChatsError = action.error.code;
+        draft.message = action.error.message;
         break;
-      case LOGOUT_CHAT_USER_SUCCESS:
-        draft.logoutChatUserLoading = false;
-        draft.logoutChatUserDone = true;
-        draft.currentChatUser = {};
-        draft.messageFromChat = action.payload;
-        draft.registerChatUserLoading = false;
-        draft.registerChatUserDone = false;
-        draft.registerChatUserError = null;
-        draft.loginChatUserLoading = false;
-        draft.loginChatUserDone = false;
-        draft.loginChatUserError = null;
+      case LOAD_CHAT_ROOMS_REQUEST:
+        draft.loadChatRoomsLoading = true;
+        draft.loadChatRoomsDone = false;
+        draft.loadChatRoomsError = null;
         break;
-      case LOGOUT_CHAT_USER_FAILURE:
-        draft.logoutChatUserLoading = false;
-        draft.logoutChatUserError = action.error.code;
-        draft.messageFromChat = action.error.message;
+      case LOAD_CHAT_ROOMS_SUCCESS:
+        draft.loadChatRoomsLoading = false;
+        draft.loadChatRoomsDone = true;
+        draft.chatRooms = action.payload.chatRooms;
+        draft.currentChatRoom = action.payload.chatRooms[0];
+        draft.message = action.payload.message;
+        break;
+      case LOAD_CHAT_ROOMS_FAILURE:
+        draft.loadChatRoomsLoading = false;
+        draft.loadChatRoomsError = action.error.code;
+        draft.message = action.error.message;
+        break;
+      case CREATE_CHAT_ROOM_SUCCESS:
+        draft.createChatRoomLoading = false;
+        draft.createChatRoomDone = true;
+        draft.chatRooms.push(action.payload.chatRoom);
+        draft.message = action.payload.message;
+        break;
+      case CREATE_CHAT_ROOM_FAILURE:
+        draft.createChatRoomLoading = false;
+        draft.createChatRoomError = action.error.code;
+        draft.message = action.error.message;
         break;
       case SET_CURRENT_CHAT_ROOM:
-        draft.currentChatRoom = action.payload;
+        const room = draft.chatRooms.filter(room => {
+          return room._id === action.payload;
+        })[0]
+        draft.currentChatRoom = room;
+        draft.message = 'currentChatRoom 정보를 정상적으로 변경했습니다.';
         break;
-      case SET_CHAT_USER:
-        draft.currentChatUser.userId = action.payload.uid;
-        draft.currentChatUser.image = action.payload.photoURL;
-        draft.currentChatUser.email = action.payload.email;
-        draft.currentChatUser.name = action.payload.displayName;
-        draft.messageFromChat = 'Firebase에서 사용자가 정상적으로 인증되었습니다.';
+      case TOGGLE_CHAT_ROOM_FAVORITE_REQUEST:
+        draft.toggleChatRoomFavoriteLoading = true;
+        draft.toggleChatRoomFavoriteDone = false;
+        draft.toggleChatRoomFavoriteError = null;
         break;
-      case SET_PRIVATE_CHAT_ROOM:
-        draft.isPrivateChatRoom = action.payload;
+      case TOGGLE_CHAT_ROOM_FAVORITE_SUCCESS:
+        draft.toggleChatRoomFavoriteLoading = false;
+        draft.toggleChatRoomFavoriteDone = true;
+        draft.currentChatRoom.favorite = action.payload.favorite;
+        draft.chatRooms = draft.chatRooms.map((value) => {
+          if (value._id === action.payload.roomId) {
+            value.favorite = !value.favorite;
+          }
+          return value;
+        })
+        draft.message = action.payload.message;
         break;
-      case SET_USER_POSTS:
-        draft.userPosts = action.payload;
+      case TOGGLE_CHAT_ROOM_FAVORITE_FAILURE:
+        draft.toggleChatRoomFavoriteLoading = false;
+        draft.toggleChatRoomFavoriteError = action.error.code;
+        draft.message = action.error.message;
+        break;
+      case LOAD_CHAT_USERS_REQUEST:
+        draft.loadChatUsersLoading = true;
+        draft.loadChatUsersDone = false;
+        draft.loadChatUsersError = null;
+        break;
+      case LOAD_CHAT_USERS_SUCCESS:
+        draft.loadChatUsersLoading = false;
+        draft.loadChatUsersDone = true;
+        draft.chatUsers = action.payload.users.filter(user => (user._id !== action.payload.userId));
+        draft.message = action.payload.message;
+        break;
+      case LOAD_CHAT_USERS_FAILURE:
+        draft.loadChatUsersLoading = false;
+        draft.loadChatUsersError = action.error.code;
+        draft.message = action.error.message;
+        break;
+      case SET_CURRENT_DIRECT_ROOM:
+        const directUser = draft.chatUsers.filter(user => (user._id === action.payload))[0];
+        draft.currentChatRoom = {
+          private: true,
+          favorite: null,
+          _id: directUser._id,
+          title: directUser.name,
+          description: `${directUser.name}님에게 안부를 물어보세요.`,
+          writer: directUser,
+        };
+        draft.message = 'currentChatRoom 정보를 정상적으로 변경했습니다.';
         break;
       default:
         break;

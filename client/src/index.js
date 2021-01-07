@@ -6,7 +6,6 @@ import { Provider } from 'react-redux'
 import './index.css';
 import 'antd/dist/antd.css'
 import 'react-image-gallery/styles/css/image-gallery.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import App from './components/App';
 import store from './store/storeConfiguration'
 

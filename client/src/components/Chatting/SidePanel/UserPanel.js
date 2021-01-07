@@ -1,49 +1,25 @@
 import React from 'react'
-import { useSelector, useDispatch } from 'react-redux';
-import { RiKakaoTalkFill } from 'react-icons/ri'
-import { Dropdown, Image } from 'react-bootstrap'
-
-import firebase from '../../../config/firebase'
-import { LOGOUT_CHAT_USER_REQUEST, LOGOUT_USER_REQUEST } from '../../../reducers/types'
+import { useSelector } from 'react-redux';
+import { Card, Avatar, Typography } from 'antd'
+import { SoundOutlined, CaretDownOutlined } from '@ant-design/icons'
+const { Title } = Typography;
 
 function UserPanel() {
 
-  const dispatch = useDispatch();
-  const { currentChatUser } = useSelector(state => state.chat);
-  const chatUserPresenceRef = firebase.database().ref('presence');
-
-  const handleLogout = () => {
-    firebase.auth().signOut();
-    dispatch({
-      type: LOGOUT_CHAT_USER_REQUEST,
-    });
-    dispatch({
-      type: LOGOUT_USER_REQUEST,
-    });
-    chatUserPresenceRef.child(currentChatUser.userId).remove()
-  }
+  const { currentUser } = useSelector(state => state.user);
 
   return (
     <div>
-      <h3 style={{ color: 'white' }}>
-        <RiKakaoTalkFill style={{ marginBottom: 9 }} />{' '}Talk-A-Tive
-      </h3>
-      <div style={{ display: 'flex', marginBottom: '1rem' }}>
-
-        <Image
-          style={{ width: '30px', height: '30px', marginTop: '3px' }}
-          src={currentChatUser && currentChatUser.image} roundedCircle />
-
-        <Dropdown>
-          <Dropdown.Toggle
-            style={{ background: 'transparent', border: '0' }}
-            id="dropdown-basic">
-            {currentChatUser && currentChatUser.name}
-          </Dropdown.Toggle>
-          <Dropdown.Menu>
-            <Dropdown.Item onClick={handleLogout}>로그아웃</Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
+      <Title level={3} style={{ color: 'white' }}>
+        <SoundOutlined />{' '}Talk-A-Tive
+        </Title>
+      <div style={{ display: 'flex', marginBottom: -15 }}>
+        <Card style={{ backgroundColor: '#415972', border: 'none', padding: 0 }}>
+          <Card.Meta
+            avatar={<Avatar style={{ marginTop: -4, marginRight: -12 }} src={currentUser?.image} />}
+            title={<p style={{ color: 'white' }}>{currentUser?.name}</p>} />
+        </Card>
+        <CaretDownOutlined style={{ zIndex: 1, marginTop: 27, marginLeft: -17 }} />
       </div>
     </div>
   )

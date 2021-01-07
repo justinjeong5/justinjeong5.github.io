@@ -1,108 +1,65 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux';
-import { MdFavorite } from 'react-icons/md'
-import { ListGroup } from 'react-bootstrap';
-import { v4 as uuidv4 } from 'uuid';
-import firebase from '../../../config/firebase'
-import { SET_CURRENT_CHAT_ROOM, SET_PRIVATE_CHAT_ROOM } from '../../../reducers/types'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { Typography } from 'antd'
+import { BellOutlined } from '@ant-design/icons'
+import { v4 as uuidv4 } from 'uuid'
+import { LOAD_CHAT_ROOMS_REQUEST, SET_CURRENT_CHAT_ROOM } from '../../../reducers/types';
+const { Title } = Typography;
 
-export class Favorited extends Component {
+function Favorited() {
 
-  state = {
-    usersRef: firebase.database().ref('users'),
-    favoritedChatRooms: [],
-  }
+  const dispatch = useDispatch();
+  const [favoriteChatRooms, setFavoriteChatRooms] = useState([])
+  const { chatRooms, currentChatRoom, loadChatRoomsDone } = useSelector(state => state.chat)
 
-  componentDidMount() {
-    if (this.props.currentChatUser?.userId) {
-      this.addListeners(this.props.currentChatUser.userId);
+  useEffect(() => {
+    dispatch({
+      type: LOAD_CHAT_ROOMS_REQUEST
+    })
+  }, [])
+
+  useEffect(() => {
+    if (chatRooms?.length) {
+      const favorites = chatRooms.filter(room => room.favorite)
+      setFavoriteChatRooms(favorites)
     }
-  }
+  }, [chatRooms])
 
-  componentWillUnmount() {
-    if (this.props.currentChatUser?.userId) {
-      this.removeListener(this.props.currentChatUser.userId);
-    }
-  }
-  removeListener = (userId) => {
-    this.state.usersRef.child(userId).child('favorited').off()
-  }
-
-  addListeners(userId) {
-    const { usersRef } = this.state;
-    usersRef
-      .child(userId)
-      .child('favorited')
-      .on('child_added', (DataSnapShot) => {
-        const favoritedChatRoom = { id: DataSnapShot.key, ...DataSnapShot.val() };
-        this.setState({
-          favoritedChatRooms: [favoritedChatRoom, ...this.state.favoritedChatRooms]
-        })
-      })
-
-    usersRef
-      .child(userId)
-      .child('favorited')
-      .on('child_removed', (DataSnapShot) => {
-        const chatRoomToRemove = DataSnapShot.key;
-        const filteredChatRooms = this.state.favoritedChatRooms.filter(chatRoom => {
-          return chatRoom.id !== chatRoomToRemove;
-        })
-        this.setState({
-          favoritedChatRooms: filteredChatRooms,
-        })
-      })
-  }
-
-  changeChatRoom = (chatRoom) => {
-    this.props.dispatch({
+  const handleCurrentRoom = (roomId) => () => {
+    dispatch({
       type: SET_CURRENT_CHAT_ROOM,
-      payload: chatRoom,
-    });
-    this.props.dispatch({
-      type: SET_PRIVATE_CHAT_ROOM,
-      payload: false,
-    });
-    this.setState({ activeChatRoomId: chatRoom.id })
-  }
-
-  renderFavoritedChatRooms = () => {
-    if (this.state.favoritedChatRooms.length === 0) return;
-    return this.state.favoritedChatRooms.map((room) => {
-      return (
-        <ListGroup.Item
-          key={uuidv4()}
-          style={{ backgroundColor: room.id === this.state.activeChatRoomId ? '#ffffff45' : '#415972', border: 'none', padding: '5px' }}
-          onClick={() => {
-            this.changeChatRoom(room)
-          }}
-        >
-          # {room.name}
-        </ListGroup.Item>
-      )
+      payload: roomId,
     })
   }
 
-
-  render() {
-    return (
-      <div>
-        <span style={{ display: 'flex', alignItems: 'center' }}>
-          <MdFavorite style={{ marginRight: 3, color: 'white' }} />
-          {` 즐겨찾기 [${this.state.favoritedChatRooms.length}]`}
-        </span>
-        <ListGroup style={{ listStyleType: 'none', padding: 0 }}>
-          {this.renderFavoritedChatRooms()}
-        </ListGroup>
-      </div>
-    )
+  const renderSelected = (roomId) => {
+    if (roomId === currentChatRoom._id) {
+      return 'gray'
+    }
+    return ''
   }
+
+  const renderChatRooms = favoriteChatRooms.map((room) => (
+    <div key={uuidv4()} onClick={handleCurrentRoom(room._id)}
+      style={{
+        backgroundColor: renderSelected(room._id),
+        margin: '0.2rem',
+        padding: '0.2rem',
+        borderRadius: '0.3rem'
+      }}
+    >
+      {`# ${room.title}`}
+    </div>
+  ))
+
+  return (
+    <div>
+      <Title level={5} style={{ color: 'white' }}>
+        <BellOutlined />{` 좋아요 [${favoriteChatRooms.length}] `}
+      </Title>
+      {loadChatRoomsDone && renderChatRooms}
+    </div>
+  )
 }
 
-const mapStateToProps = (state) => {
-  return {
-    currentChatUser: state.chat.currentChatUser,
-  }
-}
-
-export default connect(mapStateToProps)(Favorited)
+export default Favorited

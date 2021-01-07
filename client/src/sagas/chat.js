@@ -1,133 +1,177 @@
 import { all, fork, put, call, takeLatest } from 'redux-saga/effects'
-import firebase from '../config/firebase'
+import axios from 'axios';
+
+import { initiateSocket, disconnectSocket, detectError } from '../components/utils/socket'
 
 import {
-  REGISTER_CHAT_USER_REQUEST, REGISTER_CHAT_USER_SUCCESS, REGISTER_CHAT_USER_FAILURE,
-  LOGIN_CHAT_USER_REQUEST, LOGIN_CHAT_USER_SUCCESS, LOGIN_CHAT_USER_FAILURE,
-  LOGOUT_CHAT_USER_REQUEST, LOGOUT_CHAT_USER_SUCCESS, LOGOUT_CHAT_USER_FAILURE,
+  SOCKET_CONNECT, SOCKET_DISCONNECT,
+  SOCKET_SUBSCRIBE_REQUEST, SOCKET_SUBSCRIBE_SUCCESS, SOCKET_SUBSCRIBE_FAILURE,
+  LOAD_CHATS_REQUEST, LOAD_CHATS_SUCCESS, LOAD_CHATS_FAILURE,
+  LOAD_CHAT_ROOMS_REQUEST, LOAD_CHAT_ROOMS_SUCCESS, LOAD_CHAT_ROOMS_FAILURE,
+  TOGGLE_CHAT_ROOM_FAVORITE_REQUEST, TOGGLE_CHAT_ROOM_FAVORITE_SUCCESS, TOGGLE_CHAT_ROOM_FAVORITE_FAILURE,
+  LOAD_CHAT_USERS_REQUEST, LOAD_CHAT_USERS_SUCCESS, LOAD_CHAT_USERS_FAILURE,
+  CREATE_CHAT_ROOM_REQUEST, CREATE_CHAT_ROOM_SUCCESS, CREATE_CHAT_ROOM_FAILURE,
 } from '../reducers/types'
 
-async function registerChatAPI(data) {
-  try {
-    let createdUser = await firebase
-      .auth()
-      .createUserWithEmailAndPassword(data.email, data.password);
-    await createdUser.user.updateProfile({
-      displayName: data.name,
-      photoURL: data.image,
-    })
-    await firebase.database().ref('users').child(createdUser.user.uid).set({
-      name: createdUser.user.displayName,
-      image: createdUser.user.photoURL
-    })
-    return 'Firebase에 정상적으로 등록되었습니다.';
-  } catch (error) {
-    throw error;
-  }
+function* socketConnect() {
+  yield initiateSocket();
+  yield detectError();
 }
 
-function* registerChat(action) {
-  try {
-    const result = yield call(registerChatAPI, action.payload);
+function* socketDisconnect() {
+  yield disconnectSocket();
+}
+
+function* SocketSubscribe(action) {
+  if (action.error) {
     yield put({
-      type: REGISTER_CHAT_USER_SUCCESS,
-      payload: result,
+      type: SOCKET_SUBSCRIBE_FAILURE,
+      payload: action.error,
     })
-  } catch (error) {
-    console.error(error)
+  } else {
     yield put({
-      type: REGISTER_CHAT_USER_FAILURE,
-      error: {
-        code: 'AlreadyExistUserFirebase',
-        message: '이미 존재하는 Firebase 사용자입니다.',
-        error,
-      }
+      type: SOCKET_SUBSCRIBE_SUCCESS,
+      payload: action.payload,
     })
   }
 }
 
-function loginChatAPI(data) {
-  return firebase.auth()
-    .signInWithEmailAndPassword(data.email, data.password)
-    .then(payload => {
-      return ({
-        userId: payload.user.uid,
-        image: payload.user.photoURL,
-        email: payload.user.email,
-        name: payload.user.displayName,
-        message: 'Firebase에 정상적으로 로그인되었습니다.',
-      })
-    }).catch(error => {
-      throw error;
-    })
+function loadChatAPI(data) {
+  return axios.get(`/api/chat/chats?roomId=${data}`)
 }
 
-function* loginFirebase(action) {
+function* loadChat(action) {
   try {
-    const result = yield call(loginChatAPI, action.payload);
+    const result = yield call(loadChatAPI, action.payload);
     yield put({
-      type: LOGIN_CHAT_USER_SUCCESS,
-      payload: result,
+      type: LOAD_CHATS_SUCCESS,
+      payload: result.data,
     })
   } catch (error) {
     console.error(error)
     yield put({
-      type: LOGIN_CHAT_USER_FAILURE,
-      error: {
-        code: 'FirebaseError',
-        message: 'Firebase에 로그인 하는 과정에서 문제가 발생했습니다.',
-        error,
-      }
+      type: LOAD_CHATS_FAILURE,
+      error: error.response.data,
     })
   }
 }
 
-async function logoutChatAPI() {
-  try {
-    await firebase.auth().signOut();
-    return 'Firebase에서 정상적으로 로그아웃되었습니다.';
-  } catch (error) {
-    throw error;
-  }
+function loadChatRoomAPI() {
+  return axios.get('/api/chatRoom/chatRooms')
 }
 
-function* logoutFirebase() {
+function* loadChatRoom() {
   try {
-    const result = yield call(logoutChatAPI);
+    const result = yield call(loadChatRoomAPI);
     yield put({
-      type: LOGOUT_CHAT_USER_SUCCESS,
-      payload: result,
+      type: LOAD_CHAT_ROOMS_SUCCESS,
+      payload: result.data,
     })
   } catch (error) {
     console.error(error)
     yield put({
-      type: LOGOUT_CHAT_USER_FAILURE,
-      error: {
-        code: 'FirebaseError',
-        message: 'Firebase에 로그아웃 하는 과정에서 문제가 발생했습니다.',
-        error,
-      }
+      type: LOAD_CHAT_ROOMS_FAILURE,
+      error: error.response.data,
     })
   }
 }
 
-function* watchRegisterChat() {
-  yield takeLatest(REGISTER_CHAT_USER_REQUEST, registerChat)
+function toggleChatRoomFavoriteAPI(data) {
+  return axios.post('/api/chatRoom/toggleFavorite', data)
 }
 
-function* watchLoginChat() {
-  yield takeLatest(LOGIN_CHAT_USER_REQUEST, loginFirebase)
+function* toggleChatRoomFavorite(action) {
+  try {
+    const result = yield call(toggleChatRoomFavoriteAPI, action.payload);
+    yield put({
+      type: TOGGLE_CHAT_ROOM_FAVORITE_SUCCESS,
+      payload: result.data,
+    })
+  } catch (error) {
+    console.error(error)
+    yield put({
+      type: TOGGLE_CHAT_ROOM_FAVORITE_FAILURE,
+      error: error.response.data,
+    })
+  }
 }
 
-function* watchLogoutChat() {
-  yield takeLatest(LOGOUT_CHAT_USER_REQUEST, logoutFirebase)
+function loadChatUsersAPI() {
+  return axios.get('/api/user/users')
+}
+
+function* loadChatUsers() {
+  try {
+    const result = yield call(loadChatUsersAPI);
+    yield put({
+      type: LOAD_CHAT_USERS_SUCCESS,
+      payload: result.data,
+    })
+  } catch (error) {
+    console.error(error)
+    yield put({
+      type: LOAD_CHAT_USERS_FAILURE,
+      error: error.response.data,
+    })
+  }
+}
+
+function* socketSubscribeCreateChatRoom(action) {
+  if (action.error) {
+    yield put({
+      type: CREATE_CHAT_ROOM_FAILURE,
+      payload: action.error,
+    })
+  } else {
+    yield put({
+      type: CREATE_CHAT_ROOM_SUCCESS,
+      payload: action.payload,
+    })
+  }
+}
+
+function* watchSocketConnect() {
+  yield takeLatest(SOCKET_CONNECT, socketConnect)
+}
+
+function* watchSocketDisonnect() {
+  yield takeLatest(SOCKET_DISCONNECT, socketDisconnect)
+}
+
+function* watchSocketSubscribe() {
+  yield takeLatest(SOCKET_SUBSCRIBE_REQUEST, SocketSubscribe)
+}
+
+function* watchLoadChat() {
+  yield takeLatest(LOAD_CHATS_REQUEST, loadChat)
+}
+
+function* watchLoadChatRoom() {
+  yield takeLatest(LOAD_CHAT_ROOMS_REQUEST, loadChatRoom)
+}
+
+function* watchToggleChatRoomFavorite() {
+  yield takeLatest(TOGGLE_CHAT_ROOM_FAVORITE_REQUEST, toggleChatRoomFavorite)
+}
+
+function* watchLoadChatUsers() {
+  yield takeLatest(LOAD_CHAT_USERS_REQUEST, loadChatUsers)
+}
+
+function* watchSocketSubscribeCreateChatRoom() {
+  yield takeLatest(CREATE_CHAT_ROOM_REQUEST, socketSubscribeCreateChatRoom)
 }
 
 
 export default function* chatSaga() {
   yield all([
-    fork(watchRegisterChat),
-    fork(watchLoginChat),
-    fork(watchLogoutChat),
+    fork(watchSocketConnect),
+    fork(watchSocketDisonnect),
+    fork(watchSocketSubscribe),
+    fork(watchLoadChat),
+    fork(watchLoadChatRoom),
+    fork(watchToggleChatRoomFavorite),
+    fork(watchLoadChatUsers),
+    fork(watchSocketSubscribeCreateChatRoom),
   ])
 }

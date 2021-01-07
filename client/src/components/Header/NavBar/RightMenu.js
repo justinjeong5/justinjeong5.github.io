@@ -3,18 +3,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation, withRouter } from 'react-router-dom'
 import { Menu, message as Message } from 'antd';
 import { LogoutOutlined, LoginOutlined, UserAddOutlined, UserOutlined, LoadingOutlined } from '@ant-design/icons'
-import { LOGOUT_USER_REQUEST, LOGOUT_CHAT_USER_REQUEST } from '../../../reducers/types';
+import { LOGOUT_USER_REQUEST } from '../../../reducers/types';
 import { routerPathList } from '../../utils/RouterPathList'
-import firebase from '../../../config/firebase'
 
 function RightMenu(props) {
 
   const dispatch = useDispatch();
   const { currentUser, logoutUserLoading, logoutUserDone, logoutUserError, message } = useSelector(state => state.user)
-  const { currentChatUser, logoutChatUserLoading, logoutChatUserDone, logoutChatUserError, messageFromChat } = useSelector(state => state.chat)
   const [prevLocation, setPrevLocation] = useState('/')
   const currentLocation = useLocation();
-  const chatUserPresenceRef = firebase.database().ref('presence');
 
   useEffect(() => {
     const router = routerPathList.filter((path) => {
@@ -27,40 +24,32 @@ function RightMenu(props) {
     if (logoutUserError) {
       Message.error({ content: message, duration: 2 });
     }
-    if (logoutChatUserError) {
-      Message.error({ content: messageFromChat, duration: 2 });
-    }
-  }, [logoutUserError, message, logoutChatUserError, messageFromChat])
+  }, [logoutUserError, message])
 
   useEffect(() => {
-    if (logoutUserDone && logoutChatUserDone)
+    if (logoutUserDone) {
       if (prevLocation === '/talkative') {
         props.history.push('/');
       } else {
         props.history.push(prevLocation);
       }
-  }, [logoutUserDone, logoutChatUserDone, props.history])
+    }
+  }, [logoutUserDone, props.history])
 
   const handleLogout = () => {
     dispatch({
       type: LOGOUT_USER_REQUEST
     })
-    dispatch({
-      type: LOGOUT_CHAT_USER_REQUEST
-    })
-    if (currentChatUser?.userId) {
-      chatUserPresenceRef.child(currentChatUser.userId).remove()
-    }
   }
 
   return (
     <>
-      { (logoutUserLoading || logoutChatUserLoading) &&
+      {logoutUserLoading &&
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100vw', height: 'calc(100vh - 80px)' }}>
           <LoadingOutlined style={{ fontSize: '10rem' }} />
         </div>
       }
-      {currentUser?.isAuth || currentChatUser?.userId
+      {currentUser?.isAuth
         ? <Menu mode={props.mode}>
           <Menu.Item key="logout"
             onClick={handleLogout} >

@@ -1,267 +1,112 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux';
-import { Modal, Button, Form, ListGroup, Badge } from 'react-bootstrap'
-import { RiChatSmile3Fill } from 'react-icons/ri'
-import { FaPlusSquare } from 'react-icons/fa'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { Typography, Modal, Input, Form } from 'antd'
+import { SendOutlined, PlusSquareOutlined, ApiOutlined } from '@ant-design/icons'
 import { v4 as uuidv4 } from 'uuid'
+import { LOAD_CHAT_ROOMS_REQUEST, SET_CURRENT_CHAT_ROOM } from '../../../reducers/types';
+import { createChatRoom } from '../../utils/socket'
+const { Title } = Typography;
 
-import firebase from '../../../config/firebase'
-import { SET_CURRENT_CHAT_ROOM, SET_PRIVATE_CHAT_ROOM } from '../../../reducers/types'
+const layout = {
+  labelCol: { span: 6 },
+  wrapperCol: { span: 16 },
+};
 
-export class ChatRooms extends Component {
-  state = {
-    showModal: false,
-    name: '',
-    description: '',
-    chatRoomsRef: firebase.database().ref('chatRooms'),
-    messagesRef: firebase.database().ref('messages'),
-    chatRooms: [],
-    firstLoad: true,
-    activeChatRoomId: '',
-    notifications: [],
-  }
+function ChatRooms() {
 
-  componentDidMount() {
-    this.addChatRoomsListeners();
-  }
+  const [form] = Form.useForm();
+  const dispatch = useDispatch();
+  const [showModal, setShowModal] = useState(false);
+  const { chatRooms, currentChatRoom, loadChatRoomsDone, createChatRoomDone } = useSelector(state => state.chat)
+  const { currentUser } = useSelector(state => state.user)
 
-  componentWillUnmount() {
-    this.state.chatRoomsRef.off();
-    this.state.chatRooms.forEach(currentChatRoom => {
-      this.state.messagesRef.child(currentChatRoom.id).off();
+  useEffect(() => {
+    dispatch({
+      type: LOAD_CHAT_ROOMS_REQUEST
     })
-  }
+  }, [])
 
-  setFirstChatRoom = () => {
-    if (this.state.firstLoad && this.state.chatRooms.length > 0) {
-      const firstChatRoom = this.state.chatRooms[0];
-      this.props.dispatch({
+  useEffect(() => {
+    if (createChatRoomDone && chatRooms[chatRooms.length - 1].writer._id === currentUser.userId) {
+      dispatch({
         type: SET_CURRENT_CHAT_ROOM,
-        payload: firstChatRoom,
-      });
-      this.setState({
-        firstLoad: false,
-        activeChatRoomId: firstChatRoom.id
+        payload: chatRooms[chatRooms.length - 1]._id
       })
-    }
+    } 
+  }, [createChatRoomDone, chatRooms, currentUser.userId])
+
+  const handleModal = () => {
+    setShowModal(!showModal);
   }
 
-  addChatRoomsListeners = () => {
-    let chatRoomsArray = [];
-    this.state.chatRoomsRef.on('child_added', (DataSnapshot) => {
-      chatRoomsArray.push(DataSnapshot.val());
-      this.setState({
-        chatRooms: chatRoomsArray,
-      })
-      this.setFirstChatRoom();
-      this.addNotificationListener(DataSnapshot.key);
-    })
-  }
-
-  addNotificationListener = (chatRoomId) => {
-    this.state.messagesRef.child(chatRoomId).on('value', (DataSnapshot) => {
-      if (this.props.currentChatRoom) {
-        this.handleNotification(chatRoomId, this.props.currentChatRoom.id, this.state.notifications, DataSnapshot)
-      }
-    })
-  }
-
-  handleNotification = (chatRoomId, currentChatRoomId, notifications, DataSnapshot) => {
-    // TODO: 각 방에 맞는 알림 갯수를 state의 notifications에 넣기
-
-    // 이미 state의 notifications에 알림 정보가 들어있는 채팅방과 그렇지 않은 채팅방을 나누어주기.
-    let index = notifications.findIndex(notification => {
-      return notification.id === chatRoomId
-    })
-
-    if (index === -1) {
-      notifications.push({
-        id: chatRoomId,
-        total: DataSnapshot.numChildren(),
-        lastKnownTotal: DataSnapshot.numChildren(),
-        count: 0,
-      })
-    } else {
-      // 대화상대가 채팅방에 없을 때
-      if (chatRoomId !== currentChatRoomId) {
-
-        // 현제까지 상대방이 확인한 메세지의 개수
-        const lastTotal = notifications[index].lastKnownTotal;
-
-        // 카운드 알림으로 보여줄 숫자
-        // 현재 메세지 갯수 - 이전에 확인한 메세지 갯수
-        if (DataSnapshot.numChildren() - lastTotal >= 0) {
-          notifications[index].count = DataSnapshot.numChildren() - lastTotal;
-        }
-      }
-      notifications[index].total = DataSnapshot.numChildren();
-    }
-
-    this.setState({ notifications })
-  }
-
-  handleClose = () => {
-    this.setState({ showModal: false })
-  };
-  handleShow = () => {
-    this.setState({ showModal: true })
-  };
-  handleSubmit = (event) => {
-    event.preventDefault();
-    const { name, description } = this.state;
-    if (!this.isFormValid(name, description)) return;
-    this.addChatRoom();
-  }
-
-  isFormValid = (name, description) => {
-    return name && description;
-  }
-
-  addChatRoom = async () => {
-    // reference => https://firebase.google.com/docs/database/web/lists-of-data#append_to_a_list_of_data
-    const key = await this.state.chatRoomsRef.push().key;
-    const { name, description } = this.state;
-    const { currentChatUser } = this.props;
-    const newChatRoom = {
-      id: key,
-      name,
+  const handleMakeRoom = () => {
+    const { title, description } = form.getFieldValue();
+    if (!title || !description) return;
+    if (title.length > 15) return;
+    createChatRoom({
+      title,
       description,
-      createdBy: {
-        name: currentChatUser.name,
-        image: currentChatUser.image,
-      }
-    }
-    try {
-      await this.state.chatRoomsRef.child(key).update(newChatRoom)
-      this.setState({
-        showModal: false,
-        name: '',
-        description: '',
-      })
-    } catch (error) {
-      console.error(error);
-    }
+      writer: currentUser.userId,
+      favorite: false,
+      private: false,
+    })
+    form.resetFields();
+    handleModal();
   }
 
-  changeChatRoom = (room) => {
-    this.props.dispatch({
+  const handleCurrentRoom = (roomId) => () => {
+    dispatch({
       type: SET_CURRENT_CHAT_ROOM,
-      payload: room,
-    });
-    this.props.dispatch({
-      type: SET_PRIVATE_CHAT_ROOM,
-      payload: false,
-    });
-    this.setState({ activeChatRoomId: room.id })
-    this.clearNotifications(room.id)
+      payload: roomId,
+    })
   }
 
-  clearNotifications = (chatRoomId) => {
-    let index = this.state.notifications.findIndex((notification) => {
-      return notification.id === chatRoomId
-    })
-
-    if (index > -1) {
-      let updatedNotifications = [...this.state.notifications];
-      updatedNotifications[index].lastKnownTotal = this.state.notifications[index].total;
-      updatedNotifications[index].count = 0;
-      this.setState({ notifications: updatedNotifications });
+  const renderSelected = (roomId) => {
+    if (roomId === currentChatRoom._id) {
+      return 'gray'
     }
+    return ''
   }
 
-  getNotificationCount = (room) => {
-    let count = 0;
-    this.state.notifications.forEach(notification => {
-      if (notification.id === room.id) {
-        count = notification.count;
-      }
-    });
-    if (count > 0) return count;
-  }
+  const renderChatRooms = chatRooms.map((room) => (
+    <div key={uuidv4()} onClick={handleCurrentRoom(room._id)}
+      style={{
+        backgroundColor: renderSelected(room._id),
+        margin: '0.2rem',
+        padding: '0.2rem',
+        borderRadius: '0.3rem'
+      }}
+    >
+      {`# ${room.title}`}
+    </div>
+  ))
 
-  renderChatRooms = () => {
-    if (this.state.chatRooms.length === 0) return;
-    return this.state.chatRooms.map((room) => {
-      return (
-        <ListGroup.Item
-          key={uuidv4()}
-          style={{ backgroundColor: room.id === this.state.activeChatRoomId ? '#ffffff45' : '#415972', border: 'none', padding: '5px' }}
-          onClick={() => {
-            this.changeChatRoom(room);
-          }}
-        >
-          # {room.name}
-          <Badge style={{ float: 'right', marginTop: 4 }} variant='danger' >{this.getNotificationCount(room)}</Badge>
-        </ListGroup.Item>
-      )
-    })
-  }
+  return (
+    <div>
+      <Title level={5} style={{ color: 'white' }}>
+        <SendOutlined />{` 방 목록 [${chatRooms.length}] `}<PlusSquareOutlined onClick={handleModal} style={{ float: 'right', marginTop: 5, marginRight: 7 }} />
+      </Title>
 
-
-  render() {
-    return (
-      <div>
-        <div style={{
-          position: 'relative', width: '100%', display: 'flex', alignItems: 'center'
-        }}>
-          <RiChatSmile3Fill
-            style={{ color: 'white', marginRight: 6 }}
-          />
-          {`방 목록 [${this.state.chatRooms.length}]`}
-          <FaPlusSquare
-            style={{ color: 'white', position: 'absolute', right: 0, cursor: 'pointer' }}
-            onClick={this.handleShow}
-          />
-        </div>
-        <ListGroup style={{ listStyleType: 'none', padding: 0 }}>
-          {this.renderChatRooms()}
-        </ListGroup>
-        {/* 모달으로 새 채팅방 정보 입력받기 */}
-        <Modal show={this.state.showModal} onHide={this.handleClose}>
-          <Modal.Header closeButton>
-            <Modal.Title>
-              새로운 대화방 만들기
-            </Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            {/* 모달 내부 form 시작 */}
-            <Form onSubmit={this.handleSubmit}>
-              <Form.Group >
-                <Form.Label>방 이름</Form.Label>
-                <Form.Control
-                  onChange={(e) => this.setState({ name: e.target.value })}
-                  type="text"
-                  placeholder="새로운 대화방의 이름을 적어주세요" />
-              </Form.Group>
-
-              <Form.Group >
-                <Form.Label>방 설명</Form.Label>
-                <Form.Control
-                  onChange={(e) => this.setState({ description: e.target.value })}
-                  type="text"
-                  placeholder="방 정보를 적어주세요" />
-              </Form.Group>
-            </Form>
-            {/* 모달 내부 form 끝 */}
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={this.handleClose}>
-              취소
-            </Button>
-            <Button variant="primary" onClick={this.handleSubmit} >
-              방 만들기
-            </Button>
-          </Modal.Footer>
-        </Modal>
-      </div>
-    )
-  }
+      <Modal
+        title={<span><ApiOutlined style={{ marginTop: 5 }} /> 새로운 대화방을 만듭니다</span>}
+        visible={showModal}
+        onOk={handleMakeRoom}
+        onCancel={handleModal}
+        okText="방 만들기"
+        cancelText="취소"
+      >
+        <Form {...layout} name="basic" form={form} onFinish={handleMakeRoom}>
+          <Form.Item label="방 이름" name="title" rules={[{ required: true, message: '방 제목을 정해주세요' }, { max: 15, message: '방 이름은 14글자 이하로 해주세요' }]}>
+            <Input />
+          </Form.Item>
+          <Form.Item label="방 설명" name="description" rules={[{ required: true, message: '방 설명을 적어주세요' }]}>
+            <Input />
+          </Form.Item>
+        </Form>
+      </Modal>
+      {loadChatRoomsDone && renderChatRooms}
+    </div>
+  )
 }
 
-const mapStateToProps = (state) => {
-  return {
-    currentChatUser: state.chat.currentChatUser,
-    currentChatRoom: state.chat.currentChatRoom,
-  }
-}
-export default connect(mapStateToProps)(ChatRooms);
+export default ChatRooms
