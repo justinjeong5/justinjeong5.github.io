@@ -99,6 +99,7 @@ const blog = (state = initialState, action) => {
         draft.loadBlogPostLoading = false;
         draft.loadBlogPostDone = true;
         draft.message = action.payload.message;
+        draft.currentBlogPost._id = action.payload.blog._id;
         draft.currentBlogPost.title = action.payload.blog.title;
         draft.currentBlogPost.content = action.payload.blog.content;
         draft.currentBlogPost.createdAt = action.payload.blog.createdAt;

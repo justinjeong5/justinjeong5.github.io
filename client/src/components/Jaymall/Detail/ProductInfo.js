@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Button, Descriptions, Tabs, } from 'antd';
 import NumberFormat from 'react-number-format';
 import { ADD_TO_CART_REQUEST } from '../../../reducers/types'
+import Comment from '../../utils/Comment/Comment'
 
 function ProductInfo() {
 
@@ -19,7 +20,7 @@ function ProductInfo() {
   return (
     <div>
       <Tabs defaultActiveKey="1">
-        <Tabs.TabPane tab="상품 정보" key="1">
+        <Tabs.TabPane tab="상품 정보" key="productInfo">
           <Descriptions >
             <Descriptions.Item label="가격" span={3}>
               <NumberFormat value={currentProduct.price} displayType={'text'} thousandSeparator={true} suffix={'원'} />
@@ -38,11 +39,8 @@ function ProductInfo() {
           </div>
         </Tabs.TabPane>
 
-        <Tabs.TabPane tab="구매 후기" key="2">
-          구매 후기
-        </Tabs.TabPane>
-        <Tabs.TabPane tab="상품 문의" key="3">
-          상품 후기
+        <Tabs.TabPane tab="구매 후기" key="productReview">
+          <Comment payload={{ jaymallId: currentProduct._id }} description='후기 남기기' placeholder="상품의 사용 후기를 공유해주세요!" />
         </Tabs.TabPane>
       </Tabs>
 

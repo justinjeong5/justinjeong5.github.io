@@ -163,3 +163,15 @@ export const LOAD_CHAT_USERS_SUCCESS = 'LOAD_CHAT_USERS_SUCCESS';
 export const LOAD_CHAT_USERS_FAILURE = 'LOAD_CHAT_USERS_FAILURE';
 
 export const SET_CURRENT_DIRECT_ROOM = 'SET_CURRENT_DIRECT_ROOM';
+
+
+//=========================================
+//                 Comment
+//=========================================
+export const POST_COMMENT_REQUEST = 'POST_COMMENT_REQUEST';
+export const POST_COMMENT_SUCCESS = 'POST_COMMENT_SUCCESS';
+export const POST_COMMENT_FAILURE = 'POST_COMMENT_FAILURE';
+
+export const LOAD_COMMENTS_REQUEST = 'LOAD_COMMENTS_REQUEST';
+export const LOAD_COMMENTS_SUCCESS = 'LOAD_COMMENTS_SUCCESS';
+export const LOAD_COMMENTS_FAILURE = 'LOAD_COMMENTS_FAILURE';

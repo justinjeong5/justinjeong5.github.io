@@ -3,9 +3,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { withRouter, useParams, useHistory } from 'react-router-dom'
 import { PageHeader, Divider, Card, Avatar } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
-import { LOAD_BLOG_POST_REQUEST } from '../../reducers/types';
 import moment from 'moment'
 import 'moment/locale/ko'
+import Comment from '../utils/Comment/Comment'
+import { LOAD_BLOG_POST_REQUEST } from '../../reducers/types';
 
 function PostPage() {
 
@@ -47,6 +48,8 @@ function PostPage() {
           <div style={{ margin: '3rem auto', height: '100%' }}>
             <div dangerouslySetInnerHTML={{ __html: currentBlogPost.content }} />
           </div>
+
+          <Comment payload={{ blogId: currentBlogPost._id }} description='덧글 남기기' placeholder='댓글을 남겨주세요. 블로거에게는 큰 힘이 됩니다.' />
         </div>
       </>}
     </>
