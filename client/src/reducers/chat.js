@@ -59,7 +59,8 @@ const chat = (state = initialState, action) => {
         break;
       case SOCKET_SUBSCRIBE_SUCCESS:
         draft.socketSubscribe = true;
-        if (action.payload.chat.chatRoom === draft.currentChatRoom._id) {
+        if (action.payload.chat.chatRoom === draft.currentChatRoom._id
+          || action.payload.chat.directRoom === draft.currentChatRoom._id) {
           draft.chatList.push(action.payload.chat);
         }
         draft.message = action.payload.message;
@@ -150,7 +151,17 @@ const chat = (state = initialState, action) => {
       case LOAD_CHAT_USERS_SUCCESS:
         draft.loadChatUsersLoading = false;
         draft.loadChatUsersDone = true;
-        draft.chatUsers = action.payload.users.filter(user => (user._id !== action.payload.userId));
+        const users = action.payload.users.filter(user => (user._id !== action.payload.userId));
+        const getDirectRoomId = (user) => {
+          if (user._id > action.payload.userId) {
+            return `${user._id}/${action.payload.userId}`
+          }
+          return `${action.payload.userId}/${user._id}`
+        }
+        draft.chatUsers = users.map(user => {
+          user.directRoom = getDirectRoomId(user)
+          return user;
+        });
         draft.message = action.payload.message;
         break;
       case LOAD_CHAT_USERS_FAILURE:
@@ -159,11 +170,11 @@ const chat = (state = initialState, action) => {
         draft.message = action.error.message;
         break;
       case SET_CURRENT_DIRECT_ROOM:
-        const directUser = draft.chatUsers.filter(user => (user._id === action.payload))[0];
+        const directUser = draft.chatUsers.filter(user => (user.directRoom === action.payload))[0];
         draft.currentChatRoom = {
           private: true,
           favorite: null,
-          _id: directUser._id,
+          _id: directUser.directRoom,
           title: directUser.name,
           description: `${directUser.name}님에게 안부를 물어보세요.`,
           writer: directUser,

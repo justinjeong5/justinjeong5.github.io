@@ -9,15 +9,19 @@ function MessageForm() {
   const { currentUser } = useSelector(state => state.user)
   const { currentChatRoom } = useSelector(state => state.chat)
 
-
   const handleFinish = () => {
     const value = form.getFieldValue();
     if (!value.content?.trim()) return;
     const payload = {
       content: value.content.trim(),
       writer: currentUser.userId,
-      chatRoom: currentChatRoom._id,
     };
+
+    if (currentChatRoom.private) {
+      payload.directRoom = currentChatRoom._id;
+    } else {
+      payload.chatRoom = currentChatRoom._id;
+    }
     sendChat(payload)
     form.resetFields();
   }

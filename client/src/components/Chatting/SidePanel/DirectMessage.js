@@ -11,24 +11,24 @@ function DirectMessage() {
   const dispatch = useDispatch();
   const { chatUsers, currentChatRoom, loadChatUsersDone } = useSelector(state => state.chat)
 
-  const handleCurrentRoom = (roomId) => () => {
+  const handleCurrentRoom = (directRoom) => () => {
     dispatch({
       type: SET_CURRENT_DIRECT_ROOM,
-      payload: roomId,
+      payload: directRoom,
     })
   }
 
-  const renderSelected = (roomId) => {
-    if (roomId === currentChatRoom._id) {
+  const renderSelected = (directRoom) => {
+    if (directRoom === currentChatRoom._id) {
       return 'gray'
     }
     return ''
   }
 
   const renderRirectMessages = chatUsers.map(user => (
-    <div key={uuidv4()} onClick={handleCurrentRoom(user._id)}
+    <div key={uuidv4()} onClick={handleCurrentRoom(user.directRoom)}
       style={{
-        backgroundColor: renderSelected(user._id),
+        backgroundColor: renderSelected(user.directRoom),
         margin: '0.2rem',
         padding: '0.2rem',
         borderRadius: '0.3rem'

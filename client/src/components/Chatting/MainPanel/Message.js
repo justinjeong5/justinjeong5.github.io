@@ -12,10 +12,16 @@ function Message() {
   const { chatList, currentChatRoom, loadChatsDone, loadChatsLoading } = useSelector(state => state.chat)
 
   useEffect(() => {
-    if (currentChatRoom?._id) {
+    if (currentChatRoom) {
+      const payload = {};
+      if (currentChatRoom.private) {
+        payload.directRoom = currentChatRoom._id;
+      } else {
+        payload.chatRoom = currentChatRoom._id;
+      }
       dispatch({
         type: LOAD_CHATS_REQUEST,
-        payload: currentChatRoom._id,
+        payload
       })
     }
   }, [dispatch, currentChatRoom])

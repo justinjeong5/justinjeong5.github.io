@@ -37,7 +37,7 @@ function* SocketSubscribe(action) {
 }
 
 function loadChatAPI(data) {
-  return axios.get(`/api/chat/chats?roomId=${data}`)
+  return axios.post('/api/chat/chats', data)
 }
 
 function* loadChat(action) {
