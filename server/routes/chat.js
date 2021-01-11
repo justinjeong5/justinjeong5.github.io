@@ -5,12 +5,8 @@ const { auth } = require('../middleware/auth')
 const { Chat } = require('../models/Chat')
 
 
-router.get('/chats', auth, (req, res) => {
-  const variables = {}
-  if (req.query.roomId) {
-    variables.chatRoom = req.query.roomId
-  }
-  Chat.find(variables)
+router.post('/chats', auth, (req, res) => {
+  Chat.find(req.body)
     .populate('writer')
     .exec((error, chats) => {
       if (error) {

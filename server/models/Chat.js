@@ -10,6 +10,9 @@ const chatSchema = mongoose.Schema({
     type: Schema.Types.ObjectId,
     ref: 'ChatRoom'
   },
+  directRoom: {
+    type: String
+  },
   content: {
     type: String,
   },
