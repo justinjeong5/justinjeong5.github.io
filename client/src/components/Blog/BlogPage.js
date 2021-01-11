@@ -4,6 +4,7 @@ import StyledLink from '../utils/StyledLink'
 import { v4 as uuidv4 } from 'uuid'
 import { Card, Avatar, Col, Row, Typography, Skeleton, Empty } from 'antd'
 import { SettingOutlined, EditOutlined, EllipsisOutlined } from '@ant-design/icons'
+import moment from 'moment'
 import { LOAD_BLOG_POSTS_REQUEST } from '../../reducers/types'
 
 const { Title } = Typography;
@@ -53,7 +54,11 @@ function BlogPage() {
             <Card.Meta
               avatar={<Avatar src={blog.writer.image} />}
               title={blog.title.slice(0, 20)}
-              description={blog.writer.name}
+              description={
+                <span style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <p>{blog.writer.name}</p>
+                  <p style={{ marginRight: 10 }}>{moment(blog.createdAt).fromNow()}</p>
+                </span>}
             />
             <div style={{ height: 400, overflowY: 'scroll', marginTop: 10, color: 'black' }}>
               <div dangerouslySetInnerHTML={{ __html: blog.content }} />

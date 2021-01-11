@@ -38,6 +38,7 @@ function Comment(props) {
       {loadCommentsDone && renderComment}
       <br />
       <CommentForm payload={props.payload} description={props.description} placeholder={props.placeholder} />
+      <br />
     </div>
   )
 }

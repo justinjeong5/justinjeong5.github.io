@@ -37,7 +37,7 @@ function NavBar() {
           <MenuOutlined />
         </Button>
         <Drawer
-          title="Boilerplate"
+          title="JustinJeong5.github.io"
           placement="right"
           className="menu_drawer"
           closable={false}
