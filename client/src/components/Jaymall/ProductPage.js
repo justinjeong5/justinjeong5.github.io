@@ -32,11 +32,13 @@ function ProductPage() {
   }, [dispatch, loadProductsLoading, noMoreProducts, skip, limit, orderBy, sortBy, filters]);
 
   useEffect(() => {
-    dispatch({
-      type: LOAD_PRODUCTS_REQUEST,
-      payload: { skip, limit },
-    });
-  }, [dispatch])
+    if (skip === 0) {
+      dispatch({
+        type: LOAD_PRODUCTS_REQUEST,
+        payload: { skip, limit },
+      });
+    }
+  }, [dispatch, skip])
 
   const onFilterChange = (data) => {
     dispatch({
@@ -72,7 +74,7 @@ function ProductPage() {
         </div>
         {productData && <ProductFilter onFilterChange={onFilterChange} />}
         <Row gutter={[24, 32]}>
-          {loadProductsLoading && renderSkeleton}
+          {loadProductsLoading && !productData.length && renderSkeleton}
           {productData?.map(product => (
             <ProductCard key={uuidv4()} product={product} />
           ))}

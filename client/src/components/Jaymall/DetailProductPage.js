@@ -4,7 +4,7 @@ import { withRouter, useParams, useHistory } from 'react-router-dom'
 import { PageHeader, Row, Col, Divider } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons'
 
-import { LOAD_PRODUCT_DETAILS_REQUEST, SET_ALL_FILTERS_INFO } from '../../reducers/types'
+import { LOAD_PRODUCT_DETAILS_REQUEST } from '../../reducers/types'
 import ProductImage from './Detail/ProductImage'
 import ProductInfo from './Detail/ProductInfo'
 import { ProductClothesSort, ProductAccessorySort } from './utils/ProductSort'
@@ -40,13 +40,6 @@ function DetailProductPage() {
   }, [dispatch, productId])
 
   const handleHistory = () => {
-    dispatch({
-      type: SET_ALL_FILTERS_INFO,
-      payload: {
-        skip: 0,
-        limit: 8,
-      }
-    })
     history.goBack(1);
   }
 

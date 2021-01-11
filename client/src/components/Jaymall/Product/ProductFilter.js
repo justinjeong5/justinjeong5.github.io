@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react'
 import { Divider, Checkbox, Row, Col, Slider, Collapse, Input, Radio } from 'antd'
 import { ShoppingOutlined } from '@ant-design/icons'
@@ -11,6 +10,7 @@ const marks = {
 
 function ProductFilter(props) {
 
+  const [trigger, setTrigger] = useState(false)
   const [priceRange, setPriceRange] = useState([0, 500000])
   const [word, setWord] = useState('')
   const [orderBy, setOrderBy] = useState(-1)
@@ -26,14 +26,17 @@ function ProductFilter(props) {
 
 
   useEffect(() => {
-    const payload = {
-      sort: [...checkedClothesList, ...checkedAccessoryList],
-      price: [priceRange[0] * 10000, priceRange[1] * 10000],
-      word,
-      orderBy,
-      sortBy,
+    if (trigger) {
+      const payload = {
+        sort: [...checkedClothesList, ...checkedAccessoryList],
+        price: [priceRange[0] * 10000, priceRange[1] * 10000],
+        word,
+        orderBy,
+        sortBy,
+      }
+      props.onFilterChange(payload)
     }
-    props.onFilterChange(payload)
+    setTrigger(true)
   }, [checkedClothesList, checkedAccessoryList, priceRange, word, orderBy, sortBy])
 
   const onChangeClothes = list => {
@@ -121,8 +124,8 @@ function ProductFilter(props) {
                 순서
               </Divider>
               <Radio.Group onChange={handleChangeOrderBy} value={orderBy}>
-                <Radio value={-1}>오름차순</Radio>
-                <Radio value={1}>내림차순</Radio>
+                <Radio value={1}>오름차순</Radio>
+                <Radio value={-1}>내림차순</Radio>
               </Radio.Group>
             </Col>
             <Col span={10} style={{ margin: 'auto' }}>
