@@ -86,6 +86,7 @@ app.use('/api/jaymall', require('./routes/jaymall'));
 app.use('/api/blog', require('./routes/blog'));
 app.use('/api/chat', require('./routes/chat'));
 app.use('/api/chatRoom', require('./routes/chatRoom'));
+app.use('/api/comment', require('./routes/comment'));
 
 
 app.get('/', (req, res) => {
