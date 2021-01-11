@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { withRouter, useHistory } from 'react-router-dom';
 import { Typography, Form, Button, message as Message, Input, Space } from 'antd'
 import { CREATE_BLOG_POST_REQUEST, RESET_CREATE_BLOG_POST } from '../../reducers/types'
 import QuillEditor from './Editor/QuillEditor'
 const { Title } = Typography;
 
-function CreatePage(props) {
+function CreatePage() {
 
   const dispatch = useDispatch();
+  const history = useHistory();
   const [content, setContent] = useState('')
   const [title, setTitle] = useState('')
   const [files, setFiles] = useState([]);
@@ -24,10 +25,10 @@ function CreatePage(props) {
         dispatch({
           type: RESET_CREATE_BLOG_POST
         })
-        props.history.push('/blog')
+        history.push('/blog')
       }, 2000)
     }
-  }, [createBlogPostDone])
+  }, [dispatch, history, createBlogPostDone])
 
   const onSubmit = () => {
     if (title === '') return Message.error('제목을 작성해주세요.');

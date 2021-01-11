@@ -1,17 +1,19 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { withRouter } from 'react-router-dom'
+import { withRouter, useParams, useHistory } from 'react-router-dom'
 import { PageHeader, Row, Col, Divider } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons'
 
-import { LOAD_PRODUCT_DETAILS_REQUEST } from '../../reducers/types'
+import { LOAD_PRODUCT_DETAILS_REQUEST, SET_ALL_FILTERS_INFO } from '../../reducers/types'
 import ProductImage from './Detail/ProductImage'
 import ProductInfo from './Detail/ProductInfo'
 import { ProductClothesSort, ProductAccessorySort } from './utils/ProductSort'
 
-function DetailProductPage(props) {
+function DetailProductPage() {
 
   const dispatch = useDispatch();
+  const history = useHistory();
+  const { productId } = useParams();
   const { currentProduct, loadProductDetailsLoading, loadProductDetailsDone } = useSelector(state => state.jaymall)
 
   const getIndex = (target) => {
@@ -33,9 +35,20 @@ function DetailProductPage(props) {
   useEffect(() => {
     dispatch({
       type: LOAD_PRODUCT_DETAILS_REQUEST,
-      payload: props.match.params.productId
+      payload: productId
     })
-  }, [props.match.params.productId])
+  }, [dispatch, productId])
+
+  const handleHistory = () => {
+    dispatch({
+      type: SET_ALL_FILTERS_INFO,
+      payload: {
+        skip: 0,
+        limit: 8,
+      }
+    })
+    history.goBack(1);
+  }
 
   return (
     <div>
@@ -47,7 +60,7 @@ function DetailProductPage(props) {
         <div style={{ width: '100%', padding: '4rem' }}>
           <PageHeader
             className="site-page-header"
-            onBack={() => window.history.back()}
+            onBack={handleHistory}
             title={currentProduct.title}
             breadcrumb={{ routes }}
           />

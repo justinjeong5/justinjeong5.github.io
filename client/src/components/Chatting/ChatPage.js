@@ -38,7 +38,7 @@ function ChatPage() {
         type: SOCKET_DISCONNECT
       })
     }
-  }, [])
+  }, [dispatch])
 
   useEffect(() => {
     const timer = setInterval(() => {

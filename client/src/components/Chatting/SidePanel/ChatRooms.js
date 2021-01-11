@@ -24,7 +24,7 @@ function ChatRooms() {
     dispatch({
       type: LOAD_CHAT_ROOMS_REQUEST
     })
-  }, [])
+  }, [dispatch])
 
   useEffect(() => {
     if (createChatRoomDone && chatRooms[chatRooms.length - 1].writer._id === currentUser.userId) {
@@ -32,8 +32,8 @@ function ChatRooms() {
         type: SET_CURRENT_CHAT_ROOM,
         payload: chatRooms[chatRooms.length - 1]._id
       })
-    } 
-  }, [createChatRoomDone, chatRooms, currentUser.userId])
+    }
+  }, [dispatch, createChatRoomDone, chatRooms, currentUser.userId])
 
   const handleModal = () => {
     setShowModal(!showModal);

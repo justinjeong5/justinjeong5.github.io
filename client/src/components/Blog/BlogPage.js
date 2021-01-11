@@ -28,14 +28,14 @@ function BlogPage() {
     return () => {
       window.removeEventListener('scroll', onScroll);
     };
-  }, [loadBlogPostsLoading, noMorePosts, skip, limit, blogPosts]);
+  }, [dispatch, loadBlogPostsLoading, noMorePosts, skip, limit, blogPosts]);
 
   useEffect(() => {
     dispatch({
       type: LOAD_BLOG_POSTS_REQUEST,
       payload: { skip, limit },
     });
-  }, [])
+  }, [dispatch])
 
   const renderCards = blogPosts.map((blog) => {
     return (

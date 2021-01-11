@@ -22,7 +22,7 @@ function CartPage() {
         payload: cartItems
       })
     }
-  }, [currentUser, removeCartItemDone])
+  }, [dispatch, currentUser, removeCartItemDone])
 
   useEffect(() => {
     if (cartWithDetail) {

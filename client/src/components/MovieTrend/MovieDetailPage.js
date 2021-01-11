@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { withRouter } from 'react-router-dom'
+import { withRouter, useHistory, useParams } from 'react-router-dom'
 import Youtube from 'react-youtube'
 import { PageHeader, Tabs, Divider } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
@@ -15,28 +15,30 @@ import MovieFavorite from './Favorite/MovieFavorite'
 
 const { TabPane } = Tabs;
 
-function MovieDetailPage(props) {
+function MovieDetailPage() {
 
-  let movieDetailsPageFrontRef = React.createRef();
+  let movieDetailsPageFrontRef = useRef();
   const dispatch = useDispatch();
+  const history = useHistory();
+  const { movieId } = useParams();
   const { currentMovie, loadMovieDetailDone, loadMovieTrailerDone, loadMovieTrailerLoading } = useSelector(state => state.movie)
 
   useEffect(() => {
     movieDetailsPageFrontRef.scrollIntoView();
     dispatch({
       type: LOAD_MOVIE_DETAIL_REQUEST,
-      payload: props.match.params.movieId
+      payload: movieId
     })
-  }, [props.match.params.movieId])
+  }, [dispatch, movieId])
 
   useEffect(() => {
     if (loadMovieDetailDone) {
       dispatch({
         type: LOAD_MOVIE_TRAILER_REQUEST,
-        payload: props.match.params.movieId
+        payload: movieId
       })
     }
-  }, [loadMovieDetailDone, props.match.params.movieId])
+  }, [dispatch, loadMovieDetailDone, movieId])
 
   const renderPageHeader = (<>
     <Divider />
@@ -75,7 +77,7 @@ function MovieDetailPage(props) {
         <div style={{ width: '80%', margin: '1rem auto' }}>
           <PageHeader
             className="site-page-header-responsive"
-            onBack={() => window.history.back()}
+            onBack={() => history.goBack(1)}
             title={currentMovie.title}
             subTitle={currentMovie.original_title}
             footer={renderPageHeader}

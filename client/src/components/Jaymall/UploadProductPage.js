@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { withRouter } from 'react-router-dom'
+import { withRouter, useHistory } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
 import { Form, Input, InputNumber, Button, Typography, Select, message as Message, Space } from 'antd';
 import FileUploader from './File/FileUploader'
-import { RESET_UPLOAD_IMAGE, UPLOAD_PRODUCT_REQUEST } from '../../reducers/types'
+import { RESET_UPLOAD_IMAGE, UPLOAD_PRODUCT_REQUEST, SET_ALL_FILTERS_INFO } from '../../reducers/types'
 import { ProductClothesSort, ProductAccessorySort } from './utils/ProductSort'
 
 const layout = {
@@ -16,8 +16,9 @@ const layout = {
   },
 };
 
-function UploadProductPage(props) {
+function UploadProductPage() {
 
+  const history = useHistory();
   const { currentUser } = useSelector(state => state.user)
   const { fileData, uploadProductDone, uploadProductLoading, uploadProductError, uploadImageLoading, mesasge } = useSelector(state => state.jaymall)
   const dispatch = useDispatch();
@@ -32,10 +33,10 @@ function UploadProductPage(props) {
         dispatch({
           type: RESET_UPLOAD_IMAGE,
         })
-        props.history.push('/jaymall')
+        history.push('/jaymall')
       }, 2000)
     }
-  }, [uploadProductDone, props.history, mesasge, uploadProductError])
+  }, [dispatch, uploadProductDone, history, mesasge, uploadProductError])
 
   const onFinish = (values) => {
     const payload = {
@@ -48,6 +49,17 @@ function UploadProductPage(props) {
       payload
     })
   };
+
+  const handleHistory = () => {
+    dispatch({
+      type: SET_ALL_FILTERS_INFO,
+      payload: {
+        skip: 0,
+        limit: 8,
+      }
+    })
+    history.goBack(1);
+  }
 
   return (
     <div style={{ maxWidth: 700, margin: '3rem auto' }}>
@@ -90,7 +102,7 @@ function UploadProductPage(props) {
             <InputNumber
               style={{ width: 140, alignItems: 'end' }}
               formatter={value => value.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-              parser={value => value.replace(/\원\s?|(,*)/g, '')}
+              parser={value => value.replace(/(,*)/g, '')}
               placeholder='가격'
             />
           </Form.Item>
@@ -125,7 +137,7 @@ function UploadProductPage(props) {
               <Button type="primary" htmlType="submit" disabled={uploadProductLoading || uploadImageLoading}>
                 상품 등록
               </Button>
-              <Button onClick={() => { props.history.goBack() }}>
+              <Button onClick={handleHistory}>
                 취소
               </Button>
             </Space>

@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { withRouter } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid'
 import { Row, Col, Typography, Skeleton, Empty } from 'antd';
 
@@ -30,14 +29,14 @@ function ProductPage() {
     return () => {
       window.removeEventListener('scroll', onScroll);
     };
-  }, [loadProductsLoading, noMoreProducts, skip, limit, orderBy, sortBy, filters]);
+  }, [dispatch, loadProductsLoading, noMoreProducts, skip, limit, orderBy, sortBy, filters]);
 
   useEffect(() => {
     dispatch({
       type: LOAD_PRODUCTS_REQUEST,
       payload: { skip, limit },
     });
-  }, [])
+  }, [dispatch])
 
   const onFilterChange = (data) => {
     dispatch({
@@ -86,4 +85,4 @@ function ProductPage() {
   )
 }
 
-export default withRouter(ProductPage);
+export default ProductPage;

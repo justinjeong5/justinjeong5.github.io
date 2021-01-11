@@ -22,7 +22,7 @@ function MoviePage() {
       type: LOAD_MOVIES_REQUEST,
       payload: pageNumber
     })
-  }, [])
+  }, [dispatch])
 
   useEffect(() => {
     function onScroll() {
@@ -39,7 +39,7 @@ function MoviePage() {
     return () => {
       window.removeEventListener('scroll', onScroll);
     };
-  }, [loadMoviesLoading, pageNumber]);
+  }, [dispatch, loadMoviesLoading, pageNumber]);
 
   const renderMovieCard = movieData?.map((movie) => {
     return (

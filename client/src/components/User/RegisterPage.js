@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, withRouter } from 'react-router-dom';
+import { Link, withRouter, useHistory } from 'react-router-dom';
 import { Form, Input, Button, Typography, message as Message, Space } from 'antd';
 import { UserOutlined, MailOutlined, LockOutlined, CheckSquareOutlined } from '@ant-design/icons';
 import md5 from 'md5'
@@ -16,19 +16,20 @@ const tailLayout = {
   wrapperCol: { offset: 8, span: 16 },
 };
 
-function RegisterPage(props) {
+function RegisterPage() {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
+  const history = useHistory();
   const { registerUserLoading, registerUserDone, registerUserError, message } = useSelector(state => state.user)
 
   useEffect(() => {
     if (registerUserDone) {
-      props.history.push('/login')
+      history.push('/login')
     }
     if (registerUserError) {
       Message.error({ content: message, duration: 2 });
     }
-  }, [registerUserDone, registerUserError, props.history, message])
+  }, [registerUserDone, registerUserError, history, message])
 
   const onFinish = async (values) => {
     const payload = {
@@ -111,7 +112,7 @@ function RegisterPage(props) {
               disabled={registerUserLoading}>
               회원가입
             </Button>
-            <Button onClick={() => { props.history.goBack() }} >
+            <Button onClick={() => { history.goBack(1) }} >
               취소
             </Button>
           </Space>

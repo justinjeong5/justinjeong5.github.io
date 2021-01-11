@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { withRouter } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Form, Input, Button, Typography, message as Message, Space, Popover } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { EDIT_USER_REQUEST, CONFIRM_USER_REQUEST } from '../../reducers/types';
@@ -14,8 +14,9 @@ const tailLayout = {
   wrapperCol: { offset: 8, span: 16 },
 };
 
-function EditPage(props) {
+function EditPage() {
   const [form] = Form.useForm();
+  const history = useHistory();
   const dispatch = useDispatch();
   const { currentUser, editUserLoading, editUserDone, editUserError, message,
     confirmUserLoading, confirmUserDone, confirmUserError } = useSelector(state => state.user)
@@ -25,12 +26,12 @@ function EditPage(props) {
       userName: currentUser?.name,
     });
     if (editUserDone) {
-      props.history.push('/')
+      history.push('/')
     }
     if (editUserError || confirmUserError) {
       Message.error({ content: message, duration: 2 });
     }
-  }, [currentUser, editUserDone, editUserError, confirmUserError, message, props.history, form])
+  }, [currentUser, editUserDone, editUserError, confirmUserError, message, history, form])
 
   const handleEdit = (values) => {
     dispatch({
@@ -101,7 +102,7 @@ function EditPage(props) {
               : <Button type="primary" htmlType="submit" loading={confirmUserLoading} disabled={confirmUserLoading}>
                 본인 확인
                 </Button>}
-            <Button onClick={() => { props.history.goBack() }} >
+            <Button onClick={() => { history.goBack(1) }} >
               취소
             </Button>
           </Space>
@@ -111,4 +112,4 @@ function EditPage(props) {
   )
 }
 
-export default withRouter(EditPage);
+export default EditPage;

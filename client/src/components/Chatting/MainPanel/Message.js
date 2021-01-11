@@ -18,7 +18,7 @@ function Message() {
         payload: currentChatRoom._id,
       })
     }
-  }, [currentChatRoom])
+  }, [dispatch, currentChatRoom])
 
   const timeFromNow = (timestamp) => {
     return moment(timestamp).fromNow();

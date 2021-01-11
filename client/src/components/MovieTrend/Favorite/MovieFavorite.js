@@ -32,7 +32,7 @@ function MovieFavorite() {
         }
       })
     }
-  }, [currentUser, currentMovie, isFavorited])
+  }, [dispatch, currentUser, currentMovie, isFavorited])
 
   const handleFavorite = () => {
     dispatch({

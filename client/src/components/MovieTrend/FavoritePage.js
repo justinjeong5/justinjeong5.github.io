@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import StyledLink from '../utils/StyledLink'
 import { v4 as uuidv4 } from 'uuid'
@@ -23,7 +23,7 @@ function FavoritePage() {
   const { currentUser } = useSelector(state => state.user)
   const { favoritedList, loadFavoritedListLoading, loadFavoritedListDone,
     changeFavoriteDone, changeFavoriteLoading } = useSelector(state => state.movieFavorite)
-  let movieDetailsPageFrontRef = React.createRef();
+  let movieDetailsPageFrontRef = useRef();
 
   useEffect(() => {
     if (movieDetailsPageFrontRef) {
@@ -37,7 +37,7 @@ function FavoritePage() {
         }
       })
     }
-  }, [currentUser, changeFavoriteDone])
+  }, [dispatch, currentUser, changeFavoriteDone])
 
   const handleFavorite = (movie) => () => {
     dispatch({

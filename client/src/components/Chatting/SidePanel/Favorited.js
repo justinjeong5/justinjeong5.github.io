@@ -16,7 +16,7 @@ function Favorited() {
     dispatch({
       type: LOAD_CHAT_ROOMS_REQUEST
     })
-  }, [])
+  }, [dispatch])
 
   useEffect(() => {
     if (chatRooms?.length) {

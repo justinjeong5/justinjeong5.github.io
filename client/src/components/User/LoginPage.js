@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, withRouter } from 'react-router-dom';
+import { Link, withRouter, useHistory } from 'react-router-dom';
 import { Form, Button, Checkbox, Space, Typography, message as Message } from 'antd';
 import { LOGIN_USER_REQUEST } from '../../reducers/types';
 import EmailForm from './LoginForm/EmailForm';
@@ -16,19 +16,20 @@ const tailLayout = {
   wrapperCol: { offset: 8, span: 16 },
 };
 
-function LoginPage(props) {
+function LoginPage() {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
+  const history = useHistory();
   const { loginUserLoading, loginUserDone, loginUserError, message } = useSelector(state => state.user)
 
   useEffect(() => {
     if (loginUserDone) {
-      props.history.push('/')
+      history.push('/')
     }
     if (loginUserError) {
       Message.error({ content: message, duration: 2 });
     }
-  }, [loginUserDone, loginUserError, props.history, message])
+  }, [loginUserDone, loginUserError, history, message])
 
   const initialValues = {
     rememberMe: true,
@@ -78,7 +79,7 @@ function LoginPage(props) {
               disabled={loginUserLoading}>
               로그인
               </Button>
-            <Button onClick={() => { props.history.goBack() }}>
+            <Button onClick={() => { history.goBack(1) }}>
               취소
             </Button>
           </Space>

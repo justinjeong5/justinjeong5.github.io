@@ -19,7 +19,7 @@ function MovieCasting() {
         payload: currentMovie.id
       })
     }
-  }, [loadMovieDetailDone, currentMovie.id])
+  }, [dispatch, loadMovieDetailDone, currentMovie.id])
 
   return (
     <div>

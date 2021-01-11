@@ -1,23 +1,26 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { withRouter } from 'react-router-dom'
+import { withRouter, useParams, useHistory } from 'react-router-dom'
 import { PageHeader, Divider, Card, Avatar } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
 import { LOAD_BLOG_POST_REQUEST } from '../../reducers/types';
 import moment from 'moment'
 import 'moment/locale/ko'
 
-function PostPage(props) {
+function PostPage() {
 
   const dispatch = useDispatch();
+  const history = useHistory();
+
+  const { postId } = useParams();
   const { currentBlogPost, loadBlogPostLoading, loadBlogPostDone } = useSelector(state => state.blog)
 
   useEffect(() => {
     dispatch({
       type: LOAD_BLOG_POST_REQUEST,
-      payload: props.match.params.postId,
+      payload: postId,
     })
-  }, [])
+  }, [dispatch, postId])
 
   return (
     <>
@@ -28,7 +31,7 @@ function PostPage(props) {
         <div style={{ width: '80%', maxWidth: '1000px', padding: 24, margin: '3rem auto' }}>
           <PageHeader
             ghost={false}
-            onBack={() => window.history.back()}
+            onBack={() => history.goBack(1)}
             title={currentBlogPost.title}
           >
             <Card style={{ border: 'none' }}>

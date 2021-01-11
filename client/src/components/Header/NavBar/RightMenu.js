@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useLocation, withRouter } from 'react-router-dom'
+import { Link, useLocation, withRouter, useHistory } from 'react-router-dom'
 import { Menu, message as Message } from 'antd';
 import { LogoutOutlined, LoginOutlined, UserAddOutlined, UserOutlined, LoadingOutlined } from '@ant-design/icons'
 import { LOGOUT_USER_REQUEST } from '../../../reducers/types';
@@ -11,6 +11,7 @@ const { Item } = Menu;
 function RightMenu(props) {
 
   const dispatch = useDispatch();
+  const history = useHistory();
   const { currentUser, logoutUserLoading, logoutUserDone, logoutUserError, message } = useSelector(state => state.user)
   const [prevLocation, setPrevLocation] = useState('/')
   const currentLocation = useLocation();
@@ -31,12 +32,12 @@ function RightMenu(props) {
   useEffect(() => {
     if (logoutUserDone) {
       if (prevLocation === '/talkative') {
-        props.history.push('/');
+        history.push('/');
       } else {
-        props.history.push(prevLocation);
+        history.push(prevLocation);
       }
     }
-  }, [logoutUserDone, props.history])
+  }, [logoutUserDone, prevLocation, history])
 
   const handleLogout = () => {
     dispatch({
