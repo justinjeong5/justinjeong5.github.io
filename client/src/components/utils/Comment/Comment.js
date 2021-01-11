@@ -14,7 +14,6 @@ function Comment(props) {
   const { commentList, loadCommentsLoading, loadCommentsDone } = useSelector(state => state.comment)
 
   useEffect(() => {
-    console.log(props.payload, 'comment dispatcher payload')
     dispatch({
       type: LOAD_COMMENTS_REQUEST,
       payload: props.payload
