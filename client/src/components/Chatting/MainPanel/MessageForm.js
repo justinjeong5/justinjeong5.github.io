@@ -41,10 +41,10 @@ function MessageForm() {
         onKeyDown={handleKeyDown}
       >
         <Form.Item name='content' >
-          <Input.TextArea placeholder="메세지를 입력하세요." showCount maxLength={100} />
+          <Input.TextArea disabled={!currentUser.isAuth} placeholder={currentUser.isAuth ? '메세지를 입력하세요.' : '로그인해주세요.'} showCount maxLength={100} />
         </Form.Item>
         <Form.Item>
-          <Button type="primary" htmlType="submit" style={{ marginRight: 10 }}>
+          <Button disabled={!currentUser.isAuth} type="primary" htmlType="submit" style={{ marginRight: 10 }}>
             보내기
           </Button>
         </Form.Item>

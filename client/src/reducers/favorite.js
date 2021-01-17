@@ -3,7 +3,7 @@ import produce from 'immer'
 import {
   LOAD_FAVORITE_NUMBER_REQUEST, LOAD_FAVORITE_NUMBER_SUCCESS, LOAD_FAVORITE_NUMBER_FAILURE,
   CHANGE_FAVORITE_REQUEST, CHANGE_FAVORITE_SUCCESS, CHANGE_FAVORITE_FAILURE,
-  LOAD_IS_FAVORITED_REQUEST, LOAD_IS_FAVORITED_SUCCESS, LOAD_IS_FAVORITED_FAILURE,
+  LOAD_FAVORITED_REQUEST, LOAD_FAVORITED_SUCCESS, LOAD_FAVORITED_FAILURE,
   LOAD_FAVORITED_LIST_REQUEST, LOAD_FAVORITED_LIST_SUCCESS, LOAD_FAVORITED_LIST_FAILURE,
 } from './types'
 
@@ -62,18 +62,18 @@ const favorite = (state = initialState, action) => {
         draft.changeFavoriteError = action.error.code;
         draft.message = action.error.message;
         break;
-      case LOAD_IS_FAVORITED_REQUEST:
+      case LOAD_FAVORITED_REQUEST:
         draft.loadIsFavoritedLoading = true;
         draft.loadIsFavoritedDone = false;
         draft.loadIsFavoritedError = null;
         break;
-      case LOAD_IS_FAVORITED_SUCCESS:
+      case LOAD_FAVORITED_SUCCESS:
         draft.loadIsFavoritedLoading = false;
         draft.loadIsFavoritedDone = true;
         draft.message = action.payload.message;
         draft.isFavorited = action.payload.isFavorited;
         break;
-      case LOAD_IS_FAVORITED_FAILURE:
+      case LOAD_FAVORITED_FAILURE:
         draft.loadIsFavoritedLoading = false;
         draft.loadIsFavoritedError = action.error.code;
         draft.message = action.error.message;

@@ -3,21 +3,21 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Tag } from 'antd'
 import { HeartTwoTone, HeartOutlined, LoadingOutlined } from '@ant-design/icons'
 import {
-  LOAD_FAVORITE_NUMBER_REQUEST, CHANGE_FAVORITE_REQUEST, LOAD_IS_FAVORITED_REQUEST
+  LOAD_FAVORITE_NUMBER_REQUEST, CHANGE_FAVORITE_REQUEST, LOAD_FAVORITED_REQUEST
 } from '../../../reducers/types';
 
 function MovieFavorite() {
 
   const dispatch = useDispatch();
   const { isFavorited, favoriteNumber, loadIsFavoritedDone,
-    loadFavoriteNumberLoading, loadFavoriteNumberDone } = useSelector(state => state.movieFavorite)
+    loadFavoriteNumberLoading, loadFavoriteNumberDone } = useSelector(state => state.favorite)
   const { currentMovie } = useSelector(state => state.movie)
   const { currentUser } = useSelector(state => state.user)
 
   useEffect(() => {
-    if (currentUser && currentMovie) {
+    if (currentUser.isAuth && currentMovie) {
       dispatch({
-        type: LOAD_IS_FAVORITED_REQUEST,
+        type: LOAD_FAVORITED_REQUEST,
         payload: {
           userFrom: currentUser._id,
           movieId: currentMovie.id,
@@ -58,9 +58,10 @@ function MovieFavorite() {
       {loadFavoriteNumberLoading && <LoadingOutlined />}
       {loadFavoriteNumberDone &&
         <Tag icon={loadIsFavoritedDone &&
-          (isFavorited
+          currentUser.isAuth ? (isFavorited
             ? <HeartTwoTone twoToneColor="#eb2f96" onClick={handleFavorite} />
             : <HeartOutlined onClick={handleFavorite} />)
+          : <span style={{ color: 'gray' }}>로그인해주세요(좋아요 개수) </span>
         }>
           {favoriteNumber}
         </Tag>

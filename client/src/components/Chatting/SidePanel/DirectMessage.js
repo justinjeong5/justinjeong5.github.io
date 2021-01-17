@@ -9,6 +9,7 @@ const { Title } = Typography;
 function DirectMessage() {
 
   const dispatch = useDispatch();
+  const { currentUser } = useSelector(state => state.user)
   const { chatUsers, currentChatRoom, loadChatUsersDone } = useSelector(state => state.chat)
 
   const handleCurrentRoom = (directRoom) => () => {
@@ -25,7 +26,7 @@ function DirectMessage() {
     return ''
   }
 
-  const renderRirectMessages = chatUsers.map(user => (
+  const renderRirectMessages = chatUsers?.map(user => (
     <div key={uuidv4()} onClick={handleCurrentRoom(user.directRoom)}
       style={{
         backgroundColor: renderSelected(user.directRoom),
@@ -41,23 +42,31 @@ function DirectMessage() {
     </div>
   ))
 
+  const renderEmptyMessages = (<div style={{ color: 'gray' }}>
+    로그인해주세요.
+  </div>)
+
+  const handleRerender = () => {
+    if (currentUser.isAuth) {
+      dispatch({
+        type: LOAD_CHAT_USERS_REQUEST
+      })
+    }
+  }
+
   return (
     <div>
       <Title level={5} style={{ color: 'white' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <span>
-            <CoffeeOutlined />{` DirectMessage [${chatUsers?.length}] `}
+            <CoffeeOutlined />{chatUsers ? ` DirectMessage [${chatUsers?.length}] ` : ` DirectMessage [0] `}
           </span>
           <RedoOutlined style={{ marginTop: 5, marginRight: 7 }}
-            onClick={() => {
-              dispatch({
-                type: LOAD_CHAT_USERS_REQUEST
-              })
-            }} />
+            onClick={handleRerender} />
         </div>
 
       </Title>
-      {loadChatUsersDone && renderRirectMessages}
+      {loadChatUsersDone && (chatUsers ? renderRirectMessages : renderEmptyMessages)}
     </div>
   )
 }

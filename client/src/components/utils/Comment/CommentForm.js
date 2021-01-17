@@ -42,11 +42,11 @@ function CommentForm(props) {
           name="content"
           rules={[{ required: true, message: '내용을 입력해주세요.' }]}
         >
-          <Input.TextArea placeholder={props.placeholder} />
+          <Input.TextArea disabled={props.disabled} placeholder={props.disabled ? '로그인해주세요.' : props.placeholder} />
         </Form.Item>
 
         <Form.Item >
-          <Button type="primary" htmlType="submit">
+          <Button disabled={props.disabled} type="primary" htmlType="submit">
             {props.description}
           </Button>
         </Form.Item>

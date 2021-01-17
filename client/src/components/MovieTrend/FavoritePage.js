@@ -22,7 +22,7 @@ function FavoritePage() {
   const dispatch = useDispatch();
   const { currentUser } = useSelector(state => state.user)
   const { favoritedList, loadFavoritedListLoading, loadFavoritedListDone,
-    changeFavoriteDone, changeFavoriteLoading } = useSelector(state => state.movieFavorite)
+    changeFavoriteDone, changeFavoriteLoading } = useSelector(state => state.favorite)
   let movieDetailsPageFrontRef = useRef();
 
   useEffect(() => {
@@ -43,9 +43,15 @@ function FavoritePage() {
     dispatch({
       type: CHANGE_FAVORITE_REQUEST,
       payload: {
-        userFrom: currentUser._id,
         movieId: movie.movieId,
+        userFrom: currentUser._id,
       }
+    })
+  }
+
+  const getFavoritedList = () => {
+    return favoritedList.filter(item => {
+      return item.movieId;
     })
   }
 
@@ -64,7 +70,7 @@ function FavoritePage() {
           <List
             itemLayout="vertical"
             size="large"
-            dataSource={favoritedList}
+            dataSource={getFavoritedList()}
             style={{ marginBottom: 100 }}
             renderItem={item => (
               <List.Item

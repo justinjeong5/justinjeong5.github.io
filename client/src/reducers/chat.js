@@ -7,7 +7,6 @@ import {
   LOAD_CHAT_ROOMS_REQUEST, LOAD_CHAT_ROOMS_SUCCESS, LOAD_CHAT_ROOMS_FAILURE,
   CREATE_CHAT_ROOM_SUCCESS, CREATE_CHAT_ROOM_FAILURE,
   SET_CURRENT_CHAT_ROOM,
-  TOGGLE_CHAT_ROOM_FAVORITE_REQUEST, TOGGLE_CHAT_ROOM_FAVORITE_SUCCESS, TOGGLE_CHAT_ROOM_FAVORITE_FAILURE,
   LOAD_CHAT_USERS_REQUEST, LOAD_CHAT_USERS_SUCCESS, LOAD_CHAT_USERS_FAILURE,
   SET_CURRENT_DIRECT_ROOM,
 } from './types'
@@ -32,9 +31,6 @@ const initialState = {
   createChatRoomLoading: false,
   createChatRoomDone: false,
   createChatRoomError: null,
-  toggleChatRoomFavoriteLoading: false,
-  toggleChatRoomFavoriteDone: false,
-  toggleChatRoomFavoriteError: null,
   loadChatUsersLoading: false,
   loadChatUsersDone: false,
   loadChatUsersError: null,
@@ -121,28 +117,6 @@ const chat = (state = initialState, action) => {
         draft.currentChatRoom = room;
         draft.message = 'currentChatRoom 정보를 정상적으로 변경했습니다.';
         break;
-      case TOGGLE_CHAT_ROOM_FAVORITE_REQUEST:
-        draft.toggleChatRoomFavoriteLoading = true;
-        draft.toggleChatRoomFavoriteDone = false;
-        draft.toggleChatRoomFavoriteError = null;
-        break;
-      case TOGGLE_CHAT_ROOM_FAVORITE_SUCCESS:
-        draft.toggleChatRoomFavoriteLoading = false;
-        draft.toggleChatRoomFavoriteDone = true;
-        draft.currentChatRoom.favorite = action.payload.favorite;
-        draft.chatRooms = draft.chatRooms.map((value) => {
-          if (value._id === action.payload.roomId) {
-            value.favorite = !value.favorite;
-          }
-          return value;
-        })
-        draft.message = action.payload.message;
-        break;
-      case TOGGLE_CHAT_ROOM_FAVORITE_FAILURE:
-        draft.toggleChatRoomFavoriteLoading = false;
-        draft.toggleChatRoomFavoriteError = action.error.code;
-        draft.message = action.error.message;
-        break;
       case LOAD_CHAT_USERS_REQUEST:
         draft.loadChatUsersLoading = true;
         draft.loadChatUsersDone = false;
@@ -151,14 +125,14 @@ const chat = (state = initialState, action) => {
       case LOAD_CHAT_USERS_SUCCESS:
         draft.loadChatUsersLoading = false;
         draft.loadChatUsersDone = true;
-        const users = action.payload.users.filter(user => (user._id !== action.payload.userId));
+        const users = action.payload.users?.filter(user => (user._id !== action.payload.userId));
         const getDirectRoomId = (user) => {
           if (user._id > action.payload.userId) {
             return `${user._id}/${action.payload.userId}`
           }
           return `${action.payload.userId}/${user._id}`
         }
-        draft.chatUsers = users.map(user => {
+        draft.chatUsers = users?.map(user => {
           user.directRoom = getDirectRoomId(user)
           return user;
         });
@@ -173,7 +147,7 @@ const chat = (state = initialState, action) => {
         const directUser = draft.chatUsers.filter(user => (user.directRoom === action.payload))[0];
         draft.currentChatRoom = {
           private: true,
-          favorite: null,
+          favorite: false,
           _id: directUser.directRoom,
           title: directUser.name,
           description: `${directUser.name}님에게 안부를 물어보세요.`,

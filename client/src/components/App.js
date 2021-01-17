@@ -34,16 +34,16 @@ function App() {
         <Route exact path='/login' component={Auth(LoginPage, false)} />
         <Route exact path='/edit' component={Auth(EditPage, true)} />
         <Route exact path='/movieTrend/' component={Auth(MoviePage, null)} />
-        <Route exact path="/movieTrend/movie/:movieId" component={Auth(MovieDetailPage, true)} />
+        <Route exact path="/movieTrend/movie/:movieId" component={Auth(MovieDetailPage, null)} />
         <Route exact path="/movieTrend/favorite" component={Auth(FavoritePage, true)} />
         <Route exact path="/jaymall/" component={Auth(ProductPage, null)} />
         <Route exact path="/jaymall/upload" component={Auth(UploadProductPage, true)} />
-        <Route exact path="/jaymall/product/:productId" component={Auth(DetailProductPage, true)} />
+        <Route exact path="/jaymall/product/:productId" component={Auth(DetailProductPage, null)} />
         <Route exact path="/jaymall/cart" component={Auth(CartPage, true)} />
         <Route exact path="/blog/" component={Auth(BlogPage, null)} />
         <Route exact path="/blog/create" component={Auth(CreatePage, true)} />
-        <Route exact path="/blog/post/:postId" component={Auth(PostPage, true)} />
-        <Route exact path="/talkative" component={Auth(ChatPage, true)} />
+        <Route exact path="/blog/post/:postId" component={Auth(PostPage, null)} />
+        <Route exact path="/talkative" component={Auth(ChatPage, null)} />
       </Switch>
       <Footer />
     </div>

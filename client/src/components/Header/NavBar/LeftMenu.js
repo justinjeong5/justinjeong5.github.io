@@ -37,7 +37,7 @@ function LeftMenu(props) {
       </StyledSubMenu>
 
       <StyledSubMenu title={<Title>채팅</Title>}>
-        <Item key="talkative" disabled={!currentUser?.isAuth} >
+        <Item key="talkative" >
           {<StyledLink to='/talkative'>토커팁</StyledLink>}
         </Item>
       </StyledSubMenu>

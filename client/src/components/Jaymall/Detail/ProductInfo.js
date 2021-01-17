@@ -8,6 +8,7 @@ import Comment from '../../utils/Comment/Comment'
 function ProductInfo() {
 
   const dispatch = useDispatch();
+  const { currentUser } = useSelector(state => state.user)
   const { currentProduct } = useSelector(state => state.jaymall)
 
   const handleAddToCart = () => {
@@ -35,12 +36,15 @@ function ProductInfo() {
               shape='round'
               type='danger'
               onClick={handleAddToCart}
-            >장바구니에 담기</Button>
+              disabled={!currentUser.isAuth}
+            >
+              {currentUser.isAuth ? '장바구니에 담기' : '로그인해주세요.'}
+            </Button>
           </div>
         </Tabs.TabPane>
 
         <Tabs.TabPane tab="구매 후기" key="productReview">
-          <Comment payload={{ jaymallId: currentProduct._id }} description='후기 남기기' placeholder="상품의 사용 후기를 공유해주세요!" />
+          <Comment disabled={!currentUser.isAuth} payload={{ jaymallId: currentProduct._id }} description='후기 남기기' placeholder="상품의 사용 후기를 공유해주세요!" />
         </Tabs.TabPane>
       </Tabs>
 

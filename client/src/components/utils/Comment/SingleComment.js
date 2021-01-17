@@ -17,7 +17,9 @@ function SingleComment(props) {
 
   const actions = [<span>좋아요</span>, <span>신고하기</span>]
   if (comment.writer._id !== currentUser.userId) {
-    actions.unshift(<span onClick={handleReply}>대댓글 달기</span>)
+    if (currentUser.isAuth) {
+      actions.unshift(<span onClick={handleReply}>대댓글 달기</span>)
+    }
   }
 
   return (

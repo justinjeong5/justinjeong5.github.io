@@ -37,7 +37,7 @@ function Message() {
 
   const renderSkeleton = Array.from(Array(4)).map(_ => <Skeleton key={uuidv4()} avatar />)
 
-  if (chatList.length === 0) {
+  if (chatList?.length === 0) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: 'calc(100vh - 500px)' }}>
         <Empty description='대화기록이 없습니다. 말을 걸어보세요.' />
@@ -48,7 +48,7 @@ function Message() {
   return (<>
     <div style={{ display: 'flex', flexDirection: 'column' }}>
       {loadChatsLoading && renderSkeleton}
-      {loadChatsDone && chatList.map(message => {
+      {loadChatsDone && chatList?.map(message => {
         if (isMessageMine(message)) {
           return (
             <div key={uuidv4()} style={{ marginLeft: 'auto', padding: '16px 0', display: 'flex' }}>

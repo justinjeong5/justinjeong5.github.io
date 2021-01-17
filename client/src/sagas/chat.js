@@ -8,7 +8,6 @@ import {
   SOCKET_SUBSCRIBE_REQUEST, SOCKET_SUBSCRIBE_SUCCESS, SOCKET_SUBSCRIBE_FAILURE,
   LOAD_CHATS_REQUEST, LOAD_CHATS_SUCCESS, LOAD_CHATS_FAILURE,
   LOAD_CHAT_ROOMS_REQUEST, LOAD_CHAT_ROOMS_SUCCESS, LOAD_CHAT_ROOMS_FAILURE,
-  TOGGLE_CHAT_ROOM_FAVORITE_REQUEST, TOGGLE_CHAT_ROOM_FAVORITE_SUCCESS, TOGGLE_CHAT_ROOM_FAVORITE_FAILURE,
   LOAD_CHAT_USERS_REQUEST, LOAD_CHAT_USERS_SUCCESS, LOAD_CHAT_USERS_FAILURE,
   CREATE_CHAT_ROOM_REQUEST, CREATE_CHAT_ROOM_SUCCESS, CREATE_CHAT_ROOM_FAILURE,
 } from '../reducers/types'
@@ -76,26 +75,6 @@ function* loadChatRoom() {
   }
 }
 
-function toggleChatRoomFavoriteAPI(data) {
-  return axios.post('/api/chatRoom/toggleFavorite', data)
-}
-
-function* toggleChatRoomFavorite(action) {
-  try {
-    const result = yield call(toggleChatRoomFavoriteAPI, action.payload);
-    yield put({
-      type: TOGGLE_CHAT_ROOM_FAVORITE_SUCCESS,
-      payload: result.data,
-    })
-  } catch (error) {
-    console.error(error)
-    yield put({
-      type: TOGGLE_CHAT_ROOM_FAVORITE_FAILURE,
-      error: error.response.data,
-    })
-  }
-}
-
 function loadChatUsersAPI() {
   return axios.get('/api/user/users')
 }
@@ -150,10 +129,6 @@ function* watchLoadChatRoom() {
   yield takeLatest(LOAD_CHAT_ROOMS_REQUEST, loadChatRoom)
 }
 
-function* watchToggleChatRoomFavorite() {
-  yield takeLatest(TOGGLE_CHAT_ROOM_FAVORITE_REQUEST, toggleChatRoomFavorite)
-}
-
 function* watchLoadChatUsers() {
   yield takeLatest(LOAD_CHAT_USERS_REQUEST, loadChatUsers)
 }
@@ -170,7 +145,6 @@ export default function* chatSaga() {
     fork(watchSocketSubscribe),
     fork(watchLoadChat),
     fork(watchLoadChatRoom),
-    fork(watchToggleChatRoomFavorite),
     fork(watchLoadChatUsers),
     fork(watchSocketSubscribeCreateChatRoom),
   ])

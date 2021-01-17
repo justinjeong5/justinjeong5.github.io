@@ -36,7 +36,9 @@ function ChatRooms() {
   }, [dispatch, createChatRoomDone, chatRooms, currentUser.userId])
 
   const handleModal = () => {
-    setShowModal(!showModal);
+    if (currentUser.isAuth) {
+      setShowModal(!showModal);
+    }
   }
 
   const handleMakeRoom = () => {
@@ -47,7 +49,6 @@ function ChatRooms() {
       title,
       description,
       writer: currentUser.userId,
-      favorite: false,
       private: false,
     })
     form.resetFields();

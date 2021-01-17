@@ -14,6 +14,7 @@ function PostPage() {
   const history = useHistory();
 
   const { postId } = useParams();
+  const { currentUser } = useSelector(state => state.user);
   const { currentBlogPost, loadBlogPostLoading, loadBlogPostDone } = useSelector(state => state.blog)
 
   useEffect(() => {
@@ -48,8 +49,7 @@ function PostPage() {
           <div style={{ margin: '3rem auto', height: '100%' }}>
             <div dangerouslySetInnerHTML={{ __html: currentBlogPost.content }} />
           </div>
-
-          <Comment payload={{ blogId: currentBlogPost._id }} description='덧글 남기기' placeholder='댓글을 남겨주세요. 블로거에게는 큰 힘이 됩니다.' />
+          <Comment disabled={!currentUser.isAuth} payload={{ blogId: currentBlogPost._id }} description='덧글 남기기' placeholder='댓글을 남겨주세요. 블로거에게는 큰 힘이 됩니다.' />
         </div>
       </>}
     </>

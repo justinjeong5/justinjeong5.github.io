@@ -57,13 +57,13 @@ function ProductPage() {
     })
   }
 
-  const renderSkeleton = Array.from(Array(limit)).map((_) => {
-    return (<>
-      <Col lg={6} md={8} sm={12} xs={24} >
+  const renderSkeleton = Array.from(Array(limit)).map(_ => {
+    return (
+      <Col key={uuidv4()} lg={6} md={8} sm={12} xs={24} >
         <Skeleton.Image />
         <Skeleton active />
       </Col>
-    </>)
+    )
   })
 
   return (

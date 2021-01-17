@@ -37,7 +37,7 @@ function Comment(props) {
       {loadCommentsLoading && renderSkeleton}
       {loadCommentsDone && renderComment}
       <br />
-      <CommentForm payload={props.payload} description={props.description} placeholder={props.placeholder} />
+      <CommentForm disabled={props.disabled} payload={props.payload} description={props.description} placeholder={props.placeholder} />
       <br />
     </div>
   )

@@ -1,63 +1,85 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Typography } from 'antd'
 import { BellOutlined } from '@ant-design/icons'
 import { v4 as uuidv4 } from 'uuid'
-import { LOAD_CHAT_ROOMS_REQUEST, SET_CURRENT_CHAT_ROOM } from '../../../reducers/types';
+import { SET_CURRENT_CHAT_ROOM, LOAD_FAVORITED_REQUEST, LOAD_FAVORITED_LIST_REQUEST } from '../../../reducers/types';
 const { Title } = Typography;
 
 function Favorited() {
 
   const dispatch = useDispatch();
-  const [favoriteChatRooms, setFavoriteChatRooms] = useState([])
-  const { chatRooms, currentChatRoom, loadChatRoomsDone } = useSelector(state => state.chat)
+  const { currentUser } = useSelector(state => state.user)
+  const { currentChatRoom } = useSelector(state => state.chat)
+  const { favoritedList, loadFavoritedListDone, changeFavoriteDone } = useSelector(state => state.favorite)
 
   useEffect(() => {
-    dispatch({
-      type: LOAD_CHAT_ROOMS_REQUEST
-    })
+    if (currentUser.isAuth && currentChatRoom) {
+      dispatch({
+        type: LOAD_FAVORITED_REQUEST,
+        payload: {
+          userFrom: currentUser.userId,
+          chatRoom: currentChatRoom._id,
+        }
+      })
+    }
   }, [dispatch])
 
   useEffect(() => {
-    if (chatRooms?.length) {
-      const favorites = chatRooms.filter(room => room.favorite)
-      setFavoriteChatRooms(favorites)
+    if (currentChatRoom) {
+      dispatch({
+        type: LOAD_FAVORITED_LIST_REQUEST,
+        payload: {
+          userFrom: currentUser.userId,
+        }
+      })
     }
-  }, [chatRooms])
+  }, [dispatch, changeFavoriteDone])
 
-  const handleCurrentRoom = (roomId) => () => {
+  const handleCurrentRoom = (chatRoomId) => () => {
     dispatch({
       type: SET_CURRENT_CHAT_ROOM,
-      payload: roomId,
+      payload: chatRoomId,
     })
   }
 
-  const renderSelected = (roomId) => {
-    if (roomId === currentChatRoom._id) {
+  const renderSelected = (chatRoomId) => {
+    if (chatRoomId === currentChatRoom._id) {
       return 'gray'
     }
     return ''
   }
 
-  const renderChatRooms = favoriteChatRooms.map((room) => (
-    <div key={uuidv4()} onClick={handleCurrentRoom(room._id)}
-      style={{
-        backgroundColor: renderSelected(room._id),
-        margin: '0.2rem',
-        padding: '0.2rem',
-        borderRadius: '0.3rem'
-      }}
-    >
-      {`# ${room.title}`}
-    </div>
-  ))
+  const renderChatRooms = favoritedList?.filter(item => {
+    return item.chatRoom
+  }).map((favorited) => {
+    const chatRoom = favorited.chatRoom;
+    return (
+      <div key={uuidv4()} onClick={handleCurrentRoom(chatRoom._id)}
+        style={{
+          backgroundColor: renderSelected(chatRoom._id),
+          margin: '0.2rem',
+          padding: '0.2rem',
+          borderRadius: '0.3rem'
+        }}
+      >
+        {`# ${chatRoom.title}`}
+      </div>
+    )
+  })
+
+  const renderEmptyMessages = (<div style={{ color: 'gray' }}>
+    로그인해주세요.
+  </div>)
 
   return (
     <div>
       <Title level={5} style={{ color: 'white' }}>
-        <BellOutlined />{` 좋아요 [${favoriteChatRooms.length}] `}
+        <BellOutlined />{favoritedList ? ` 즐겨찾기 [${favoritedList.filter(item => {
+          return item.chatRoom
+        }).length}] ` : ' 즐겨찾기 [0]'}
       </Title>
-      {loadChatRoomsDone && renderChatRooms}
+      {loadFavoritedListDone && (favoritedList ? renderChatRooms : renderEmptyMessages)}
     </div>
   )
 }

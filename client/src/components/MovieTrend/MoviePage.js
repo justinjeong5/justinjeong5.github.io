@@ -57,22 +57,20 @@ function MoviePage() {
   });
 
   return (
-    <>
-      <div style={{ height: 'calc(100vh - 80px)' }}>
-        {loadMoviesLoading &&
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100vw', height: '100vh' }}>
-            <LoadingOutlined style={{ fontSize: '10rem' }} />
-          </div>}
-        <MainImage movie={movieData[0]} />
-        <Divider />
-        <div style={{ width: '85%', margin: '1rem auto' }}>
-          <Title level={2} >오늘의 영화</Title>
-          <Row gutter={[16, 16]}>
-            {renderMovieCard}
-          </Row>
-        </div>
+    <div>
+      {loadMoviesLoading &&
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100vw', height: '100vh' }}>
+          <LoadingOutlined style={{ fontSize: '10rem' }} />
+        </div>}
+      <MainImage movie={movieData[0]} />
+      <Divider />
+      <div style={{ width: '85%', margin: '1rem auto' }}>
+        <Title level={2} >오늘의 영화</Title>
+        <Row gutter={[16, 16]}>
+          {renderMovieCard}
+        </Row>
       </div>
-    </>
+    </div>
   )
 }
 

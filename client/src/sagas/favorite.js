@@ -4,12 +4,12 @@ import axios from 'axios';
 import {
   LOAD_FAVORITE_NUMBER_REQUEST, LOAD_FAVORITE_NUMBER_SUCCESS, LOAD_FAVORITE_NUMBER_FAILURE,
   CHANGE_FAVORITE_REQUEST, CHANGE_FAVORITE_SUCCESS, CHANGE_FAVORITE_FAILURE,
-  LOAD_IS_FAVORITED_REQUEST, LOAD_IS_FAVORITED_SUCCESS, LOAD_IS_FAVORITED_FAILURE,
+  LOAD_FAVORITED_REQUEST, LOAD_FAVORITED_SUCCESS, LOAD_FAVORITED_FAILURE,
   LOAD_FAVORITED_LIST_REQUEST, LOAD_FAVORITED_LIST_SUCCESS, LOAD_FAVORITED_LIST_FAILURE,
 } from '../reducers/types'
 
 function LoadFavoriteNumberAPI(data) {
-  return axios.post('/api/movie/favorite/favoriteNumber', data)
+  return axios.post('/api/favorite/favoriteNumber', data)
 }
 
 function* loadFavoriteNumber(action) {
@@ -29,7 +29,7 @@ function* loadFavoriteNumber(action) {
 }
 
 function changeFavoriteAPI(data) {
-  return axios.post('/api/movie/favorite/changeFavorited', data)
+  return axios.post('/api/favorite/changeFavorited', data)
 }
 
 function* changeFavorite(action) {
@@ -49,27 +49,27 @@ function* changeFavorite(action) {
 }
 
 function isFavoritedAPI(data) {
-  return axios.post('/api/movie/favorite/isFavorited', data)
+  return axios.post('/api/favorite/isFavorited', data)
 }
 
 function* isFavorited(action) {
   try {
     const result = yield call(isFavoritedAPI, action.payload);
     yield put({
-      type: LOAD_IS_FAVORITED_SUCCESS,
+      type: LOAD_FAVORITED_SUCCESS,
       payload: result.data,
     })
   } catch (error) {
     console.error(error)
     yield put({
-      type: LOAD_IS_FAVORITED_FAILURE,
+      type: LOAD_FAVORITED_FAILURE,
       error: error.response.data,
     })
   }
 }
 
 function loadFavoritedListAPI(data) {
-  return axios.post('/api/movie/favorite/favoritedList', data)
+  return axios.post('/api/favorite/favoritedList', data)
 }
 
 function* loadFavoritedList(action) {
@@ -97,7 +97,7 @@ function* watchChangeFavorite() {
 }
 
 function* watchIsFavorited() {
-  yield takeLatest(LOAD_IS_FAVORITED_REQUEST, isFavorited)
+  yield takeLatest(LOAD_FAVORITED_REQUEST, isFavorited)
 }
 
 function* watchLoadFavoritedList() {

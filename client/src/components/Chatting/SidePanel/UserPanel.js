@@ -13,14 +13,17 @@ function UserPanel() {
       <Title level={3} style={{ color: 'white' }}>
         <SoundOutlined />{' '}Talk-A-Tive
         </Title>
-      <div style={{ display: 'flex', marginBottom: -15 }}>
-        <Card style={{ backgroundColor: '#415972', border: 'none', padding: 0 }}>
-          <Card.Meta
-            avatar={<Avatar style={{ marginTop: -4, marginRight: -12 }} src={currentUser?.image} />}
-            title={<p style={{ color: 'white' }}>{currentUser?.name}</p>} />
-        </Card>
-        <CaretDownOutlined style={{ zIndex: 1, marginTop: 27, marginLeft: -17 }} />
-      </div>
+
+      {currentUser.isAuth
+        ? <div style={{ display: 'flex', marginBottom: -15 }}>
+          <Card style={{ backgroundColor: '#415972', border: 'none', padding: 0 }}>
+            <Card.Meta
+              avatar={<Avatar style={{ marginTop: -4, marginRight: -12 }} src={currentUser?.image} />}
+              title={<p style={{ color: 'white' }}>{currentUser?.name}</p>} />
+          </Card>
+          <CaretDownOutlined style={{ zIndex: 1, marginTop: 27, marginLeft: -17 }} />
+        </div>
+        : <Title level={5} style={{ color: 'gray' }}>로그인이 필요한 서비스입니다.</Title>}
     </div>
   )
 }
