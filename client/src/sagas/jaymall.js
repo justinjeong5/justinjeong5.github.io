@@ -55,6 +55,7 @@ function* uploadProduct(action) {
 }
 
 function uploadImageAPI(data) {
+  console.log(data, 'Jaymall uploadImageAPI data')
   return axios.post('/api/jaymall/uploadImage', data.formData, data.config)
 }
 

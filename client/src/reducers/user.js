@@ -9,6 +9,7 @@ import {
   ADD_TO_CART_REQUEST, ADD_TO_CART_SUCCESS, ADD_TO_CART_FAILURE,
   LOAD_CART_ITEMS_REQUEST, LOAD_CART_ITEMS_SUCCESS, LOAD_CART_ITEMS_FAILURE,
   REMOVE_CART_ITEM_REQUEST, REMOVE_CART_ITEM_SUCCESS, REMOVE_CART_ITEM_FAILURE,
+  UPLOAD_USER_IMAGE_REQUEST, UPLOAD_USER_IMAGE_SUCCESS, UPLOAD_USER_IMAGE_FAILURE,
 } from './types'
 
 const initialState = {
@@ -43,6 +44,9 @@ const initialState = {
   removeCartItemLoading: false,
   removeCartItemDone: false,
   removeCartItemError: null,
+  uploadUserImageLoading: false,
+  uploadUserImageDone: false,
+  uploadUserImageError: null,
 }
 
 const user = (state = initialState, action) => {
@@ -225,6 +229,22 @@ const user = (state = initialState, action) => {
       case REMOVE_CART_ITEM_FAILURE:
         draft.removeCartItemLoading = false;
         draft.removeCartItemError = action.error.code;
+        draft.message = action.error.message;
+        break;
+      case UPLOAD_USER_IMAGE_REQUEST:
+        draft.uploadUserImageLoading = true;
+        draft.uploadUserImageDone = false;
+        draft.uploadUserImageError = null;
+        break;
+      case UPLOAD_USER_IMAGE_SUCCESS:
+        draft.uploadUserImageLoading = false;
+        draft.uploadUserImageDone = true;
+        draft.currentUser.image = action.payload.url;
+        draft.message = action.payload.message;
+        break;
+      case UPLOAD_USER_IMAGE_FAILURE:
+        draft.uploadUserImageLoading = false;
+        draft.uploadUserImageError = action.error.code;
         draft.message = action.error.message;
         break;
       default:

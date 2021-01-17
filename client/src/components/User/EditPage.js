@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom';
 import { Form, Input, Button, Typography, message as Message, Space, Popover } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import { EDIT_USER_REQUEST, CONFIRM_USER_REQUEST } from '../../reducers/types';
+import { EDIT_USER_REQUEST, CONFIRM_USER_REQUEST, UPLOAD_USER_IMAGE_REQUEST } from '../../reducers/types';
 const { Title } = Typography;
 
 const layout = {
@@ -15,6 +15,8 @@ const tailLayout = {
 };
 
 function EditPage() {
+
+  const inputOpenImageRef = useRef();
   const [form] = Form.useForm();
   const history = useHistory();
   const dispatch = useDispatch();
@@ -54,6 +56,26 @@ function EditPage() {
   const onFinishFailed = ({ errorFields }) => {
     form.scrollToField(errorFields[0].name);
   };
+  const handleImage = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+
+    const config = {
+      header: { 'content-type': 'multipart/form-data' }
+    }
+    formData.append('file', file)
+    // return console.log(file, 'UPLOAD_USER_IMAGE_REQUEST file')
+
+    dispatch({
+      type: UPLOAD_USER_IMAGE_REQUEST,
+      payload: {
+        formData,
+        config,
+      }
+    })
+  }
 
 
   return (
@@ -94,11 +116,17 @@ function EditPage() {
           </Form.Item>}
 
         <Form.Item {...tailLayout}>
-          <Space >
+          <Space>
             {(confirmUserDone || confirmUserError === false)
-              ? <Button type="primary" htmlType="submit" loading={editUserLoading} disabled={editUserLoading}>
-                수정하기
+              ? <>
+                <Button type="primary" htmlType="submit" loading={editUserLoading} disabled={editUserLoading}>
+                  수정하기
                 </Button>
+                <Button loading={editUserLoading} disabled={editUserLoading} onClick={() => inputOpenImageRef.current.click()}>
+                  사진변경
+                </Button>
+                <input accept='image/jpeg, image/png' type="file" hidden ref={inputOpenImageRef} onChange={handleImage} />
+              </>
               : <Button type="primary" htmlType="submit" loading={confirmUserLoading} disabled={confirmUserLoading}>
                 본인 확인
                 </Button>}

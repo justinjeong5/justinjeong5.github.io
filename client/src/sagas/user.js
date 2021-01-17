@@ -11,6 +11,7 @@ import {
   ADD_TO_CART_REQUEST, ADD_TO_CART_SUCCESS, ADD_TO_CART_FAILURE,
   LOAD_CART_ITEMS_REQUEST, LOAD_CART_ITEMS_SUCCESS, LOAD_CART_ITEMS_FAILURE,
   REMOVE_CART_ITEM_REQUEST, REMOVE_CART_ITEM_SUCCESS, REMOVE_CART_ITEM_FAILURE,
+  UPLOAD_USER_IMAGE_REQUEST, UPLOAD_USER_IMAGE_SUCCESS, UPLOAD_USER_IMAGE_FAILURE,
 } from '../reducers/types'
 
 function registerAPI(data) {
@@ -193,6 +194,26 @@ function* removeCartItem(action) {
   }
 }
 
+function uploadUserImageAPI(data) {
+  return axios.post('/api/user/editImage', data.formData, data.config)
+}
+
+function* uploadUserImage(action) {
+  try {
+    const result = yield call(uploadUserImageAPI, action.payload);
+    yield put({
+      type: UPLOAD_USER_IMAGE_SUCCESS,
+      payload: result.data,
+    })
+  } catch (error) {
+    console.error(error)
+    yield put({
+      type: UPLOAD_USER_IMAGE_FAILURE,
+      error: error.response.data,
+    })
+  }
+}
+
 function* watchRegister() {
   yield takeLatest(REGISTER_USER_REQUEST, register)
 }
@@ -229,6 +250,10 @@ function* watchRemoveCartItem() {
   yield takeLatest(REMOVE_CART_ITEM_REQUEST, removeCartItem)
 }
 
+function* watchUploadUserImage() {
+  yield takeLatest(UPLOAD_USER_IMAGE_REQUEST, uploadUserImage)
+}
+
 
 export default function* userSaga() {
   yield all([
@@ -241,5 +266,6 @@ export default function* userSaga() {
     fork(watchAddToCart),
     fork(watchLoadCartItems),
     fork(watchRemoveCartItem),
+    fork(watchUploadUserImage),
   ])
 }
