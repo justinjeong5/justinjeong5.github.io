@@ -225,7 +225,7 @@ router.get('/users', auth, (req, res) => {
       if (error) {
         return res.status(400).json({ code: 'DatabaseError', message: '전체 사용자 목록을 호출하는 과정에서 문제가 발생했습니다.', error });
       }
-      return res.status(200).json({ message: '전체 사용자 목록을 정상적으로 가져왔습니다.', users, userId: req.user._id })
+      return res.status(200).json({ message: '전체 사용자 목록을 정상적으로 가져왔습니다.', users, userId: req?.user._id })
     })
 })
 

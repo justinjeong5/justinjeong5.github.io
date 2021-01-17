@@ -81,12 +81,12 @@ io.on('connection', (socket) => {
 
 app.use('/uploads', express.static('uploads'));
 app.use('/api/user', require('./routes/user'));
-app.use('/api/movie/favorite', require('./routes/movieFavorite'));
 app.use('/api/jaymall', require('./routes/jaymall'));
 app.use('/api/blog', require('./routes/blog'));
 app.use('/api/chat', require('./routes/chat'));
 app.use('/api/chatRoom', require('./routes/chatRoom'));
 app.use('/api/comment', require('./routes/comment'));
+app.use('/api/favorite', require('./routes/favorite'));
 
 
 app.get('/', (req, res) => {

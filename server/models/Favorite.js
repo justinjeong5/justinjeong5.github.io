@@ -1,9 +1,13 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const movieFavoriteSchema = mongoose.Schema({
+const favoriteSchema = mongoose.Schema({
   userFrom: {
     type: Schema.Types.ObjectId,
     ref: 'User',
+  },
+  chatRoom: {
+    type: Schema.Types.ObjectId,
+    ref: 'ChatRoom',
   },
   movieId: {
     type: String,
@@ -28,7 +32,6 @@ const movieFavoriteSchema = mongoose.Schema({
   },
   movieGenre: {
     type: Array,
-    default: []
   },
   movieDescription: {
     type: String,
@@ -38,10 +41,9 @@ const movieFavoriteSchema = mongoose.Schema({
   },
   movieRate: {
     type: Number,
-    default: 0,
   }
 })
 
-const MovieFavorite = mongoose.model('MovieFavorite', movieFavoriteSchema)
+const Favorite = mongoose.model('Favorite', favoriteSchema)
 
-module.exports = { MovieFavorite }
+module.exports = { Favorite }

@@ -34,20 +34,4 @@ router.post('/create', (req, res) => {
   })
 })
 
-router.post('/toggleFavorite', (req, res) => {
-  ChatRoom.findOneAndUpdate({ '_id': req.body.roomId },
-    { $set: { favorite: req.body.favorite } },
-    (error, chatRoom) => {
-      if (error) {
-        console.error(error)
-        return res.status(400).json({ code: 'DatabaseError', message: '채팅방 정보를 불러오는 과정에서 문제가 발생했습니다.', error })
-      }
-      if (!chatRoom) {
-        console.error(error)
-        return res.status(400).json({ code: 'NoSuchChatRoom', message: '채팅방을 데이터베이스에서 찾을 수 없습니다.', error })
-      }
-      return res.status(200).json({ message: '채팅방 좋아요 상태를 정상적으로 변경했습니다.', favorite: req.body.favorite, roomId: req.body.roomId });
-    })
-})
-
 module.exports = router

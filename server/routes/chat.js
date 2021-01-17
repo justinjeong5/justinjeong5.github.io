@@ -1,11 +1,10 @@
 const express = require('express');
 const router = express.Router();
 
-const { auth } = require('../middleware/auth')
 const { Chat } = require('../models/Chat')
 
 
-router.post('/chats', auth, (req, res) => {
+router.post('/chats', (req, res) => {
   Chat.find(req.body)
     .populate('writer')
     .exec((error, chats) => {

@@ -15,10 +15,6 @@ const chatRoomSchema = mongoose.Schema({
   private: {
     type: Boolean,
     default: false,
-  },
-  favorite: {
-    type: Boolean,
-    default: false,
   }
 }, { timestamps: true })
 
