@@ -2,8 +2,7 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import StyledLink from '../utils/StyledLink'
 import { v4 as uuidv4 } from 'uuid'
-import { Card, Avatar, Col, Row, Typography, Skeleton, Empty } from 'antd'
-import { SettingOutlined, EditOutlined, EllipsisOutlined } from '@ant-design/icons'
+import { Button, Avatar, Typography, Skeleton, Empty, List } from 'antd'
 import moment from 'moment'
 import { LOAD_BLOG_POSTS_REQUEST } from '../../reducers/types'
 
@@ -12,6 +11,7 @@ const { Title } = Typography;
 function BlogPage() {
 
   const dispatch = useDispatch();
+  const { currentUser } = useSelector(state => state.user)
   const { blogPosts, loadBlogPostsDone, loadBlogPostsLoading, noMorePosts, skip, limit } = useSelector(state => state.blog)
 
   useEffect(() => {
@@ -38,58 +38,51 @@ function BlogPage() {
     });
   }, [dispatch])
 
-  const renderCards = blogPosts.map((blog) => {
-    return (
-      <Col key={uuidv4()} xl={8} lg={12} md={12} xs={24}>
-        <Card
-          hoverable
-          style={{ width: '100%' }}
-          actions={[
-            <SettingOutlined />,
-            <EditOutlined />,
-            <EllipsisOutlined />
-          ]}
-        >
-          <StyledLink to={`/blog/post/${blog._id}`}>
-            <Card.Meta
-              avatar={<Avatar src={blog.writer.image} />}
-              title={blog.title.slice(0, 20)}
-              description={
-                <span style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <p>{blog.writer.name}</p>
-                  <p style={{ marginRight: 10 }}>{moment(blog.createdAt).fromNow()}</p>
-                </span>}
-            />
-            <div style={{ height: 400, overflowY: 'scroll', marginTop: 10, color: 'black' }}>
-              <div dangerouslySetInnerHTML={{ __html: blog.content }} />
-            </div>
-          </StyledLink>
-        </Card>
-      </Col>
-    )
-  })
-
-  const renderSkeleton = Array.from(Array(6)).map(_ => {
-    return (
-      <Col key={uuidv4()} xl={8} lg={12} md={12} xs={24}>
-        <Skeleton active paragraph={{ rows: 8 }} />
-      </Col>
-    )
-  })
+  const renderSkeleton = Array.from(Array(2)).map(_ => <Skeleton key={uuidv4()} />)
 
   return (
     <div style={{ width: '75%', margin: '3rem auto' }}>
-      <div style={{ textAlign: 'center', marginTop: 100, marginBottom: 100 }}>
+      <div style={{ textAlign: 'center', marginTop: 100, marginBottom: 30 }}>
         <Title level={2} >블로그 목록</Title>
       </div>
-      <Row gutter={[12, 8]}>
-        {loadBlogPostsLoading && renderSkeleton}
-        {loadBlogPostsDone && blogPosts.length > 0 && renderCards}
-        {loadBlogPostsDone && blogPosts.length === 0 && <div style={{ margin: '200px auto' }}>
+      <div style={{ display: 'flex' }}>
+        <Button
+          type='primary'
+          disabled={!currentUser.isAuth}
+          loading={loadBlogPostsLoading}
+          style={{ marginLeft: 'auto', marginBottom: 20 }}>
+          <StyledLink to='/blog/create'>
+            글쓰기
+          </StyledLink>
+        </Button>
+      </div>
+
+      {loadBlogPostsLoading && renderSkeleton}
+      {loadBlogPostsDone && blogPosts.length > 0 &&
+        <List
+          width="100%"
+          itemLayout="horizontal"
+          dataSource={blogPosts}
+          renderItem={item => (
+            <List.Item>
+              <List.Item.Meta
+                avatar={<Avatar src={item.writer.image} style={{ marginTop: 7 }} />}
+                title={<StyledLink to={`/blog/post/${item._id}`}>{item.title}</StyledLink>}
+                description={
+                  <span style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <p>{item.writer.name}</p>
+                    <p style={{ marginRight: 10 }}>{moment(item.createdAt).fromNow()}</p>
+                  </span>}
+              />
+            </List.Item>
+          )}
+        />}
+      {
+        loadBlogPostsDone && blogPosts.length === 0 && <div style={{ margin: '200px auto' }}>
           <Empty description='블로그에 게시글이 아직 없습니다.' />
-        </div>}
-      </Row>
-    </div>
+        </div>
+      }
+    </div >
   )
 }
 
