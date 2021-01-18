@@ -353,6 +353,7 @@ class QuillEditor extends React.Component {
           formats={this.formats}
           value={this.state.editorHtml}
           placeholder={this.props.placeholder}
+          style={{ height: 'calc(100vh - 358px)', overflowY: 'hidden' }}
         />
         <input type="file" accept="image/*" ref={this.inputOpenImageRef} hidden onChange={this.insertImage} />
         <input type="file" accept="video/*" ref={this.inputOpenVideoRef} hidden onChange={this.insertVideo} />
