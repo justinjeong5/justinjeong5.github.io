@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Result, Typography } from 'antd';
 import NumberFormat from 'react-number-format'
@@ -33,8 +33,10 @@ function CartPage() {
     }
   }, [cartWithDetail, loadCartItemsDone])
 
+  const rootDivStyle = useMemo(() => ({ width: '80%', margin: '3rem auto', marginTop: 100 }), [])
+
   return (
-    <div style={{ width: '80%', margin: '3rem auto', marginTop: 100 }}>
+    <div style={rootDivStyle}>
       <Title level={3}>장바구니</Title>
       <CartDetails />
       {!<Result status='success' title='구매가 정상적으로 완료되었습니다.' />}

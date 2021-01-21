@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { withRouter, useParams, useHistory } from 'react-router-dom'
 import { PageHeader, Row, Col, Divider } from 'antd';
@@ -16,10 +16,17 @@ function DetailProductPage() {
   const { productId } = useParams();
   const { currentProduct, loadProductDetailsLoading, loadProductDetailsDone } = useSelector(state => state.jaymall)
 
-  const getIndex = (target) => {
+  useEffect(() => {
+    dispatch({
+      type: LOAD_PRODUCT_DETAILS_REQUEST,
+      payload: productId
+    })
+  }, [dispatch, productId])
+
+  const getIndex = useCallback((target) => {
     if (ProductClothesSort.includes(target)) return '의류'
     if (ProductAccessorySort.includes(target)) return '패션 잡화'
-  }
+  }, [])
 
   const routes = [
     {
@@ -32,30 +39,27 @@ function DetailProductPage() {
     }
   ];
 
-  useEffect(() => {
-    dispatch({
-      type: LOAD_PRODUCT_DETAILS_REQUEST,
-      payload: productId
-    })
-  }, [dispatch, productId])
-
-  const handleHistory = () => {
+  const handleHistory = useCallback(() => {
     history.goBack(1);
-  }
+  }, [])
+
+  const loadingWrapperDivStyle = useMemo(() => ({ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100vw', height: 'calc(100vh - 80px)' }), [])
+  const loadingStyle = useMemo(() => ({ fontSize: '10rem' }), [])
+  const pageWrapperStyle = useMemo(() => ({ width: '100%', padding: '4rem' }), [])
+  const breadcrumbData = useMemo(() => ({ routes }), [routes])
 
   return (
     <div>
       {loadProductDetailsLoading &&
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100vw', height: 'calc(100vh - 80px)' }}>
-          <LoadingOutlined style={{ fontSize: '10rem' }} />
+        <div style={loadingWrapperDivStyle}>
+          <LoadingOutlined style={loadingStyle} />
         </div>}
       {loadProductDetailsDone && <>
-        <div style={{ width: '100%', padding: '4rem' }}>
+        <div style={pageWrapperStyle}>
           <PageHeader
-            className="site-page-header"
             onBack={handleHistory}
             title={currentProduct.title}
-            breadcrumb={{ routes }}
+            breadcrumb={breadcrumbData}
           />
           <Divider />
           <Row gutter={[16, 16]}>

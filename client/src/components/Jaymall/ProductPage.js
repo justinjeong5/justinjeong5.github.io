@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { v4 as uuidv4 } from 'uuid'
 import { Row, Col, Typography, Skeleton, Empty } from 'antd';
@@ -40,7 +40,7 @@ function ProductPage() {
     }
   }, [dispatch, skip])
 
-  const onFilterChange = (data) => {
+  const onFilterChange = useCallback((data) => {
     dispatch({
       type: SET_ALL_FILTERS_INFO,
       payload: {
@@ -55,35 +55,38 @@ function ProductPage() {
         },
       }
     })
-  }
+  }, [])
 
-  const renderSkeleton = Array.from(Array(limit)).map(_ => {
+  const renderSkeleton = useMemo(() => (Array.from(Array(limit)).map(_ => {
     return (
       <Col key={uuidv4()} lg={6} md={8} sm={12} xs={24} >
         <Skeleton.Image />
         <Skeleton active />
       </Col>
     )
-  })
+  })), [])
+
+  const rootDivWrapperStyle = useMemo(() => ({ width: '75%', margin: '3rem auto' }), [])
+  const titleDivWrapperStyle = useMemo(() => ({ textAlign: 'center', marginTop: 100, marginBottom: 100 }), [])
+  const emptyWrapperStyle = useMemo(() => ({ margin: '200px auto' }), [])
+
 
   return (
-    <>
-      <div style={{ width: '75%', margin: '3rem auto' }}>
-        <div style={{ textAlign: 'center', marginTop: 100, marginBottom: 100 }}>
-          <Title level={2}>좋은 옷, Jaymall</Title>
-        </div>
-        {productData && <ProductFilter onFilterChange={onFilterChange} />}
-        <Row gutter={[24, 32]}>
-          {loadProductsLoading && !productData.length && renderSkeleton}
-          {productData?.map(product => (
-            <ProductCard key={uuidv4()} product={product} />
-          ))}
-          {loadProductsDone && productData?.length === 0 && <div style={{ margin: '200px auto' }}>
-            <Empty description='필터 조건에 맞는 상품이 없습니다.' />
-          </div>}
-        </Row>
+    <div style={rootDivWrapperStyle}>
+      <div style={titleDivWrapperStyle}>
+        <Title level={2}>좋은 옷, Jaymall</Title>
       </div>
-    </>
+      {productData && <ProductFilter onFilterChange={onFilterChange} />}
+      <Row gutter={[24, 32]}>
+        {loadProductsLoading && !productData.length && renderSkeleton}
+        {productData?.map(product => (
+          <ProductCard key={uuidv4()} product={product} />
+        ))}
+        {loadProductsDone && productData?.length === 0 && <div style={emptyWrapperStyle}>
+          <Empty description='필터 조건에 맞는 상품이 없습니다.' />
+        </div>}
+      </Row>
+    </div>
   )
 }
 

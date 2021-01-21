@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useMemo, useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Tag } from 'antd'
 import { HeartTwoTone, HeartOutlined, LoadingOutlined } from '@ant-design/icons'
@@ -34,7 +34,7 @@ function MovieFavorite() {
     }
   }, [dispatch, currentUser, currentMovie, isFavorited])
 
-  const handleFavorite = () => {
+  const handleFavorite = useCallback(() => {
     dispatch({
       type: CHANGE_FAVORITE_REQUEST,
       payload: {
@@ -51,7 +51,9 @@ function MovieFavorite() {
         movieDescription: currentMovie.overview,
       }
     })
-  }
+  }, [currentUser])
+
+  const favoriteStyle = useMemo(() => ({ color: 'gray' }), [])
 
   return (
     <div>
@@ -61,7 +63,7 @@ function MovieFavorite() {
           currentUser.isAuth ? (isFavorited
             ? <HeartTwoTone twoToneColor="#eb2f96" onClick={handleFavorite} />
             : <HeartOutlined onClick={handleFavorite} />)
-          : <span style={{ color: 'gray' }}>로그인해주세요(좋아요 개수) </span>
+          : <span style={favoriteStyle}>로그인해주세요(좋아요 개수) </span>
         }>
           {favoriteNumber}
         </Tag>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import NumberFormat from 'react-number-format'
 import { Table, Tag } from 'antd';
@@ -12,23 +12,23 @@ function CartDetails() {
   const dispatch = useDispatch();
   const { cartWithDetail, loadCartItemsLoading } = useSelector(state => state.user);
 
-  const handleRemoveItem = (productId) => () => {
+  const handleRemoveItem = useCallback((productId) => () => {
     dispatch({
       type: REMOVE_CART_ITEM_REQUEST,
       payload: {
         productId
       }
     })
-  }
+  }, [])
 
-  const getTagColor = (tag) => {
+  const getTagColor = useCallback((tag) => {
     if (ProductAccessorySort.includes(tag)) {
       return 'geekblue'
     }
     if (ProductClothesSort.includes(tag)) {
       return 'green'
     }
-  }
+  }, [])
 
   const columns = [
     {
@@ -73,21 +73,20 @@ function CartDetails() {
       key: 'cart',
       render: (item) => <div onClick={handleRemoveItem(item.key)}><CloseOutlined /></div>
     },
-  ];
+  ]
 
+  const onHeaderRowStyle = useMemo(() => (() => ({ align: 'center' })), [])
+  const onRowStyle = useMemo(() => (() => ({ align: 'center' })), [])
 
   return (
-    <>
-      <Table
-        columns={columns}
-        dataSource={cartWithDetail}
-        onHeaderRow={() => ({ align: 'center' })}
-        onRow={() => ({ align: 'center' })}
-        pagination={{ defaultPageSize: 3 }}
-        tableLayout='auto'
-        loading={loadCartItemsLoading}
-      />
-    </>
+    <Table
+      columns={columns}
+      dataSource={cartWithDetail}
+      onHeaderRow={onHeaderRowStyle}
+      onRow={onRowStyle}
+      tableLayout='auto'
+      loading={loadCartItemsLoading}
+    />
   )
 }
 

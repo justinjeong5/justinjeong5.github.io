@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useMemo, useEffect, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, withRouter, useHistory } from 'react-router-dom';
 import { Form, Input, Button, Typography, message as Message, Space } from 'antd';
@@ -6,15 +6,6 @@ import { UserOutlined, MailOutlined, LockOutlined, CheckSquareOutlined } from '@
 import md5 from 'md5'
 import { REGISTER_USER_REQUEST } from '../../reducers/types';
 const { Title } = Typography;
-
-
-const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 16 },
-};
-const tailLayout = {
-  wrapperCol: { offset: 8, span: 16 },
-};
 
 function RegisterPage() {
   const [form] = Form.useForm();
@@ -31,7 +22,7 @@ function RegisterPage() {
     }
   }, [registerUserDone, registerUserError, history, message])
 
-  const onFinish = async (values) => {
+  const onFinish = useCallback((values) => {
     const payload = {
       email: values.email,
       name: values.userName,
@@ -42,83 +33,101 @@ function RegisterPage() {
       type: REGISTER_USER_REQUEST,
       payload
     })
-  };
+  }, []);
 
-  const onFinishFailed = ({ errorFields }) => {
-    form.scrollToField(errorFields[0].name);
-  };
+  const handleCancel = useCallback(() => {
+    history.goBack(1)
+  }, [])
 
+  const rootDivWrapperStyle = useMemo(() => ({ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100vh' }), [])
+  const formLabelColStyle = useMemo(() => ({ span: 8 }), [])
+  const formWrapperColStyle = useMemo(() => ({ span: 16 }), [])
+  const formStyle = useMemo(() => ({ width: '400px' }), [])
+  const titleStyle = useMemo(() => ({ display: 'flex', justifyContent: 'center', marginBottom: 40 }), [])
+  const formEmailRules = useMemo(() => ([
+    { required: true, message: '이메일을 입력해주세요.' },
+    { type: "email", message: '이메일의 형식이 올바르지 않습니다.' }
+  ]), [])
+  const formUserNameRules = useMemo(() => ([
+    { required: true, message: '이름을 입력해주세요.' },
+    { type: "string", max: 20, message: '이름은 20자 이내로 입력해주세요' }
+  ]), [])
+  const fromPasswordRules = useMemo(() => ([
+    { required: true, message: '비밀번호를 입력해주세요.' },
+    { type: "string", message: '비밀번호의 형식이 올바르지 않습니다.' },
+    { whitespace: false, message: '비밀번호의 형식이 올바르지 않습니다.' },
+    { min: 6, message: '비밀번호는 6글자보다 길어야합니다.' }
+  ]), [])
+  const formPasswordConfirmRules = useMemo(() => ([
+    { required: true, message: '비밀번호를 입력해주세요.' },
+    ({ getFieldValue }) => ({
+      validator(rule, value) {
+        if (!value || getFieldValue('password') === value) {
+          return Promise.resolve();
+        }
+        return Promise.reject('비밀번호 확인이 일치하지 않습니다.');
+      },
+    })
+  ]), [])
+  const formItemWrapperColStyle = useMemo(() => ({ offset: 8, span: 16 }), [])
+  const formItemStyle = useMemo(() => ({ marginTop: -10 }), [])
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100vh' }}>
+    <div style={rootDivWrapperStyle}>
       <Form
-        {...layout}
+        labelCol={formLabelColStyle}
+        wrapperCol={formWrapperColStyle}
         name="basic"
-        style={{ width: '400px' }}
+        style={formStyle}
         onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
       >
-        <Title level={2} style={{ display: 'flex', justifyContent: 'center', marginBottom: 40 }} >회원가입</Title>
+        <Title level={2} style={titleStyle} >회원가입</Title>
         <Form.Item
           label="이메일"
           name="email"
-          rules={[{ required: true, message: '이메일을 입력해주세요.' },
-          { type: "email", message: '이메일의 형식이 올바르지 않습니다.' }]}
+          rules={formEmailRules}
         >
-          <Input prefix={<MailOutlined className="site-form-item-icon" />} placeholder="email" />
+          <Input prefix={<MailOutlined />} placeholder="email" />
         </Form.Item>
 
         <Form.Item
           label="이름"
           name="userName"
-          rules={[{ required: true, message: '이름을 입력해주세요.' },
-          { type: "string", max: 20, message: '이름은 20자 이내로 입력해주세요' }]}
+          rules={formUserNameRules}
         >
-          <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="name" />
+          <Input prefix={<UserOutlined />} placeholder="name" />
         </Form.Item>
 
         <Form.Item
           label="비밀번호 "
           name="password"
-          rules={[{ required: true, message: '비밀번호를 입력해주세요.' },
-          { type: "string", message: '비밀번호의 형식이 올바르지 않습니다.' },
-          { whitespace: false, message: '비밀번호의 형식이 올바르지 않습니다.' },
-          { min: 6, message: '비밀번호는 6글자보다 길어야합니다.' }]}
+          rules={fromPasswordRules}
         >
-          <Input.Password prefix={<LockOutlined className="site-form-item-icon" />} placeholder="password" />
+          <Input.Password prefix={<LockOutlined />} placeholder="password" />
         </Form.Item>
 
         <Form.Item
           label="비밀번호 확인"
           name="passwordConfirm"
-          rules={[{ required: true, message: '비밀번호를 입력해주세요.' },
-          ({ getFieldValue }) => ({
-            validator(rule, value) {
-              if (!value || getFieldValue('password') === value) {
-                return Promise.resolve();
-              }
-              return Promise.reject('비밀번호 확인이 일치하지 않습니다.');
-            },
-          })
-          ]}
+          rules={formPasswordConfirmRules}
         >
-          <Input.Password prefix={<CheckSquareOutlined className="site-form-item-icon" />} placeholder="password check" />
+          <Input.Password prefix={<CheckSquareOutlined />} placeholder="password check" />
         </Form.Item>
 
-        <Form.Item {...tailLayout}>
+        <Form.Item wrapperCol={formItemWrapperColStyle}>
           <Space >
             <Button type="primary" htmlType="submit"
               loading={registerUserLoading}
               disabled={registerUserLoading}>
               회원가입
             </Button>
-            <Button onClick={() => { history.goBack(1) }} >
+            <Button onClick={handleCancel} >
               취소
             </Button>
           </Space>
         </Form.Item>
 
-        <Form.Item  {...tailLayout} style={{ marginTop: -10 }}>
+        <Form.Item wrapperCol={formItemWrapperColStyle} style={formItemStyle}>
           <Link to='/login'>이미 회원이시라면</Link>
         </Form.Item>
 

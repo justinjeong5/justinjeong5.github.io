@@ -36,21 +36,21 @@ function Favorited() {
     }
   }, [dispatch, changeFavoriteDone])
 
-  const handleCurrentRoom = (chatRoomId) => () => {
+  const handleCurrentRoom = useCallback((chatRoomId) => () => {
     dispatch({
       type: SET_CURRENT_CHAT_ROOM,
       payload: chatRoomId,
     })
-  }
+  }, [])
 
-  const renderSelected = (chatRoomId) => {
+  const renderSelected = useCallback((chatRoomId) => {
     if (chatRoomId === currentChatRoom._id) {
       return 'gray'
     }
     return ''
-  }
+  }, [currentChatRoom])
 
-  const renderChatRooms = favoritedList?.filter(item => {
+  const renderChatRooms = useCallback(favoritedList?.filter(item => {
     return item.chatRoom
   }).map((favorited) => {
     const chatRoom = favorited.chatRoom;
@@ -66,18 +66,26 @@ function Favorited() {
         {`# ${chatRoom.title}`}
       </div>
     )
-  })
+  }), [favoritedList, currentChatRoom])
 
-  const renderEmptyMessages = (<div style={{ color: 'gray' }}>
+  const renderChatRoomCount = useCallback(() => {
+    return (favoritedList
+      ? ` 즐겨찾기 [${favoritedList.filter(item => {
+        return item.chatRoom
+      }).length}] `
+      : ' 즐겨찾기 [0]'
+    )
+  }, [favoritedList])
+
+  const renderEmptyMessages = useMemo(() => (<div style={{ color: 'gray' }}>
     로그인해주세요.
-  </div>)
+  </div>), [])
+  const rootDivStyle = useMemo(() => ({ color: 'white' }), [])
 
   return (
     <div>
-      <Title level={5} style={{ color: 'white' }}>
-        <BellOutlined />{favoritedList ? ` 즐겨찾기 [${favoritedList.filter(item => {
-          return item.chatRoom
-        }).length}] ` : ' 즐겨찾기 [0]'}
+      <Title level={5} style={rootDivStyle}>
+        <BellOutlined />{renderChatRoomCount()}
       </Title>
       {loadFavoritedListDone && (favoritedList ? renderChatRooms : renderEmptyMessages)}
     </div>

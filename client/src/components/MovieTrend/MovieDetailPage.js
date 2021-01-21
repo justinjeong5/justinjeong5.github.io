@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { withRouter, useHistory, useParams } from 'react-router-dom'
 import Youtube from 'react-youtube'
@@ -40,7 +40,11 @@ function MovieDetailPage() {
     }
   }, [dispatch, loadMovieDetailDone, movieId])
 
-  const renderPageHeader = (<>
+  const handleCancel = useCallback(() => {
+    history.goBack(1)
+  }, [])
+
+  const renderPageHeader = useMemo(() => (<>
     <Divider />
     <Tabs defaultActiveKey="trailer">
       <TabPane tab="트레일러" key="trailer" >
@@ -64,20 +68,23 @@ function MovieDetailPage() {
         <MovieMaker />
       </TabPane>
     </Tabs>
-  </>)
+  </>), [currentMovie])
+
+  const loadingWrapperDivStyle = useMemo(() => ({ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100vw', height: 'calc(100vh - 128px)' }), [])
+  const loadingIconStyle = useMemo(() => ({ fontSize: '5rem' }), [])
+  const pageHeaderWrapperStyle = useMemo(() => ({ width: '80%', margin: '1rem auto' }), [])
 
   return (
     <div>
       <div ref={node => (movieDetailsPageFrontRef = node)} />
-      {loadMovieTrailerLoading && <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100vw', height: 'calc(100vh - 128px)' }}>
-        <LoadingOutlined style={{ fontSize: '5rem' }} />
+      {loadMovieTrailerLoading && <div style={loadingWrapperDivStyle}>
+        <LoadingOutlined style={loadingIconStyle} />
       </div>}
       {loadMovieTrailerDone && <>
         <MainImage movie={currentMovie} />
-        <div style={{ width: '80%', margin: '1rem auto' }}>
+        <div style={pageHeaderWrapperStyle}>
           <PageHeader
-            className="site-page-header-responsive"
-            onBack={() => history.goBack(1)}
+            onBack={handleCancel}
             title={currentMovie.title}
             subTitle={currentMovie.original_title}
             footer={renderPageHeader}

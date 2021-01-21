@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { withRouter } from 'react-router-dom';
 import { subscribeChat, subscribeChatRoom } from '../utils/socket'
@@ -53,18 +53,24 @@ function ChatPage() {
     }
   }, [])
 
+  const rootDivStyle = useMemo(() => ({ position: 'absolute', display: 'flex', marginTop: 48, height: 'calc(100vh - 128px)' }), [])
+  const SidePanelStyle = useMemo(() => ({ width: '300px' }), [])
+  const mainPanelStyle = useMemo(() => ({ width: '100%' }), [])
+  const errorDivStyle = useMemo(() => ({ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 48, height: 'calc(100vh - 128px)', backgroundColor: '#415972' }), [])
+
+
   return (
     <>
       {showViewport
-        ? <div style={{ position: 'absolute', display: 'flex', marginTop: 48, height: 'calc(100vh - 128px)' }}>
-          <div style={{ width: '300px' }}>
+        ? <div style={rootDivStyle}>
+          <div style={SidePanelStyle}>
             <SidePanel key={currentUser?.userId} />
           </div>
-          <div style={{ width: '100%' }}>
+          <div style={mainPanelStyle}>
             <MainPanel key={1} />
           </div>
         </div >
-        : <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 48, height: 'calc(100vh - 128px)', backgroundColor: '#415972' }}>
+        : <div style={errorDivStyle}>
           <h2> 너비가 992px보다 작은 화면에서는 <br />Talk-A-Tive가 지원되지 않습니다. </h2>
         </div>
       }

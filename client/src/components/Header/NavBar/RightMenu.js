@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useMemo, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation, withRouter, useHistory } from 'react-router-dom'
 import { Menu, message as Message } from 'antd';
@@ -39,17 +39,20 @@ function RightMenu(props) {
     }
   }, [logoutUserDone, prevLocation, history])
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     dispatch({
       type: LOGOUT_USER_REQUEST
     })
-  }
+  }, [])
+
+  const loadingStyle = useMemo(() => ({ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100vw', height: 'calc(100vh - 80px)' }), [])
+  const loadingIconStyle = useMemo(() => ({ fontSize: '10rem' }), [])
 
   return (
     <>
       {logoutUserLoading &&
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100vw', height: 'calc(100vh - 80px)' }}>
-          <LoadingOutlined style={{ fontSize: '10rem' }} />
+        <div style={loadingStyle}>
+          <LoadingOutlined style={loadingIconStyle} />
         </div>
       }
       {currentUser?.isAuth

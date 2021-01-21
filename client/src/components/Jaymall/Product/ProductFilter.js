@@ -1,19 +1,24 @@
-import React, { useEffect, useState } from 'react'
+import React, { useMemo, useEffect, useState } from 'react'
 import { Divider, Checkbox, Row, Col, Slider, Collapse, Input, Radio } from 'antd'
 import { ShoppingOutlined } from '@ant-design/icons'
 import { ProductClothesSort, ProductAccessorySort } from '../utils/ProductSort'
+import styled from 'styled-components'
 
 const marks = {
   0: '0원',
   100: '1,000,000원',
 };
 
+const StyledCol = styled(Col)`
+  margin: auto
+`
+
 function ProductFilter(props) {
 
   const [trigger, setTrigger] = useState(false)
-  const [priceRange, setPriceRange] = useState([0, 500000])
+  const [priceRange, setPriceRange] = useState([0, 100])
   const [word, setWord] = useState('')
-  const [orderBy, setOrderBy] = useState(-1)
+  const [orderBy, setOrderBy] = useState(1)
   const [sortBy, setSortBy] = useState('_id')
 
   const [checkedClothesList, setCheckedClothesList] = useState(ProductClothesSort);
@@ -84,86 +89,86 @@ function ProductFilter(props) {
     setSortBy(e.target.value);
   }
 
+  const collapseStyle = useMemo(() => ({ marginBottom: '2rem' }), [])
+
   return (
-    <div>
-      <Collapse style={{ marginBottom: '2rem' }}>
-        <Collapse.Panel header="검색 필터">
-          <Row gutter={[24, 24]}>
-            <Col span={10} style={{ margin: 'auto' }}>
-              <Divider orientation="left" plain>
-                의류
+    <Collapse style={collapseStyle}>
+      <Collapse.Panel header="검색 필터">
+        <Row gutter={[24, 24]}>
+          <StyledCol span={10}>
+            <Divider orientation="left" plain>
+              의류
               </Divider>
-              <Checkbox
-                indeterminate={indeterminateClothes}
-                onChange={onCheckAllClothesChange}
-                checked={checkAllClothes}>
-                모두 선택
+            <Checkbox
+              indeterminate={indeterminateClothes}
+              onChange={onCheckAllClothesChange}
+              checked={checkAllClothes}>
+              모두 선택
               </Checkbox>
-              <Checkbox.Group
-                options={ProductClothesSort}
-                value={checkedClothesList}
-                onChange={onChangeClothes} />
-            </Col>
-            <Col span={10} style={{ margin: 'auto' }}>
-              <Divider orientation="left" plain>
-                잡화
+            <Checkbox.Group
+              options={ProductClothesSort}
+              value={checkedClothesList}
+              onChange={onChangeClothes} />
+          </StyledCol>
+          <StyledCol span={10}>
+            <Divider orientation="left" plain>
+              잡화
               </Divider>
-              <Checkbox
-                indeterminate={indeterminateAccessory}
-                onChange={onCheckAllAccessoryChange}
-                checked={checkAllAccessory}>
-                모두 선택
+            <Checkbox
+              indeterminate={indeterminateAccessory}
+              onChange={onCheckAllAccessoryChange}
+              checked={checkAllAccessory}>
+              모두 선택
               </Checkbox>
-              <Checkbox.Group
-                options={ProductAccessorySort}
-                value={checkedAccessoryList}
-                onChange={onChangeAccessory} />
-            </Col>
-            <Col span={10} style={{ margin: 'auto' }}>
-              <Divider orientation="left" plain>
-                순서
+            <Checkbox.Group
+              options={ProductAccessorySort}
+              value={checkedAccessoryList}
+              onChange={onChangeAccessory} />
+          </StyledCol>
+          <StyledCol span={10}>
+            <Divider orientation="left" plain>
+              순서
               </Divider>
-              <Radio.Group onChange={handleChangeOrderBy} value={orderBy}>
-                <Radio value={1}>오름차순</Radio>
-                <Radio value={-1}>내림차순</Radio>
-              </Radio.Group>
-            </Col>
-            <Col span={10} style={{ margin: 'auto' }}>
-              <Divider orientation="left" plain>
-                기준
+            <Radio.Group onChange={handleChangeOrderBy} value={orderBy}>
+              <Radio value={1}>오름차순</Radio>
+              <Radio value={-1}>내림차순</Radio>
+            </Radio.Group>
+          </StyledCol>
+          <StyledCol span={10}>
+            <Divider orientation="left" plain>
+              기준
               </Divider>
-              <Radio.Group onChange={handleChangeSortBy} value={sortBy}>
-                <Radio value='_id'>등록일</Radio>
-                <Radio value='price'>가격</Radio>
-                <Radio value='views'>조회수</Radio>
-                <Radio value='sold'>구매수</Radio>
-              </Radio.Group>
-            </Col>
-            <Col span={22} style={{ margin: 'auto' }}>
-              <Divider orientation="left" plain>
-                가격
+            <Radio.Group onChange={handleChangeSortBy} value={sortBy}>
+              <Radio value='_id'>등록일</Radio>
+              <Radio value='price'>가격</Radio>
+              <Radio value='views'>조회수</Radio>
+              <Radio value='sold'>구매수</Radio>
+            </Radio.Group>
+          </StyledCol>
+          <StyledCol span={22}>
+            <Divider orientation="left" plain>
+              가격
               </Divider>
-              <Slider
-                range
-                step={1}
-                marks={marks}
-                defaultValue={[0, 100]}
-                tooltipVisible
-                tipFormatter={handleTipFormatter}
-                onAfterChange={onAfterChange}
-              />
-            </Col>
-            <Col span={22} style={{ margin: 'auto' }}>
-              <Input.Search
-                value={word}
-                onChange={handleChangeWord}
-                placeholder="상품의 이름이나 설명을 통해 검색하세요."
-                prefix={<ShoppingOutlined />} enterButton />
-            </Col>
-          </Row>
-        </Collapse.Panel>
-      </Collapse>
-    </div>
+            <Slider
+              range
+              step={1}
+              marks={marks}
+              defaultValue={[0, 100]}
+              tooltipVisible
+              tipFormatter={handleTipFormatter}
+              onAfterChange={onAfterChange}
+            />
+          </StyledCol>
+          <StyledCol span={22}>
+            <Input.Search
+              value={word}
+              onChange={handleChangeWord}
+              placeholder="상품의 이름이나 설명을 통해 검색하세요."
+              prefix={<ShoppingOutlined />} enterButton />
+          </StyledCol>
+        </Row>
+      </Collapse.Panel>
+    </Collapse>
   )
 }
 

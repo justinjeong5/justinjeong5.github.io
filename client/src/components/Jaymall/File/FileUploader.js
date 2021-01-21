@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Dropzone from 'react-dropzone'
 import { v4 as uuidv4 } from 'uuid'
@@ -10,7 +10,7 @@ function FileUploader() {
   const dispatch = useDispatch();
   const { fileData, uploadImageLoading, uploadImageDone } = useSelector(state => state.jaymall)
 
-  const handleOnDrop = (files) => {
+  const handleOnDrop = useCallback((files) => {
     const formData = new FormData();
     const config = {
       header: { 'content-type': 'multipart/form-data' }
@@ -24,17 +24,29 @@ function FileUploader() {
         config
       }
     })
-  }
+  }, [])
 
-  const handleRemove = (index) => () => {
+  const handleRemove = useCallback((index) => () => {
     dispatch({
       type: REMOVE_UPLOADED_IMAGE,
       payload: index
     })
-  }
+  }, [])
+
+  const rootDivStyle = useMemo(() => ({ display: 'flex', justifyContent: 'space-between' }), [])
+  const getRootPropsStyle = useMemo(() => ({
+    width: 200, height: 240, border: '1px solid lightgray',
+    display: 'flex', alignItems: 'center', justifyContent: 'center'
+  }), [])
+  const plusIconStyle = useMemo(() => ({ fontSize: '3rem' }), [])
+  const imageDivStyle = useMemo(() => ({ display: 'flex', alignItems: 'center', width: 500, height: 240, overflowX: 'scroll' }), [])
+  const loadingWrapperDivStyle = useMemo(() => ({ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 500, height: 240 }), [])
+  const loadingIconStyle = useMemo(() => ({ fontSize: '3rem' }), [])
+  const imageStyle = useMemo(() => ({ height: 240, marginRight: 10 }), [])
+
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+    <div style={rootDivStyle}>
       <Dropzone
         onDrop={handleOnDrop}
         multiple
@@ -42,31 +54,27 @@ function FileUploader() {
       >
         {({ getRootProps, getInputProps }) => {
           return (
-            <div style={{
-              width: 200, height: 240, border: '1px solid lightgray',
-              display: 'flex', alignItems: 'center', justifyContent: 'center'
-            }}
+            <div style={getRootPropsStyle}
               {...getRootProps()}
             >
               <input {...getInputProps()} />
-              <PlusSquareOutlined style={{ fontSize: '3rem' }} />
+              <PlusSquareOutlined style={plusIconStyle} />
             </div>
           )
         }}
       </Dropzone>
-      <div style={{ display: 'flex', alignItems: 'center', width: 500, height: 240, overflowX: 'scroll' }}>
-        {uploadImageLoading && <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 500, height: 240 }}>
-          <LoadingOutlined style={{ fontSize: '3rem' }} />
+      <div style={imageDivStyle}>
+        {uploadImageLoading && <div style={loadingWrapperDivStyle}>
+          <LoadingOutlined style={loadingIconStyle} />
         </div>}
         {uploadImageDone && fileData.map((file, index) => {
           return (
             <div onClick={handleRemove(index)} key={uuidv4()}>
-              <img src={file.image} alt={file.fileName} style={{ height: 240, marginRight: 10 }} />
+              <img src={file.image} alt={file.fileName} style={imageStyle} />
             </div>
           )
         })}
       </div>
-
     </div >
   )
 }

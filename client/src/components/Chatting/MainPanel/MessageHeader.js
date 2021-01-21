@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Typography, Card, Avatar } from 'antd'
 import { UnlockOutlined, LockOutlined, StarOutlined, StarFilled } from '@ant-design/icons'
@@ -33,7 +33,7 @@ function MessageHeader() {
     }
   }, [dispatch, currentUser, currentChatRoom])
 
-  const handleFavorite = () => {
+  const handleFavorite = useCallback(() => {
     if (currentUser.isAuth) {
       dispatch({
         type: CHANGE_FAVORITE_REQUEST,
@@ -43,55 +43,62 @@ function MessageHeader() {
         }
       })
     }
-  }
+  }, [currentUser, currentChatRoom])
+
+  const rootDivStyle = useMemo(() => ({
+    width: '100%',
+    height: '100%',
+    padding: '1rem 2rem',
+    marginBottom: '1rem'
+  }), [])
+  const loadingStyle = useMemo(() => ({ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '130px' }), [])
+  const headerDivWrapperStyle = useMemo(() => ({ display: 'flex', justifyContent: 'space-between' }), [])
+  const titleWrapperStyle = useMemo(() => ({ display: 'flex', justifyContent: 'space-between', width: 'calc(100vw - 620px)' }), [])
+  const roomCreatedDivStyle = useMemo(() => ({ color: 'gray', fontSize: '0.7rem' }), [])
+  const roomStateIconStyle = useMemo(() => ({ marginTop: 20 }), [])
+  const roomCreatorCardStyle = useMemo(() => ({ width: '100%', border: 'none' }), [])
+  const avatarStyle = useMemo(() => ({ marginTop: -4, marginRight: -12 }), [])
 
   return (
-    <div style={{
-      width: '100%',
-      height: '100%',
-      padding: '1rem 2rem',
-      marginBottom: '1rem'
-    }}>
+    <div style={rootDivStyle}>
       {loadChatRoomsLoading &&
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '130px' }}>
+        <div style={loadingStyle}>
           Loading
         </div>
       }
       {loadChatRoomsDone && currentChatRoom?.title &&
-        < div style={{ display: 'flex', justifyContent: 'space-between' }} >
+        <div style={headerDivWrapperStyle} >
           <div>
-            <Title level={3} style={{ display: 'flex', justifyContent: 'space-between', width: 'calc(100vw - 620px)' }}>
+            <Title level={3} style={titleWrapperStyle}>
               <div>
                 {currentChatRoom.createdAt
-                  ? <div style={{ color: 'gray', fontSize: '0.7rem' }}>{` ${moment(currentChatRoom.createdAt).calendar()}  / 즐겨찾기 ${favoriteNumber}개`}</div>
-                  : <div style={{ color: 'gray', fontSize: '0.7rem' }}>{`DIRECT MESSAGE  / 즐겨찾기 ${favoriteNumber}명`}</div>
+                  ? <div style={roomCreatedDivStyle}>{` ${moment(currentChatRoom.createdAt).calendar()}  / 즐겨찾기 ${favoriteNumber}명`}</div>
+                  : <div style={roomCreatedDivStyle}>{`DIRECT MESSAGE  / 즐겨찾기 ${favoriteNumber}명`}</div>
                 }
                 {currentChatRoom.title}
               </div>
               <div>
                 <span onClick={handleFavorite}>
                   {currentChatRoom.favorite === false
-                    ? <StarOutlined style={{ marginTop: 20 }} />
+                    ? <StarOutlined style={roomStateIconStyle} />
                     : isFavorited
-                      ? <StarFilled style={{ marginTop: 20 }} />
-                      : <StarOutlined style={{ marginTop: 20 }} />
+                      ? <StarFilled style={roomStateIconStyle} />
+                      : <StarOutlined style={roomStateIconStyle} />
                   }
                 </span>
                 {currentChatRoom.private
-                  ? <LockOutlined style={{ marginTop: 20 }} />
-                  : <UnlockOutlined style={{ marginTop: 20 }} />
+                  ? <LockOutlined style={roomStateIconStyle} />
+                  : <UnlockOutlined style={roomStateIconStyle} />
                 }
               </div>
-
             </Title>
-
             <p>{currentChatRoom.description}</p>
           </div>
           <div>
             {currentChatRoom._id &&
-              <Card style={{ width: '100%', border: 'none' }}>
+              <Card style={roomCreatorCardStyle}>
                 <Card.Meta
-                  avatar={<Avatar style={{ marginTop: -4, marginRight: -12 }} src={currentChatRoom.writer.image} />}
+                  avatar={<Avatar style={avatarStyle} src={currentChatRoom.writer.image} />}
                   title={currentChatRoom.writer.name} />
               </Card>
             }

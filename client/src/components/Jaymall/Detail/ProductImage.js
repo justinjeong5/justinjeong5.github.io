@@ -20,9 +20,7 @@ function ProductImage() {
   }, [currentProduct])
 
   return (
-    <div>
-      <ImageGallery items={images} />
-    </div>
+    <ImageGallery items={images} />
   )
 }
 

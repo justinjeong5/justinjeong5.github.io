@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter, useHistory } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
@@ -7,14 +7,7 @@ import FileUploader from './File/FileUploader'
 import { RESET_UPLOAD_IMAGE, UPLOAD_PRODUCT_REQUEST, SET_ALL_FILTERS_INFO } from '../../reducers/types'
 import { ProductClothesSort, ProductAccessorySort } from './utils/ProductSort'
 
-const layout = {
-  labelCol: {
-    span: 8,
-  },
-  wrapperCol: {
-    span: 16,
-  },
-};
+const { Title } = Typography;
 
 function UploadProductPage() {
 
@@ -61,20 +54,64 @@ function UploadProductPage() {
     history.goBack(1);
   }
 
+  const renderProductClothSort = useMemo(() => (
+    ProductClothesSort.map((value) => {
+      return (
+        <Select.Option key={uuidv4()} value={value}>{value}</Select.Option>
+      )
+    })
+  ), [ProductClothesSort])
+
+  const renderAccessoryClothSort = useMemo(() => (
+    ProductAccessorySort.map((value) => {
+      return (
+        <Select.Option key={uuidv4()} value={value}>{value}</Select.Option>
+      )
+    })
+  ), [ProductAccessorySort])
+
+  const rootDivWrapperStyle = useMemo(() => ({ maxWidth: 700, margin: '3rem auto' }), [])
+  const titleDivWrapperStyle = useMemo(() => ({ alignItems: 'center', margin: '100px 0' }), [])
+  const titleStyle = useMemo(() => ({ textAlign: 'center', margin: 30 }), [])
+  const formLabelColStyle = useMemo(() => ({ span: 8 }), [])
+  const formLabelWrapperColStyle = useMemo(() => ({ span: 16 }), [])
+  const formStyle = useMemo(() => ({ maxWidth: 600 }), [])
+  const formTitleRules = useMemo(() => ([
+    { required: true, message: '상품명을 입력해주세요.' },
+  ]), [])
+  const formDescriptionRules = useMemo(() => ([
+    { required: true, message: '상품 설명을 입력해주세요.' },
+    { min: 10, message: '상품 설명은 10자 이상으로 입력해주세요.' },
+  ]), [])
+  const inputTextDescriptionStyle = useMemo(() => ({ minHeight: 150 }), [])
+  const formPriceRules = useMemo(() => ([
+    { required: true, message: '상품 가격을 입력해주세요.' },
+    { type: 'number', min: 1, message: '가격은 0원 보다 높아야합니다.' },
+    { type: 'number', max: 100000000, message: '우리 쇼핑몰은 1억원 이하의 상품만 거래합니다.' },
+  ]), [])
+  const inputNumberStyle = useMemo(() => ({ width: 140, alignItems: 'end' }), [])
+  const formSortRules = useMemo(() => ([
+    { required: true, message: '상품 종류를 선택해주세요.' },
+  ]), [])
+
+
   return (
-    <div style={{ maxWidth: 700, margin: '3rem auto' }}>
-      <div style={{ alignItems: 'center', margin: '100px 0' }}>
-        <Typography.Title level={3} style={{ textAlign: 'center', margin: 30 }} >Jaymall 상품 등록</Typography.Title>
+    <div style={rootDivWrapperStyle}>
+      <div style={titleDivWrapperStyle}>
+        <Title level={3} style={titleStyle} >Jaymall 상품 등록</Title>
         <FileUploader />
         <br />
 
-        <Form {...layout} name="nest-messages" onFinish={onFinish} style={{ maxWidth: 600 }} >
+        <Form
+          name="nest-messages"
+          labelCol={formLabelColStyle}
+          wrapperCol={formLabelWrapperColStyle}
+          style={formStyle}
+          onFinish={onFinish} >
           <Form.Item
             name='title'
             label="상품명"
-            rules={[
-              { required: true, message: '상품명을 입력해주세요.' },
-            ]}
+            rules={formTitleRules}
           >
             <Input placeholder='상품명' />
           </Form.Item>
@@ -82,25 +119,18 @@ function UploadProductPage() {
           <Form.Item
             name='description'
             label="상품 설명"
-            rules={[
-              { required: true, message: '상품 설명을 입력해주세요.' },
-              { min: 10, message: '상품 설명은 10자 이상으로 입력해주세요.' },
-            ]}
+            rules={formDescriptionRules}
           >
-            <Input.TextArea style={{ minHeight: 150 }} placeholder='상품 설명' />
+            <Input.TextArea style={inputTextDescriptionStyle} placeholder='상품 설명' />
           </Form.Item>
 
           <Form.Item
             name='price'
             label="가격"
-            rules={[
-              { required: true, message: '상품 가격을 입력해주세요.' },
-              { type: 'number', min: 1, message: '가격은 0원 보다 높아야합니다.' },
-              { type: 'number', max: 100000000, message: '우리 쇼핑몰은 1억원 이하의 상품만 거래합니다.' },
-            ]}
+            rules={formPriceRules}
           >
             <InputNumber
-              style={{ width: 140, alignItems: 'end' }}
+              style={inputNumberStyle}
               formatter={value => value.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
               parser={value => value.replace(/(,*)/g, '')}
               placeholder='가격'
@@ -110,29 +140,19 @@ function UploadProductPage() {
           <Form.Item
             name='sort'
             label="종류"
-            rules={[
-              { required: true, message: '상품 종류를 선택해주세요.' },
-            ]}
+            rules={formSortRules}
           >
             <Select placeholder='상품 종류' >
               <Select.OptGroup label="의류">
-                {ProductClothesSort.map((value) => {
-                  return (
-                    <Select.Option key={uuidv4()} value={value}>{value}</Select.Option>
-                  )
-                })}
+                {renderProductClothSort}
               </Select.OptGroup>
               <Select.OptGroup label="잡화">
-                {ProductAccessorySort.map((value) => {
-                  return (
-                    <Select.Option key={uuidv4()} value={value}>{value}</Select.Option>
-                  )
-                })}
+                {renderAccessoryClothSort}
               </Select.OptGroup>
             </Select>
           </Form.Item>
 
-          <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
+          <Form.Item wrapperCol={{ span: 16, offset: 8 }}>
             <Space>
               <Button type="primary" htmlType="submit" disabled={uploadProductLoading || uploadImageLoading}>
                 상품 등록

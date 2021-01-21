@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import StyledLink from '../utils/StyledLink'
 import { Drawer, Button } from 'antd';
 import { MenuOutlined } from '@ant-design/icons'
@@ -9,16 +9,18 @@ import RightMenu from './NavBar/RightMenu';
 function NavBar() {
   const [visible, setVisible] = useState(false)
 
-  const showDrawer = () => {
+  const showDrawer = useCallback(() => {
     setVisible(true)
-  };
+  }, []);
 
-  const onClose = () => {
+  const onClose = useCallback(() => {
     setVisible(false)
-  };
+  }, [])
+
+  const navStyle = useMemo(() => ({ position: 'fixed', top: 0, zIndex: 5, width: '100%' }), [])
 
   return (
-    <nav className="menu" style={{ position: 'fixed', top: 0, zIndex: 5, width: '100%' }}>
+    <nav className="menu" style={navStyle}>
       <div className="menu__container">
         <div className="menu_left">
           <LeftMenu mode="horizontal" />

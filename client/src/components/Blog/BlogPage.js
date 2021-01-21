@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import StyledLink from '../utils/StyledLink'
 import { v4 as uuidv4 } from 'uuid'
@@ -38,19 +38,48 @@ function BlogPage() {
     });
   }, [dispatch])
 
-  const renderSkeleton = Array.from(Array(2)).map(_ => <Skeleton key={uuidv4()} />)
+  const renderSkeleton = useMemo(() => (Array.from(Array(2)).map(_ => <Skeleton key={uuidv4()} />)), [])
+  const rootDivStyle = useMemo(() => ({ width: '75%', margin: '3rem auto' }), [])
+  const titleDivStyle = useMemo(() => ({ textAlign: 'center', marginTop: 100, marginBottom: 30 }), [])
+  const buttonWrapperDivStyle = useMemo(() => ({ display: 'flex' }), [])
+  const buttonStyle = useMemo(() => ({ marginLeft: 'auto', marginBottom: 20 }), [])
+  const avatarStyle = useMemo(() => ({ marginTop: 7 }), [])
+  const descriptionStyle = useMemo(() => ({ marginTop: 10 }), [])
+  const descriptionWrapperStyle = useMemo(() => ({ display: 'flex', justifyContent: 'space-between' }), [])
+  const emptyWrapperStyle = useMemo(() => ({ margin: '200px auto' }), [])
+
+  const renderBlogPosts = useCallback(() => (
+    <List
+      width="100%"
+      itemLayout="horizontal"
+      dataSource={blogPosts}
+      renderItem={post => (
+        <List.Item>
+          <List.Item.Meta
+            avatar={<Avatar src={post.writer.image} style={avatarStyle} />}
+            title={<StyledLink to={`/blog/post/${post._id}`}>{post.title}</StyledLink>}
+            description={
+              <span style={descriptionWrapperStyle}>
+                <p>{post.writer.name}</p>
+                <p style={descriptionStyle}>{moment(post.createdAt).fromNow()}</p>
+              </span>}
+          />
+        </List.Item>
+      )}
+    />
+  ), [blogPosts])
 
   return (
-    <div style={{ width: '75%', margin: '3rem auto' }}>
-      <div style={{ textAlign: 'center', marginTop: 100, marginBottom: 30 }}>
+    <div style={rootDivStyle}>
+      <div style={titleDivStyle}>
         <Title level={2} >블로그 목록</Title>
       </div>
-      <div style={{ display: 'flex' }}>
+      <div style={buttonWrapperDivStyle}>
         <Button
           type='primary'
           disabled={!currentUser.isAuth}
           loading={loadBlogPostsLoading}
-          style={{ marginLeft: 'auto', marginBottom: 20 }}>
+          style={buttonStyle}>
           <StyledLink to='/blog/create'>
             글쓰기
           </StyledLink>
@@ -59,26 +88,9 @@ function BlogPage() {
 
       {loadBlogPostsLoading && renderSkeleton}
       {loadBlogPostsDone && blogPosts.length > 0 &&
-        <List
-          width="100%"
-          itemLayout="horizontal"
-          dataSource={blogPosts}
-          renderItem={item => (
-            <List.Item>
-              <List.Item.Meta
-                avatar={<Avatar src={item.writer.image} style={{ marginTop: 7 }} />}
-                title={<StyledLink to={`/blog/post/${item._id}`}>{item.title}</StyledLink>}
-                description={
-                  <span style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <p>{item.writer.name}</p>
-                    <p style={{ marginRight: 10 }}>{moment(item.createdAt).fromNow()}</p>
-                  </span>}
-              />
-            </List.Item>
-          )}
-        />}
-      {
-        loadBlogPostsDone && blogPosts.length === 0 && <div style={{ margin: '200px auto' }}>
+        renderBlogPosts()}
+      {loadBlogPostsDone && blogPosts.length === 0 &&
+        <div style={emptyWrapperStyle}>
           <Empty description='블로그에 게시글이 아직 없습니다.' />
         </div>
       }

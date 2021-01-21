@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo, useCallback } from 'react'
 import { Descriptions, Tag, Tooltip } from 'antd'
 import { useSelector } from 'react-redux'
 import { v4 as uuidv4 } from 'uuid'
@@ -7,7 +7,7 @@ function MovieDescription() {
 
   const { currentMovie } = useSelector(state => state.movie)
 
-  const getMovieTag = () => {
+  const getMovieTag = useCallback(() => {
     const tags = currentMovie.genres.map(genre => {
       return <Tag key={uuidv4()}>{genre.name}</Tag>
     })
@@ -15,7 +15,9 @@ function MovieDescription() {
       tags.unshift(<Tag>청불</Tag>)
     }
     return tags
-  }
+  }, [currentMovie])
+
+  const descriptionItemDescriptionStyle = useMemo(() => ({ width: '97%', margin: '1rem auto' }), [])
 
   return (
     <>
@@ -34,7 +36,7 @@ function MovieDescription() {
           </Tooltip>
         </Descriptions.Item>
         <Descriptions.Item key='rate' label="평점">{currentMovie.vote_average}</Descriptions.Item>
-        <Descriptions.Item key='description' label=""> <div style={{ width: '97%', margin: '1rem auto' }}> {currentMovie.overview}</div></Descriptions.Item>
+        <Descriptions.Item key='description' label=""> <div style={descriptionItemDescriptionStyle}> {currentMovie.overview}</div></Descriptions.Item>
       </Descriptions>
     </>
   )

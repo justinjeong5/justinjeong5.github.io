@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, withRouter, useHistory } from 'react-router-dom';
 import { Form, Button, Checkbox, Space, Typography, message as Message } from 'antd';
@@ -7,14 +7,6 @@ import EmailForm from './LoginForm/EmailForm';
 import PasswordForm from './LoginForm/PasswordForm';
 
 const { Title } = Typography;
-
-const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 16 },
-};
-const tailLayout = {
-  wrapperCol: { offset: 8, span: 16 },
-};
 
 function LoginPage() {
   const [form] = Form.useForm();
@@ -31,12 +23,12 @@ function LoginPage() {
     }
   }, [loginUserDone, loginUserError, history, message])
 
-  const initialValues = {
+  const initialValues = useMemo(() => ({
     rememberMe: true,
     email: localStorage.getItem('rememberMe'),
-  }
+  }), [])
 
-  const onFinish = (values) => {
+  const onFinish = useCallback((values) => {
     if (values.rememberMe) {
       localStorage.setItem('rememberMe', values.email);
     }
@@ -47,45 +39,57 @@ function LoginPage() {
         password: values.password,
       }
     })
-  };
+  }, []);
 
-  const onFinishFailed = ({ errorFields }) => {
+  const handleCancel = useCallback(() => {
+    history.goBack(1)
+  }, [])
+
+  const onFinishFailed = useCallback(({ errorFields }) => {
     form.scrollToField(errorFields[0].name);
-  };
+  }, [form]);
+  const rootDivWrapperStyle = useMemo(() => ({ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100vh' }), [])
+  const formLabelColStyle = useMemo(() => ({ span: 8 }), [])
+  const formWrapperColStyle = useMemo(() => ({ span: 16 }), [])
+  const formStyle = useMemo(() => ({ width: '400px' }), [])
+  const titleStyle = useMemo(() => ({ display: 'flex', justifyContent: 'center', marginBottom: 40 }), [])
+  const formItemWrapperColStyle = useMemo(() => ({ offset: 8, span: 16 }), [])
+  const formItemStyle = useMemo(() => ({ marginTop: -10 }), [])
 
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100vh' }}>
+    <div style={rootDivWrapperStyle}>
       <Form
-        {...layout}
         name="basic"
-        style={{ width: '400px' }}
         initialValues={initialValues}
+        labelCol={formLabelColStyle}
+        wrapperCol={formWrapperColStyle}
+        style={formStyle}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
       >
-        <Title level={2} style={{ display: 'flex', justifyContent: 'center', marginBottom: 40 }} >로그인</Title>
+        <Title level={2} style={titleStyle} >로그인</Title>
         <EmailForm />
         <PasswordForm />
 
-        <Form.Item {...tailLayout} name="rememberMe" valuePropName="checked">
+        <Form.Item wrapperCol={formItemWrapperColStyle} name="rememberMe" valuePropName="checked">
           <Checkbox>아이디 기억하기</Checkbox>
         </Form.Item>
 
-        <Form.Item {...tailLayout}>
+        <Form.Item wrapperCol={formItemWrapperColStyle}>
           <Space>
             <Button type="primary" htmlType="submit"
               loading={loginUserLoading}
               disabled={loginUserLoading}>
               로그인
               </Button>
-            <Button onClick={() => { history.goBack(1) }}>
+            <Button onClick={handleCancel}>
               취소
             </Button>
           </Space>
         </Form.Item>
 
-        <Form.Item  {...tailLayout} style={{ marginTop: -10 }}>
+        <Form.Item wrapperCol={formItemWrapperColStyle} style={formItemStyle}>
           <Link to='/register'>아직 회원이 아니시라면</Link>
         </Form.Item>
       </Form>

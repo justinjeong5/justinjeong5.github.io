@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import MessageHeader from './MessageHeader'
 import Message from './Message'
 import MessageForm from './MessageForm'
@@ -15,21 +15,25 @@ function MainPanel() {
     }
   }, [chatList])
 
+
+  const rootDivStyle = useMemo(() => ({ padding: '2rem' }), [])
+  const messageComponentWrapperStyle = useMemo(() => ({
+    width: 'calc(100vw - 370px)',
+    height: 'calc(100vh - 440px)',
+    border: '.2rem solid #ececec',
+    borderRadius: '4px',
+    padding: '1rem',
+    margin: '1rem auto',
+    overflowY: 'auto'
+  }), [])
+
   return (
-    <div style={{ padding: '2rem' }}>
+    <div style={rootDivStyle}>
       <MessageHeader />
-      <div style={{
-        width: 'calc(100vw - 370px)',
-        height: 'calc(100vh - 440px)',
-        border: '.2rem solid #ececec',
-        borderRadius: '4px',
-        padding: '1rem',
-        margin: '1rem auto',
-        overflowY: 'auto'
-      }}>
+      <div style={messageComponentWrapperStyle}>
         <Message />
         {/* Ref를 이용한 DOM선택 */}
-        <div ref={node => (messageEndRef = node)} /></div>
+        <div ref={(node) => (messageEndRef = node)} /></div>
       <MessageForm />
     </div>
   )

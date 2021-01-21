@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, Descriptions, Tabs, } from 'antd';
 import NumberFormat from 'react-number-format';
@@ -11,12 +11,15 @@ function ProductInfo() {
   const { currentUser } = useSelector(state => state.user)
   const { currentProduct } = useSelector(state => state.jaymall)
 
-  const handleAddToCart = () => {
+  const handleAddToCart = useCallback(() => {
     dispatch({
       type: ADD_TO_CART_REQUEST,
       payload: { productId: currentProduct._id }
     })
-  }
+  }, [currentProduct])
+
+  const buttonWrapperDivStyle = useMemo(() => ({ display: 'flex', justifyContent: 'center', marginTop: 40 }), [])
+  const payloadData = useMemo(() => ({ jaymallId: currentProduct._id }), [currentProduct])
 
   return (
     <div>
@@ -30,7 +33,7 @@ function ProductInfo() {
             <Descriptions.Item label="누적판매" span={3}>{currentProduct.sold}</Descriptions.Item>
             <Descriptions.Item >&nbsp;&nbsp;{currentProduct.description}</Descriptions.Item>
           </Descriptions>
-          <div style={{ display: 'flex', justifyContent: 'center', marginTop: 40 }}>
+          <div style={buttonWrapperDivStyle}>
             <Button
               size='large'
               shape='round'
@@ -44,7 +47,7 @@ function ProductInfo() {
         </Tabs.TabPane>
 
         <Tabs.TabPane tab="구매 후기" key="productReview">
-          <Comment disabled={!currentUser.isAuth} payload={{ jaymallId: currentProduct._id }} description='후기 남기기' placeholder="상품의 사용 후기를 공유해주세요!" />
+          <Comment disabled={!currentUser.isAuth} payload={payloadData} description='후기 남기기' placeholder="상품의 사용 후기를 공유해주세요!" />
         </Tabs.TabPane>
       </Tabs>
 

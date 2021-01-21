@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { v4 as uuidv4 } from 'uuid'
 import { Card, Row, Col, Empty } from 'antd'
@@ -21,11 +21,15 @@ function MovieCasting() {
     }
   }, [dispatch, loadMovieDetailDone, currentMovie.id])
 
+  const loadingWrapperDivStyle = useMemo(() => ({ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '80vw', height: '300px' }), [])
+  const loadingIconStyle = useMemo(() => ({ fontSize: '3rem' }), [])
+  const cardStyle = useMemo(() => ({ width: 180 }), [])
+
   return (
     <div>
       {loadMovieCastingLoading &&
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '80vw', height: '300px' }}>
-          <LoadingOutlined style={{ fontSize: '3rem' }} />
+        <div style={loadingWrapperDivStyle}>
+          <LoadingOutlined style={loadingIconStyle} />
         </div>}
       {loadMovieCastingDone && <>
         <Row gutter={[16, 16]}>
@@ -35,7 +39,7 @@ function MovieCasting() {
                 {cast.profile_path
                   ? <Card
                     key={uuidv4()}
-                    style={{ width: 180 }}
+                    style={cardStyle}
                     cover={<img alt="example" src={`${IMAGE_URL}/w500/${cast.profile_path}`} />}
                   >
                     <Card.Meta title={cast.name} description={cast.character} />
@@ -43,7 +47,7 @@ function MovieCasting() {
                   :
                   <Card
                     key={uuidv4()}
-                    style={{ width: 180 }}>
+                    style={cardStyle}>
                     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 270 }}>
                       <Empty description='' />
                     </div>

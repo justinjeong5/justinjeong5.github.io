@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useMemo, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Typography, Modal, Input, Form } from 'antd'
 import { SendOutlined, PlusSquareOutlined, ApiOutlined } from '@ant-design/icons'
@@ -7,10 +7,6 @@ import { LOAD_CHAT_ROOMS_REQUEST, SET_CURRENT_CHAT_ROOM } from '../../../reducer
 import { createChatRoom } from '../../utils/socket'
 const { Title } = Typography;
 
-const layout = {
-  labelCol: { span: 6 },
-  wrapperCol: { span: 16 },
-};
 
 function ChatRooms() {
 
@@ -35,13 +31,13 @@ function ChatRooms() {
     }
   }, [dispatch, createChatRoomDone, chatRooms, currentUser.userId])
 
-  const handleModal = () => {
+  const handleModal = useCallback(() => {
     if (currentUser.isAuth) {
       setShowModal(!showModal);
     }
-  }
+  }, [currentUser, showModal])
 
-  const handleMakeRoom = () => {
+  const handleMakeRoom = useCallback(() => {
     const { title, description } = form.getFieldValue();
     if (!title || !description) return;
     if (title.length > 15) return;
@@ -53,23 +49,23 @@ function ChatRooms() {
     })
     form.resetFields();
     handleModal();
-  }
+  }, [currentUser, form])
 
-  const handleCurrentRoom = (roomId) => () => {
+  const handleCurrentRoom = useCallback((roomId) => () => {
     dispatch({
       type: SET_CURRENT_CHAT_ROOM,
       payload: roomId,
     })
-  }
+  }, [])
 
-  const renderSelected = (roomId) => {
+  const renderSelected = useCallback((roomId) => {
     if (roomId === currentChatRoom._id) {
       return 'gray'
     }
     return ''
-  }
+  }, [currentChatRoom])
 
-  const renderChatRooms = chatRooms.map((room) => (
+  const renderChatRooms = useCallback(chatRooms.map((room) => (
     <div key={uuidv4()} onClick={handleCurrentRoom(room._id)}
       style={{
         backgroundColor: renderSelected(room._id),
@@ -80,33 +76,51 @@ function ChatRooms() {
     >
       {`# ${room.title}`}
     </div>
-  ))
+  )), [chatRooms, currentChatRoom])
+
+  const renderChatRoomCounts = useCallback(() => {
+    return (
+      <Title level={5} style={titleStyle}>
+        <SendOutlined />{` 방 목록 [${chatRooms.length}] `}<PlusSquareOutlined onClick={handleModal} style={plusIconStyle} />
+      </Title>
+    )
+  }, [chatRooms])
+
+  const titleStyle = useMemo(() => ({ color: 'white' }), [])
+  const plusIconStyle = useMemo(() => ({ float: 'right', marginTop: 5, marginRight: 7 }), [])
+  const modalTitleStyle = useMemo(() => ({ marginTop: 5 }), [])
+  const labelColStyle = useMemo(() => ({ span: 6 }), [])
+  const wrapperColStyle = useMemo(() => ({ span: 16 }), [])
+  const inputTitleRules = useMemo(() => ([{ required: true, message: '방 제목을 정해주세요' }, { max: 15, message: '방 이름은 14글자 이하로 해주세요' }]), [])
+  const inputDescriptionRules = useMemo(() => ([{ required: true, message: '방 설명을 적어주세요' }]), [])
 
   return (
     <div>
-      <Title level={5} style={{ color: 'white' }}>
-        <SendOutlined />{` 방 목록 [${chatRooms.length}] `}<PlusSquareOutlined onClick={handleModal} style={{ float: 'right', marginTop: 5, marginRight: 7 }} />
-      </Title>
-
+      {renderChatRoomCounts()}
       <Modal
-        title={<span><ApiOutlined style={{ marginTop: 5 }} /> 새로운 대화방을 만듭니다</span>}
+        title={<span><ApiOutlined style={modalTitleStyle} /> 새로운 대화방을 만듭니다</span>}
         visible={showModal}
         onOk={handleMakeRoom}
         onCancel={handleModal}
         okText="방 만들기"
         cancelText="취소"
       >
-        <Form {...layout} name="basic" form={form} onFinish={handleMakeRoom}>
-          <Form.Item label="방 이름" name="title" rules={[{ required: true, message: '방 제목을 정해주세요' }, { max: 15, message: '방 이름은 14글자 이하로 해주세요' }]}>
+        <Form
+          name="basic"
+          form={form}
+          labelCol={labelColStyle}
+          wrapperCol={wrapperColStyle}
+          onFinish={handleMakeRoom}>
+          <Form.Item label="방 이름" name="title" rules={inputTitleRules}>
             <Input />
           </Form.Item>
-          <Form.Item label="방 설명" name="description" rules={[{ required: true, message: '방 설명을 적어주세요' }]}>
+          <Form.Item label="방 설명" name="description" rules={inputDescriptionRules}>
             <Input />
           </Form.Item>
         </Form>
       </Modal>
       {loadChatRoomsDone && renderChatRooms}
-    </div>
+    </div >
   )
 }
 

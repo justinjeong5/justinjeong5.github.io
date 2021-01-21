@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { withRouter } from 'react-router-dom';
 import StyledLink from '../utils/StyledLink'
@@ -41,7 +41,7 @@ function MoviePage() {
     };
   }, [dispatch, loadMoviesLoading, pageNumber]);
 
-  const renderMovieCard = movieData?.map((movie) => {
+  const renderMovieCard = useMemo(() => (movieData?.map((movie) => {
     return (
       <Col xl={4} lg={6} md={8} sm={12} xs={24} key={uuidv4()}>
         <StyledLink to={`/movieTrend/movie/${movie.id}`}>
@@ -54,17 +54,22 @@ function MoviePage() {
         </StyledLink>
       </Col >
     )
-  });
+  })), [movieData]);
+
+  const loadingWrapperDivStyle = useMemo(() => ({ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100vw', height: '100vh' }), [])
+  const loadingIconStyle = useMemo(() => ({ fontSize: '10rem' }), [])
+  const titleDivWrapperStyle = useMemo(() => ({ width: '85%', margin: '1rem auto' }), [])
+
 
   return (
     <div>
       {loadMoviesLoading &&
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100vw', height: '100vh' }}>
-          <LoadingOutlined style={{ fontSize: '10rem' }} />
+        <div style={loadingWrapperDivStyle}>
+          <LoadingOutlined style={loadingIconStyle} />
         </div>}
       <MainImage movie={movieData[0]} />
       <Divider />
-      <div style={{ width: '85%', margin: '1rem auto' }}>
+      <div style={titleDivWrapperStyle}>
         <Title level={2} >오늘의 영화</Title>
         <Row gutter={[16, 16]}>
           {renderMovieCard}

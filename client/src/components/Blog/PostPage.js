@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter, useParams, useHistory } from 'react-router-dom'
 import { PageHeader, Divider, Card, Avatar } from 'antd'
@@ -24,19 +24,31 @@ function PostPage() {
     })
   }, [dispatch, postId])
 
+  const handleCancel = useCallback(() => {
+    history.goBack(1)
+  }, [])
+
+  const loadingWrapperStyle = useMemo(() => ({ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100vw', height: 'calc(100vh - 128px)' }), [])
+  const loadingStyle = useMemo(() => ({ fontSize: '5rem' }), [])
+  const rootWrapperStyle = useMemo(() => ({ width: '80%', maxWidth: '1000px', padding: 24, margin: '3rem auto' }), [])
+  const cardStyle = useMemo(() => ({ border: 'none' }), [])
+  const blogContentStyle = useMemo(() => ({ margin: '3rem auto', height: '100%' }), [])
+  const renderBlogPost = useMemo(() => ({ __html: currentBlogPost.content }), [currentBlogPost])
+  const commentPayload = useMemo(() => ({ blogId: currentBlogPost._id }), [currentBlogPost])
+
   return (
     <>
-      {loadBlogPostLoading && <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100vw', height: 'calc(100vh - 128px)' }}>
-        <LoadingOutlined style={{ fontSize: '5rem' }} />
+      {loadBlogPostLoading && <div style={loadingWrapperStyle}>
+        <LoadingOutlined style={loadingStyle} />
       </div>}
       {loadBlogPostDone && <>
-        <div style={{ width: '80%', maxWidth: '1000px', padding: 24, margin: '3rem auto' }}>
+        <div style={rootWrapperStyle}>
           <PageHeader
             ghost={false}
-            onBack={() => history.goBack(1)}
+            onBack={handleCancel}
             title={currentBlogPost.title}
           >
-            <Card style={{ border: 'none' }}>
+            <Card style={cardStyle}>
               <Card.Meta
                 avatar={<Avatar size='large' src={currentBlogPost.writer.image} alt={currentBlogPost.writer.name} />}
                 title={currentBlogPost.writer.email}
@@ -46,10 +58,10 @@ function PostPage() {
           </PageHeader>
 
           <Divider />
-          <div style={{ margin: '3rem auto', height: '100%' }}>
-            <div dangerouslySetInnerHTML={{ __html: currentBlogPost.content }} />
+          <div style={blogContentStyle}>
+            <div dangerouslySetInnerHTML={renderBlogPost} />
           </div>
-          <Comment disabled={!currentUser.isAuth} payload={{ blogId: currentBlogPost._id }} description='덧글 남기기' placeholder='댓글을 남겨주세요. 블로거에게는 큰 힘이 됩니다.' />
+          <Comment disabled={!currentUser.isAuth} payload={commentPayload} description='덧글 남기기' placeholder='댓글을 남겨주세요. 블로거에게는 큰 힘이 됩니다.' />
         </div>
       </>}
     </>

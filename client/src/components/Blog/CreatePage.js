@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter, useHistory } from 'react-router-dom';
 import { Typography, Form, Button, message as Message, Input, Space, Select, Divider } from 'antd'
-import { PlusOutlined, CloseOutlined } from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
 import { CREATE_BLOG_POST_REQUEST, RESET_CREATE_BLOG_POST } from '../../reducers/types'
 import QuillEditor from './Editor/QuillEditor'
 const { Title } = Typography;
@@ -34,7 +34,7 @@ function CreatePage() {
     }
   }, [dispatch, history, createBlogPostDone])
 
-  const onSubmit = () => {
+  const onSubmit = useCallback(() => {
     if (title === '') return Message.error('제목을 작성해주세요.');
     if (content === '') return Message.error('내용을 작성해주세요.');
 
@@ -47,23 +47,26 @@ function CreatePage() {
         files: uploadDataset.files
       },
     })
-
     setContent('');
-  }
+  }, [title, content, currentUser, uploadDataset])
 
-  const onEditorChange = (value) => {
+  const isAdmin = useCallback(() => {
+    return currentUser.role === 1
+  }, [currentUser])
+
+  const onEditorChange = useCallback((value) => {
     setContent(value)
-  }
+  }, [])
 
-  const onFilesChange = (files) => {
+  const onFilesChange = useCallback((files) => {
     setFiles(files)
-  }
+  }, [])
 
-  const onChangeTitle = (event) => {
+  const onChangeTitle = useCallback((event) => {
     setTitle(event.target.value);
-  }
+  }, [])
 
-  const handleAddCategory = () => {
+  const handleAddCategory = useCallback(() => {
     if (!newCategory.trim()) {
       return setNewCategory('');
     }
@@ -72,38 +75,58 @@ function CreatePage() {
     }
     setCategories(prev => [...prev, newCategory]);
     setNewCategory('')
-  }
+  }, [newCategory])
+
+  const handleCancel = useCallback(() => {
+    history.goBack(1)
+  }, [])
+
+  const handleCategory = useCallback((event) => {
+    setNewCategory(event.currentTarget.value)
+  }, [])
+
+  const renderCategory = useCallback(categories.map((category) => {
+    return <Option key={category}>{category}</Option>
+  }), [categories])
+
+  const rootDivStyle = useMemo(() => ({ width: '75%', margin: 'auto' }), [])
+  const titleStyle = useMemo(() => ({ textAlign: 'center', paddingTop: 100 }), [])
+  const formWrapperStyle = useMemo(() => ({ display: 'flex', }), [])
+  const selectorStyle = useMemo(() => ({ width: 240 }), [])
+  const selectorDividerStyle = useMemo(() => ({ margin: '4px 0' }), [])
+  const categoryWrapperStyle = useMemo(() => ({ display: 'flex', flexWrap: 'nowrap', padding: 8 }), [])
+  const categoryInputStyle = useMemo(() => ({ width: '75%' }), [])
+  const spaceStyle = useMemo(() => ({ textAlign: 'end', marginTop: '1rem' }), [])
+  const plusButtonWrapperStyle = useMemo(() => ({ marginTop: 5 }), [])
+
 
   return (
-    <div style={{ width: '75%', margin: 'auto' }}>
-      <div style={{ textAlign: 'center', paddingTop: 100 }}>
+    <div style={rootDivStyle}>
+      <div style={titleStyle}>
         <Title level={2} >블로그 글 작성</Title>
       </div>
 
       <Form onFinish={onSubmit}>
-        <div style={{ display: 'flex', }}>
+        <div style={formWrapperStyle}>
           <Input value={title} onChange={onChangeTitle} placeholder='제목을 입력하세요' />
           <Select
-            disabled={currentUser.role !== 1}
+            disabled={!isAdmin}
             defaultValue={'자유게시판'}
-            style={{ width: 240 }}
+            style={selectorStyle}
             dropdownRender={menu => (
               <div>
                 {menu}
-                <Divider style={{ margin: '4px 0' }} />
-                <div style={{ display: 'flex', flexWrap: 'nowrap', padding: 8 }}>
-                  <Input style={{ flex: 'auto' }} value={newCategory} onChange={(event) => setNewCategory(event.currentTarget.value)} />
-                  <a
-                    style={{ flex: 'none', padding: '8px', display: 'block', cursor: 'pointer' }}
-                    onClick={handleAddCategory}
-                  >
-                    <PlusOutlined /> 추가
-                    </a>
+                <Divider style={selectorDividerStyle} />
+                <div style={categoryWrapperStyle}>
+                  <Input style={categoryInputStyle} value={newCategory} onChange={handleCategory} />
+                  <span style={plusButtonWrapperStyle}>
+                    <PlusOutlined onClick={handleAddCategory} />추가
+                  </span>
                 </div>
               </div>
             )}
           >
-            {categories.map((category) => (<Option key={category}>{category}</Option>))}
+            {renderCategory}
           </Select>
         </div>
 
@@ -113,20 +136,16 @@ function CreatePage() {
           onFilesChange={onFilesChange}
         />
 
-        <div style={{ textAlign: 'end', marginTop: '1rem' }}>
-          <Space>
-            <Button
-              htmlType='submit'
-              type='primary'
-              onSubmit={onSubmit}
-              disabled={createBlogPostLoading}
-              loading={createBlogPostLoading || uploadBlogDatasetLoading}
-            >글쓰기</Button>
-            <Button
-              onClick={() => history.goBack(1)}
-            >취소</Button>
-          </Space>
-        </div>
+        <Space style={spaceStyle}>
+          <Button
+            htmlType='submit'
+            type='primary'
+            onSubmit={onSubmit}
+            disabled={createBlogPostLoading}
+            loading={createBlogPostLoading || uploadBlogDatasetLoading}
+          >글쓰기</Button>
+          <Button onClick={handleCancel}>취소</Button>
+        </Space>
       </Form>
     </div>
   )
