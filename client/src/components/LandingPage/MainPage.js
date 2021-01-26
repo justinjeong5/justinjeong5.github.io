@@ -1,16 +1,15 @@
 import React, { useCallback, useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux';
-import { Typography, } from 'antd';
+import { Typography } from 'antd';
 import { GithubOutlined, LoadingOutlined } from '@ant-design/icons';
-
 import StyledLink from '../utils/StyledLink';
-
 
 import UserCard from './UserCard';
 import BlogSummary from './BlogSummary';
 import MovieSummary from './MovieSummary';
 import ChatSummary from './ChatSummary';
 import JaymallSummary from './JaymallSummary';
+import TweeterSummary from './TweeterSummary';
 
 const { Title } = Typography;
 
@@ -22,6 +21,7 @@ function MainPage() {
   const { loadMoviesLoading } = useSelector(state => state.movie);
   const { loadChatRoomsLoading } = useSelector(state => state.chat);
   const { loadProductsLoading } = useSelector(state => state.jaymall);
+  const { loadTweetsLoading } = useSelector(state => state.tweeter);
 
   const handlePageFrontRef = useCallback(() => {
     landingPageFrontRef.scrollIntoView();
@@ -66,6 +66,10 @@ function MainPage() {
       <div style={componentWrapperStyle}>
         <Title level={4}><StyledLink to='/jaymall' onClick={handlePageFrontRef}>🛍️ 제이몰</StyledLink></Title>
         {loadProductsLoading ? renderLoading : <JaymallSummary />}
+      </div>
+      <div style={componentWrapperStyle}>
+        <Title level={4}><StyledLink to='/jaymall' onClick={handlePageFrontRef}>🐦 트위터</StyledLink></Title>
+        {loadTweetsLoading ? renderLoading : <TweeterSummary />}
       </div>
     </div>
   )
