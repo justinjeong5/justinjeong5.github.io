@@ -69,8 +69,8 @@ function LeftMenu(props) {
       </StyledSubMenu>
 
       <StyledSubMenu title={<Title>트위터</Title>}>
-        <Item key="jaytweet" disabled>
-          {<StyledLink to='/jaytweet'>트위터</StyledLink>}
+        <Item key="tweeter" >
+          {<StyledLink to='/tweeter'>트위터</StyledLink>}
         </Item>
       </StyledSubMenu>
     </Menu>
