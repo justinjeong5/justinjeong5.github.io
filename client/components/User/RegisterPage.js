@@ -1,6 +1,7 @@
 import React, { useMemo, useEffect, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, withRouter, useHistory } from 'react-router-dom';
+import Router, { useRouter } from 'next/router'
+import Link from 'next/link'
 import { Form, Input, Button, Typography, message as Message, Space } from 'antd';
 import { UserOutlined, MailOutlined, LockOutlined, CheckSquareOutlined } from '@ant-design/icons';
 import md5 from 'md5'
@@ -9,24 +10,28 @@ const { Title } = Typography;
 
 function RegisterPage() {
   const dispatch = useDispatch();
-  const history = useHistory();
-  const { registerUserLoading, registerUserDone, registerUserError, message } = useSelector(state => state.user)
+  const router = useRouter();
+  const { currentUser, registerUserLoading, registerUserDone, registerUserError, message } = useSelector(state => state.user)
 
   useEffect(() => {
     if (registerUserDone) {
-      history.push('/login')
+      Router.push('/login')
+    }
+    if (currentUser.isAuth) {
+      Message.warning('로그인 하지 않은 사용자만 회원가입 가능합니다.');
+      return Router.push('/')
     }
     if (registerUserError) {
       Message.error({ content: message, duration: 2 });
     }
-  }, [registerUserDone, registerUserError, history, message])
+  }, [registerUserDone, registerUserError, message, currentUser])
 
   const onFinish = useCallback((values) => {
     const payload = {
       email: values.email,
       name: values.userName,
       password: values.password,
-      image: `http://gravatar.com/avatar/${md5(values.email)}?d=identicon`,
+      image: `https://gravatar.com/avatar/${md5(values.email)}?d=identicon`,
     }
     dispatch({
       type: REGISTER_USER_REQUEST,
@@ -35,7 +40,7 @@ function RegisterPage() {
   }, []);
 
   const handleCancel = useCallback(() => {
-    history.goBack(1)
+    router.back()
   }, [])
 
   const rootDivWrapperStyle = useMemo(() => ({ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100vh' }), [])
@@ -127,7 +132,7 @@ function RegisterPage() {
         </Form.Item>
 
         <Form.Item wrapperCol={formItemWrapperColStyle} style={formItemStyle}>
-          <Link to='/login'>이미 회원이시라면</Link>
+          <Link href='/login'><a>이미 회원이시라면</a></Link>
         </Form.Item>
 
       </Form>
@@ -135,4 +140,4 @@ function RegisterPage() {
   )
 }
 
-export default withRouter(RegisterPage);
+export default RegisterPage;
