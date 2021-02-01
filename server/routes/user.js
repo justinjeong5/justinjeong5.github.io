@@ -39,15 +39,17 @@ router.get('/auth', auth, (req, res) => {
     }
   }
   res.status(200).json({
-    userId: req.user._id,
-    email: req.user.email,
-    name: req.user.name,
-    lastname: req.user.lastname,
-    image: req.user.image,
-    role: req.user.role,
-    cart: req.user.cart,
-    isAdmin: isAdmin(req.user.role),
-    isAuth: true,
+    user: {
+      userId: req.user._id,
+      email: req.user.email,
+      name: req.user.name,
+      lastname: req.user.lastname,
+      image: req.user.image,
+      role: req.user.role,
+      cart: req.user.cart,
+      isAdmin: isAdmin(req.user.role),
+      isAuth: true,
+    },
     message: '정상적으로 사용자가 인증되었습니다.'
   })
 })

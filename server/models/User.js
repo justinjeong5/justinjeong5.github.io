@@ -62,7 +62,10 @@ userSchema.pre('save', function (next) {
 userSchema.methods.comparePassword = function (plainPassword, callback) {
   var user = this;
   bcrypt.compare(plainPassword, user.password, function (err, isMatch) {
-    if (err) return callback(err);
+    if (err) {
+      console.error(err)
+      return callback(err);
+    }
     callback(null, isMatch);
   })
 }
@@ -78,7 +81,10 @@ userSchema.methods.generateToken = function (callback) {
   }, process.env.SECRET_OR_PRIVATE_KEY);
   user.token = token;
   user.save(function (err, user) {
-    if (err) return callback(err);
+    if (err) {
+      console.error(err)
+      return callback(err);
+    }
     callback(null, user);
   })
 }
@@ -86,12 +92,18 @@ userSchema.methods.generateToken = function (callback) {
 userSchema.statics.findByToken = function (token, callback) {
   var user = this;
   jwt.verify(token, process.env.SECRET_OR_PRIVATE_KEY, function (err, decoded) {
-    if (err) return callback(err);
+    if (err) {
+      console.error(err)
+      return callback(err);
+    }
     user.findOne({
       "_id": decoded.data,
       "token": token
     }, function (err, user) {
-      if (err) return callback(err);
+      if (err) {
+        console.error(err)
+        return callback(err);
+      }
       callback(null, user);
     })
   })
