@@ -1,12 +1,12 @@
 import React from 'react'
 import AppLayout from '../components/AppLayout'
 
-function Home() {
+function Talkative() {
   return (
     <AppLayout>
-      Landing Page
+      Talkative
     </AppLayout>
   )
 }
 
-export default Home
+export default Talkative

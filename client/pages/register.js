@@ -1,12 +1,12 @@
 import React from 'react'
 import AppLayout from '../components/AppLayout'
 
-function Home() {
+function Register() {
   return (
     <AppLayout>
-      Landing Page
+      Register
     </AppLayout>
   )
 }
 
-export default Home
+export default Register

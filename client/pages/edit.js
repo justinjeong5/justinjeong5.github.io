@@ -1,12 +1,12 @@
 import React from 'react'
 import AppLayout from '../components/AppLayout'
 
-function Home() {
+function Edit() {
   return (
     <AppLayout>
-      Landing Page
+      Edit
     </AppLayout>
   )
 }
 
-export default Home
+export default Edit

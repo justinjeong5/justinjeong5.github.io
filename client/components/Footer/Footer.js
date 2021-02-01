@@ -11,7 +11,7 @@ function Footer() {
 
   return (
     <div style={rootDivStyle}>
-      <p>JustinJeong <CarOutlined /> Github.io</p>
+      <p>JustinJeong <CarOutlined /> 정경하</p>
     </div>
   )
 }

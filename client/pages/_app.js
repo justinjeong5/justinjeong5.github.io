@@ -2,7 +2,7 @@ import React from 'react'
 import Head from 'next/head'
 import Proptypes from 'prop-types'
 import withReduxSaga from 'next-redux-saga'
-import './NavBar.css';
+import '../css/NavBar.css';
 import 'antd/dist/antd.css';
 import 'react-image-gallery/styles/css/image-gallery.css';
 
