@@ -16,7 +16,6 @@ function LoadMoviesAPI(data) {
 function* loadMovies(action) {
   try {
     const result = yield call(LoadMoviesAPI, action.payload);
-    console.log(result, 'LoadMoviesAPILoadMoviesAPILoadMoviesAPILoadMoviesAPI')
     yield put({
       type: LOAD_MOVIES_SUCCESS,
       payload: result.data,
