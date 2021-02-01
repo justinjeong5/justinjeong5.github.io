@@ -24,9 +24,6 @@ import PostPage from './Blog/PostPage'
 
 import ChatPage from './Chatting/ChatPage'
 
-import TweeterPage from './Tweeter/TweeterPage'
-import TweeterProfile from './Tweeter/TweeterProfile'
-
 function App() {
   return (
     <div>
@@ -47,8 +44,6 @@ function App() {
         <Route exact path="/blog/create" component={Auth(CreatePage, true)} />
         <Route exact path="/blog/post/:postId" component={Auth(PostPage, null)} />
         <Route exact path="/talkative" component={Auth(ChatPage, null)} />
-        <Route exact path="/tweeter" component={Auth(TweeterPage, null)} />
-        <Route exact path="/tweeter/profile" component={Auth(TweeterProfile, true)} />
       </Switch>
       <Footer />
     </div>

@@ -7,7 +7,6 @@ import blog from './blog'
 import chat from './chat'
 import comment from './comment'
 import favorite from './favorite'
-import tweeter from './tweeter'
 
 
 const rootReducer = (state, action) => {
@@ -19,7 +18,6 @@ const rootReducer = (state, action) => {
     chat,
     comment,
     favorite,
-    tweeter,
   })
   return combineReducer(state, action);
 };

@@ -9,7 +9,6 @@ import jaymallSaga from './jaymall'
 import blogSaga from './blog'
 import chatSaga from './chat'
 import commentSaga from './comment'
-import tweeterSaga from './tweeter'
 
 
 axios.defaults.baseURL = SERVER_URL;
@@ -24,6 +23,5 @@ export default function* rootSaga() {
     fork(chatSaga),
     fork(commentSaga),
     fork(favoriteSaga),
-    fork(tweeterSaga),
   ]);
 }

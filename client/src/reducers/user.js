@@ -12,16 +12,10 @@ import {
   LOAD_CART_ITEMS_REQUEST, LOAD_CART_ITEMS_SUCCESS, LOAD_CART_ITEMS_FAILURE,
   REMOVE_CART_ITEM_REQUEST, REMOVE_CART_ITEM_SUCCESS, REMOVE_CART_ITEM_FAILURE,
   UPLOAD_USER_IMAGE_REQUEST, UPLOAD_USER_IMAGE_SUCCESS, UPLOAD_USER_IMAGE_FAILURE,
-  ADD_TWEET_TO_ME, REMOVE_TWEET_FROM_ME,
-  FOLLOW_REQUEST, FOLLOW_SUCCESS, FOLLOW_FAILURE,
-  UNFOLLOW_REQUEST, UNFOLLOW_SUCCESS, UNFOLLOW_FAILURE,
 } from './types'
 
 const initialState = {
   currentUser: {},
-  tweets: Array.from(Array(2)).map(_ => ({ id: uuidv4() })),
-  followers: Array.from(Array(6)).map(_ => ({ id: uuidv4(), name: faker.name.findName(), src: faker.image.image() })),
-  followings: Array.from(Array(4)).map(_ => ({ id: uuidv4(), name: faker.name.findName(), src: faker.image.image() })),
   cartWithDetail: [],
   message: '',
 
@@ -55,12 +49,6 @@ const initialState = {
   uploadUserImageLoading: false,
   uploadUserImageDone: false,
   uploadUserImageError: null,
-  followLoading: false,
-  followDone: false,
-  followError: null,
-  unfollowLoading: false,
-  unfollowDone: false,
-  unfollowError: null,
 }
 
 const user = (state = initialState, action) => {
@@ -260,46 +248,6 @@ const user = (state = initialState, action) => {
         draft.uploadUserImageLoading = false;
         draft.uploadUserImageError = action.error.code;
         draft.message = action.error.message;
-        break;
-      case ADD_TWEET_TO_ME:
-        draft.tweets.unshift({ id: action.data.id })
-        break;
-      case REMOVE_TWEET_FROM_ME:
-        const postIndex = draft.tweets.findIndex((post) => post.id === action.data.id);
-        draft.tweets.splice(postIndex, 1);
-        break;
-      case FOLLOW_REQUEST:
-        draft.followLoading = true;
-        draft.followDone = false;
-        draft.followError = null;
-        break;
-      case FOLLOW_SUCCESS:
-        draft.followings.push({ id: action.data.userTo })
-        draft.message = action.message;
-        draft.followLoading = false;
-        draft.followDone = true;
-        break;
-      case FOLLOW_FAILURE:
-        draft.message = action.message;
-        draft.followLoading = false;
-        draft.followError = action.error;
-        break;
-      case UNFOLLOW_REQUEST:
-        draft.unfollowLoading = true;
-        draft.unfollowDone = false;
-        draft.unfollowError = null;
-        break;
-      case UNFOLLOW_SUCCESS:
-        const followIndex = draft.followings.findIndex((follow => follow.id === action.data.userTo))
-        draft.followings.splice(followIndex, 1)
-        draft.message = action.message;
-        draft.unfollowLoading = false;
-        draft.unfollowDone = true;
-        break;
-      case UNFOLLOW_FAILURE:
-        draft.message = action.message;
-        draft.unfollowLoading = false;
-        draft.unfollowError = action.error;
         break;
       default:
         break;

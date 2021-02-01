@@ -1,4 +1,4 @@
-import { all, fork, put, call, takeLatest, delay } from 'redux-saga/effects'
+import { all, fork, put, call, takeLatest } from 'redux-saga/effects'
 import axios from 'axios';
 
 import {
@@ -12,8 +12,6 @@ import {
   LOAD_CART_ITEMS_REQUEST, LOAD_CART_ITEMS_SUCCESS, LOAD_CART_ITEMS_FAILURE,
   REMOVE_CART_ITEM_REQUEST, REMOVE_CART_ITEM_SUCCESS, REMOVE_CART_ITEM_FAILURE,
   UPLOAD_USER_IMAGE_REQUEST, UPLOAD_USER_IMAGE_SUCCESS, UPLOAD_USER_IMAGE_FAILURE,
-  FOLLOW_REQUEST, FOLLOW_SUCCESS, FOLLOW_FAILURE,
-  UNFOLLOW_REQUEST, UNFOLLOW_SUCCESS, UNFOLLOW_FAILURE,
 } from '../reducers/types'
 
 function registerAPI(data) {
@@ -216,48 +214,6 @@ function* uploadUserImage(action) {
   }
 }
 
-function followAPI(data) {
-  return axios.post('/api/tweeter/follow', data)
-}
-
-function* follow(action) {
-  try {
-    yield delay(1000);  // server is not ready
-    // const result = yield call(followAPI, action.data)
-    yield put({
-      type: FOLLOW_SUCCESS,
-      data: action.data
-    })
-  } catch (error) {
-    console.error(error)
-    yield put({
-      type: FOLLOW_FAILURE,
-      data: error.response.data
-    })
-  }
-}
-
-function unfollowAPI(data) {
-  return axios.post('/api/tweeter/unfollow', data)
-}
-
-function* unfollow(action) {
-  try {
-    yield delay(1000);  // server is not ready
-    // const result = yield call(unfollowAPI, action.data)
-    yield put({
-      type: UNFOLLOW_SUCCESS,
-      data: action.data
-    })
-  } catch (error) {
-    console.error(error)
-    yield put({
-      type: UNFOLLOW_FAILURE,
-      data: error.response.data
-    })
-  }
-}
-
 function* watchRegister() {
   yield takeLatest(REGISTER_USER_REQUEST, register)
 }
@@ -298,14 +254,6 @@ function* watchUploadUserImage() {
   yield takeLatest(UPLOAD_USER_IMAGE_REQUEST, uploadUserImage)
 }
 
-function* watchFollow() {
-  yield takeLatest(FOLLOW_REQUEST, follow)
-}
-
-function* watchUnfollow() {
-  yield takeLatest(UNFOLLOW_REQUEST, unfollow)
-}
-
 
 export default function* userSaga() {
   yield all([
@@ -319,7 +267,5 @@ export default function* userSaga() {
     fork(watchLoadCartItems),
     fork(watchRemoveCartItem),
     fork(watchUploadUserImage),
-    fork(watchFollow),
-    fork(watchUnfollow),
   ])
 }

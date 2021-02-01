@@ -149,7 +149,7 @@ router.post('/confirm', auth, (req, res) => {
 
 router.post('/edit', auth, (req, res) => {
   User.findOneAndUpdate({ _id: req.user._id, },
-    { name: req.body.name }, (error, user) => {
+    req.body, (error, user) => {
       if (error) {
         console.error(error);
         return res.status(400).json({ code: 'DatabaseError', message: '회원정보를 찾는 과정에서 문제가 발생했습니다.', error });

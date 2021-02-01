@@ -70,7 +70,7 @@ function LeftMenu(props) {
 
       <StyledSubMenu title={<Title>트위터</Title>}>
         <Item key="tweeter" >
-          {<StyledLink to='/tweeter'>트위터</StyledLink>}
+          {<a href="https://tweeter.shinywaterjeong.com" target="_blank" rel="noreferrer noopener">트위터</a>}
         </Item>
       </StyledSubMenu>
     </Menu>
