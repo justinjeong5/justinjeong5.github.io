@@ -106,20 +106,11 @@ const user = (state = initialState, action) => {
         draft.authenticateUserError = null;
         break;
       case AUTHENTICATE_USER_SUCCESS:
+        draft.currentUser = action.payload.user;
+        draft.message = action.payload.message;
+
         draft.authenticateUserLoading = false;
         draft.authenticateUserDone = true;
-
-        draft.currentUser.userId = action.payload.userId;
-        draft.currentUser.email = action.payload.email;
-        draft.currentUser.name = action.payload.name;
-        draft.currentUser.lastname = action.payload.lastname;
-        draft.currentUser.image = action.payload.image;
-        draft.currentUser.role = action.payload.role;
-        draft.currentUser.cart = action.payload.cart;
-        draft.currentUser.isAdmin = action.payload.isAdmin;
-        draft.currentUser.isAuth = action.payload.isAuth;
-        draft.currentUser.message = action.payload.message;
-
         draft.registerUserLoading = false;
         draft.registerUserDone = false;
         draft.registerUserError = null;
@@ -137,8 +128,9 @@ const user = (state = initialState, action) => {
         draft.editUserError = null;
         break;
       case AUTHENTICATE_USER_FAILURE:
+        draft.currentUser = action.error.user;
         draft.authenticateUserLoading = false;
-        draft.authenticateUserError = action.error.code;
+        draft.authenticateUserError = action.error.err;
         draft.message = action.error.message;
         break;
       case CONFIRM_USER_REQUEST:

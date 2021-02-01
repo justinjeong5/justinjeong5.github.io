@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, withRouter, useHistory } from 'react-router-dom';
+import Router, { useRouter } from 'next/router'
+import Link from 'next/link'
 import { Form, Button, Checkbox, Space, Typography, message as Message } from 'antd';
 import { LOGIN_USER_REQUEST } from '../../reducers/types';
 import EmailForm from './LoginForm/EmailForm';
@@ -11,27 +12,27 @@ const { Title } = Typography;
 function LoginPage() {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
-  const history = useHistory();
+  const router = useRouter();
   const { loginUserLoading, loginUserDone, loginUserError, message } = useSelector(state => state.user)
 
   useEffect(() => {
     if (loginUserDone) {
-      history.push('/')
+      Router.push('/')
     }
     if (loginUserError) {
       Message.error({ content: message, duration: 2 });
     }
-  }, [loginUserDone, loginUserError, history, message])
+  }, [loginUserDone, loginUserError, message])
 
-  const initialValues = useMemo(() => ({
-    rememberMe: true,
-    email: localStorage.getItem('rememberMe'),
-  }), [])
+  // let initialValues = useMemo(() => ({
+  //   rememberMe: true,
+  //   email: localStorage.getItem('rememberMe'),
+  // }), [localStorage])
 
   const onFinish = useCallback((values) => {
-    if (values.rememberMe) {
-      localStorage.setItem('rememberMe', values.email);
-    }
+    // if (values.rememberMe) {
+    //   window.localStorage.setItem('rememberMe', values.email);
+    // }
     dispatch({
       type: LOGIN_USER_REQUEST,
       payload: {
@@ -42,7 +43,7 @@ function LoginPage() {
   }, []);
 
   const handleCancel = useCallback(() => {
-    history.goBack(1)
+    router.back()
   }, [])
 
   const onFinishFailed = useCallback(({ errorFields }) => {
@@ -61,7 +62,7 @@ function LoginPage() {
     <div style={rootDivWrapperStyle}>
       <Form
         name="basic"
-        initialValues={initialValues}
+        // initialValues={initialValues}
         labelCol={formLabelColStyle}
         wrapperCol={formWrapperColStyle}
         style={formStyle}
@@ -90,11 +91,11 @@ function LoginPage() {
         </Form.Item>
 
         <Form.Item wrapperCol={formItemWrapperColStyle} style={formItemStyle}>
-          <Link to='/register'>아직 회원이 아니시라면</Link>
+          <Link href='/register'><a>아직 회원이 아니시라면</a></Link>
         </Form.Item>
       </Form>
     </div >
   )
 }
 
-export default withRouter(LoginPage);
+export default LoginPage;
