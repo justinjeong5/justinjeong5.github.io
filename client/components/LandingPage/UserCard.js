@@ -1,10 +1,11 @@
 import React, { useCallback, useMemo } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Card, } from 'antd'
+import Link from 'next/link'
+import Router from 'next/router'
+import { Card } from 'antd'
 import { LogoutOutlined, EditOutlined, EllipsisOutlined } from '@ant-design/icons'
 import { v4 as uuidv4 } from 'uuid'
 import { LOGOUT_USER_REQUEST } from '../../reducers/types'
-import StyledLink from '../utils/StyledLink'
 
 const { Meta } = Card;
 
@@ -17,6 +18,7 @@ function UserCard() {
     dispatch({
       type: LOGOUT_USER_REQUEST
     })
+    Router.push('/')
   }, [])
 
   const userWrapperStyle = useMemo(() => ({ marginLeft: 'auto', paddingRight: 30 }), [])
@@ -35,8 +37,8 @@ function UserCard() {
           />
         }
         actions={[
-          <StyledLink key={uuidv4()} to='#'><LogoutOutlined onClick={handleLogout} /></StyledLink>,
-          <StyledLink key={uuidv4()} to='/edit'><EditOutlined /></StyledLink>,
+          <LogoutOutlined onClick={handleLogout} />,
+          <Link key={uuidv4()} href='/edit'><a><EditOutlined /></a></Link>,
           <EllipsisOutlined key={uuidv4()} />,
         ]}
       >

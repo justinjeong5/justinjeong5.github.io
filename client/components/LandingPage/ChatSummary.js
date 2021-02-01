@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { List, Avatar } from 'antd'
 import moment from 'moment'
 import { LOAD_CHAT_ROOMS_REQUEST, SET_CURRENT_CHAT_ROOM } from '../../reducers/types';
-import StyledLink from '../utils/StyledLink';
+import Link from 'next/link'
 
 function ChatSummary() {
 
@@ -34,18 +34,7 @@ function ChatSummary() {
         <List.Item>
           <List.Item.Meta
             avatar={<Avatar src={item.writer.image} style={chatAvatarStyle} />}
-            title={
-              <StyledLink to={`/talkative`} onClick={() => {
-                setTimeout(() => {
-                  dispatch({
-                    type: SET_CURRENT_CHAT_ROOM,
-                    payload: item._id
-                  })
-                }, 500)
-              }}>
-                {item.title}
-              </StyledLink>
-            }
+            title={<Link href={`/talkative`}><a>{item.title}</a></Link>}
             description={
               <span style={chatListItemDescriptionStyle}>
                 <p>{item.description}</p>

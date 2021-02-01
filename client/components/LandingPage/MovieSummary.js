@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
+import Link from 'next/link'
 import { List, Avatar } from 'antd'
 import { v4 as uuidv4 } from 'uuid'
 import { LOAD_MOVIES_REQUEST } from '../../reducers/types';
-import StyledLink from '../utils/StyledLink';
 import { IMAGE_URL } from '../../config/key';
 
 function MovieSummary() {
@@ -48,7 +48,7 @@ function MovieSummary() {
                 style={movieAvatarStyle}
               />
             }
-            title={<StyledLink to={`/movieTrend/movie/${item.id}`}>{item.title}</StyledLink>}
+            title={<Link href={`/movieTrend/movie/${item.id}`}><a>{item.title}</a></Link>}
             description={item.original_title}
           />
           {item.overview}

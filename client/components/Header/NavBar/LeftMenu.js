@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Menu, Badge } from 'antd';
 import styled from 'styled-components'
-import StyledLink from '../../utils/StyledLink'
+import Link from 'next/link'
 import StyledSubMenu from '../../utils/StyledSubMenu'
 
 const { Item } = Menu;
@@ -17,28 +17,28 @@ function LeftMenu(props) {
 
   return (
     <Menu mode={props.mode}>
-      <Item><StyledLink to='/'>HOME</StyledLink></Item>
+      <Item><Link href='/'><a>HOME</a></Link></Item>
       <StyledSubMenu title={<Title>블로그</Title>}>
         <Item key="blog" >
-          {<StyledLink to='/blog'>블로그</StyledLink>}
+          {<Link href='/blog'><a>블로그</a></Link>}
         </Item>
         <Item key="blog/create" disabled={!currentUser?.isAuth} >
-          {<StyledLink to='/blog/create'>작성하기</StyledLink>}
+          {<Link href='/blog/create'><a>작성하기</a></Link>}
         </Item>
       </StyledSubMenu>
 
       <StyledSubMenu title={<Title>영화</Title>}>
         <Item key="movieTrend">
-          {<StyledLink to='/movieTrend'>트렌드</StyledLink>}
+          {<Link href='/movieTrend'><a>트렌드</a></Link>}
         </Item>
         <Item key="movieTrend/favorite" disabled={!currentUser?.isAuth} >
-          {<StyledLink to='/movieTrend/favorite'>즐겨찾기</StyledLink>}
+          {<Link href='/movieTrend/favorite'><a>즐겨찾기</a></Link>}
         </Item>
       </StyledSubMenu>
 
       <StyledSubMenu title={<Title>채팅</Title>}>
         <Item key="talkative" >
-          {<StyledLink to='/talkative'>토커팁</StyledLink>}
+          {<Link href='/talkative'><a>토커팁</a></Link>}
         </Item>
       </StyledSubMenu>
 
@@ -50,21 +50,21 @@ function LeftMenu(props) {
           : <Title>쇼핑</Title>}
       >
         <Item key="jaymall">
-          {<StyledLink to='/jaymall'>제이몰</StyledLink>}
+          {<Link href='/jaymall'><a>제이몰</a></Link>}
         </Item>
         <Item key="cart" disabled={!currentUser?.isAuth} >
-          <StyledLink to='/jaymall/cart'>
+          <Link href='/jaymall/cart'><a>
             장바구니<Badge size='small' count={currentUser?.cart?.length} showZero={false} offset={[0, -10]} />
-          </StyledLink>
+          </a></Link>
         </Item>
         <Item key="product" disabled={!currentUser?.isAuth} >
-          {<StyledLink to='/jaymall/upload'>상품등록</StyledLink>}
+          {<Link href='/jaymall/upload'><a>상품등록</a></Link>}
         </Item>
       </StyledSubMenu>
 
       <StyledSubMenu title={<Title>유투브</Title>}>
         <Item key="jaytube" disabled>
-          {<StyledLink to='/jaytube'>유투브</StyledLink>}
+          {<Link href='/jaytube'><a>유투브</a></Link>}
         </Item>
       </StyledSubMenu>
 
@@ -73,7 +73,7 @@ function LeftMenu(props) {
           {<a href="https://tweeter.shinywaterjeong.com" target="_blank" rel="noreferrer noopener">트위터</a>}
         </Item>
       </StyledSubMenu>
-    </Menu>
+    </Menu >
   )
 }
 

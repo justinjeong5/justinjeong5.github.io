@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { withRouter } from 'react-router-dom';
-import StyledLink from '../utils/StyledLink'
+import Link from 'next/link'
 import { Typography, Row, Col, Card, Divider } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
 import { v4 as uuidv4 } from 'uuid'
@@ -44,14 +43,15 @@ function MoviePage() {
   const renderMovieCard = useMemo(() => (movieData?.map((movie) => {
     return (
       <Col xl={4} lg={6} md={8} sm={12} xs={24} key={uuidv4()}>
-        <StyledLink to={`/movieTrend/movie/${movie.id}`}>
-          <Card
+        <Link href={`/movieTrend/movie/${movie.id}`}>
+          <a><Card
             hoverable
             cover={<img alt={movie.title} src={`${IMAGE_URL}/w500${movie.poster_path}`} />}
           >
             <Card.Meta title={movie.title} description={movie.overview ? `${movie.overview.slice(0, 30)}...` : '(내용 요약 없음)'} />
           </Card>
-        </StyledLink>
+          </a>
+        </Link>
       </Col >
     )
   })), [movieData]);
@@ -79,4 +79,4 @@ function MoviePage() {
   )
 }
 
-export default withRouter(MoviePage);
+export default MoviePage;

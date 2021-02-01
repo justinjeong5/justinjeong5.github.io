@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import StyledLink from '../utils/StyledLink'
+import Link from 'next/link';
 import { v4 as uuidv4 } from 'uuid'
 import { Button, Avatar, Typography, Skeleton, Empty, List } from 'antd'
 import moment from 'moment'
@@ -54,7 +54,7 @@ function BlogPage() {
         <List.Item>
           <List.Item.Meta
             avatar={<Avatar src={post.writer.image} style={{ marginTop: 7 }} />}
-            title={<StyledLink to={`/blog/post/${post._id}`}>{post.title}</StyledLink>}
+            title={<Link href={`/blog/post/${post._id}`}><a>{post.title}</a></Link>}
             description={
               <span style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <p>{post.writer.name}</p>
@@ -77,9 +77,9 @@ function BlogPage() {
           disabled={!currentUser.isAuth}
           loading={loadBlogPostsLoading}
           style={buttonStyle}>
-          <StyledLink to='/blog/create'>
-            글쓰기
-          </StyledLink>
+          <Link href='/blog/create'>
+            <a>글쓰기</a>
+          </Link>
         </Button>
       </div>
 

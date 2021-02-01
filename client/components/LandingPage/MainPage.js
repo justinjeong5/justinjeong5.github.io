@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux';
 import { Typography } from 'antd';
 import { GithubOutlined, LoadingOutlined } from '@ant-design/icons';
-import StyledLink from '../utils/StyledLink';
+import Link from 'next/head'
 
 import UserCard from './UserCard';
 import BlogSummary from './BlogSummary';
@@ -20,10 +20,6 @@ function MainPage() {
   const { loadMoviesLoading } = useSelector(state => state.movie);
   const { loadChatRoomsLoading } = useSelector(state => state.chat);
   const { loadProductsLoading } = useSelector(state => state.jaymall);
-
-  const handlePageFrontRef = useCallback(() => {
-    landingPageFrontRef.scrollIntoView();
-  }, [landingPageFrontRef])
 
   const rootDivStyle = useMemo(() => ({ alignItems: 'center', maxWidth: '1000px', width: '80%', margin: 'auto', height: '100%', padding: '80px 0' }), [])
   const titleDivWrapperStyle = useMemo(() => ({ display: 'flex', justifyContent: 'center', margin: '50px 0 100px 0' }), [])
@@ -49,20 +45,20 @@ function MainPage() {
       <div style={contentWrapperStyle}>
         {currentUser.userId ? <UserCard /> : null}
         <div style={componentWrapperStyle}>
-          <Title level={4}> <StyledLink to='/blog' onClick={handlePageFrontRef}>📝 블로그</StyledLink> </Title>
+          <Title level={4}> <Link to='/blog'><a>📝 블로그</a></Link> </Title>
           {loadBlogPostsLoading ? renderLoading : <BlogSummary />}
         </div>
       </div>
       <div style={componentWrapperStyle}>
-        <Title level={4}><StyledLink to='/movieTrend' onClick={handlePageFrontRef}>🍿 영화 트렌드</StyledLink></Title>
+        <Title level={4}><Link to='/movieTrend'><a>🍿 영화 트렌드</a></Link></Title>
         {loadMoviesLoading ? renderLoading : <MovieSummary />}
       </div>
       <div style={componentWrapperStyle}>
-        <Title level={4}><StyledLink to='/talkative'>🤝 채팅방</StyledLink></Title>
+        <Title level={4}><Link to='/talkative'><a>🤝 채팅방</a></Link></Title>
         {loadChatRoomsLoading ? renderLoading : <ChatSummary />}
       </div>
       <div style={componentWrapperStyle}>
-        <Title level={4}><StyledLink to='/jaymall' onClick={handlePageFrontRef}>🛍️ 제이몰</StyledLink></Title>
+        <Title level={4}><Link to='/jaymall'><a>🛍️ 제이몰</a></Link></Title>
         {loadProductsLoading ? renderLoading : <JaymallSummary />}
       </div>
       <div style={componentWrapperStyle}>

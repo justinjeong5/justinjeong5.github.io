@@ -1,27 +1,18 @@
-import React, { useCallback, useMemo, useEffect, useState } from 'react';
+import React, { useCallback, useMemo, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useLocation, withRouter, useHistory } from 'react-router-dom'
+import Router from 'next/router';
+import Link from 'next/link'
+import PropTypes from 'prop-types'
 import { Menu, message as Message } from 'antd';
 import { LogoutOutlined, LoginOutlined, UserAddOutlined, UserOutlined, LoadingOutlined } from '@ant-design/icons'
 import { LOGOUT_USER_REQUEST } from '../../../reducers/types';
-import { routerPathList } from '../../utils/RouterPathList'
 
 const { Item } = Menu;
 
 function RightMenu(props) {
 
   const dispatch = useDispatch();
-  const history = useHistory();
   const { currentUser, logoutUserLoading, logoutUserDone, logoutUserError, message } = useSelector(state => state.user)
-  const [prevLocation, setPrevLocation] = useState('/')
-  const currentLocation = useLocation();
-
-  useEffect(() => {
-    const router = routerPathList.filter((path) => {
-      return currentLocation.pathname.includes(path)
-    })[0]
-    setPrevLocation(router);
-  }, [currentLocation])
 
   useEffect(() => {
     if (logoutUserError) {
@@ -31,13 +22,9 @@ function RightMenu(props) {
 
   useEffect(() => {
     if (logoutUserDone) {
-      if (prevLocation === '/talkative') {
-        history.push('/');
-      } else {
-        history.push(prevLocation);
-      }
+      Router.push('/');
     }
-  }, [logoutUserDone, prevLocation, history])
+  }, [logoutUserDone])
 
   const handleLogout = useCallback(() => {
     dispatch({
@@ -59,23 +46,27 @@ function RightMenu(props) {
         ? <Menu mode={props.mode}>
           <Item key="logout"
             onClick={handleLogout} >
-            <Link to='#'><LogoutOutlined />{props.mode === 'inline' ? '로그아웃' : ''}</Link>
+            <Link href='/'><a><LogoutOutlined />{props.mode === 'inline' ? '로그아웃' : ''}</a></Link>
           </Item >
           <Item key="edit" >
-            <Link to='/edit'><UserOutlined />{props.mode === 'inline' ? '정보수정' : ''}</Link>
+            <Link href='/edit'><a><UserOutlined />{props.mode === 'inline' ? '정보수정' : ''}</a></Link>
           </Item>
         </Menu >
         : <Menu mode={props.mode}>
           <Item key="login" >
-            <Link to='/login'><LoginOutlined />{props.mode === 'inline' ? '로그인' : ''}</Link>
+            <Link href='/login'><a><LoginOutlined />{props.mode === 'inline' ? '로그인' : ''}</a></Link>
           </Item>
           <Item key="register" >
-            <Link to='/register'><UserAddOutlined />{props.mode === 'inline' ? '회원가입' : ''}</Link>
+            <Link href='/register'><a><UserAddOutlined />{props.mode === 'inline' ? '회원가입' : ''}</a></Link>
           </Item>
         </Menu>
       }
     </>
   );
-
 }
-export default withRouter(RightMenu);
+
+RightMenu.propTypes = {
+  mode: PropTypes.string.isRequired
+}
+
+export default RightMenu;

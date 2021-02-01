@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import Link from 'next/link'
 import { List, Avatar } from 'antd'
 import moment from 'moment'
 import { LOAD_BLOG_POSTS_REQUEST } from '../../reducers/types'
-import StyledLink from '../utils/StyledLink';
 
 function BlogSummary() {
 
@@ -34,7 +34,7 @@ function BlogSummary() {
         <List.Item>
           <List.Item.Meta
             avatar={<Avatar src={item.writer.image} />}
-            title={<StyledLink to={`/blog/post/${item._id}`}>{item.title}</StyledLink>}
+            title={<Link href={`/blog/post/${item._id}`}><a>{item.title}</a></Link>}
             description={
               <span style={blogListItemDescriptionStyle}>
                 <p>{item.writer.name}</p>

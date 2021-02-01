@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import StyledLink from '../utils/StyledLink'
+import Link from 'next/link'
 import { v4 as uuidv4 } from 'uuid'
 import { List, Space, Avatar, Typography, Divider, Card } from 'antd'
 import { StarOutlined, MessageOutlined, HeartTwoTone, LoadingOutlined } from '@ant-design/icons'
@@ -96,14 +96,15 @@ function FavoritePage() {
                   />} />
               }
             >
-              <StyledLink to={`/movieTrend/movie/${item.movieId}`}>
-                <List.Item.Meta
+              <Link href={`/movieTrend/movie/${item.movieId}`}>
+                <a><List.Item.Meta
                   key={uuidv4()}
                   avatar={<Avatar size='large' src={`${IMAGE_URL}/w500${item.movieImage}`} />}
                   title={item.movieTitle}
                   description={item.movieOriginalTitle}
                 />
-              </StyledLink>
+                </a>
+              </Link>
               {item.movieDescription}
             </List.Item >
           )}
