@@ -17,7 +17,7 @@ function BlogSummary() {
         payload: { limit, skip }
       })
     }
-  }, [])
+  }, [blogPosts])
 
   const getBlogPosts = useCallback(() => {
     return blogPosts.slice(0, 3);

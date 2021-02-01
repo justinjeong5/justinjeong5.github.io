@@ -35,7 +35,7 @@ function Message() {
     return message.writer._id === currentUser.userId
   }, [currentUser])
 
-  const renderMessages = useCallback(chatList?.map(message => {
+  const renderMessages = useCallback(() => chatList?.map(message => {
     if (isMessageMine(message)) {
       return (
         <div key={uuidv4()} style={{ marginLeft: 'auto', padding: '16px 0', display: 'flex' }}>

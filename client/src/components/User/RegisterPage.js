@@ -8,7 +8,6 @@ import { REGISTER_USER_REQUEST } from '../../reducers/types';
 const { Title } = Typography;
 
 function RegisterPage() {
-  const [form] = Form.useForm();
   const dispatch = useDispatch();
   const history = useHistory();
   const { registerUserLoading, registerUserDone, registerUserError, message } = useSelector(state => state.user)

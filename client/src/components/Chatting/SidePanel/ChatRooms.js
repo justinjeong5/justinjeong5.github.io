@@ -65,7 +65,7 @@ function ChatRooms() {
     return ''
   }, [currentChatRoom])
 
-  const renderChatRooms = useCallback(chatRooms.map((room) => (
+  const renderChatRooms = useCallback(() => chatRooms.map((room) => (
     <div key={uuidv4()} onClick={handleCurrentRoom(room._id)}
       style={{
         backgroundColor: renderSelected(room._id),
@@ -76,18 +76,16 @@ function ChatRooms() {
     >
       {`# ${room.title}`}
     </div>
-  )), [chatRooms, currentChatRoom])
+  )), [chatRooms])
 
   const renderChatRoomCounts = useCallback(() => {
     return (
-      <Title level={5} style={titleStyle}>
-        <SendOutlined />{` 방 목록 [${chatRooms.length}] `}<PlusSquareOutlined onClick={handleModal} style={plusIconStyle} />
+      <Title level={5} style={{ color: 'white' }}>
+        <SendOutlined />{` 방 목록 [${chatRooms.length}] `}<PlusSquareOutlined onClick={handleModal} style={{ float: 'right', marginTop: 5, marginRight: 7 }} />
       </Title>
     )
   }, [chatRooms])
 
-  const titleStyle = useMemo(() => ({ color: 'white' }), [])
-  const plusIconStyle = useMemo(() => ({ float: 'right', marginTop: 5, marginRight: 7 }), [])
   const modalTitleStyle = useMemo(() => ({ marginTop: 5 }), [])
   const labelColStyle = useMemo(() => ({ span: 6 }), [])
   const wrapperColStyle = useMemo(() => ({ span: 16 }), [])

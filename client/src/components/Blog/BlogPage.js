@@ -43,9 +43,6 @@ function BlogPage() {
   const titleDivStyle = useMemo(() => ({ textAlign: 'center', marginTop: 100, marginBottom: 30 }), [])
   const buttonWrapperDivStyle = useMemo(() => ({ display: 'flex' }), [])
   const buttonStyle = useMemo(() => ({ marginLeft: 'auto', marginBottom: 20 }), [])
-  const avatarStyle = useMemo(() => ({ marginTop: 7 }), [])
-  const descriptionStyle = useMemo(() => ({ marginTop: 10 }), [])
-  const descriptionWrapperStyle = useMemo(() => ({ display: 'flex', justifyContent: 'space-between' }), [])
   const emptyWrapperStyle = useMemo(() => ({ margin: '200px auto' }), [])
 
   const renderBlogPosts = useCallback(() => (
@@ -56,12 +53,12 @@ function BlogPage() {
       renderItem={post => (
         <List.Item>
           <List.Item.Meta
-            avatar={<Avatar src={post.writer.image} style={avatarStyle} />}
+            avatar={<Avatar src={post.writer.image} style={{ marginTop: 7 }} />}
             title={<StyledLink to={`/blog/post/${post._id}`}>{post.title}</StyledLink>}
             description={
-              <span style={descriptionWrapperStyle}>
+              <span style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <p>{post.writer.name}</p>
-                <p style={descriptionStyle}>{moment(post.createdAt).fromNow()}</p>
+                <p style={{ marginTop: 10 }}>{moment(post.createdAt).fromNow()}</p>
               </span>}
           />
         </List.Item>

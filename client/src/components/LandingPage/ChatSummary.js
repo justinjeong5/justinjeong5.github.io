@@ -16,7 +16,7 @@ function ChatSummary() {
         type: LOAD_CHAT_ROOMS_REQUEST
       })
     }
-  }, [])
+  }, [chatRooms])
 
   const getChatRooms = useCallback(() => {
     return chatRooms.slice(0, 3);

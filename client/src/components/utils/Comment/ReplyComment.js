@@ -14,7 +14,7 @@ function ReplyComment(props) {
       return props.comment._id === comment.responseTo
     })
     setList(list);
-  }, [])
+  }, [commentList, props])
 
   const renderComment = list.map(comment => {
     return (

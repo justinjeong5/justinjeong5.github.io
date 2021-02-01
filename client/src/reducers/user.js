@@ -1,6 +1,5 @@
 import produce from 'immer'
-import { v4 as uuidv4 } from 'uuid'
-import faker from 'faker'
+
 import {
   REGISTER_USER_REQUEST, REGISTER_USER_SUCCESS, REGISTER_USER_FAILURE,
   LOGIN_USER_REQUEST, LOGIN_USER_SUCCESS, LOGIN_USER_FAILURE,

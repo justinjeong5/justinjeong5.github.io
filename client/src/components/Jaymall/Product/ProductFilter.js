@@ -42,7 +42,7 @@ function ProductFilter(props) {
       props.onFilterChange(payload)
     }
     setTrigger(true)
-  }, [checkedClothesList, checkedAccessoryList, priceRange, word, orderBy, sortBy])
+  }, [checkedClothesList, checkedAccessoryList, priceRange, word, orderBy, sortBy, trigger])
 
   const onChangeClothes = list => {
     setCheckedClothesList(list);

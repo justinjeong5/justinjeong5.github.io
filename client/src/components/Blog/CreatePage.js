@@ -85,7 +85,7 @@ function CreatePage() {
     setNewCategory(event.currentTarget.value)
   }, [])
 
-  const renderCategory = useCallback(categories.map((category) => {
+  const renderCategory = useCallback(() => categories.map((category) => {
     return <Option key={category}>{category}</Option>
   }), [categories])
 

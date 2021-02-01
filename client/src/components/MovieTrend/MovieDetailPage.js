@@ -68,7 +68,7 @@ function MovieDetailPage() {
         <MovieMaker />
       </TabPane>
     </Tabs>
-  </>), [currentMovie])
+  </>), [currentMovie, loadMovieTrailerDone])
 
   const loadingWrapperDivStyle = useMemo(() => ({ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100vw', height: 'calc(100vh - 128px)' }), [])
   const loadingIconStyle = useMemo(() => ({ fontSize: '5rem' }), [])

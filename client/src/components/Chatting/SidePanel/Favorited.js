@@ -23,7 +23,7 @@ function Favorited() {
         }
       })
     }
-  }, [dispatch])
+  }, [dispatch, currentUser, currentChatRoom])
 
   useEffect(() => {
     if (currentChatRoom) {
@@ -34,7 +34,7 @@ function Favorited() {
         }
       })
     }
-  }, [dispatch, changeFavoriteDone])
+  }, [dispatch, changeFavoriteDone, currentChatRoom, currentUser])
 
   const handleCurrentRoom = useCallback((chatRoomId) => () => {
     dispatch({
@@ -50,7 +50,7 @@ function Favorited() {
     return ''
   }, [currentChatRoom])
 
-  const renderChatRooms = useCallback(favoritedList?.filter(item => {
+  const renderChatRooms = useCallback(() => favoritedList?.filter(item => {
     return item.chatRoom
   }).map((favorited) => {
     const chatRoom = favorited.chatRoom;

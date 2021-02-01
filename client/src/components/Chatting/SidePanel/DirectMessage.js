@@ -26,7 +26,7 @@ function DirectMessage() {
     return ''
   }, [currentChatRoom])
 
-  const renderRirectMessages = useCallback(chatUsers?.map(user => (
+  const renderRirectMessages = useCallback(() => chatUsers?.map(user => (
     <div key={uuidv4()} onClick={handleCurrentRoom(user.directRoom)}
       style={{
         backgroundColor: renderSelected(user.directRoom),

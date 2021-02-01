@@ -16,7 +16,7 @@ function JaymallSummary() {
         type: LOAD_PRODUCTS_REQUEST
       })
     }
-  }, [])
+  }, [productData])
 
   const getProductData = useCallback(() => {
     return productData.slice(0, 4);

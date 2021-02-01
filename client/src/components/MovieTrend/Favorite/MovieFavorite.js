@@ -51,7 +51,7 @@ function MovieFavorite() {
         movieDescription: currentMovie.overview,
       }
     })
-  }, [currentUser])
+  }, [currentUser, currentMovie])
 
   const favoriteStyle = useMemo(() => ({ color: 'gray' }), [])
 

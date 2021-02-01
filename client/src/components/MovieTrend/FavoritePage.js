@@ -53,7 +53,7 @@ function FavoritePage() {
     favoritedList.filter(item => {
       return item.movieId;
     })
-  ), [])
+  ), [favoritedList])
   const rootDivStyle = useMemo(() => ({ position: 'relative', top: 80, width: '80%', margin: '1rem auto', minHeight: 'calc(100vh - 80px)' }), [])
   const loadingWrapperDivStyle = useMemo(() => ({ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '80vw', height: 'calc(100vh - 300px)' }), [])
   const loadingIconStyle = useMemo(() => ({ fontSize: '10rem' }), [])

@@ -18,7 +18,7 @@ function MovieSummary() {
         payload: 1
       })
     }
-  }, [])
+  }, [movieData])
 
   const getMovieData = useCallback(() => {
     return movieData.slice(0, 2);

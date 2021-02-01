@@ -46,7 +46,6 @@ function DetailProductPage() {
   const loadingWrapperDivStyle = useMemo(() => ({ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100vw', height: 'calc(100vh - 80px)' }), [])
   const loadingStyle = useMemo(() => ({ fontSize: '10rem' }), [])
   const pageWrapperStyle = useMemo(() => ({ width: '100%', padding: '4rem' }), [])
-  const breadcrumbData = useMemo(() => ({ routes }), [routes])
 
   return (
     <div>
@@ -59,7 +58,7 @@ function DetailProductPage() {
           <PageHeader
             onBack={handleHistory}
             title={currentProduct.title}
-            breadcrumb={breadcrumbData}
+            breadcrumb={{ routes }}
           />
           <Divider />
           <Row gutter={[16, 16]}>

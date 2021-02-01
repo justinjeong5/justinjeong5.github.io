@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter, useHistory } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
@@ -60,7 +60,7 @@ function UploadProductPage() {
         <Select.Option key={uuidv4()} value={value}>{value}</Select.Option>
       )
     })
-  ), [ProductClothesSort])
+  ), [])
 
   const renderAccessoryClothSort = useMemo(() => (
     ProductAccessorySort.map((value) => {
@@ -68,7 +68,7 @@ function UploadProductPage() {
         <Select.Option key={uuidv4()} value={value}>{value}</Select.Option>
       )
     })
-  ), [ProductAccessorySort])
+  ), [])
 
   const rootDivWrapperStyle = useMemo(() => ({ maxWidth: 700, margin: '3rem auto' }), [])
   const titleDivWrapperStyle = useMemo(() => ({ alignItems: 'center', margin: '100px 0' }), [])
