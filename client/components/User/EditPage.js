@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory } from 'react-router-dom';
+import Router, { useRouter } from 'next/router'
 import { Form, Input, Button, Typography, message as Message, Space, Popover } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { EDIT_USER_REQUEST, CONFIRM_USER_REQUEST, UPLOAD_USER_IMAGE_REQUEST } from '../../reducers/types';
@@ -10,7 +10,7 @@ function EditPage() {
 
   const inputOpenImageRef = useRef();
   const [form] = Form.useForm();
-  const history = useHistory();
+  const router = useRouter();
   const dispatch = useDispatch();
   const { currentUser, editUserLoading, editUserDone, editUserError, message,
     confirmUserLoading, confirmUserDone, confirmUserError } = useSelector(state => state.user)
@@ -20,12 +20,12 @@ function EditPage() {
       userName: currentUser?.name,
     });
     if (editUserDone) {
-      history.push('/')
+      Router.push('/')
     }
     if (editUserError || confirmUserError) {
       Message.error({ content: message, duration: 2 });
     }
-  }, [currentUser, editUserDone, editUserError, confirmUserError, message, history, form])
+  }, [currentUser, editUserDone, editUserError, confirmUserError, message, form])
 
   const handleEdit = useCallback((values) => {
     dispatch({
@@ -55,7 +55,6 @@ function EditPage() {
       header: { 'content-type': 'multipart/form-data' }
     }
     formData.append('file', file)
-    // return console.log(file, 'UPLOAD_USER_IMAGE_REQUEST file')
 
     dispatch({
       type: UPLOAD_USER_IMAGE_REQUEST,
@@ -71,7 +70,7 @@ function EditPage() {
   }, [inputOpenImageRef])
 
   const handleCancel = useCallback(() => {
-    history.goBack(1)
+    router.back()
   }, [])
 
   const rootDivWrapperStyle = useMemo(() => ({ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100vh' }), [])
