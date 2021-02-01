@@ -37,8 +37,8 @@ const movie = (state = initialState, action) => {
       case LOAD_MOVIES_SUCCESS:
         draft.loadMoviesLoading = false;
         draft.loadMoviesDone = true;
-        draft.message = action.payload.message;
-        draft.movieData = draft.movieData.concat(action.payload.results);
+        draft.message = '영화 목록을 정상적으로 가져왔습니다.';
+        draft.movieData.push(...action.payload.results);
         draft.pageNumber += 1;
         break;
       case LOAD_MOVIES_FAILURE:

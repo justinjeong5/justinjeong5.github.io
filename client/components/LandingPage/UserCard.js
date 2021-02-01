@@ -1,10 +1,10 @@
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import Link from 'next/link'
 import Router from 'next/router'
+import { v4 as uuidv4 } from 'uuid'
 import { Card } from 'antd'
 import { LogoutOutlined, EditOutlined, EllipsisOutlined } from '@ant-design/icons'
-import { v4 as uuidv4 } from 'uuid'
 import { LOGOUT_USER_REQUEST } from '../../reducers/types'
 
 const { Meta } = Card;
@@ -21,19 +21,15 @@ function UserCard() {
     Router.push('/')
   }, [])
 
-  const userWrapperStyle = useMemo(() => ({ marginLeft: 'auto', paddingRight: 30 }), [])
-  const userCardStyle = useMemo(() => ({ width: 180 }), [])
-  const userCardImageStyle = useMemo(() => ({ borderRadius: 4, width: '100%' }), [])
-
   return (
-    <div style={userWrapperStyle}>
+    <div style={{ marginLeft: 'auto', paddingRight: 30 }}>
       <Card
-        style={userCardStyle}
+        style={{ width: 180 }}
         cover={
           <img
             alt={currentUser.name}
             src={currentUser.image}
-            style={userCardImageStyle}
+            style={{ borderRadius: 4, width: '100%' }}
           />
         }
         actions={[

@@ -71,7 +71,7 @@ const blog = (state = initialState, action) => {
         draft.loadBlogPostsLoading = false;
         draft.loadBlogPostsDone = true;
         draft.message = action.payload.message;
-        draft.blogPosts = draft.blogPosts.concat(action.payload.blogs);
+        draft.blogPosts.push(...action.payload.blogs);
         draft.noMorePosts = action.noMorePosts;
         draft.skip += draft.limit;
         break;

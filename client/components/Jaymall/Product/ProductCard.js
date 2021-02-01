@@ -1,5 +1,4 @@
 import React, { useMemo } from 'react'
-import Link from '../../utils/Link'
 import Link from 'next/link'
 import { v4 as uuidv4 } from 'uuid'
 import { Card, Col, Carousel, Descriptions } from 'antd';
@@ -19,7 +18,7 @@ function ProductCard(props) {
         hoverable={true}
         style={cardStyle}
       >
-        <Link href={`/jaymall/product/${product._id}`}>
+        <Link href={`/jaymall/${product._id}`}>
           <a>
             <Carousel autoplay >
               {product?.images?.map((img) => {
