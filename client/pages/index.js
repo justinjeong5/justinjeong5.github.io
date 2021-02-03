@@ -4,7 +4,7 @@ import axios from 'axios'
 import wrapper from '../store/storeConfiguration'
 import AppLayout from '../components/AppLayout'
 import LandingPage from '../components/LandingPage'
-import { LOAD_BLOG_POSTS_REQUEST, LOAD_CHAT_ROOMS_REQUEST, LOAD_PRODUCTS_REQUEST, LOAD_MOVIES_REQUEST, AUTHENTICATE_USER_REQUEST } from '../reducers/types'
+import { LOAD_BLOG_POSTS_REQUEST, LOAD_CHAT_ROOMS_REQUEST, LOAD_PRODUCTS_REQUEST, AUTHENTICATE_USER_REQUEST } from '../reducers/types'
 
 function Home() {
 
@@ -34,10 +34,6 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
   })
   context.store.dispatch({
     type: LOAD_PRODUCTS_REQUEST
-  })
-  context.store.dispatch({
-    type: LOAD_MOVIES_REQUEST,
-    payload: 1
   })
 
   context.store.dispatch(END);

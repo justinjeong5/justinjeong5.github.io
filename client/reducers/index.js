@@ -2,7 +2,6 @@ import { HYDRATE } from 'next-redux-wrapper'
 import { combineReducers } from 'redux'
 
 import user from './user'
-import movie from './movie'
 import jaymall from './jaymall'
 import blog from './blog'
 import chat from './chat'
@@ -17,7 +16,6 @@ const rootReducer = (state, action) => {
     default: {
       const combineReducer = combineReducers({
         user,
-        movie,
         jaymall,
         blog,
         chat,

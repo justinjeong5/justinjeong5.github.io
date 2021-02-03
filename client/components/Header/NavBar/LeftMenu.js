@@ -22,15 +22,6 @@ function LeftMenu(props) {
         </Item>
       </SubMenu>
 
-      <SubMenu key={uuidv4()} title={<span>영화</span>}>
-        <Item key={uuidv4()}>
-          {<Link href='/movieTrend'><a>트렌드</a></Link>}
-        </Item>
-        <Item key={uuidv4()} disabled={!currentUser?.isAuth} >
-          {<Link href='/movieTrend/favorite'><a>즐겨찾기</a></Link>}
-        </Item>
-      </SubMenu>
-
       <SubMenu key={uuidv4()} title={<span>채팅</span>}>
         <Item key={uuidv4()}>
           {<Link href='/talkative'><a>토커팁</a></Link>}

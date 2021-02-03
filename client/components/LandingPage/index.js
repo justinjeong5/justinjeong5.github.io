@@ -6,7 +6,6 @@ import { GithubOutlined, LoadingOutlined } from '@ant-design/icons';
 
 import UserCard from './UserCard';
 import BlogSummary from './BlogSummary';
-import MovieSummary from './MovieSummary';
 import ChatSummary from './ChatSummary';
 import JaymallSummary from './JaymallSummary';
 
@@ -16,7 +15,6 @@ function LandingPage() {
 
   const { currentUser } = useSelector(state => state.user);
   const { loadBlogPostsLoading } = useSelector(state => state.blog);
-  const { loadMoviesLoading } = useSelector(state => state.movie);
   const { loadChatRoomsLoading } = useSelector(state => state.chat);
   const { loadProductsLoading } = useSelector(state => state.jaymall);
 
@@ -41,10 +39,6 @@ function LandingPage() {
           <Title level={4}><Link href='/blog'><a>📝 블로그</a></Link></Title>
           {loadBlogPostsLoading ? renderLoading : <BlogSummary />}
         </div>
-      </div>
-      <div style={componentWrapperStyle}>
-        <Title level={4}><Link href='/movieTrend'><a>🍿 영화 트렌드</a></Link></Title>
-        {loadMoviesLoading ? renderLoading : <MovieSummary />}
       </div>
       <div style={componentWrapperStyle}>
         <Title level={4}><Link href='/talkative'><a>🤝 채팅방</a></Link></Title>
