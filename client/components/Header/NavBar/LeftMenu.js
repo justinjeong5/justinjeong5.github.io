@@ -24,7 +24,7 @@ function LeftMenu(props) {
 
       <SubMenu key={uuidv4()} title={<span>채팅</span>}>
         <Item key={uuidv4()}>
-          {<Link href='/talkative'><a>토커팁</a></Link>}
+          {<Link href='https://react-chat-webapp.firebaseapp.com/' target='_blank' rel='noreferrer noopener'><a>슬랙</a></Link>}
         </Item>
       </SubMenu >
 
@@ -59,9 +59,15 @@ function LeftMenu(props) {
 
       <SubMenu key={uuidv4()} title={<span>트위터</span>}>
         <Item key={uuidv4()}>
-          {<a href="https://tweeter.shinywaterjeong.com" target="_blank" rel="noreferrer noopener">트위터</a>}
+          {<Link href="https://tweeter.shinywaterjeong.com" target="_blank" rel="noreferrer noopener"><a>트위터</a></Link>}
         </Item>
       </SubMenu >
+
+      <SubMenu key={uuidv4()} title={<span>영화</span>}>
+        <Item disabled key={uuidv4()}>
+          {<Link href='/' target="_blank" rel="noreferrer noopener"><a>트렌드</a></Link>}
+        </Item>
+      </SubMenu>
     </Menu >
   )
 }
