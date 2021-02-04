@@ -6,7 +6,6 @@ import userSaga from './user'
 import favoriteSaga from './favorite'
 import jaymallSaga from './jaymall'
 import blogSaga from './blog'
-import chatSaga from './chat'
 import commentSaga from './comment'
 
 
@@ -18,7 +17,6 @@ export default function* rootSaga() {
     fork(userSaga),
     fork(jaymallSaga),
     fork(blogSaga),
-    fork(chatSaga),
     fork(commentSaga),
     fork(favoriteSaga),
   ]);

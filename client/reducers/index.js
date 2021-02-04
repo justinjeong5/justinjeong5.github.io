@@ -4,7 +4,6 @@ import { combineReducers } from 'redux'
 import user from './user'
 import jaymall from './jaymall'
 import blog from './blog'
-import chat from './chat'
 import comment from './comment'
 import favorite from './favorite'
 
@@ -18,7 +17,6 @@ const rootReducer = (state, action) => {
         user,
         jaymall,
         blog,
-        chat,
         comment,
         favorite,
       })

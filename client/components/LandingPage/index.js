@@ -6,7 +6,6 @@ import { GithubOutlined, LoadingOutlined } from '@ant-design/icons';
 
 import UserCard from './UserCard';
 import BlogSummary from './BlogSummary';
-import ChatSummary from './ChatSummary';
 import JaymallSummary from './JaymallSummary';
 
 const { Title } = Typography;
@@ -15,7 +14,6 @@ function LandingPage() {
 
   const { currentUser } = useSelector(state => state.user);
   const { loadBlogPostsLoading } = useSelector(state => state.blog);
-  const { loadChatRoomsLoading } = useSelector(state => state.chat);
   const { loadProductsLoading } = useSelector(state => state.jaymall);
 
   const componentWrapperStyle = useMemo(() => ({ width: '100%', marginBottom: 100 }), [])
@@ -39,10 +37,6 @@ function LandingPage() {
           <Title level={4}><Link href='/blog'><a>📝 블로그</a></Link></Title>
           {loadBlogPostsLoading ? renderLoading : <BlogSummary />}
         </div>
-      </div>
-      <div style={componentWrapperStyle}>
-        <Title level={4}><Link href='/talkative'><a>🤝 채팅방</a></Link></Title>
-        {loadChatRoomsLoading ? renderLoading : <ChatSummary />}
       </div>
       <div style={componentWrapperStyle}>
         <Title level={4}><Link href='/jaymall'><a>🛍️ 제이몰</a></Link></Title>
