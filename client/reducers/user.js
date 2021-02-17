@@ -7,16 +7,11 @@ import {
   AUTHENTICATE_USER_REQUEST, AUTHENTICATE_USER_SUCCESS, AUTHENTICATE_USER_FAILURE,
   EDIT_USER_REQUEST, EDIT_USER_SUCCESS, EDIT_USER_FAILURE,
   CONFIRM_USER_REQUEST, CONFIRM_USER_SUCCESS, CONFIRM_USER_FAILURE,
-  ADD_TO_CART_REQUEST, ADD_TO_CART_SUCCESS, ADD_TO_CART_FAILURE,
-  LOAD_CART_ITEMS_REQUEST, LOAD_CART_ITEMS_SUCCESS, LOAD_CART_ITEMS_FAILURE,
-  REMOVE_CART_ITEM_REQUEST, REMOVE_CART_ITEM_SUCCESS, REMOVE_CART_ITEM_FAILURE,
   UPLOAD_USER_IMAGE_REQUEST, UPLOAD_USER_IMAGE_SUCCESS, UPLOAD_USER_IMAGE_FAILURE,
 } from './types'
 
 const initialState = {
   currentUser: {},
-  cartWithDetail: [],
-  message: '',
 
   registerUserLoading: false,
   registerUserDone: false,
@@ -36,15 +31,6 @@ const initialState = {
   editUserLoading: false,
   editUserDone: false,
   editUserError: null,
-  addToCartLoading: false,
-  addToCartDone: false,
-  addToCartError: null,
-  loadCartItemsLoading: false,
-  loadCartItemsDone: false,
-  loadCartItemsError: null,
-  removeCartItemLoading: false,
-  removeCartItemDone: false,
-  removeCartItemError: null,
   uploadUserImageLoading: false,
   uploadUserImageDone: false,
   uploadUserImageError: null,
@@ -61,12 +47,10 @@ const user = (state = initialState, action) => {
       case REGISTER_USER_SUCCESS:
         draft.registerUserLoading = false;
         draft.registerUserDone = true;
-        draft.message = action.payload.message;
         break;
       case REGISTER_USER_FAILURE:
         draft.registerUserLoading = false;
-        draft.registerUserError = action.error.code;
-        draft.message = action.error.message;
+        draft.registerUserError = action.error;
         break;
       case LOGIN_USER_REQUEST:
         draft.loginUserLoading = true;
@@ -77,12 +61,10 @@ const user = (state = initialState, action) => {
         draft.loginUserLoading = false;
         draft.loginUserDone = true;
         draft.currentUser.userId = action.payload.userId;
-        draft.message = action.payload.message;
         break;
       case LOGIN_USER_FAILURE:
         draft.loginUserLoading = false;
-        draft.loginUserError = action.error.code;
-        draft.message = action.error.message;
+        draft.loginUserError = action.error;
         break;
       case LOGOUT_USER_REQUEST:
         draft.logoutUserLoading = true;
@@ -93,12 +75,10 @@ const user = (state = initialState, action) => {
         draft.logoutUserLoading = false;
         draft.logoutUserDone = true;
         draft.currentUser = {};
-        draft.message = action.payload.message;
         break;
       case LOGOUT_USER_FAILURE:
         draft.logoutUserLoading = false;
-        draft.logoutUserError = action.error.code;
-        draft.message = action.error.message;
+        draft.logoutUserError = action.error;
         break;
       case AUTHENTICATE_USER_REQUEST:
         draft.authenticateUserLoading = true;
@@ -107,7 +87,6 @@ const user = (state = initialState, action) => {
         break;
       case AUTHENTICATE_USER_SUCCESS:
         draft.currentUser = action.payload.user;
-        draft.message = action.payload.message;
 
         draft.authenticateUserLoading = false;
         draft.authenticateUserDone = true;
@@ -131,7 +110,6 @@ const user = (state = initialState, action) => {
         draft.currentUser = action.error.user;
         draft.authenticateUserLoading = false;
         draft.authenticateUserError = action.error.err;
-        draft.message = action.error.message;
         break;
       case CONFIRM_USER_REQUEST:
         draft.confirmUserLoading = true;
@@ -141,12 +119,10 @@ const user = (state = initialState, action) => {
       case CONFIRM_USER_SUCCESS:
         draft.confirmUserLoading = false;
         draft.confirmUserDone = true;
-        draft.message = action.payload.message;
         break;
       case CONFIRM_USER_FAILURE:
         draft.confirmUserLoading = false;
-        draft.confirmUserError = action.error.code;
-        draft.message = action.error.message;
+        draft.confirmUserError = action.error;
         break;
       case EDIT_USER_REQUEST:
         draft.editUserLoading = true;
@@ -157,72 +133,10 @@ const user = (state = initialState, action) => {
         draft.editUserLoading = false;
         draft.editUserDone = true;
         draft.currentUser.isAuth = true;
-        draft.message = action.payload.message;
         break;
       case EDIT_USER_FAILURE:
         draft.editUserLoading = false;
-        draft.editUserError = action.error.code;
-        draft.message = action.error.message;
-        break;
-      case ADD_TO_CART_REQUEST:
-        draft.addToCartLoading = true;
-        draft.addToCartDone = false;
-        draft.addToCartError = null;
-        break;
-      case ADD_TO_CART_SUCCESS:
-        draft.addToCartLoading = false;
-        draft.addToCartDone = true;
-        draft.currentUser.cart = action.payload.cart;
-        draft.message = action.payload.message;
-        break;
-      case ADD_TO_CART_FAILURE:
-        draft.addToCartLoading = false;
-        draft.addToCartError = action.error.code;
-        draft.message = action.error.message;
-        break;
-      case LOAD_CART_ITEMS_REQUEST:
-        draft.loadCartItemsLoading = true;
-        draft.loadCartItemsDone = false;
-        draft.loadCartItemsError = null;
-        break;
-      case LOAD_CART_ITEMS_SUCCESS:
-        const data = action.payload.productDetails.map((item, index) => ({
-          key: item._id,
-          title: item.title,
-          price: item.price,
-          quantity: draft.currentUser.cart[index].quantity,
-          totalPrice: draft.currentUser.cart[index].quantity * item.price,
-          image: item.images[0].image,
-          tags: [item.sort]
-        }));
-
-        draft.loadCartItemsLoading = false;
-        draft.loadCartItemsDone = true;
-        draft.cartWithDetail = data;
-        draft.message = action.payload.message;
-        draft.removeCartItemLoading = false;
-        draft.removeCartItemDone = false;
-        break;
-      case LOAD_CART_ITEMS_FAILURE:
-        draft.loadCartItemsLoading = false;
-        draft.loadCartItemsError = action.error.code;
-        draft.message = action.error.message;
-        break;
-      case REMOVE_CART_ITEM_REQUEST:
-        draft.removeCartItemLoading = true;
-        draft.removeCartItemDone = false;
-        draft.removeCartItemError = null;
-        break;
-      case REMOVE_CART_ITEM_SUCCESS:
-        draft.removeCartItemLoading = false;
-        draft.removeCartItemDone = true;
-        draft.currentUser.cart = action.payload.cart;
-        draft.message = action.payload.message;
-        break;
-      case REMOVE_CART_ITEM_FAILURE:
-        draft.removeCartItemLoading = false;
-        draft.removeCartItemError = action.error.code;
-        draft.message = action.error.message;
+        draft.editUserError = action.error;
         break;
       case UPLOAD_USER_IMAGE_REQUEST:
         draft.uploadUserImageLoading = true;
@@ -233,12 +147,10 @@ const user = (state = initialState, action) => {
         draft.uploadUserImageLoading = false;
         draft.uploadUserImageDone = true;
         draft.currentUser.image = action.payload.url;
-        draft.message = action.payload.message;
         break;
       case UPLOAD_USER_IMAGE_FAILURE:
         draft.uploadUserImageLoading = false;
-        draft.uploadUserImageError = action.error.code;
-        draft.message = action.error.message;
+        draft.uploadUserImageError = action.error;
         break;
       default:
         break;
