@@ -4,11 +4,11 @@
   "private": true,
   "dependencies": {
     "@ant-design/icons": "^4.3.0",
+    "@next/bundle-analyzer": "^10.0.7",
     "antd": "^4.9.4",
     "axios": "^0.21.0",
     "immer": "^8.0.0",
     "md5": "^2.3.0",
-    "mime": "^2.4.7",
     "moment": "^2.29.1",
     "next": "^10.0.6",
     "next-redux-saga": "^4.1.2",
@@ -16,23 +16,16 @@
     "prop-types": "^15.7.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "react-dropzone": "^11.2.4",
-    "react-image-gallery": "^1.0.8",
-    "react-number-format": "^4.4.1",
     "react-quill": "^1.3.5",
     "react-redux": "^7.2.2",
-    "react-scripts": "4.0.1",
-    "react-youtube": "^7.13.0",
     "redux": "^4.0.5",
     "redux-devtools-extension": "^2.13.8",
     "redux-saga": "^1.1.3",
-    "socket.io-client": "^3.0.4",
-    "styled-components": "^5.2.1",
-    "uuid": "^8.3.2",
-    "web-vitals": "^0.2.4"
+    "uuid": "^8.3.2"
   },
   "scripts": {
     "start": "next",
+    "build": "ANALYZE=true NODE_ENV=production next build",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },

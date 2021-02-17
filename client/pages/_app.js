@@ -6,7 +6,6 @@ import '../css/index.css';
 import '../css/navBar.css';
 import 'antd/dist/antd.css';
 import 'react-quill/dist/quill.snow.css';
-import 'react-image-gallery/styles/css/image-gallery.css';
 
 import wrapper from '../store/storeConfiguration'
 
