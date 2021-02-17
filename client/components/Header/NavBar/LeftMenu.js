@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import Link from 'next/link'
-import { Menu, Badge } from 'antd';
+import { Menu } from 'antd';
 import { v4 as uuidv4 } from 'uuid'
 
 const { Item, SubMenu } = Menu;
@@ -21,47 +21,6 @@ function LeftMenu(props) {
           {<Link href='/blog/create'><a>작성하기</a></Link>}
         </Item>
       </SubMenu>
-
-      <SubMenu key={uuidv4()} title={<span>채팅</span>}>
-        <Item key={uuidv4()}>
-          {<Link href='https://react-chat-webapp.firebaseapp.com/' target='_blank' rel='noreferrer noopener'><a>슬랙</a></Link>}
-        </Item>
-      </SubMenu >
-
-      <SubMenu
-        key={uuidv4()}
-        title={currentUser?.cart?.length
-          ? <Badge dot showZero={false}>
-            <span>쇼핑</span>
-          </Badge>
-          : <span>쇼핑</span>}
-      >
-        <Item key={uuidv4()}>
-          {<Link href='/jaymall'><a>제이몰</a></Link>}
-        </Item>
-        <Item key={uuidv4()} disabled={!currentUser?.isAuth} >
-          <Link href='/jaymall/cart'>
-            <a>
-              장바구니<Badge size='small' count={currentUser?.cart?.length} showZero={false} offset={[0, -10]} />
-            </a>
-          </Link>
-        </Item >
-        <Item key={uuidv4()} disabled={!currentUser?.isAuth} >
-          {< Link href='/jaymall/upload'><a>상품등록</a></Link >}
-        </Item >
-      </SubMenu >
-
-      <SubMenu key={uuidv4()} title={<span>유투브</span>}>
-        <Item key={uuidv4()} disabled>
-          {<Link href='/jaytube'><a>유투브</a></Link>}
-        </Item>
-      </SubMenu >
-
-      <SubMenu key={uuidv4()} title={<span>트위터</span>}>
-        <Item key={uuidv4()}>
-          {<Link href="https://tweeter.shinywaterjeong.com" target="_blank" rel="noreferrer noopener"><a>트위터</a></Link>}
-        </Item>
-      </SubMenu >
 
       <SubMenu key={uuidv4()} title={<span>영화</span>}>
         <Item disabled key={uuidv4()}>

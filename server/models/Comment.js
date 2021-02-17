@@ -10,13 +10,6 @@ const commentSchema = mongoose.Schema({
     type: Schema.Types.ObjectId,
     ref: 'Blog'
   },
-  jaymallId: {
-    type: Schema.Types.ObjectId,
-    ref: 'Jaymall'
-  },
-  movieId: {
-    type: String,
-  },
   responseTo: {
     type: Schema.Types.ObjectId,
     ref: 'User'
