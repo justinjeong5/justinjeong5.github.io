@@ -1,197 +1,196 @@
-import "react-quill/dist/quill.snow.css";
-
 import React from 'react';
 import { connect } from 'react-redux'
-import ReactQuill, { Quill } from 'react-quill';
 import axios from 'axios';
 import { message as Message } from 'antd'
 import { FileImageOutlined, FileAddOutlined, VideoCameraAddOutlined } from '@ant-design/icons'
 import { UPLOAD_BLOG_DATASET_REQUEST, RESET_UPLOAD_BLOG_DATASET } from '../../../reducers/types'
 
-const __ISMSIE__ = navigator.userAgent.match(/Trident/i) ? true : false;
+const ReactQuill = typeof window === 'object' ? require('react-quill') : () => false;
+const { Quill } = ReactQuill;
 
-// Quill.register('modules/clipboard', PlainClipboard, true);
+// const __ISMSIE__ = navigator.userAgent.match(/Trident/i) ? true : false;
 
-const QuillClipboard = Quill.import('modules/clipboard');
+if (Quill) {
+  const QuillClipboard = Quill.import('modules/clipboard');
 
-class Clipboard extends QuillClipboard {
+  class Clipboard extends QuillClipboard {
 
-  getMetaTagElements = (stringContent) => {
-    const el = document.createElement('div');
-    el.innerHTML = stringContent;
-    return el.getElementsByTagName('meta');
-  };
+    getMetaTagElements = (stringContent) => {
+      const el = document.createElement('div');
+      el.innerHTML = stringContent;
+      return el.getElementsByTagName('meta');
+    };
 
-  async onPaste(e) {
-    let clipboardData = e.clipboardData || window.clipboardData;
-    let pastedData = await clipboardData.getData('Text');
+    async onPaste(e) {
+      let clipboardData = e.clipboardData || window.clipboardData;
+      let pastedData = await clipboardData.getData('Text');
 
-    const urlMatches = pastedData.match(/\b(http|https)?:\/\/\S+/gi) || [];
-    if (urlMatches.length > 0) {
-      e.preventDefault();
-      urlMatches.forEach(link => {
-        axios.get(link)
-          .then(payload => {
-            // let title, image, url, description;
-            let title, image, url;
-            for (let node of this.getMetaTagElements(payload)) {
-              if (node.getAttribute("property") === "og:title") {
-                title = node.getAttribute("content");
+      const urlMatches = pastedData.match(/\b(http|https)?:\/\/\S+/gi) || [];
+      if (urlMatches.length > 0) {
+        e.preventDefault();
+        urlMatches.forEach(link => {
+          axios.get(link)
+            .then(payload => {
+              // let title, image, url, description;
+              let title, image, url;
+              for (let node of this.getMetaTagElements(payload)) {
+                if (node.getAttribute("property") === "og:title") {
+                  title = node.getAttribute("content");
+                }
+                if (node.getAttribute("property") === "og:image") {
+                  image = node.getAttribute("content");
+                }
+                if (node.getAttribute("property") === "og:url") {
+                  url = node.getAttribute("content");
+                }
+                // if (node.getAttribute("property") === "og:description") {
+                //     description = node.getAttribute("content");
+                // }
               }
-              if (node.getAttribute("property") === "og:image") {
-                image = node.getAttribute("content");
-              }
-              if (node.getAttribute("property") === "og:url") {
-                url = node.getAttribute("content");
-              }
-              // if (node.getAttribute("property") === "og:description") {
-              //     description = node.getAttribute("content");
-              // }
-            }
 
-            const rendered = `<a href=${url} target="_blank"><div><img src=${image} alt=${title} width="20%"/><span>${title}</span></div></a>`;
+              const rendered = `<a href=${url} target="_blank"><div><img src=${image} alt=${title} width="20%"/><span>${title}</span></div></a>`;
 
-            let range = this.quill.getSelection();
-            let position = range ? range.index : 0;
-            this.quill.pasteHTML(position, rendered, 'silent');
-            this.quill.setSelection(position + rendered.length);
-          })
-          .catch(error => console.error(error));
-      });
+              let range = this.quill.getSelection();
+              let position = range ? range.index : 0;
+              this.quill.pasteHTML(position, rendered, 'silent');
+              this.quill.setSelection(position + rendered.length);
+            })
+            .catch(error => console.error(error));
+        });
 
-    } else {
-      //console.log('when to use this') 보통 다른 곳에서  paste 한다음에  copy하면 이쪽 걸로 한다. 
-      super.onPaste(e);
+      } else {
+        //console.log('when to use this') 보통 다른 곳에서  paste 한다음에  copy하면 이쪽 걸로 한다. 
+        super.onPaste(e);
+      }
     }
+
   }
+  Quill.register('modules/clipboard', Clipboard, true);
 
-}
-Quill.register('modules/clipboard', Clipboard, true);
+  const BlockEmbed = Quill.import('blots/block/embed');
 
-const BlockEmbed = Quill.import('blots/block/embed');
+  class ImageBlot extends BlockEmbed {
 
-class ImageBlot extends BlockEmbed {
-
-  static create(value) {
-    const imgTag = super.create();
-    imgTag.setAttribute('src', value.src);
-    imgTag.setAttribute('alt', value.title);
-    imgTag.setAttribute('style', 'width: 70%; max-width: 400px;');
-    return imgTag;
-  }
-
-  static value(node) {
-    return { src: node.getAttribute('src'), title: node.getAttribute('alt') };
-  }
-
-}
-
-ImageBlot.blotName = 'image';
-ImageBlot.tagName = 'img';
-Quill.register(ImageBlot);
-
-class VideoBlot extends BlockEmbed {
-
-  static create(value) {
-    if (value && value.src) {
-      const videoTag = super.create();
-      videoTag.setAttribute('src', value.src);
-      videoTag.setAttribute('title', value.title);
-      videoTag.setAttribute('style', 'width: 70%; max-width: 400px;');
-      videoTag.setAttribute('controls', '');
-
-      return videoTag;
-    } else {
-      const iframeTag = document.createElement('iframe');
-      iframeTag.setAttribute('src', value);
-      iframeTag.setAttribute('frameborder', '0');
-      iframeTag.setAttribute('allowfullscreen', true);
-      iframeTag.setAttribute('style', 'width: 70%; max-width: 400px;');
-      return iframeTag;
+    static create(value) {
+      const imgTag = super.create();
+      imgTag.setAttribute('src', value.src);
+      imgTag.setAttribute('alt', value.title);
+      imgTag.setAttribute('style', 'width: 70%; max-width: 400px;');
+      return imgTag;
     }
-  }
 
-  static value(node) {
-    if (node.getAttribute('title')) {
-      return { src: node.getAttribute('src'), title: node.getAttribute('title') };
-    } else {
-      return node.getAttribute('src');
+    static value(node) {
+      return { src: node.getAttribute('src'), title: node.getAttribute('alt') };
     }
+
   }
 
+  ImageBlot.blotName = 'image';
+  ImageBlot.tagName = 'img';
+  Quill.register(ImageBlot);
+
+  class VideoBlot extends BlockEmbed {
+
+    static create(value) {
+      if (value && value.src) {
+        const videoTag = super.create();
+        videoTag.setAttribute('src', value.src);
+        videoTag.setAttribute('title', value.title);
+        videoTag.setAttribute('style', 'width: 70%; max-width: 400px;');
+        videoTag.setAttribute('controls', '');
+
+        return videoTag;
+      } else {
+        const iframeTag = document.createElement('iframe');
+        iframeTag.setAttribute('src', value);
+        iframeTag.setAttribute('frameborder', '0');
+        iframeTag.setAttribute('allowfullscreen', true);
+        iframeTag.setAttribute('style', 'width: 70%; max-width: 400px;');
+        return iframeTag;
+      }
+    }
+
+    static value(node) {
+      if (node.getAttribute('title')) {
+        return { src: node.getAttribute('src'), title: node.getAttribute('title') };
+      } else {
+        return node.getAttribute('src');
+      }
+    }
+
+  }
+
+  VideoBlot.blotName = 'video';
+  VideoBlot.tagName = 'video';
+  Quill.register(VideoBlot);
+
+  class FileBlot extends BlockEmbed {
+
+    static create(value) {
+      const prefixTag = document.createElement('span');
+      prefixTag.innerText = "첨부파일 - ";
+
+      const bTag = document.createElement('b');
+      //위에 첨부파일 글자 옆에  파일 이름이 b 태그를 사용해서 나온다.
+      bTag.innerText = value.title;
+
+      const linkTag = document.createElement('a');
+      linkTag.setAttribute('href', value.src);
+      linkTag.setAttribute("target", "_blank");
+      linkTag.setAttribute("className", "file-link-inner-post");
+      linkTag.appendChild(bTag);
+      //linkTag 이런식으로 나온다 <a href="btn_editPic@3x.png" target="_blank" classname="file-link-inner-post"><b>btn_editPic@3x.png</b></a>
+
+      const node = super.create();
+      node.appendChild(prefixTag);
+      node.appendChild(linkTag);
+
+      return node;
+
+    }
+
+    static value(node) {
+      return { src: node.querySelector('a').getAttribute('href'), title: node.querySelector('b').innerText };
+    }
+
+  }
+
+  FileBlot.blotName = 'file';
+  FileBlot.tagName = 'p';
+  FileBlot.className = 'file-inner-post';
+  Quill.register(FileBlot);
+
+  class PollBlot extends BlockEmbed {
+
+    static create(value) {
+      const prefixTag = document.createElement('span');
+      prefixTag.innerText = "투표 - ";
+
+      const bTag = document.createElement('b');
+      bTag.innerText = value.title;
+
+      const node = super.create();
+      node.setAttribute('id', value.id);
+      node.appendChild(prefixTag);
+      node.appendChild(bTag);
+
+      return node;
+    }
+
+    static value(node) {
+      const id = node.getAttribute('id');
+      const bTag = node.querySelector('b');
+      const title = bTag.innerText;
+      return { id, title };
+    }
+
+  }
+
+  PollBlot.blotName = 'poll';
+  PollBlot.tagName = 'p';
+  PollBlot.className = 'poll-inner-post';
+  Quill.register(PollBlot);
 }
-
-VideoBlot.blotName = 'video';
-VideoBlot.tagName = 'video';
-Quill.register(VideoBlot);
-
-class FileBlot extends BlockEmbed {
-
-  static create(value) {
-    console.log(value, 'fileBlot, fileINfo')
-    const prefixTag = document.createElement('span');
-    prefixTag.innerText = "첨부파일 - ";
-
-    const bTag = document.createElement('b');
-    //위에 첨부파일 글자 옆에  파일 이름이 b 태그를 사용해서 나온다.
-    bTag.innerText = value.title;
-
-    const linkTag = document.createElement('a');
-    linkTag.setAttribute('href', value.src);
-    linkTag.setAttribute("target", "_blank");
-    linkTag.setAttribute("className", "file-link-inner-post");
-    linkTag.appendChild(bTag);
-    //linkTag 이런식으로 나온다 <a href="btn_editPic@3x.png" target="_blank" classname="file-link-inner-post"><b>btn_editPic@3x.png</b></a>
-
-    const node = super.create();
-    node.appendChild(prefixTag);
-    node.appendChild(linkTag);
-
-    return node;
-
-  }
-
-  static value(node) {
-    return { src: node.querySelector('a').getAttribute('href'), title: node.querySelector('b').innerText };
-  }
-
-}
-
-FileBlot.blotName = 'file';
-FileBlot.tagName = 'p';
-FileBlot.className = 'file-inner-post';
-Quill.register(FileBlot);
-
-class PollBlot extends BlockEmbed {
-
-  static create(value) {
-    const prefixTag = document.createElement('span');
-    prefixTag.innerText = "투표 - ";
-
-    const bTag = document.createElement('b');
-    bTag.innerText = value.title;
-
-    const node = super.create();
-    node.setAttribute('id', value.id);
-    node.appendChild(prefixTag);
-    node.appendChild(bTag);
-
-    return node;
-  }
-
-  static value(node) {
-    const id = node.getAttribute('id');
-    const bTag = node.querySelector('b');
-    const title = bTag.innerText;
-    return { id, title };
-  }
-
-}
-
-PollBlot.blotName = 'poll';
-PollBlot.tagName = 'p';
-PollBlot.className = 'poll-inner-post';
-Quill.register(PollBlot);
 
 class QuillEditor extends React.Component {
 
@@ -205,7 +204,7 @@ class QuillEditor extends React.Component {
     super(props);
 
     this.state = {
-      editorHtml: __ISMSIE__ ? "<p>&nbsp;</p>" : "",
+      editorHtml: "<p>&nbsp;</p>",
     };
 
     this.reactQuillRef = null;
