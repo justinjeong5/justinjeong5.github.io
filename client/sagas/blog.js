@@ -55,7 +55,7 @@ function* loadPosts(action) {
 }
 
 function loadPostAPI(data) {
-  return axios.get(`/api/blog/blog/${data}`)
+  return axios.get(`/api/blog/${data}`)
 }
 
 function* loadPost(action) {

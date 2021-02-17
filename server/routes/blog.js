@@ -77,7 +77,7 @@ router.post('/blogs', (req, res) => {
     })
 })
 
-router.get('/blog/:postId', (req, res) => {
+router.get('/:postId', (req, res) => {
   Blog.findOne({ '_id': req.params.postId })
     .populate('writer')
     .exec((error, blog) => {
