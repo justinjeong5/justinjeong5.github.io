@@ -1,17 +1,18 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { withRouter, useHistory } from 'react-router-dom';
+import Router, { useRouter } from 'next/router'
 import { Typography, Form, Button, message as Message, Input, Space, Select, Divider } from 'antd'
 import { PlusOutlined } from '@ant-design/icons';
 import { CREATE_BLOG_POST_REQUEST, RESET_CREATE_BLOG_POST } from '../../reducers/types'
 import QuillEditor from './Editor/QuillEditor'
+
 const { Title } = Typography;
 const { Option } = Select;
 
 function CreatePage() {
 
   const dispatch = useDispatch();
-  const history = useHistory();
+  const router = useRouter();
   const [content, setContent] = useState('')
   const [title, setTitle] = useState('')
   const [files, setFiles] = useState([]);
@@ -21,22 +22,19 @@ function CreatePage() {
   const { currentUser } = useSelector(state => state.user)
   const { createBlogPostLoading, createBlogPostDone, uploadDataset, uploadBlogDatasetLoading } = useSelector(state => state.blog)
 
-
   useEffect(() => {
     if (createBlogPostDone) {
+      dispatch({
+        type: RESET_CREATE_BLOG_POST
+      })
       Message.success('게시글이 등록되었습니다.')
-      setTimeout(() => {
-        dispatch({
-          type: RESET_CREATE_BLOG_POST
-        })
-        history.push('/blog')
-      }, 2000)
+      Router.push('/blog')
     }
-  }, [dispatch, history, createBlogPostDone])
+  }, [dispatch, createBlogPostDone])
 
   const onSubmit = useCallback(() => {
-    if (title === '') return Message.error('제목을 작성해주세요.');
-    if (content === '') return Message.error('내용을 작성해주세요.');
+    if (title.trim() === '') return Message.error('제목을 작성해주세요.');
+    if (content.trim() === '') return Message.error('내용을 작성해주세요.');
 
     dispatch({
       type: CREATE_BLOG_POST_REQUEST,
@@ -48,11 +46,8 @@ function CreatePage() {
       },
     })
     setContent('');
+    setTitle('');
   }, [title, content, currentUser, uploadDataset])
-
-  const isAdmin = useCallback(() => {
-    return currentUser.role === 1
-  }, [currentUser])
 
   const onEditorChange = useCallback((value) => {
     setContent(value)
@@ -78,7 +73,7 @@ function CreatePage() {
   }, [newCategory])
 
   const handleCancel = useCallback(() => {
-    history.goBack(1)
+    router.back()
   }, [])
 
   const handleCategory = useCallback((event) => {
@@ -89,44 +84,34 @@ function CreatePage() {
     return <Option key={category}>{category}</Option>
   }), [categories])
 
-  const rootDivStyle = useMemo(() => ({ width: '75%', margin: 'auto' }), [])
-  const titleStyle = useMemo(() => ({ textAlign: 'center', paddingTop: 100 }), [])
-  const formWrapperStyle = useMemo(() => ({ display: 'flex', }), [])
-  const selectorStyle = useMemo(() => ({ width: 240 }), [])
-  const selectorDividerStyle = useMemo(() => ({ margin: '4px 0' }), [])
-  const categoryWrapperStyle = useMemo(() => ({ display: 'flex', flexWrap: 'nowrap', padding: 8 }), [])
-  const categoryInputStyle = useMemo(() => ({ width: '75%' }), [])
-  const spaceStyle = useMemo(() => ({ textAlign: 'end', marginTop: '1rem' }), [])
-  const plusButtonWrapperStyle = useMemo(() => ({ marginTop: 5 }), [])
-
 
   return (
-    <div style={rootDivStyle}>
-      <div style={titleStyle}>
+    <div style={{ width: '75%', margin: 'auto' }}>
+      <div style={{ textAlign: 'center', paddingTop: 50 }}>
         <Title level={2} >블로그 글 작성</Title>
       </div>
 
       <Form onFinish={onSubmit}>
-        <div style={formWrapperStyle}>
+        <div style={{ display: 'flex' }}>
           <Input value={title} onChange={onChangeTitle} placeholder='제목을 입력하세요' />
           <Select
-            disabled={!isAdmin}
+            disabled={!currentUser.role}
             defaultValue={'자유게시판'}
-            style={selectorStyle}
+            style={{ width: 240 }}
             dropdownRender={menu => (
               <div>
                 {menu}
-                <Divider style={selectorDividerStyle} />
-                <div style={categoryWrapperStyle}>
-                  <Input style={categoryInputStyle} value={newCategory} onChange={handleCategory} />
-                  <span style={plusButtonWrapperStyle}>
+                <Divider style={{ margin: '4px 0' }} />
+                <div style={{ display: 'flex', flexWrap: 'nowrap', padding: 8 }}>
+                  <Input style={{ width: '75%' }} value={newCategory} onChange={handleCategory} />
+                  <span style={{ marginTop: 5 }}>
                     <PlusOutlined onClick={handleAddCategory} />추가
                   </span>
                 </div>
               </div>
             )}
           >
-            {renderCategory}
+            {renderCategory()}
           </Select>
         </div>
 
@@ -136,7 +121,7 @@ function CreatePage() {
           onFilesChange={onFilesChange}
         />
 
-        <Space style={spaceStyle}>
+        <Space style={{ textAlign: 'end', marginTop: '1rem' }}>
           <Button
             htmlType='submit'
             type='primary'
@@ -151,4 +136,4 @@ function CreatePage() {
   )
 }
 
-export default withRouter(CreatePage);
+export default CreatePage;

@@ -1,31 +1,21 @@
-import React, { useCallback, useEffect, useMemo } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
-import { withRouter, useParams, useHistory } from 'react-router-dom'
+import React, { useCallback, useMemo } from 'react'
+import { useSelector } from 'react-redux';
+import { useRouter } from 'next/router'
 import { PageHeader, Divider, Card, Avatar } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
 import moment from 'moment'
-import 'moment/locale/ko'
 import Comment from '../utils/Comment/Comment'
-import { LOAD_BLOG_POST_REQUEST } from '../../reducers/types';
+moment.locale('ko')
 
 function PostPage() {
 
-  const dispatch = useDispatch();
-  const history = useHistory();
+  const router = useRouter();
 
-  const { postId } = useParams();
   const { currentUser } = useSelector(state => state.user);
   const { currentBlogPost, loadBlogPostLoading, loadBlogPostDone } = useSelector(state => state.blog)
 
-  useEffect(() => {
-    dispatch({
-      type: LOAD_BLOG_POST_REQUEST,
-      payload: postId,
-    })
-  }, [dispatch, postId])
-
   const handleCancel = useCallback(() => {
-    history.goBack(1)
+    router.back()
   }, [])
 
   const loadingWrapperStyle = useMemo(() => ({ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100vw', height: 'calc(100vh - 128px)' }), [])
@@ -68,4 +58,4 @@ function PostPage() {
   )
 }
 
-export default withRouter(PostPage)
+export default PostPage

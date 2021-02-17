@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { Button, Avatar, Typography, Skeleton, Empty, List } from 'antd'
 import moment from 'moment'
 import { LOAD_BLOG_POSTS_REQUEST } from '../../reducers/types'
+moment.locale('ko');
 
 const { Title } = Typography;
 
@@ -29,14 +30,7 @@ function BlogPage() {
     return () => {
       window.removeEventListener('scroll', onScroll);
     };
-  }, [dispatch, loadBlogPostsLoading, noMorePosts, skip, limit, blogPosts]);
-
-  useEffect(() => {
-    dispatch({
-      type: LOAD_BLOG_POSTS_REQUEST,
-      payload: { skip, limit },
-    });
-  }, [dispatch])
+  }, [loadBlogPostsLoading, noMorePosts, skip, limit, blogPosts]);
 
   const renderSkeleton = useMemo(() => (Array.from(Array(2)).map(_ => <Skeleton key={uuidv4()} />)), [])
   const rootDivStyle = useMemo(() => ({ width: '75%', margin: '3rem auto' }), [])
@@ -54,7 +48,7 @@ function BlogPage() {
         <List.Item>
           <List.Item.Meta
             avatar={<Avatar src={post.writer.image} style={{ marginTop: 7 }} />}
-            title={<Link href={`/blog/post/${post._id}`}><a>{post.title}</a></Link>}
+            title={<Link href={`/blog/${post._id}`}><a>{post.title}</a></Link>}
             description={
               <span style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <p>{post.writer.name}</p>
