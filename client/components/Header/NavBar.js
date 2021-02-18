@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import Link from 'next/link'
+import Link from '../utils/Link'
 import { Drawer, Button } from 'antd';
 import { MenuOutlined } from '@ant-design/icons'
 import LeftMenu from './NavBar/LeftMenu';

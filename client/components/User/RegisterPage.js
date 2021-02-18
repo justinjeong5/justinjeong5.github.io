@@ -1,7 +1,7 @@
 import React, { useMemo, useEffect, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Router, { useRouter } from 'next/router'
-import Link from 'next/link'
+import Link from '../utils/Link'
 import { Form, Input, Button, Typography, message as Message, Space } from 'antd';
 import { UserOutlined, MailOutlined, LockOutlined, CheckSquareOutlined } from '@ant-design/icons';
 import md5 from 'md5'

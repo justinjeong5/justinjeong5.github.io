@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import Link from 'next/link';
+import Link from '../utils/Link';
 import { v4 as uuidv4 } from 'uuid'
 import { Button, Avatar, Typography, Skeleton, Empty, List } from 'antd'
 import moment from 'moment'

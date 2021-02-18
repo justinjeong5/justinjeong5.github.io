@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Router, { useRouter } from 'next/router'
-import Link from 'next/link'
+import Link from '../utils/Link'
 import { Form, Button, Checkbox, Space, Typography, message as Message } from 'antd';
 import { LOGIN_USER_REQUEST } from '../../reducers/types';
 import EmailForm from './LoginForm/EmailForm';

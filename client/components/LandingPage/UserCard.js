@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import Link from 'next/link'
+import Link from '../utils/Link'
 import Router from 'next/router'
 import { v4 as uuidv4 } from 'uuid'
 import { Card } from 'antd'

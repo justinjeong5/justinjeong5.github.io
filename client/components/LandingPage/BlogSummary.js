@@ -1,6 +1,6 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import Link from 'next/link'
+import Link from '../utils/Link'
 import { List, Avatar, Empty } from 'antd'
 import moment from 'moment'
 moment.locale('ko');

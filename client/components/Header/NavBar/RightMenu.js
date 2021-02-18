@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Router from 'next/router';
-import Link from 'next/link'
+import Link from '../../utils/Link'
 import PropTypes from 'prop-types'
 import { Menu, message as Message } from 'antd';
 import { LogoutOutlined, LoginOutlined, UserAddOutlined, UserOutlined, LoadingOutlined } from '@ant-design/icons'
