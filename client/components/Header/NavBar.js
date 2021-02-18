@@ -3,7 +3,6 @@ import Link from '../utils/Link'
 import { Drawer, Button } from 'antd';
 import { MenuOutlined } from '@ant-design/icons'
 import LeftMenu from './NavBar/LeftMenu';
-import RightMenu from './NavBar/RightMenu';
 
 function NavBar() {
   const [visible, setVisible] = useState(false)
@@ -27,9 +26,6 @@ function NavBar() {
           <div className="menu_left">
             <LeftMenu mode="horizontal" />
           </div>
-          <div className="menu_rigth">
-            <RightMenu mode="horizontal" />
-          </div>
           <div className="menu__mobile-title">
             <Link href='/'><a>HOME</a></Link>
           </div>
@@ -49,7 +45,6 @@ function NavBar() {
             visible={visible}
           >
             <LeftMenu mode="inline" />
-            <RightMenu mode="inline" />
           </Drawer>
         </div>
       </nav>

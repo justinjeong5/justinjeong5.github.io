@@ -1,7 +1,6 @@
 import React from 'react';
 import Link from '../../utils/Link'
 import { Menu } from 'antd';
-import { v4 as uuidv4 } from 'uuid'
 
 function LeftMenu(props) {
 
@@ -11,9 +10,6 @@ function LeftMenu(props) {
         <Link href='/'><a>HOME</a></Link>
       </Menu.Item>
 
-      <Menu.Item>
-        {<Link href='/blog'><a>블로그</a></Link>}
-      </Menu.Item>
     </Menu >
   )
 }
