@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@ant-design/icons": "^4.3.0",
+    "@zeit/next-css": "^1.0.1",
     "antd": "^4.9.4",
     "next": "^10.0.6",
     "prop-types": "^15.7.2",
@@ -15,7 +16,7 @@
     "start": "next",
     "export": "next export",
     "build": "NODE_ENV=production next build",
-    "predeploy": "npm run build && npm run export",
+    "predeploy": "rm -rf node_modules/.cache && npm run build && npm run export && touch out/.nojekyll",
     "deploy": "gh-pages -d out"
   },
   "homepage": "https://justinjeong5.github.io/",
