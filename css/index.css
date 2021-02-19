@@ -1,0 +1,22 @@
+body {
+	margin: 0;
+	font-family: 'Rubik', 'Arial', sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+code {
+	font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+		monospace;
+}
+
+.project__link {
+	margin-right: 10px;
+	padding: 12px;
+	border: 1px solid #191b1e;
+	border-radius: 30px;
+	background-color: #191b1e;
+	color: #ffffff;
+	font-weight: 700;
+	text-decoration: none;
+}

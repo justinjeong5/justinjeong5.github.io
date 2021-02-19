@@ -13,10 +13,10 @@
   },
   "scripts": {
     "start": "next",
-    "export": "next export -o build",
-    "build": "ANALYZE=true NODE_ENV=production next build",
+    "export": "next export",
+    "build": "NODE_ENV=production next build",
     "predeploy": "npm run build && npm run export",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d out"
   },
   "homepage": "https://justinjeong5.github.io/",
   "eslintConfig": {

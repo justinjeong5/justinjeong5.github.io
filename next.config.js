@@ -2,13 +2,14 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 })
 const prod = process.env.NODE_ENV === 'production'
-const assetPrefix = prod ? 'https://justinjeong5.github.io' : '';
+const basePath = prod ? '/client' : '';
 
 module.exports = withBundleAnalyzer({
   exportPathMap: () => ({
     '/': { page: '/' },
   }),
-  assetPrefix: assetPrefix,
+  basePath,
+  assetPrefix: `${basePath}/`,
   compress: true,
   webpack(config, { webpack }) {
     return {
@@ -19,7 +20,7 @@ module.exports = withBundleAnalyzer({
         ...config.plugins,
         new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /^\.\/ko/),
         new webpack.DefinePlugin({
-          'process.env.ASSET_PREFIX': JSON.stringify(assetPrefix),
+          'process.env.ASSET_PREFIX': JSON.stringify(`${basePath}/`),
         }),
       ]
     }

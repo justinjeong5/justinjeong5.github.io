@@ -1,1 +1,0 @@
-export const routerPathList = ['/talkative', '/blog', '/jaymall', '/movieTrend', '/'];
