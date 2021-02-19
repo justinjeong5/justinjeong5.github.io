@@ -24,12 +24,7 @@ export default class MyDocument extends Document {
   render() {
     return (
       <Html>
-        <Head>
-          <link
-            rel="stylesheet"
-            href={`${this.props.__NEXT_DATA__.assetPrefix}/_next/static/style.css`}
-          />
-        </Head>
+        <Head />
         <body>
           <Main />
           <NextScript />
