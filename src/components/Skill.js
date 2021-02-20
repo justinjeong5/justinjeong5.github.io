@@ -66,18 +66,19 @@ function Skill({ setRef }) {
 
   return (
     <div>
-      <div ref={node => setRef(node)}></div>
       <Diagonal
-        children={content}
         boxStyle={{ backgroundColor: '#FFFFFF', padding: '200px 0px 0px ' }}
         bottomStyle={{ backgroundColor: '#FFFFFF', height: 100, clipPath: 'polygon(0px 0%, 100% 0px, 100% 30%, 0px 100%)' }}
-      />
+      >
+        <div ref={node => setRef(node)}></div>
+        {content}
+      </Diagonal>
     </div>
   )
 }
 
 Skill.propTypes = {
-  ref: PropTypes.func,
+  setRef: PropTypes.func,
 }
 
 export default Skill

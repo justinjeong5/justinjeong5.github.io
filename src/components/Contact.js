@@ -27,12 +27,13 @@ function Footer({ setRef }) {
 
   return (
     <div>
-      <div ref={node => setRef(node)}></div>
       <Diagonal
-        children={content}
         boxStyle={{ backgroundColor: '#191B1E', padding: '150px 10vw', }}
         topStyle={{ backgroundColor: '#191B1E', marginTop: -100, height: 100, clipPath: 'polygon(0px 100%, 100% 0px, 100% 101%, 0px 101%)' }}
-      />
+      >
+        <div ref={node => setRef(node)}></div>
+        {content}
+      </Diagonal>
     </div>
   )
 }
