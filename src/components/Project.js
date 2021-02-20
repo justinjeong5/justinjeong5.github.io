@@ -74,7 +74,7 @@ function Project({ setRef }) {
         children={content}
         boxStyle={{ backgroundColor: '#F6F6F6', padding: '150px  10vw 50px' }}
         topStyle={{ backgroundColor: '#F6F6F6', height: 100, clipPath: 'polygon(0px 100%, 100% 0px, 100% 100%, 0px 100%)' }}
-        bottomStyle={{ backgroundColor: '#F6F6F6', height: 100, clipPath: 'polygon(0px 0%, 100% 0px, 100% 30%, 0px 100%)' }}
+        bottomStyle={{ backgroundColor: '#F6F6F6', height: 100, clipPath: 'polygon(0px -1px, 100% -1px, 100% 30%, 0px 100%)' }}
       />
     </div>
   )

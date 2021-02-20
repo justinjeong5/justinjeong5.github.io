@@ -37,7 +37,7 @@ function WelcomePage() {
       <Diagonal
         children={content}
         boxStyle={{ backgroundColor: '#191B1E', padding: '150px 10vw' }}
-        bottomStyle={{ backgroundColor: '#191B1E', height: 100, clipPath: 'polygon(0px 0%, 100% 0px, 100% 30%, 0px 100%)' }}
+        bottomStyle={{ backgroundColor: '#191B1E', height: 100, clipPath: 'polygon(0px -1px, 100% -1px, 100% 30%, 0px 100%)' }}
       />
     </>
   )
