@@ -10,14 +10,15 @@
     "prop-types": "^15.7.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "^4.0.2",
     "uuid": "^8.3.2"
   },
   "scripts": {
-    "start": "next",
-    "export": "next export",
-    "build": "NODE_ENV=production next build",
-    "predeploy": "rm -rf node_modules/.cache && npm run build && npm run export && touch out/.nojekyll",
-    "deploy": "gh-pages -d out"
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "predeploy": "rm -rf node_modules/.cache && npm run build",
+    "deploy": "gh-pages -d build"
   },
   "homepage": "https://justinjeong5.github.io/",
   "eslintConfig": {

@@ -5,7 +5,7 @@ import Diagonal from './utils/Diagonal'
 
 const { Title } = Typography;
 
-function LandingPage() {
+function WelcomePage() {
 
   const content = useMemo(() => (
     <div style={{ display: 'flex', justifyContent: 'space-around' }}>
@@ -43,4 +43,4 @@ function LandingPage() {
   )
 }
 
-export default LandingPage
+export default WelcomePage

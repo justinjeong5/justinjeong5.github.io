@@ -1,18 +1,18 @@
 import React from 'react'
 import { BackTop } from 'antd'
 
-import NavBar from '../components/NavBar'
-import Landing from '../components/Landing'
-import Skill from '../components/Skill'
-import Project from '../components/Project'
-import Contact from '../components/Contact'
+import NavBar from './NavBar'
+import Welcome from './Welcome'
+import Skill from './Skill'
+import Project from './Project'
+import Contact from './Contact'
 
 function Home() {
 
   return (
     <div>
       <NavBar />
-      <Landing />
+      <Welcome />
       <Skill />
       <Project />
       <Contact />

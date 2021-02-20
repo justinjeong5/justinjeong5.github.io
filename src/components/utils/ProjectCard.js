@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import { Typography, Divider } from 'antd'
+import { GithubOutlined } from '@ant-design/icons'
 
 const { Title } = Typography;
 
@@ -22,7 +23,7 @@ function ProjectCard({ image, title, description, skill, link, github }) {
         {skill}
         <br />
         <a className='project__link' href={link} target="_blank" rel="noreferrer noopener">사용하기</a>
-        <a className='project__link' href={github} target="_blank" rel="noreferrer noopener">Github</a>
+        <a className='project__link' href={github} target="_blank" rel="noreferrer noopener"><GithubOutlined /> Github</a>
       </div>
     </div>
   )
