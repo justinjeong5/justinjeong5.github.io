@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react'
+import PropTypes from 'prop-types'
 import { Row } from 'antd'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -7,7 +8,7 @@ import Header from './utils/Header'
 import SkillCard from './utils/SkillCard'
 import Content from './utils/Content'
 
-function Skill() {
+function Skill({ setRef }) {
 
   const renderCards = [
     <SkillCard
@@ -65,6 +66,7 @@ function Skill() {
 
   return (
     <div>
+      <div ref={node => setRef(node)}></div>
       <Diagonal
         children={content}
         boxStyle={{ backgroundColor: '#FFFFFF', padding: '200px 0px 0px ' }}
@@ -72,6 +74,10 @@ function Skill() {
       />
     </div>
   )
+}
+
+Skill.propTypes = {
+  ref: PropTypes.func,
 }
 
 export default Skill

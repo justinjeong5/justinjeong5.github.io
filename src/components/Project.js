@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react'
+import PropTypes from 'prop-types'
 import { Divider, Typography } from 'antd'
 
 import Diagonal from './utils/Diagonal'
@@ -7,7 +8,7 @@ import ProjectCard from './utils/ProjectCard'
 
 const { Title } = Typography;
 
-function Project() {
+function Project({ setRef }) {
 
   const slackSkill = useMemo(() => (
     <div>
@@ -68,6 +69,7 @@ function Project() {
 
   return (
     <div>
+      <div ref={node => setRef(node)}></div>
       <Diagonal
         children={content}
         boxStyle={{ backgroundColor: '#F6F6F6', padding: '150px  10vw 50px' }}
@@ -76,6 +78,10 @@ function Project() {
       />
     </div>
   )
+}
+
+Project.propTypes = {
+  setRef: PropTypes.func
 }
 
 export default Project

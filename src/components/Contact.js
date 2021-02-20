@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react'
+import PropTypes from 'prop-types'
 import { Typography } from 'antd'
 import { PhoneOutlined, MailOutlined, GithubOutlined } from '@ant-design/icons'
 
@@ -8,7 +9,7 @@ import Contact from './utils/Contact'
 
 const { Title } = Typography;
 
-function Footer() {
+function Footer({ setRef }) {
 
   const content = useMemo(() => (
     <div style={{ display: 'flex', justifyContent: 'space-around' }}>
@@ -26,6 +27,7 @@ function Footer() {
 
   return (
     <div>
+      <div ref={node => setRef(node)}></div>
       <Diagonal
         children={content}
         boxStyle={{ backgroundColor: '#191B1E', padding: '150px 10vw', }}
@@ -33,6 +35,10 @@ function Footer() {
       />
     </div>
   )
+}
+
+Footer.propTypes = {
+  setRef: PropTypes.func
 }
 
 export default Footer
