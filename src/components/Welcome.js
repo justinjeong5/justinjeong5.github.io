@@ -15,12 +15,14 @@ function WelcomePage() {
             안녕하세요.<br /> 정경하입니다.
           </Title>
           <Title style={{ color: '#5D5D5F', width: 'calc(100vw - 800px)' }} level={3}>
-            저는 웹 프론트엔드 개발자입니다. 주로 React와 Next를 이용하여 개발합니다.<br />
+            저는 웹 프론트엔드 개발자입니다. <br />
+            주로 React와 NextJs를 이용하여 개발합니다.<br />
+            디자인 프레임워크는 Ant Design을 활용합니다.<br />
           </Title>
         </div>
       </div>
       <img
-        src='https://user-images.githubusercontent.com/44011462/108510061-64e7b380-7301-11eb-82e0-dd9a66c26528.jpeg'
+        src='https://user-images.githubusercontent.com/44011462/108590986-b21f6000-73a9-11eb-94c0-940e49dd07e4.png'
         alt='JustinJeongImage'
         style={{
           width: '40vw', maxWidth: 400,

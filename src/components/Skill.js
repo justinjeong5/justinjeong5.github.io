@@ -15,10 +15,13 @@ function Skill({ setRef }) {
       key={uuidv4()}
       title='REACT'
       content={<>
-        <Content content='HOOKS 사용' />
-        <Content content='REDUX를 이용한 상태 관리' />
-        <Content content='REDUX-SAGA 비동기 통신' />
-        <Content content='ROUTER등의 LIBRARY 사용' />
+        <Content content='Hooks 사용' />
+        <Content content='Component간 데이터 교환' />
+        <Content content='Redux를 이용한 상태 관리' />
+        <Content content='Redux-Saga 비동기 통신' />
+        <Content content='HOC 활용' />
+        <Content content='React-Router-Dom 등의 Libray 사용' />
+        <Content content='주로 Ant Design 활용' />
       </>}
     />,
     <SkillCard
@@ -26,27 +29,28 @@ function Skill({ setRef }) {
       title='NEXT.JS'
       content={<>
         <Content content='GetServerSideProps를 이용한 SSR' />
-        <Content content='DYNAMIC ROUTING 사용' />
-        <Content content='BUNDLE-ALAYZER 사용' />
-        <Content content='ROUTER, HEAD 등의 LIBRARY 사용' />
+        <Content content='Dynamic Routing 사용' />
+        <Content content='Router, Head, Link 등의 Built-in Component 사용' />
       </>}
     />,
     <SkillCard
       key={uuidv4()}
       title='NODE.JS'
       content={<>
-        <Content content='EXPRESS와 MIDDLEWARE 사용' />
-        <Content content='SEQUELIZE를 이용한 MYSQL' />
-        <Content content='MONGODB 사용' />
-        <Content content='JWT, PASSPORT, SESSION을 이용한 유저관리' />
+        <Content content='Express 활용' />
+        <Content content='Restful APIs 작성' />
+        <Content content='Middleware로 Routing 관리' />
+        <Content content='주로 MongoDB 활용' />
+        <Content content='Sequelize를 이용한 Mysql' />
+        <Content content='JWT, Passport, Session로 유저 상태 관리' />
       </>}
     />,
     <SkillCard
       key={uuidv4()}
       title='CLOUD'
       content={<>
-        <Content content='AWS-ec2, AWS-route53, AWS-s3 사용 경험' />
-        <Content content='HEROKU 사용 경험' />
+        <Content content='AWS-ec2, AWS-route53, AWS-s3 경험' />
+        <Content content='Heroku 경험' />
       </>}
     />,
   ]
