@@ -44,7 +44,7 @@ function Skill({ setRef }) {
         <Content content='Middleware로 Routing 관리' />
         <Content content='Mysql, MongoDB 활용' />
         <Content content='Sequelize를 이용한 Mysql' />
-        <Content content='JWT, Passport, Session로 유저 상태 관리' />
+        <Content content='JWT, Passport을 통한 유저 상태 관리' />
       </>}
     />,
     <SkillCard

@@ -16,8 +16,8 @@ function WelcomePage() {
           </Title>
           <Title style={{ color: '#5D5D5F', width: 'calc(100vw - 800px)' }} level={3}>
             저는 웹 프론트엔드 개발자입니다. <br />
-            주로 React와 NextJs를 이용하여 개발합니다.<br />
-            디자인 프레임워크는 Ant Design을 활용합니다.<br />
+            주로 React를 이용하여 개발합니다.<br />
+            함께 일하기 좋은 개발자가 되기위해 노력하겠습니다.
           </Title>
         </div>
       </div>

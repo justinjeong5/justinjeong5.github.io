@@ -10,7 +10,7 @@ function NavBar({ handleSkillRef, handleProjectRef, handleContactRef }) {
     <div style={{ backgroundColor: '#191B1E', padding: '10vw' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <div>
-          <Header title='정경하 | JustinJeong' color='#FFFFFF' />
+          <Header title='정경하 | 웹 FE 개발자' color='#FFFFFF' />
         </div>
         <div>
           <Menu title='Skills' handleRef={handleSkillRef} />

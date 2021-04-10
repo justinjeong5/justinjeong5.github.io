@@ -18,7 +18,7 @@ function Project({ setRef }) {
       </div>
       <div style={{ display: 'flex' }}>
         <Title level={4}>Server</Title>
-        <Title level={5} style={{ margin: '3px 10px' }}>Nodejs(Express), MongoDB, WebSocket</Title>
+        <Title level={5} style={{ margin: '3px 10px' }}>Nodejs(Express), MongoDB, SocketIO</Title>
       </div>
       <div style={{ display: 'flex' }}>
         <Title level={4}>Cloud</Title>
