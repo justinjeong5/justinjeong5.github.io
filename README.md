@@ -4,14 +4,14 @@
 
 ## 구조
 
-- `src/content/siteContent.js`: 프로필, 신뢰 신호, 케이스 스터디, 빌더 로그 콘텐츠
+- `src/content/siteContent.js`: 프로필, 방문자 경로, 증거 시스템, 케이스 스터디, 빌더 로그 콘텐츠
 - `src/components/LandingPage.jsx`: 전체 페이지 레이아웃
 - `src/css/index.css`: 반응형 스타일
 - `.github/workflows/deploy.yml`: GitHub Pages 자동 배포
 
 ## 사례를 추가하는 방법
 
-업무 중 공개 가능한 사례가 생기면 `src/content/siteContent.js`의 `caseStudies` 또는 `builderLogs`에 추가합니다.
+업무 중 공개 가능한 사례가 생기면 `src/content/siteContent.js`의 `caseStudies`, `builderLogs`, `writingIdeas`에 추가합니다.
 
 케이스 스터디는 아래 다섯 가지를 채우는 흐름으로 유지합니다.
 
