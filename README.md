@@ -1,35 +1,35 @@
-<h1 align="center">JUSTINJEONG5</h1>
+# 정경하 개인 사이트
 
+기술 스택 나열형 포트폴리오를 방문자 관점의 신뢰 허브로 재구성한 사이트입니다.
 
-## 👋 인사말
-안녕하세요. 저는 정경하입니다.
-저는 웹 프론트엔드 개발자입니다.
-주로 React와 Nextjs를 사용합니다.
-백엔드 서버가 필요하다면 NodeJs, Express, MongoDB를 사용합니다.
+## 구조
 
-저에 대해서 간단하게 소개를 하고자 아래의 링크를 준비했습니다.
-[정경하의 Github.io 방문하기](https://justinjeong5.github.io)
+- `src/content/siteContent.js`: 프로필, 신뢰 신호, 케이스 스터디, 빌더 로그 콘텐츠
+- `src/components/LandingPage.jsx`: 전체 페이지 레이아웃
+- `src/css/index.css`: 반응형 스타일
+- `.github/workflows/deploy.yml`: GitHub Pages 자동 배포
 
-## 📚 기술 스택
-- React
-  - Component간에 Prop로 데이터 교환
-  - Redux를 이용한 상태관리
-  - Redux-Saga의 비동기 통신과 상태관리
-  - React-Router-Dom등의 라이브러리 사용
-  - HOC 사용
-  - Ant Design을 이용한 디자인
-- NextJs
-  - GetServerSideProps를 이용한 SSR
-  - Head, Link 등의 Built-in 컴포넌트 사용
-  - Dynamic Routing을 이용한 페이지 설정
+## 사례를 추가하는 방법
 
-## 🎥 프로젝트
-- React Slack
-  - WebSocket을 이용한 실시간 채팅 서비스
-  - React, NextJs, NodeJs, MongoDB, AWS-ec2, AWS-s3
-  - [바로가기](https://slack.shinywaterjeong.com)
+업무 중 공개 가능한 사례가 생기면 `src/content/siteContent.js`의 `caseStudies` 또는 `builderLogs`에 추가합니다.
 
-- React Tweeter
-  - 트윗, 좋아요, 댓글 등의 기능이 있는 SNS
-  - React, NextJs, NodeJs, Mysql, sequelize, AWS-ec2, AWS-s3
-  - [바로가기](https://tweeter.shinywaterjeong.com)
+케이스 스터디는 아래 다섯 가지를 채우는 흐름으로 유지합니다.
+
+- 문제: 누가 어떤 불편을 겪었나
+- 역할: 내가 직접 판단하고 만든 부분은 무엇인가
+- 접근: 버린 선택지와 채택한 이유는 무엇인가
+- 결과: 수치, 반응, 운영 변화 중 무엇이 남았나
+- 회고: 지금 다시 한다면 무엇을 다르게 할 것인가
+
+## 실행
+
+```bash
+npm install
+npm run dev
+```
+
+## 빌드
+
+```bash
+npm run build
+```
