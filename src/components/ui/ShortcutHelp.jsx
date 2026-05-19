@@ -11,7 +11,7 @@ const SHORTCUTS = [
     { keys: ['Esc'], desc: '모달 닫기' },
   ]},
   { group: '테마', items: [
-    { keys: ['T'], desc: '테마 순환 (베이지 → 다크 → 세피아)' },
+    { keys: ['T'], desc: '테마 전환 (라이트 ↔ 다크)' },
   ]},
   { group: '페이지 이동 (g 누르고 다음 키)', items: [
     { keys: ['g', 'h'], desc: '홈' },

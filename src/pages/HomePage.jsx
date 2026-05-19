@@ -32,7 +32,9 @@ const growthIcon = {
 };
 
 function HomePage() {
-  const featuredCases = getAllCases().slice(0, 3);
+  const allCases = getAllCases();
+  const liveCases = allCases.filter((c) => c.status === 'Live');
+  const featuredCases = liveCases.length > 0 ? liveCases.slice(0, 3) : allCases.slice(0, 3);
   const recentNotes = getAllNotes().slice(0, 5);
   const recentLogs = getAllLogs().slice(0, 3);
 
@@ -74,6 +76,18 @@ function HomePage() {
             </ul>
           </div>
         </aside>
+      </section>
+
+      <section className="hero-proof-section" aria-label="요약 증거">
+        <div className="hero-proof-grid">
+          {siteData.heroProof.map((item) => (
+            <article key={item.label} className="hero-proof-card">
+              <p className="eyebrow">{item.label}</p>
+              <strong>{item.value}</strong>
+              <span>{item.detail}</span>
+            </article>
+          ))}
+        </div>
       </section>
 
       <section className="paths-section" id="paths">

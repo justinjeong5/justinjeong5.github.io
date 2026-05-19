@@ -1,41 +1,24 @@
 /* ------------------------------------------------------------
- * 테마 토큰 — Editorial Modern
- * Light는 index.css :root에 정의됨. 여기는 dark/sepia만.
+ * 테마 토큰 — Neutral Modern (white + zinc + indigo)
+ * Light는 index.css :root에 정의됨. 여기는 dark만 (sepia 삭제).
  * ------------------------------------------------------------ */
 
 :root[data-theme='dark'] {
-  --bg: #0c0a09;
-  --bg-alt: #1c1917;
-  --bg-cool: #292524;
-  --bg-deep: #050403;
-  --text: #fafaf7;
-  --text-soft: #d6d3d1;
-  --text-muted: #a8a29e;
-  --accent-red: #fb923c;
-  --accent-blue: #93c5fd;
-  --accent-yellow: #fbbf24;
-  --accent-green: #86efac;
-  --border: #292524;
-  --border-soft: #1c1917;
+  --bg: #09090b;
+  --bg-alt: #18181b;
+  --bg-cool: #27272a;
+  --bg-deep: #000000;
+  --text: #fafafa;
+  --text-soft: #d4d4d8;
+  --text-muted: #a1a1aa;
+  --accent-red: #818cf8;
+  --accent-blue: #a5b4fc;
+  --accent-yellow: #f59e0b;
+  --accent-green: #34d399;
+  --border: #27272a;
+  --border-soft: #18181b;
   --shadow-card: none;
   color-scheme: dark;
-}
-
-:root[data-theme='sepia'] {
-  --bg: #f5ebd6;
-  --bg-alt: #fdf6e3;
-  --bg-cool: #ecdfc5;
-  --bg-deep: #3d2e1f;
-  --text: #3d2e1f;
-  --text-soft: #6b5b47;
-  --text-muted: #8b7355;
-  --accent-red: #a83b1f;
-  --accent-blue: #4a6d8a;
-  --accent-yellow: #c98c1f;
-  --accent-green: #5a7a4c;
-  --border: #d8c8a8;
-  --border-soft: #e5d8be;
-  --shadow-card: none;
 }
 
 /* ---------- 글로벌 색상·배경 토큰화 ---------- */
@@ -48,15 +31,9 @@ body {
   transition: background-color 200ms ease, color 200ms ease;
 }
 
-/* Hero 그리드 배경 */
-.hero {
-  background:
-    linear-gradient(90deg, color-mix(in srgb, var(--text) 4%, transparent) 1px, transparent 1px),
-    linear-gradient(180deg, color-mix(in srgb, var(--text) 3%, transparent) 1px, transparent 1px),
-    var(--bg);
-}
+/* Hero 그리드 배경 (Phase 1 잔재 — refine.css에서 var(--bg)로 비활성화) */
 
-/* Nav 글래스 */
+/* Site nav 글래스 */
 .site-nav {
   background: color-mix(in srgb, var(--bg) 88%, transparent);
   border-bottom-color: var(--border);
@@ -65,37 +42,21 @@ body {
 
 /* Site footer */
 .site-footer {
-  background: var(--bg-deep);
-  color: color-mix(in srgb, var(--bg-alt) 78%, transparent);
+  background: var(--bg-alt);
+  color: var(--text-muted);
+  border-top: 1px solid var(--border);
 }
 :root[data-theme='dark'] .site-footer {
-  background: #000;
-  color: var(--text-soft);
-}
-:root[data-theme='sepia'] .site-footer {
   background: var(--bg-deep);
-  color: color-mix(in srgb, var(--bg-alt) 86%, transparent);
+  color: var(--text-soft);
+  border-top-color: var(--border);
 }
 
-/* Profile panel — sharp border, no shadow */
+/* Profile panel */
 .profile-panel {
   background: var(--bg-alt);
   border-color: var(--border);
   box-shadow: none;
-}
-
-/* Proof strip */
-.proof-strip {
-  background: var(--bg-deep);
-  color: var(--bg-alt);
-  border-top-color: var(--bg-deep);
-  border-bottom-color: var(--bg-deep);
-}
-.proof-strip p {
-  color: var(--accent-yellow);
-}
-.proof-strip span {
-  color: color-mix(in srgb, var(--bg-alt) 72%, transparent);
 }
 
 /* Buttons */
@@ -107,16 +68,15 @@ body {
 .button:hover {
   transform: none;
   box-shadow: none;
-  background: var(--bg-cool);
 }
 .button-primary {
   background: var(--text);
-  color: var(--bg-alt);
+  color: var(--bg);
   border-color: var(--text);
 }
 .button-primary:hover {
   background: var(--text-soft);
-  color: var(--bg-alt);
+  color: var(--bg);
 }
 .button-secondary {
   background: transparent;
@@ -128,76 +88,36 @@ body {
   border-color: var(--text);
 }
 
-/* 섹션 배경 */
+/* 섹션 배경 — minimal contrast */
 .paths-section,
 .logs-section {
   background: var(--bg-alt);
 }
 .evidence-section,
 .quality-section {
-  background: var(--bg-cool);
+  background: var(--bg);
 }
 .case-section,
 .contact-section {
   background: var(--bg);
 }
-:root[data-theme='dark'] .contact-section {
-  background: var(--bg-alt);
-}
 
-/* Eyebrow, role, accents */
+/* Eyebrow·role·accents — 토큰 통일 */
 .eyebrow {
-  color: var(--accent-red);
-  letter-spacing: 0.08em;
-  font-weight: 800;
+  color: var(--text-muted);
+  letter-spacing: 0.12em;
+  font-weight: 600;
 }
 .role {
-  color: var(--accent-blue);
+  color: var(--text-soft);
 }
 .case-topline,
 .log-date {
-  color: var(--accent-blue);
+  color: var(--accent-red);
 }
 .case-meta dt,
 .case-narrative h4 {
-  color: var(--accent-red);
-}
-.case-index {
-  background: var(--bg-deep);
-  color: var(--accent-yellow);
-}
-
-/* Impact box */
-.impact-box {
-  background: var(--bg-deep);
-  color: var(--bg-alt);
-}
-.impact-box svg {
-  color: var(--accent-yellow);
-}
-.impact-box p {
-  color: color-mix(in srgb, var(--bg-alt) 80%, transparent);
-}
-.impact-box small {
-  color: color-mix(in srgb, var(--bg-alt) 60%, transparent);
-}
-
-/* Writing panel */
-.writing-panel {
-  background: var(--bg-deep);
-  color: var(--bg-alt);
-  border-color: var(--bg-deep);
-}
-.writing-panel .panel-heading h3,
-.writing-panel h4 {
-  color: var(--bg-alt);
-}
-.writing-panel .panel-heading svg,
-.writing-panel span {
-  color: var(--accent-yellow);
-}
-.writing-panel small {
-  color: color-mix(in srgb, var(--bg-alt) 60%, transparent);
+  color: var(--text-muted);
 }
 
 /* Borders — 토큰 통일 */
@@ -212,18 +132,14 @@ body {
   border-color: var(--border);
   box-shadow: none;
 }
-
-/* Hover — translateY 미세화 + border accent */
 .path-card:hover,
 .case-card:hover {
   transform: none;
   border-color: var(--text);
   box-shadow: none;
 }
-
-/* Visitor path accent */
 .path-card p {
-  color: var(--accent-blue);
+  color: var(--text-muted);
 }
 
 /* Smooth transitions */

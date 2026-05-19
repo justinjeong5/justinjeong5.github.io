@@ -30,7 +30,7 @@ h1 {
 }
 .summary {
   font-size: clamp(0.98rem, 1.2vw, 1.05rem);
-  line-height: 1.74;
+  line-height: 1.66;
   color: var(--text-soft);
 }
 
@@ -347,6 +347,51 @@ h1 {
   font-size: clamp(2rem, 4.4vw, 3.6rem);
   font-weight: 700;
   letter-spacing: -0.03em;
+}
+
+/* ---------- Hero proof — 3 카드 (검은 띠 대체) ---------- */
+.hero-proof-section {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 clamp(18px, 5vw, 72px) clamp(56px, 7vw, 96px);
+}
+.hero-proof-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+.hero-proof-card {
+  padding: 22px 22px 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-alt);
+  transition: border-color 160ms ease;
+}
+.hero-proof-card:hover {
+  border-color: var(--text);
+}
+.hero-proof-card .eyebrow {
+  margin-bottom: 12px;
+  color: var(--text-muted);
+}
+.hero-proof-card strong {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--text);
+  font-size: clamp(1.1rem, 1.6vw, 1.45rem);
+  font-weight: 600;
+  letter-spacing: -0.018em;
+}
+.hero-proof-card span {
+  display: block;
+  color: var(--text-soft);
+  font-size: 0.94rem;
+  line-height: 1.65;
+}
+@media (max-width: 720px) {
+  .hero-proof-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ---------- Mobile spacing ---------- */

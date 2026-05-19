@@ -2,7 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useState } from 'rea
 
 const UIContext = createContext(null);
 
-const THEMES = ['light', 'dark', 'sepia'];
+const THEMES = ['light', 'dark'];
 
 function readInitialTheme() {
   if (typeof window === 'undefined') return 'light';

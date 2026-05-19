@@ -1,17 +1,15 @@
-import { Coffee, Moon, Sun } from 'lucide-react';
+import { Moon, Sun } from 'lucide-react';
 
 import { useUI } from '../../lib/ui-context';
 
 const ICONS = {
   light: Sun,
   dark: Moon,
-  sepia: Coffee,
 };
 
 const LABELS = {
-  light: '라이트 (베이지)',
+  light: '라이트',
   dark: '다크',
-  sepia: '세피아',
 };
 
 function ThemeToggle() {

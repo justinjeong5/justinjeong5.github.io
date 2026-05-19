@@ -34,16 +34,18 @@ function CvPage() {
         </ol>
       </section>
 
-      <section className="cv-block">
-        <h2>Education</h2>
-        <ul className="cv-list">
-          {cvData.education.map((item) => (
-            <li key={`${item.org}-${item.degree}`}>
-              <strong>{item.degree}</strong> · {item.org} · {item.from} – {item.to}
-            </li>
-          ))}
-        </ul>
-      </section>
+      {cvData.education && cvData.education.length > 0 ? (
+        <section className="cv-block">
+          <h2>Education</h2>
+          <ul className="cv-list">
+            {cvData.education.map((item) => (
+              <li key={`${item.org}-${item.degree}`}>
+                <strong>{item.degree}</strong> · {item.org} · {item.from} – {item.to}
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
 
       {cvData.talks && cvData.talks.length > 0 ? (
         <section className="cv-block">

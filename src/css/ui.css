@@ -20,7 +20,7 @@
   background: var(--bg-alt);
   color: var(--text-soft);
   font-size: 0.86rem;
-  font-weight: 800;
+  font-weight: 600;
   cursor: pointer;
   transition: background-color 160ms ease, border-color 160ms ease;
 }
@@ -169,7 +169,7 @@
   margin: 12px 12px 6px;
   color: var(--accent-blue);
   font-size: 0.74rem;
-  font-weight: 950;
+  font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
@@ -196,7 +196,7 @@
   background: color-mix(in srgb, var(--accent-blue) 14%, transparent);
 }
 .palette-item-title {
-  font-weight: 800;
+  font-weight: 600;
 }
 .palette-item-summary {
   color: var(--text-muted);
@@ -240,7 +240,7 @@
   margin: 8px 0 8px;
   color: var(--accent-blue);
   font-size: 0.78rem;
-  font-weight: 950;
+  font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
