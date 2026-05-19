@@ -17,32 +17,42 @@ import AboutPage from '../pages/AboutPage';
 import CvPage from '../pages/CvPage';
 import NotFoundPage from '../pages/NotFoundPage';
 
+import { UIProvider } from '../lib/ui-context';
+import GlobalShortcuts from './ui/GlobalShortcuts';
+import CommandPalette from './ui/CommandPalette';
+import ShortcutHelp from './ui/ShortcutHelp';
+
 const mdxComponents = {};
 
 function App() {
   return (
-    <MDXProvider components={mdxComponents}>
-      <BrowserRouter>
-        <Routes>
-          <Route element={<Layout />}>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/cases" element={<CasesPage />} />
-            <Route path="/cases/:slug" element={<CaseDetailPage />} />
-            <Route path="/notes" element={<NotesPage />} />
-            <Route path="/notes/:slug" element={<NoteDetailPage />} />
-            <Route path="/essays" element={<EssaysPage />} />
-            <Route path="/essays/:slug" element={<EssayDetailPage />} />
-            <Route path="/logs" element={<LogsPage />} />
-            <Route path="/uses" element={<UsesPage />} />
-            <Route path="/now" element={<NowPage />} />
-            <Route path="/reading" element={<ReadingPage />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/cv" element={<CvPage />} />
-            <Route path="*" element={<NotFoundPage />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </MDXProvider>
+    <UIProvider>
+      <MDXProvider components={mdxComponents}>
+        <BrowserRouter>
+          <GlobalShortcuts />
+          <Routes>
+            <Route element={<Layout />}>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/cases" element={<CasesPage />} />
+              <Route path="/cases/:slug" element={<CaseDetailPage />} />
+              <Route path="/notes" element={<NotesPage />} />
+              <Route path="/notes/:slug" element={<NoteDetailPage />} />
+              <Route path="/essays" element={<EssaysPage />} />
+              <Route path="/essays/:slug" element={<EssayDetailPage />} />
+              <Route path="/logs" element={<LogsPage />} />
+              <Route path="/uses" element={<UsesPage />} />
+              <Route path="/now" element={<NowPage />} />
+              <Route path="/reading" element={<ReadingPage />} />
+              <Route path="/about" element={<AboutPage />} />
+              <Route path="/cv" element={<CvPage />} />
+              <Route path="*" element={<NotFoundPage />} />
+            </Route>
+          </Routes>
+          <CommandPalette />
+          <ShortcutHelp />
+        </BrowserRouter>
+      </MDXProvider>
+    </UIProvider>
   );
 }
 

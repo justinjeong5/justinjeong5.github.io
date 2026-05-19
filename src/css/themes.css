@@ -1,0 +1,249 @@
+/* ------------------------------------------------------------
+ * Phase 3 — 테마 토큰 (다크·세피아)
+ * Light는 index.css :root에 정의됨. 여기서는 dark/sepia만 추가.
+ * ------------------------------------------------------------ */
+
+:root[data-theme='dark'] {
+  --bg: #14171a;
+  --bg-alt: #1d2024;
+  --bg-cool: #252a31;
+  --bg-deep: #0a0c0e;
+  --text: #f4f1e8;
+  --text-soft: #b8bcc0;
+  --text-muted: #7d8388;
+  --accent-red: #e87964;
+  --accent-blue: #7ab0f0;
+  --accent-yellow: #f5c878;
+  --accent-green: #6dc6a8;
+  --border: rgba(244, 241, 232, 0.16);
+  --border-soft: rgba(244, 241, 232, 0.1);
+  --shadow-card: 0 14px 32px rgba(0, 0, 0, 0.45);
+  color-scheme: dark;
+}
+
+:root[data-theme='sepia'] {
+  --bg: #f3e7c9;
+  --bg-alt: #faf0d8;
+  --bg-cool: #e8d9bb;
+  --bg-deep: #3d2e1f;
+  --text: #3d2e1f;
+  --text-soft: #5e4b35;
+  --text-muted: #846847;
+  --accent-red: #a83b1f;
+  --accent-blue: #4a6d8a;
+  --accent-yellow: #c98c1f;
+  --accent-green: #5a7a4c;
+  --border: rgba(61, 46, 31, 0.2);
+  --border-soft: rgba(61, 46, 31, 0.12);
+}
+
+/* Body·global hard-coded → 토큰 기반으로 swap */
+html {
+  background: var(--bg);
+}
+body {
+  background: var(--bg);
+  color: var(--text);
+  transition: background-color 240ms ease, color 240ms ease;
+}
+
+/* Hero 그리드 배경의 베이지 hard-code 제거 */
+.hero {
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--text) 6%, transparent) 1px, transparent 1px),
+    linear-gradient(180deg, color-mix(in srgb, var(--text) 5%, transparent) 1px, transparent 1px),
+    var(--bg);
+}
+
+/* Site nav 글래스 배경을 토큰 기반으로 */
+.site-nav {
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  border-bottom-color: var(--border-soft);
+  color: var(--text-soft);
+}
+
+/* Site footer 다크 톤 */
+.site-footer {
+  background: var(--bg-deep);
+}
+
+/* 다크 테마에서 footer 텍스트 가독성 */
+:root[data-theme='dark'] .site-footer {
+  background: #050608;
+  color: rgba(244, 241, 232, 0.78);
+}
+
+/* Profile panel — 하드코딩 box-shadow를 토큰 기반으로 */
+.profile-panel {
+  background: var(--bg-alt);
+  border-color: var(--text);
+  box-shadow: 18px 18px 0 var(--text);
+}
+:root[data-theme='dark'] .profile-panel {
+  border-color: var(--accent-yellow);
+  box-shadow: 18px 18px 0 var(--accent-yellow);
+}
+
+/* Proof strip 다크 배경 (라이트에서 이미 다크 — 모든 테마 동일) */
+.proof-strip {
+  background: var(--bg-deep);
+  color: var(--bg-alt);
+  border-top-color: var(--bg-deep);
+  border-bottom-color: var(--bg-deep);
+}
+.proof-strip p {
+  color: var(--accent-yellow);
+}
+.proof-strip span {
+  color: color-mix(in srgb, var(--bg-alt) 74%, transparent);
+}
+
+/* Buttons */
+.button-primary {
+  background: var(--text);
+  color: var(--bg-alt);
+  border-color: var(--text);
+}
+.button-secondary {
+  background: var(--bg-alt);
+  color: var(--text);
+  border-color: var(--text);
+}
+
+/* Evidence section / sticky panels in dark */
+:root[data-theme='dark'] .evidence-section {
+  background: #1a1d22;
+}
+:root[data-theme='dark'] .paths-section,
+:root[data-theme='dark'] .logs-section {
+  background: var(--bg-alt);
+}
+:root[data-theme='dark'] .quality-section {
+  background: #1a1d22;
+}
+:root[data-theme='dark'] .case-section {
+  background: var(--bg);
+}
+:root[data-theme='dark'] .contact-section {
+  background: var(--bg-alt);
+}
+
+/* Sepia overrides for hard-coded section backgrounds */
+:root[data-theme='sepia'] .paths-section,
+:root[data-theme='sepia'] .logs-section {
+  background: var(--bg-alt);
+}
+:root[data-theme='sepia'] .evidence-section,
+:root[data-theme='sepia'] .quality-section {
+  background: var(--bg-cool);
+}
+:root[data-theme='sepia'] .case-section,
+:root[data-theme='sepia'] .contact-section {
+  background: var(--bg);
+}
+:root[data-theme='sepia'] .site-footer {
+  background: var(--bg-deep);
+  color: color-mix(in srgb, var(--bg-alt) 82%, transparent);
+}
+
+/* Eyebrow, role, headline 등 직접 색 지정된 텍스트들 */
+.eyebrow {
+  color: var(--accent-red);
+}
+.role {
+  color: var(--accent-blue);
+}
+.headline,
+.summary {
+  /* keep — already inherits from .text via existing rules */
+}
+
+/* Case·log accent in dark/sepia */
+.case-topline,
+.log-date {
+  color: var(--accent-blue);
+}
+.case-meta dt,
+.case-narrative h4 {
+  color: var(--accent-red);
+}
+.case-index {
+  background: var(--bg-deep);
+  color: var(--accent-yellow);
+}
+
+/* Impact box keep dark feel across themes */
+.impact-box {
+  background: var(--bg-deep);
+  color: var(--bg-alt);
+}
+.impact-box svg {
+  color: var(--accent-yellow);
+}
+.impact-box p {
+  color: color-mix(in srgb, var(--bg-alt) 82%, transparent);
+}
+.impact-box small {
+  color: color-mix(in srgb, var(--bg-alt) 62%, transparent);
+}
+
+/* Writing panel (logs-section sticky aside) */
+.writing-panel {
+  background: var(--bg-deep);
+  color: var(--bg-alt);
+}
+.writing-panel .panel-heading h3,
+.writing-panel h4 {
+  color: var(--bg-alt);
+}
+.writing-panel .panel-heading svg,
+.writing-panel span {
+  color: var(--accent-yellow);
+}
+.writing-panel small {
+  color: color-mix(in srgb, var(--bg-alt) 62%, transparent);
+}
+
+/* Borders that referenced rgba(21,23,25,...) */
+.path-card,
+.case-meta div,
+.case-narrative section,
+.evidence-card,
+.principles-panel,
+.writing-panel,
+.log-item,
+.quality-item {
+  border-color: var(--border);
+}
+
+/* Visitor path eyebrow color */
+.path-card p {
+  color: var(--accent-blue);
+}
+
+/* Smooth transition on theme switch */
+.site-nav,
+.profile-panel,
+.path-card,
+.evidence-card,
+.case-card,
+.log-item,
+.quality-item,
+.case-preview-card,
+.note-preview-card,
+.case-card-link,
+.note-card,
+.essay-card,
+.log-item-card,
+.uses-item,
+.reading-list li,
+.cv-timeline li,
+.principle-list li,
+.quality-list li {
+  transition:
+    background-color 200ms ease,
+    border-color 200ms ease,
+    color 200ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
