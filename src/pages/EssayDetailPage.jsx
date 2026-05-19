@@ -25,7 +25,7 @@ function EssayDetailPage() {
   return (
     <article className="page essay-detail">
       <header className="page-header">
-        <p className="eyebrow">Essay · {essay.date}</p>
+        <p className="eyebrow">Essay{essay.readingTime ? ` · ${essay.readingTime}` : ''}</p>
         <h1>{essay.title}</h1>
         {essay.summary ? <p className="page-lead">{essay.summary}</p> : null}
       </header>

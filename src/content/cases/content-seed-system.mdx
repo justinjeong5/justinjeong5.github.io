@@ -1,0 +1,81 @@
+---
+title: 콘텐츠 시드 채우기 — MDX 기반 사이트에 11편 신규 작성
+status: Live
+role: 콘텐츠 작성·메타데이터 표준화·페르소나 검증
+period: 2026.05
+summary: 사이트 인프라 완성 후 빈 콘텐츠 상태에서 Logs 5 + Notes 5 + Essay 1 = 11편을 한 세션에 작성. 3 페르소나 × 12축 quality-gate로 4.04 → 4.59 PASS.
+date: 2026-05-19
+tags: [content, mdx, writing, workflow]
+---
+
+## 문제
+
+라우팅·MDX·디자인·모바일 인프라가 완성됐지만 콘텐츠가 시드 3개뿐. 채용 담당자가 보면 "빈 액자" 인상. 사이트가 살아있다는 신호 부재.
+
+문제는 시간. 본업 8시간 외에 매일 글 쓸 부담은 sustainable 하지 않다. 그렇다고 빈 사이트는 가치 없음.
+
+## 의사결정
+
+### 버린 선택지
+- **자동 생성으로 11편 만들기**: AI 톤 오염, 1인칭 일관성 ↓
+- **본인 의견 전부 직접 작성**: 시간 부담, 한 세션 완료 불가
+- **사이트 publish 미루기**: 인프라가 죽은 상태로 누적
+
+### 채택
+
+**책임 분리**:
+- **Claude가 1차 작성**: 메타 작업·도구·이번 세션 사실 기반 (객관 가능 영역)
+- **사용자가 검토·다듬기**: 1인칭 톤·뉘앙스·결정 이유 (주관 영역)
+- **quality-gate 통과 확인**: 객관 기준으로 ship 여부 결정
+
+## 산출물 (11편)
+
+### Logs 5편 (시간순 cascade — '2026-05-19 13:00 ~ 18:00')
+1. routing-mdx (Phase 1 베이스, 기존 시드)
+2. interactive-phase3 (Cmd+K·키보드·테마)
+3. editorial-modern (Pretendard 도입)
+4. yellow-tone-purge (디자인 quality-gate 3.28→4.44)
+5. mobile-gnb (햄버거 메뉴)
+6. mobile-quality-gate (모바일 QG 2.75→4.75)
+
+### Notes 5편
+- dispatch-routing-pattern (Evergreen)
+- quality-gate-loop (Evergreen)
+- codex-competition (Budding)
+- color-mix-tokens (Seedling)
+- ios-hig-touch-targets (Seedling)
+
+### Essay 1편
+- deterministic-design-loop — "결정론적 디자인 루프로 미적 결정을 객관화하기"
+
+## quality-gate 사이클
+
+| 항목 | C1 | C2 |
+|---|---|---|
+| L1 사실 정확성 | 3 FAIL | **5** |
+| L4 기존 시드 톤 일관성 | 4.2 | 4.5 |
+| N2 growth 단계 적정 | 3 FAIL | **5** |
+| E2 한국어 1인칭 톤 (BLOCKING) | 4 | 4.7 |
+| E3 차별화·기억성 | 4 | 4.7 |
+
+**평균 4.04 → 4.59/5 PASS**
+
+핵심 개선:
+- 사이클 1 L1 (페르소나 수 불일치): essay에 디자인/모바일 사이클 페르소나 수 차이 명시
+- 사이클 1 N2 (growth 단계): plantedAt 당일 노트를 Budding → Seedling 다운그레이드
+- N4 (백링크): dispatch ↔ quality-gate ↔ color-mix 본문 cross-link
+
+## 임팩트
+
+- 빈 사이트 → 11편 콘텐츠로 시각적 가든 살아남
+- frontmatter 스키마 표준화 — 향후 콘텐츠 추가가 데이터 기입만으로 자동 노출
+- 메타 시스템 노출 — Claude Code·dispatch·quality-gate 시스템을 글로 외화
+- 운영 자동화 PoC v1까지 자연 연결
+
+## 회고
+
+빈 인프라는 인프라가 아무리 좋아도 죽은 액자. 핵심 인사이트: **Claude가 잘 하는 영역과 사용자만 할 수 있는 영역 분리**. 메타 작업·이번 세션 사실 = Claude. 본인 의견·뉘앙스 = 사용자.
+
+이 분리가 작동하니 한 세션에 11편 추가가 sustainable.
+
+관련: [/essays/why-not-traditional-resume](/essays/why-not-traditional-resume)

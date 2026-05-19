@@ -1,0 +1,53 @@
+---
+title: dispatch — 의도 기반 AI 라우팅 시스템 구축
+status: Live
+role: 시스템 설계·CLAUDE.md 통합·스킬 작성
+period: 2026.05
+summary: Claude Code의 30+ 스킬 중 매번 사람이 "이건 어떤 스킬"을 결정하는 건 사람 속도. 3 에이전트 병렬 경쟁으로 의도 분석 후 자동 라우팅하는 dispatch 스킬 구축.
+date: 2026-05-19
+tags: [claude, workflow, routing, ai-orchestration]
+---
+
+## 문제
+
+Claude Code에 스킬이 누적되면 매 메시지마다 "이건 `/ship`인가, `/review-changes`인가, 그냥 직접 답할 것인가"를 사람이 결정해야 한다. 30개 스킬 환경에서 이 의사결정 자체가 병목이 된다.
+
+키워드 매칭으로는 부족하다. "PR 만들어줘"는 단순 매칭이지만 "이 변경을 어떻게 마무리하지?"는 맥락 의존이다.
+
+## 의사결정
+
+### 버린 선택지
+
+- **단일 LLM 호출로 결정**: confirmation bias, 단일 시야
+- **하드코딩된 키워드 매칭**: "이 변경을 마무리"처럼 의도가 모호한 경우 처리 불가
+- **사용자가 매번 선택**: 사람 속도, 30+ 스킬 외워야 함
+
+### 채택
+
+- **3 에이전트 병렬 경쟁**: maximizer (토큰 최대), synergist (조합), pragmatist (의도 매칭)
+- **합의/이견 기반 자동 채택**: 만장일치 즉시, 이견 시 점수 공식
+- **ALTERNATIVE_DETECTED 감지**: 옵션 공간 큰 결정엔 /personas 자동 추천
+- **fast route 최적화**: 명확한 단일 매칭은 점수화 생략
+
+## 산출물
+
+- `~/.claude/skills/dispatch/SKILL.md` — 스킬 정의
+- `references/skill-registry.md` — 모든 스킬 분류
+- 점수 공식: `Fit×0.30 + Outcome×0.20 + Token×0.20 + Synergy×0.20 + Depth×0.10`
+- CLAUDE.md 제0원칙으로 통합 — 모든 COMPETE 메시지는 dispatch 거침
+- 오늘 세션에서 약 15+ 회 호출, 모두 적정 스킬 매칭
+
+## 임팩트
+
+- **사람 결정 부담 ↓**: 30+ 스킬에서 매번 선택 → dispatch가 자동
+- **의도 보존**: 키워드 매칭이 못 잡는 "이 변경을 마무리" 같은 맥락 의존 케이스 처리
+- **체인 시너지 발견**: 오늘 자동화 PoC에서 dispatch가 `personas → quality-gate` 체인을 자동 채택, 단일 사고로는 도달 어려운 결론 도출
+- **메타 시스템 자산화**: 한 번 만들고 모든 후속 세션에 재사용 가능
+
+## 회고
+
+처음엔 "그냥 매번 결정하지 뭐" 직관이 강했다. 만들고 보니 의사결정 부담의 비선형 감소가 명확하다. 도구 자체가 다른 도구를 부르는 메타 시스템이 가장 큰 가치.
+
+함정: dispatch가 자기 자신을 추천하는 무한 루프 → 명시적 금지 규칙으로 방지.
+
+관련: [/notes/dispatch-routing-pattern](/notes/dispatch-routing-pattern)

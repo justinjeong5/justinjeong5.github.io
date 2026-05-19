@@ -24,10 +24,9 @@ function EssaysPage() {
               <Link to={ROUTES.essayDetail(essay.slug)} className="essay-card">
                 <h2>{essay.title}</h2>
                 <p>{essay.summary}</p>
-                <span className="meta">
-                  {essay.date}
-                  {essay.readingTime ? ` · ${essay.readingTime}` : null}
-                </span>
+                {essay.readingTime ? (
+                  <span className="meta">{essay.readingTime}</span>
+                ) : null}
                 <span className="see-detail">
                   읽기 <ArrowUpRight size={14} aria-hidden="true" />
                 </span>

@@ -1,0 +1,65 @@
+---
+title: 일일 콘텐츠 자동화 PoC 설계 — personas + quality-gate 체인 적용
+status: Building
+role: 시스템 설계·페르소나 토론·보안 검토 통합
+period: 2026.05
+summary: 매일 Claude/Codex 대화에서 사이트 콘텐츠를 자동 추출하는 시스템 PoC를 4 페르소나로 평가. PLAN이 BLOCKING 2개 FAIL → v1 시연 + v2 운영 분리로 페르소나 충돌 해결.
+date: 2026-05-19
+tags: [automation, workflow, security, design-process]
+---
+
+## 문제
+
+매일 8시간 Claude·Codex와 대화하면서 가치 있는 인사이트·작업 기록이 휘발된다. 손으로 정리하면 시간 부담, 안 정리하면 자산화 누락.
+
+해법으로 일일 콘텐츠 자동 추출 시스템을 생각했다. 그런데 "자동 발행"은 회사 NDA·credentials 유출 위험이 영구적이다.
+
+## 의사결정
+
+### 옵션 공간 (4축)
+- TRIGGER: manual / hook / cron / hybrid
+- AUTOMATION_LEVEL: L0(제안만) ~ L3(자동 발행)
+- DATA: raw / cache / MCP / hook-extract
+- SECURITY: redaction / 사용자 검토 / allowlist / private-promote
+
+### 4 페르소나 토론
+
+- **SWE**: D/L1/B/D. Hidden complexity = Codex transcript 정규화
+- **법무**: D/L1/D/A. "L3 + 자동 redaction은 one-way door, 절대 금지"
+- **콘텐츠 전략가**: C/L1/B/B. "자동화는 글 더 많이 쓰게 하는 도구가 아니라 쓸 만한 순간 놓치지 않게 하는 알람"
+- **운영 사용자(본인)**: C/L2/B/B. **지속률 35%**, **"가장 두려운 건 회사 정보 유출 1건"**
+
+### quality-gate 평가
+- 6축 rubric → 평균 **2.5/5 FAIL** (BLOCKING G1·G2 FAIL)
+- 법무: "현 PLAN으로 publish 진행 절대 금지"
+
+### v1/v2 분리 결정
+
+페르소나 충돌(법무 강함 vs 사용자 의도 빠른 PoC)을 해결하는 키:
+- **v1**: 1회 시연 dry-run — 즉시 가능
+- **v2**: 4주 dry-run + 2주 publish — 보수적, 사용자 결정 후
+
+v1만 quality-gate **4.33/5 PASS**.
+
+## 산출물
+
+- v1 시연: `.cache/daily/2026-05-19.mdx` (publish 차단)
+- 콘텐츠 후보 2개 추출 (Log + Note) — 둘 다 정식 promote
+- `SESSION.md` (v2 인계 컨텍스트)
+- `scripts/daily-log/` 베이스 디렉토리 + README
+- 데이터 소스 위치 확정: Claude `~/.claude/projects/`, Codex `~/.codex/sessions/`
+
+## 임팩트
+
+- **거버넌스 부담 가시화**: 자동화 본 코딩 1주 vs 보안 검증 dry-run 4주 → 1:4 비율
+- **페르소나 충돌 해결 패턴**: scope를 v1(시연)/v2(운영)로 분리 → 단일 PoC 정의로는 통과 불가
+- **본인 페르소나의 BLOCKING 발견**: 외부 페르소나는 기능적 위험, 본인은 지속 가능성
+
+## 다음 보강
+
+v2 진입 시:
+- Phase 1: Source Adapter (Claude + Codex 정규화)
+- Phase 3: 보안 게이트 7개 구현
+- Phase 6: 4주 dry-run 운영 + false negative율 측정
+
+관련: [/notes/automation-vs-governance](/notes/automation-vs-governance), [/essays/automation-doesnt-reduce-work](/essays/automation-doesnt-reduce-work)
