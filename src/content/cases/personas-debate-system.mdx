@@ -1,0 +1,59 @@
+---
+title: personas — 4 페르소나 토론으로 자동화 PoC 옵션 결정
+status: Live
+role: 의사결정 시스템·트레이드오프 분석·페르소나 설계
+period: 2026.05
+summary: 옵션 공간이 큰 결정은 단일 사고로 한계. 4 페르소나 병렬 토론(SWE·법무·콘텐츠·운영) + 트레이드오프 모델(One-way Door, Essential Complexity 등) 적용으로 자동화 PoC 4축 결정.
+date: 2026-05-19
+tags: [decision-making, workflow, ai, tradeoff]
+---
+
+## 문제
+
+자동화 시스템 PoC 설계에 4축 × 4 옵션 = 16개 조합 옵션 공간. 단일 사고로 모든 트레이드오프를 보지 못함. 보안 검토자 시각 + 운영 사용자 시각 + 콘텐츠 전략가 시각이 동시에 필요했다.
+
+또 같은 모델(Claude)이 4축을 한 번에 답하면 confirmation bias. 시각 분리가 필요.
+
+## 의사결정
+
+### 버린 선택지
+- **단일 LLM에 옵션 비교 요청**: 같은 시야, bias 누적
+- **사용자 직접 토론**: 시간 부담 + 페르소나 충실도 ↓
+- **외부 자문 인터뷰**: 즉시성 ↓
+
+### 채택
+- **4 페르소나를 별도 Agent로 병렬 스폰**: 시야 강제 분리
+- **트레이드오프 모델 사전 적용** (One-way/Two-way Door, Essential/Accidental Complexity, Innovation/Stability)
+- **JSON 출력 표준화**: 각 페르소나가 같은 형식으로 답해 비교 가능
+
+## 산출물
+
+### 4 페르소나 토론 결과
+- **시니어 자동화 SWE**: TRIGGER D, L1, B, D. Hidden complexity = Codex transcript 정규화
+- **개인정보·보안 검토자**: D, L1, D, A. "L3 + 자동 redaction은 one-way door 절대 금지"
+- **콘텐츠 전략가**: C, L1, B, B. "자동화는 글 더 쓰게 하는 게 아니라 쓸 만한 순간 놓치지 않게 하는 알람"
+- **운영 부담 사용자(본인)**: C, L2, B, B. **지속률 35%**, **"가장 두려운 건 회사 정보 유출 1건"**
+
+### 충돌 해결 패턴
+페르소나 합의가 어려운 축은 강제 합의 X. 그대로 노출 → quality-gate가 객관 측정.
+
+### 최종 PLAN
+- TRIGGER: Manual (`/daily-log`) + 향후 hybrid 어댑터
+- AUTOMATION_LEVEL: L1 (만장일치)
+- DATA: B+D 하이브리드 (.cache + 명시 promote)
+- SECURITY: D 구조 + A 다중 게이트
+
+## 임팩트
+
+- **단일 사고 함정 해소**: 보안 BLOCKING (운영자 본인이 미처 못 본 7개 시나리오) 자동 노출
+- **PoC scope 분리 패턴**: v1(시연) + v2(운영) 분리는 페르소나 충돌이 강제로 만든 결론
+- **본인 페르소나의 가치**: 외부 페르소나 N명이 못 짚는 지속 가능성 BLOCKING 발견 (가장 솔직한 35%)
+- **트레이드오프 모델 정착**: 결정 시 매번 "One-way인가 Two-way인가" 자문 자동화
+
+## 회고
+
+페르소나 토론의 진짜 가치는 **시야의 차이를 강제로 노출**하는 것. 같은 사람이 4역할 다 하면 무의식적으로 한쪽 시야로 수렴한다. Agent 4개로 분리하면 시야가 진짜로 다르다.
+
+본인 페르소나를 포함하는 게 핵심 — 외부 페르소나가 "기능적 위험"만 보고, 본인은 "지속 가능성"을 본다. 둘 다 필요.
+
+관련: [/notes/self-persona-evaluation](/notes/self-persona-evaluation), [/notes/one-way-two-way-door](/notes/one-way-two-way-door), [/essays/self-persona-blocking](/essays/self-persona-blocking)

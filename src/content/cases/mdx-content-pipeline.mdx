@@ -1,0 +1,69 @@
+---
+title: MDX + Vite 콘텐츠 파이프라인 — 파일 추가만으로 사이트가 확장
+status: Live
+role: 빌드 시스템·콘텐츠 아키텍처·라우팅 설계
+period: 2026.05
+summary: 콘텐츠 한 개 = MDX 파일 한 개. import.meta.glob으로 자동 인덱싱. 컴포넌트/라우팅 수정 없이 새 글이 라우트에 등장하는 정적 사이트 베이스.
+date: 2026-05-19
+tags: [frontend, mdx, vite, content-architecture, react]
+---
+
+## 문제
+
+6년 전 단일 LandingPage 구조. 콘텐츠 추가 = 컴포넌트 수정 = JSX/CSS 변경. 매번 코드 수정해야 글 하나 올림. 시간 비용 ↑ + 글쓰기 진입 장벽 ↑.
+
+기존 SaaS 블로그 솔루션은 본인 정체성을 못 살리고, Next.js 같은 SSG는 GitHub Pages에서 빌드 복잡. 가볍게 가야 했다.
+
+## 의사결정
+
+### 옵션 비교
+
+| 옵션 | 빌드 복잡도 | 콘텐츠 추가 부담 | GitHub Pages 호환 |
+|---|---|---|---|
+| Notion + Headless | 낮음 | 낮음 | 어려움 |
+| Next.js SSG | 높음 | 낮음 | 가능 |
+| Vite + MDX | 낮음 | **매우 낮음** | 자연 |
+| Astro | 중간 | 낮음 | 자연 |
+
+### 채택: Vite 8 + @mdx-js/rollup + remark plugins
+- 콘텐츠 = MDX 파일 + frontmatter
+- `import.meta.glob('../content/notes/*.mdx', { eager: true })`로 자동 인덱싱
+- frontmatter `name: 'frontmatter'`로 export 자동 변환
+- BrowserRouter + 13 라우트, 404.html SPA fallback으로 GitHub Pages 라우팅
+
+## 산출물
+
+```
+src/content/
+├── cases/      *.mdx (frontmatter: status·role·period·summary·date·tags)
+├── notes/      *.mdx (growth·topics·plantedAt·lastTendedAt)
+├── essays/     *.mdx (date·summary·readingTime·status)
+└── logs/       *.mdx (date·type·title·summary)
+
+src/lib/content.js: import.meta.glob → getAllCases·getNote·getAllLogs 헬퍼
+```
+
+콘텐츠 추가 워크플로우:
+1. `src/content/notes/new-note.mdx` 생성
+2. frontmatter 작성
+3. 본문 markdown + 필요 시 React 컴포넌트 임베드
+4. 끝. 라우팅·인덱스 수정 0건.
+
+## 임팩트
+
+- 오늘 세션 한 번에 콘텐츠 17개+ 추가 (Logs 6·Notes 11·Essays 4·Cases 7) — 빌드 시 자동 인덱싱
+- 빌드 시간 ~500ms (콘텐츠 30개+ 환경에서도)
+- 본문에 React 컴포넌트 임베드 가능 — 차트·인터랙티브 도식 향후 확장
+- frontmatter 스키마 표준화로 검색·정렬·필터 자동
+
+## 한계 / 다음 보강
+
+- 콘텐츠 1000+ 시 빌드 타임 증가 → 그 시점에 Astro 또는 vite-ssg
+- HMR에서 frontmatter 변경 시 stale cache 가끔 — 페이지 새로고침
+- MDX 본문에 컴포넌트 너무 많으면 글쓰기 부담 → 재사용 컴포넌트 5-7개로 한정
+
+## 회고
+
+**콘텐츠 = 파일** 이 패턴이 가장 큰 가치. 글쓰기 진입 장벽이 "마크다운 + frontmatter"로 줄어드니 사이트가 진짜로 자란다. 인프라가 콘텐츠 작성 자체를 권유하는 구조.
+
+관련: [/notes/mdx-content-as-files](/notes/mdx-content-as-files), [/notes/github-pages-spa-fallback](/notes/github-pages-spa-fallback)

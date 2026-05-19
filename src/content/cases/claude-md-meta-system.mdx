@@ -1,0 +1,62 @@
+---
+title: CLAUDE.md 제0원칙 — 모든 메시지를 dispatch로 강제 라우팅하는 메타 시스템
+status: Live
+role: AI 워크플로우 설계·시스템 프롬프트·결정론적 루프
+period: 2026.04~05
+summary: 사용자 메시지마다 "어떤 처리 패턴이 적합한지"를 사람이 매번 결정하는 게 병목. dispatch 라우팅을 CLAUDE.md 제0원칙으로 박아 모든 COMPETE 메시지 자동 매칭.
+date: 2026-05-19
+tags: [claude, workflow, ai-orchestration, system-design]
+---
+
+## 문제
+
+Claude Code에 스킬 30+가 누적되면 사용자가 매번 "이건 어떤 스킬?"을 결정해야 한다. 결정 자체가 인지 부담 + 잘못된 스킬 선택 시 시간 낭비.
+
+다른 측면: 매 메시지마다 "결정론적 루프 검증", "Codex 경쟁", "옵션 비교" 같은 메타 패턴을 사람이 일일이 적용하는 건 사람 속도.
+
+해법은 **시스템 프롬프트 자체에 워크플로우를 박는 것**.
+
+## 의사결정
+
+### 버린 선택지
+- 매 메시지 시작에 "이건 어떤 패턴" 명시 — 매번 부담
+- 스킬마다 별도 trigger 키워드 — 키워드 매칭 한계
+- 시스템 자체 제어 안 함 — 일관성 ↓
+
+### 채택
+CLAUDE.md(글로벌 + 프로젝트)에 **제0~4원칙** 정의:
+
+- **제0원칙**: 강제 라우팅 (모든 메시지 → dispatch)
+- **제1원칙**: 결정론적 루프 (사람 개입 없이 검증 가능)
+- **제2원칙**: Always v1.0 + Graduated Autonomy
+- **제3원칙**: 에이전트·Codex 적극 활용
+- **제4원칙**: 깊이 우선 사고
+
+## 산출물
+
+- `~/.claude/CLAUDE.md` — 글로벌 원칙 (110+ 줄)
+- 우선순위 규칙: 🔀 라우팅 > output style > 작업 인터뷰 > 에이전트 직접 스폰
+- 모든 응답 첫 줄에 라우팅 분류 강제: `🔀 [PASS|DIRECT|COMPETE] → [스킬명 또는 "직접 응답"]`
+- Code Practice 영구 적용: 바퀴 재발명 금지, 컨벤션 준수, 셀프 리뷰, Codex 전면 경쟁
+- 자산화 (Proactive): 반복 작업 → 자동화 후보, non-trivial 해결 → debugging.md
+
+## 임팩트
+
+- 오늘 세션 30+회 dispatch 호출, 모두 자동 라우팅 (사용자가 스킬명 입력 0회)
+- 5번의 quality-gate, 1번의 personas가 dispatch 추천으로 자연 발화
+- "Codex 전면 경쟁" 규칙으로 작업 빠짐 0건 (사용자 명시 시 예외)
+- compact 내성 — SESSION.md 자동 복원 hook 통합
+
+## 한계 / 보강
+
+- 제0원칙 강제가 단순 확인 응답("네")까지 dispatch 보내면 비효율 → PASS 분류로 분리
+- dispatch 자기 자신 추천 무한 루프 위험 → 명시적 금지
+- 새 스킬 추가 시 dispatch가 못 알면 무력 → skill-registry.md 갱신 워크플로우
+
+## 회고
+
+**원칙은 시스템 프롬프트에 박혀야 항상 동작한다.** 메시지마다 "이번에도 이 원칙 따라줘"라고 말하는 건 사람 속도. 한 번 박아두면 무한히 재사용.
+
+가장 큰 가치: 원칙 자체가 도구를 부르고, 도구가 또 도구를 부르는 **메타 시스템의 자기 강화**. 한 세션이 끝나면 다음 세션에 더 잘 동작한다 (memory 자동 갱신).
+
+관련: [/cases/dispatch-routing-system](/cases/dispatch-routing-system), [/notes/dispatch-routing-pattern](/notes/dispatch-routing-pattern)

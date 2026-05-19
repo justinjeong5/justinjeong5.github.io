@@ -1,0 +1,65 @@
+---
+title: 인터랙티브 레이어 — Cmd+K 검색·키보드 단축키·다크 테마
+status: Live
+role: UX 설계·키보드 인터랙션·접근성·상태 관리
+period: 2026.05
+summary: 정적 사이트에 SaaS 수준 인터랙션 도입. Fuse.js로 글로벌 검색, 키보드 단축키(?·/·g h/c/n·T), 라이트/다크 테마 토글, inert 패턴으로 모달 focus 격리.
+date: 2026-05-19
+tags: [interaction, accessibility, react, ux]
+---
+
+## 문제
+
+미니멀 정적 사이트의 함정: "디자인은 깔끔한데 죽어 보임". 인터랙션 없는 사이트는 첫 진입 후 다른 페이지로 이동할 동기가 약하다.
+
+사용자 요구: "톤은 인터랙티브 좋아". 그러나 3D·게임화 같은 풀 인터랙티브는 미니멀 톤과 충돌.
+
+## 의사결정
+
+### 인터랙션 레벨 분류
+- **레벨 1**: 호버 효과, 부드러운 스크롤만 (가벼움)
+- **레벨 2: Living Site** ⭐ — Cmd+K 검색, 키보드 단축키, 테마 토글
+- **레벨 3**: 풀 3D·게임화 (미니멀 톤과 충돌)
+
+### 채택: 레벨 2
+- 인터랙션이 "정보 구조·반응"으로 나타남
+- 미니멀 베이스 보존
+- 키보드 first 사용자 친화
+
+## 산출물
+
+### 글로벌 검색 (Cmd+K)
+- `lib/search.js` — Fuse.js 인덱스 (cases·notes·essays·logs 통합)
+- `CommandPalette.jsx` — ↑↓ Enter 키보드 네비, 결과 그룹별 표시
+- 모바일 input: `inputMode="search" autoCorrect="off" autoCapitalize="off" enterKeyHint="search"`
+
+### 키보드 단축키 (`GlobalShortcuts.jsx`)
+- `?` — 도움말 모달
+- `/` 또는 `⌘K` — 검색
+- `T` — 테마 토글 (라이트 ↔ 다크)
+- `g h/c/n/e/l/a/u/w/r/v` — 페이지 점프 시퀀스 (1200ms idle timeout)
+
+### 다크 테마 시스템
+- `UIProvider` (`lib/ui-context.jsx`) — localStorage 영속 + prefers-color-scheme 추정
+- `data-theme` HTML attribute로 토큰 swap
+- `color-scheme: dark`로 form·scrollbar 자동 적응
+
+### 모달 접근성 (inert 패턴)
+- 3 모달(Palette/Help/MobileMenu) 모두 `previouslyFocused` 캐시 + 닫힘 시 trigger focus 복귀
+- `inert` 속성으로 background subtree 비활성화 (focus trap 라이브러리 대체)
+- `:focus-visible` 글로벌 outline + `prefers-reduced-motion` 가드
+
+## 임팩트
+
+- 정적 사이트에 SaaS급 인터랙션 (검색 7KB Fuse.js + 키보드 단축키 ~3KB)
+- WCAG 2.2 1.4.13/2.4.7/2.4.11 + APG dialog 패턴 충족
+- 모바일은 햄버거 메뉴 자동 전환 (`@media (max-width: 720px)`)
+- "키보드만으로 사이트 전체 탐색 가능" — 키보드 사용자 친화
+
+## 회부
+
+가장 강한 인터랙션은 화려한 애니메이션이 아니라 **반응 속도 + 키보드 first**. Cmd+K 한 번에 모든 콘텐츠 도달 가능하면 사이트가 살아있게 느껴진다.
+
+함정: 모달이 background focus를 trap 안 하면 Tab이 새어나간다. 가장 흔한 사고. inert 속성이 표준 API로 해결.
+
+관련: [/notes/fuse-client-side-search](/notes/fuse-client-side-search), [/notes/css-color-scheme-native](/notes/css-color-scheme-native)
