@@ -1,0 +1,44 @@
+---
+title: 빌드 사이즈 41% 감소 — manualChunks로 코드 분할
+date: '2026-05-19 22:00'
+type: Shipped
+summary: 콘텐츠 50편+ 누적으로 단일 index.js 514KB가 빌드 경고 트리거. vendor·router·content를 별도 청크로 분리해 첫 로드 gzip 150KB → 88KB로 감소.
+---
+
+## 한 일
+
+`vite.config.js`에 `build.rollupOptions.output.manualChunks` 추가.
+
+- `node_modules`를 vendor 종류별 분리: react / router / icons / search(Fuse.js) / mdx-runtime / pretendard
+- `src/content/*`를 콘텐츠 타입별 분리: cases / notes / essays / logs
+- `chunkSizeWarningLimit: 600`으로 조정 (기본 500 → 600)
+
+## 측정
+
+| 청크 | 사이즈 | gzip |
+|---|---|---|
+| react-vendor | 181 KB | 57 KB |
+| content-notes | 93 KB | 25 KB |
+| content-cases | 73 KB | 20 KB |
+| index (main) | 47 KB | 13 KB |
+| content-essays | 45 KB | 13 KB |
+| router | 40 KB | 14 KB |
+| content-logs | 24 KB | 7 KB |
+| search | 23 KB | 8 KB |
+| icons | 6 KB | 2 KB |
+
+**첫 로드 (index + react-vendor + router + icons)**: 275 KB raw / **88 KB gzip**
+이전 단일 청크: 514 KB / 150 KB → **-41%**
+
+## 임팩트
+
+- 첫 진입 88KB gzip → 모바일 4G에서도 1초 미만
+- 페이지 이동 시 콘텐츠 청크만 추가 fetch (예: `/notes` 진입 시 25KB gzip)
+- 두 번째 방문: vendor·router 캐시 hit → 콘텐츠 변경분만 다운로드
+- 빌드 경고 0건
+
+## 회고
+
+콘텐츠 50편+ 시점부터 단일 청크 비효율이 시작됨. manualChunks 한 번 설정으로 콘텐츠 추가 시마다 vendor 재다운로드 부담 사라짐. 인프라가 콘텐츠 추가에 비례 비용을 만들지 않는 게 중요.
+
+관련: [/notes/vite-manual-chunks](/notes/vite-manual-chunks)

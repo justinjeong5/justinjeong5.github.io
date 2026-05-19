@@ -1,0 +1,65 @@
+---
+title: vite manualChunks — vendor와 콘텐츠를 분리해 캐시 효율 ↑
+growth: Seedling
+topics: [build, vite, performance, frontend]
+summary: 단일 청크는 작은 콘텐츠 변경에도 전체 재다운로드. vendor(거의 안 바뀜) + 콘텐츠(자주 바뀜) 분리하면 캐시 hit 비율 ↑, 첫 로드도 줄어든다.
+plantedAt: 2026-05-19
+lastTendedAt: 2026-05-19
+---
+
+## 문제
+
+Vite 기본 빌드는 모든 코드를 단일 `index.js`에 번들. 라이브러리·내 코드·콘텐츠가 한 청크. 콘텐츠 한 편 추가 시 전체 청크 해시 변경 → 사용자가 vendor까지 재다운로드.
+
+콘텐츠 누적량이 50편+ 되면 빌드 경고 (기본 500KB chunkSizeWarningLimit) 트리거.
+
+## 해법 — manualChunks
+
+```js
+build: {
+  rollupOptions: {
+    output: {
+      manualChunks(id) {
+        if (id.includes('node_modules')) {
+          if (id.includes('react-router')) return 'router';
+          if (id.includes('react-dom') || id.includes('/react/')) return 'react-vendor';
+          if (id.includes('lucide-react')) return 'icons';
+          if (id.includes('fuse.js')) return 'search';
+          return 'vendor';
+        }
+        if (id.includes('/src/content/cases/')) return 'content-cases';
+        if (id.includes('/src/content/notes/')) return 'content-notes';
+        if (id.includes('/src/content/essays/')) return 'content-essays';
+      },
+    },
+  },
+  chunkSizeWarningLimit: 600,
+}
+```
+
+청크 분리 효과:
+- **vendor**: react·router·icons 등 거의 안 바뀜 → 브라우저 cache 잘 됨
+- **콘텐츠**: 자주 바뀌지만 작음 → 변경분만 invalidate
+
+## 분리 기준
+
+1. **변경 빈도**: 자주 바뀌는 것과 안 바뀌는 것 분리
+2. **사이즈**: 매우 큰 라이브러리는 별도 (React 181KB → react-vendor)
+3. **사용 빈도**: 첫 로드에 필요한 것과 lazy fetch 가능한 것 분리
+
+## 효과 (실측)
+
+이 사이트 적용 결과:
+- 첫 로드 raw 514KB → 275KB (-46%)
+- 첫 로드 gzip 150KB → 88KB (-41%)
+- 콘텐츠 한 편 추가 시 vendor 재다운로드 0
+
+## 함정
+
+- **manualChunks가 너무 미세하면 HTTP 요청 비용 ↑**: HTTP/2 환경이라도 청크 50+ 는 비효율. 의미 단위로 10개 정도가 적정.
+- **vendor 청크가 작으면 분리 가치 ↓**: 5KB 라이브러리는 main에 합치는 게 효율적.
+- **콘텐츠 청크가 라우트와 매핑 안 되면 무의미**: `/cases` 진입 시 content-cases만 받게 라우팅 일치 필요.
+
+## 핵심
+
+> 단일 청크는 콘텐츠 추가 비용이 누적된다. vendor 분리 한 줄로 캐시 hit 비율이 비선형으로 올라간다.
