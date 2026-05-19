@@ -39,13 +39,20 @@ function CommandPalette() {
 
   useEffect(() => {
     if (!paletteOpen) return undefined;
+    const previouslyFocused = document.activeElement;
     setQuery('');
     setActiveIdx(0);
     document.body.style.overflow = 'hidden';
+    const bg = Array.from(
+      document.querySelectorAll('body > #root > *:not(.modal-overlay)'),
+    );
+    bg.forEach((el) => el.setAttribute('inert', ''));
     const id = window.requestAnimationFrame(() => inputRef.current?.focus());
     return () => {
       document.body.style.overflow = '';
       window.cancelAnimationFrame(id);
+      bg.forEach((el) => el.removeAttribute('inert'));
+      previouslyFocused?.focus?.();
     };
   }, [paletteOpen]);
 
@@ -110,6 +117,10 @@ function CommandPalette() {
             aria-label="검색어"
             spellCheck="false"
             autoComplete="off"
+            autoCorrect="off"
+            autoCapitalize="off"
+            inputMode="search"
+            enterKeyHint="search"
           />
           <button type="button" className="icon-button" onClick={closePalette} aria-label="닫기">
             <X size={18} aria-hidden="true" />

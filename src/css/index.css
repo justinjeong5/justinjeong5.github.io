@@ -33,6 +33,7 @@
 
 * {
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
 html {
@@ -42,7 +43,12 @@ html {
 body {
   margin: 0;
   min-width: 320px;
+  min-height: 100dvh;
   background: var(--bg);
+  overflow-x: hidden;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  -webkit-text-size-adjust: 100%;
 }
 
 a {
@@ -51,7 +57,41 @@ a {
 }
 
 main {
-  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-red);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media (hover: none) {
+  .case-preview-card:hover,
+  .note-preview-card:hover,
+  .case-card-link:hover,
+  .note-card:hover,
+  .essay-card:hover,
+  .path-card:hover,
+  .hero-proof-card:hover,
+  .case-card:hover {
+    transform: none;
+    border-color: var(--border);
+  }
 }
 
 .site-nav {
@@ -73,8 +113,8 @@ main {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   border: 1px solid var(--text);
   border-radius: var(--radius);
   background: var(--text);
@@ -861,12 +901,7 @@ h1 {
 @media (max-width: 720px) {
   .site-nav {
     min-height: 64px;
-    padding: 10px 16px;
-  }
-
-  .brand {
-    width: 40px;
-    height: 40px;
+    padding: 10px 14px;
   }
 
   .site-nav nav {
@@ -887,10 +922,6 @@ h1 {
 
   .hero {
     padding-top: 52px;
-  }
-
-  h1 {
-    font-size: clamp(3.4rem, 22vw, 5.4rem);
   }
 
   .hero-actions,

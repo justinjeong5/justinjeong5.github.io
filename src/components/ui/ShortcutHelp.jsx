@@ -32,9 +32,16 @@ function ShortcutHelp() {
 
   useEffect(() => {
     if (!helpOpen) return undefined;
+    const previouslyFocused = document.activeElement;
     document.body.style.overflow = 'hidden';
+    const bg = Array.from(
+      document.querySelectorAll('body > #root > *:not(.modal-overlay)'),
+    );
+    bg.forEach((el) => el.setAttribute('inert', ''));
     return () => {
       document.body.style.overflow = '';
+      bg.forEach((el) => el.removeAttribute('inert'));
+      previouslyFocused?.focus?.();
     };
   }, [helpOpen]);
 

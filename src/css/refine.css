@@ -90,7 +90,7 @@ h1 {
 
 /* ---------- Buttons ---------- */
 .button {
-  min-height: 42px;
+  min-height: 44px;
   padding: 10px 18px;
   font-size: 0.92rem;
   font-weight: 600;
@@ -396,11 +396,45 @@ h1 {
 
 /* ---------- Mobile spacing ---------- */
 @media (max-width: 720px) {
+  /* 모바일: profile-panel 자체를 첫 화면에서 제거하여 핵심 메시지·heroProof·Paths 우선 노출.
+     같은 정보(요즘 집중)는 /about·heroProof에 존재. */
+  .profile-panel {
+    display: none;
+  }
+
   .hero {
-    padding-top: 64px;
-    padding-bottom: 56px;
+    padding-top: 56px;
+    padding-bottom: 48px;
+    gap: 32px;
   }
   h1 {
-    font-size: clamp(2.4rem, 14vw, 3.4rem);
+    font-size: clamp(2.4rem, 11vw, 3.4rem);
+    letter-spacing: -0.025em;
+  }
+  .headline {
+    font-size: clamp(1.25rem, 5vw, 1.6rem);
+  }
+  .hero-actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .hero-actions .button {
+    flex: 1 1 auto;
+    min-width: 140px;
+  }
+  .featured-section,
+  .featured-section-alt {
+    padding-top: 56px;
+    padding-bottom: 56px;
+  }
+  .see-all-link {
+    min-height: 44px;
+    padding: 10px 0;
+  }
+  .case-meta {
+    grid-template-columns: 1fr !important;
+  }
+  .page-header h1 {
+    font-size: clamp(1.8rem, 7vw, 2.4rem);
   }
 }

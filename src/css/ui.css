@@ -13,8 +13,8 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  height: 38px;
-  padding: 0 12px;
+  height: 44px;
+  padding: 0 14px;
   border: 1px solid var(--border);
   border-radius: var(--radius);
   background: var(--bg-alt);
@@ -42,8 +42,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 38px;
-  height: 38px;
+  width: 44px;
+  height: 44px;
   border: 1px solid var(--border);
   border-radius: var(--radius);
   background: var(--bg-alt);
@@ -66,7 +66,7 @@
     display: none;
   }
   .search-trigger {
-    width: 38px;
+    width: 44px;
     padding: 0;
     justify-content: center;
   }
@@ -98,6 +98,7 @@
   z-index: 100;
   background: color-mix(in srgb, var(--bg-deep) 50%, transparent);
   backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   animation: overlay-in 200ms ease;
 }
 .mobile-menu {
@@ -173,12 +174,14 @@
   padding: clamp(36px, 8vh, 96px) 16px;
   background: color-mix(in srgb, var(--bg-deep) 50%, transparent);
   backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   animation: overlay-in 160ms ease;
 }
 .modal-card {
   width: 100%;
   max-width: 640px;
-  max-height: calc(100vh - 80px);
+  max-height: calc(100dvh - 80px);
+  overscroll-behavior: contain;
   border: 1px solid var(--border);
   border-radius: 12px;
   background: var(--bg-alt);

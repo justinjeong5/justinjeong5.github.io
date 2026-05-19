@@ -38,6 +38,8 @@ body {
   background: color-mix(in srgb, var(--bg) 88%, transparent);
   border-bottom-color: var(--border);
   color: var(--text-soft);
+  -webkit-backdrop-filter: blur(16px);
+  padding-top: max(14px, env(safe-area-inset-top));
 }
 
 /* Site footer */
@@ -45,6 +47,7 @@ body {
   background: var(--bg-alt);
   color: var(--text-muted);
   border-top: 1px solid var(--border);
+  padding-bottom: max(24px, env(safe-area-inset-bottom));
 }
 :root[data-theme='dark'] .site-footer {
   background: var(--bg-deep);

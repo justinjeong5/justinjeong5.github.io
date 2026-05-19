@@ -31,9 +31,12 @@ function LogsPage() {
                 <h2>{log.title}</h2>
                 <p>{log.summary}</p>
                 {Component ? (
-                  <div className="prose log-body">
-                    <Component />
-                  </div>
+                  <details className="log-body-toggle">
+                    <summary>자세히</summary>
+                    <div className="prose log-body">
+                      <Component />
+                    </div>
+                  </details>
                 ) : null}
               </li>
             );

@@ -16,7 +16,12 @@ function MobileMenu() {
 
   useEffect(() => {
     if (!menuOpen) return undefined;
+    const previouslyFocused = document.activeElement;
     document.body.style.overflow = 'hidden';
+    const bg = Array.from(
+      document.querySelectorAll('body > #root > *:not(.mobile-menu-overlay)'),
+    );
+    bg.forEach((el) => el.setAttribute('inert', ''));
     function handler(event) {
       if (event.key === 'Escape') closeMenu();
     }
@@ -24,6 +29,8 @@ function MobileMenu() {
     return () => {
       document.body.style.overflow = '';
       window.removeEventListener('keydown', handler);
+      bg.forEach((el) => el.removeAttribute('inert'));
+      previouslyFocused?.focus?.();
     };
   }, [menuOpen, closeMenu]);
 
