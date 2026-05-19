@@ -1,0 +1,48 @@
+---
+title: 자동화 PoC PLAN 설계 — personas + quality-gate 체인
+date: '2026-05-19 21:00'
+type: Building
+summary: 4 페르소나 토론으로 자동화 시스템 옵션 4축 결정. quality-gate PLAN 평가에서 BLOCKING 2개 FAIL → v1 시연 + v2 운영 분리로 scope 재조정.
+---
+
+## 한 일
+
+콘텐츠 자동 채우기 시스템 PoC PLAN을 설계했다. dispatch가 `[ALTERNATIVE_DETECTED]`를 감지해 `personas → quality-gate` 체인을 만장일치로 채택.
+
+### personas 토론 (4 페르소나)
+
+옵션 공간 4축:
+- TRIGGER: manual / hook / cron / hybrid
+- AUTOMATION_LEVEL: L0~L3
+- DATA: raw / cache / MCP / hook-extract
+- SECURITY: redaction / 사용자 검토 / allowlist / private-promote
+
+페르소나마다 동일 4축에 다른 선택:
+- **시니어 자동화 SWE**: D/L1/B/D. Hidden complexity = Codex transcript 정규화
+- **개인정보·보안 검토자**: D/L1/D/A. "L3 + 자동 redaction은 one-way door, 절대 금지"
+- **콘텐츠 전략가**: C/L1/B/B. "자동화는 글 더 많이 쓰게 하는 도구가 아니라 쓸 만한 순간 놓치지 않게 하는 알람"
+- **운영 부담 관점 사용자(나)**: C/L2/B/B. **"운영 지속률 35%"**, **"가장 두려운 건 회사 정보 유출 1건"**
+
+### quality-gate 평가
+
+6축 rubric, BLOCKING 2개(G1·G2). 결과:
+- G1 목표 적합성: 3/5 FAIL (Codex transcript 정규화 누락)
+- G2 보안 게이트: 2/5 FAIL (5 시나리오 중 3-4개 공백)
+- G5 운영 지속성: 2/5 FAIL (manual + 알림 없음 = 까먹기 100%)
+- 평균 **2.5/5 — QUALITY FAIL**
+
+법무 검토자: **"현 PLAN으로 publish 진행 절대 금지, 4주 dry-run 필요."**
+
+### v1/v2 분리
+
+PoC를 두 단계로 쪼개니 페르소나 충돌이 풀렸다:
+- **v1**: 1회 시연 dry-run — 즉시 가능, publish 절대 차단
+- **v2**: 4주 dry-run + 2주 publish — 사용자 결정 후 별도 PoC
+
+v1만 자체 채점 4.33/5 PASS. v1 산출물(`.cache/daily/2026-05-19.mdx`)에 Log·Note 후보 2개 추출.
+
+## 회고
+
+자동화 PoC는 직관과 다르게 거버넌스 부담을 키운다. 운영 사용자 본인 페르소나가 가장 솔직한 BLOCKING(`지속률 35%`)을 짚은 게 다행 — SRE·법무·콘텐츠 전략가 누구도 짚지 못한 신호였다.
+
+자세한 인사이트: [자동화 시스템 vs 거버넌스 부담](/notes/automation-vs-governance)

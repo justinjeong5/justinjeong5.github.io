@@ -1,0 +1,45 @@
+---
+title: 누런 톤 박멸 + 토큰 single source — quality-gate 평균 3.28 → 4.44
+date: '2026-05-19 16:00'
+type: Shipped
+summary: cream → pure white + zinc + indigo로 전면 교체. 하드코딩 hex 30+, rgba 12+ 모두 토큰화하고 sepia 삭제.
+---
+
+## 한 일
+
+### 토큰 재설계 (light)
+
+- `--bg: #ffffff` (pure white)
+- `--bg-alt: #fafafa` (zinc-50)
+- `--bg-cool: #f4f4f5` (zinc-100)
+- `--bg-deep: #09090b` (zinc-950)
+- `--accent-red: #4f46e5` (indigo-600) — burnt orange는 누런 베이스와 동계열이라 누런 톤 강화. indigo로 신뢰감.
+- `--text-inverse: #fafafa` 토큰 신설 — 다크 배경 위 light text 의미 명확화
+
+### 토큰화
+
+- `index.css` 하드코딩 hex 30+, rgba 12+ 모두 `var(--*)` 일괄 치환
+- `rgba(244, 241, 232, 0.92)` (cream 잔재) → `color-mix(in srgb, var(--bg) 92%, transparent)`
+- `rgba(255, 250, 240, 0.X)` 5개 변형 → `color-mix(var(--text-inverse) X%)`
+
+### Sepia 삭제
+
+사용자가 cream도 누렇다 했는데 sepia는 더 누런 톤이라 존재 자체가 약점. CSS·JS·도움말에서 흔적 제거.
+
+### Dark 토큰
+
+zinc-950 기반 갱신. accent indigo-400(`#818cf8`) — 다크에서 채도 적정.
+
+## quality-gate 결과
+
+3 사이클:
+- 컬러 팔레트 2 → 4 → 5
+- 시각 일관성 2 → 3 → 5
+- 타이포그래피 3 → 4 → 5
+- 다크 테마 3.5 → 4 → 5
+
+평균 3.28 → 4.44/5. BLOCKING 4개 모두 5/5.
+
+## 회고
+
+세련된 디자인은 토큰 일관성이 80%다. 사용자가 hex 잔재를 의식적으로 못 보지만, 시각적 안정감의 무게가 다르다.

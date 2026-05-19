@@ -1,0 +1,23 @@
+---
+title: react-router + MDX 파이프라인 도입
+date: '2026-05-19 13:00'
+type: Shipped
+summary: 단일 SPA를 13개 라우트로 분리하고 MDX 콘텐츠 파이프라인을 깔았다. 데이터만 추가하면 페이지가 자동 확장되는 베이스가 완성.
+---
+
+## 한 일
+
+- `react-router-dom@7`, `@mdx-js/rollup`, `remark-frontmatter`, `remark-mdx-frontmatter`, `remark-gfm` 추가.
+- `vite.config.js`에 MDX 플러그인 enforce: 'pre'로 등록.
+- `src/lib/content.js`에서 `import.meta.glob`로 콘텐츠 자동 인덱싱.
+- `public/404.html` + `index.html` SPA fallback 표준 패턴(spa-github-pages) 적용.
+
+## 막힌 것
+
+- 없음. (가장 까다로운 부분이 `remark-mdx-frontmatter`의 `name: 'frontmatter'` 옵션이었는데 문서 보고 한 번에 해결.)
+
+## 다음
+
+- CSS 토큰 추출 + 새 페이지 클래스 정리.
+- Cmd+K 글로벌 검색(Phase 3).
+- 다크 테마 토글(Phase 3).

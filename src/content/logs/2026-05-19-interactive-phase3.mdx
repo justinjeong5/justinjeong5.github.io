@@ -1,0 +1,24 @@
+---
+title: Cmd+K 검색·키보드 단축키·다크 테마 (Phase 3 인터랙티브)
+date: '2026-05-19 14:00'
+type: Shipped
+summary: Fuse.js 글로벌 검색 + 키보드 단축키 + 다크/세피아 테마 토글. UIProvider로 모달 상태 중앙화하고 inert 패턴으로 focus 격리.
+---
+
+## 한 일
+
+- `lib/ui-context.jsx` — UIProvider 신설. 팔레트·도움말·테마 상태 + localStorage 영속
+- `lib/search.js` — Fuse.js 기반 글로벌 검색 인덱스. cases·notes·essays·logs 통합 + 그룹별 결과
+- `components/ui/CommandPalette.jsx` — `⌘K`/`/`로 열림. ↑↓ Enter 키보드 네비, mouse-keyboard 동기화
+- `components/ui/ShortcutHelp.jsx` — `?` 키로 단축키 도움말 모달
+- `components/ui/ThemeToggle.jsx` — 베이지/다크/세피아 순환 (`T` 키), prefers-color-scheme 추정
+- `components/ui/GlobalShortcuts.jsx` — `g h/c/n/e/l/a/u/w/r/v` 시퀀스 페이지 점프 (1200ms idle timeout)
+
+## 막힌 것
+
+- `ui-context.js`에 JSX 사용 → 빌드 실패. `.jsx`로 확장자 변경.
+- Esc 핸들러를 모달마다 두지 않고 GlobalShortcuts에서 일괄 처리 — paletteOpen·helpOpen 상태로 분기.
+
+## 다음
+
+- 인터랙션은 본격 살아있음. 디자인 톤 다듬기로 넘어간다.

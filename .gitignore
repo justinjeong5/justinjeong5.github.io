@@ -35,6 +35,9 @@ Temporary Items
 # Logs
 logs
 *.log
+# 단, 사이트 콘텐츠의 logs 디렉토리는 예외 (Node logs 패턴과 이름 충돌)
+!src/content/logs/
+!src/content/logs/**
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
