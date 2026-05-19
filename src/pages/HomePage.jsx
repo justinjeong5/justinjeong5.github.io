@@ -76,16 +76,6 @@ function HomePage() {
         </aside>
       </section>
 
-      <section className="proof-strip" aria-label="첫 화면 증거 요약">
-        {siteData.heroProof.map((item) => (
-          <article key={item.label}>
-            <p>{item.label}</p>
-            <strong>{item.value}</strong>
-            <span>{item.detail}</span>
-          </article>
-        ))}
-      </section>
-
       <section className="paths-section" id="paths">
         <div className="section-header">
           <p className="eyebrow">Visitor paths</p>

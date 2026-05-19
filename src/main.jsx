@@ -8,6 +8,7 @@ import './css/index.css';
 import './css/themes.css';
 import './css/pages.css';
 import './css/ui.css';
+import './css/refine.css';
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
