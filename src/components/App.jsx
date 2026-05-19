@@ -21,6 +21,7 @@ import { UIProvider } from '../lib/ui-context';
 import GlobalShortcuts from './ui/GlobalShortcuts';
 import CommandPalette from './ui/CommandPalette';
 import ShortcutHelp from './ui/ShortcutHelp';
+import MobileMenu from './ui/MobileMenu';
 
 const mdxComponents = {};
 
@@ -50,6 +51,7 @@ function App() {
           </Routes>
           <CommandPalette />
           <ShortcutHelp />
+          <MobileMenu />
         </BrowserRouter>
       </MDXProvider>
     </UIProvider>

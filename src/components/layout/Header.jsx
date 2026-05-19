@@ -1,19 +1,19 @@
 import { Link, NavLink } from 'react-router-dom';
-import { Keyboard, Search } from 'lucide-react';
+import { Keyboard, Menu, Search } from 'lucide-react';
 
 import { PRIMARY_NAV, ROUTES } from '../../lib/routes';
 import { useUI } from '../../lib/ui-context';
 import ThemeToggle from '../ui/ThemeToggle';
 
 function Header() {
-  const { openPalette, toggleHelp } = useUI();
+  const { openPalette, toggleHelp, toggleMenu } = useUI();
 
   return (
     <header className="site-nav" aria-label="Primary">
       <Link className="brand" to={ROUTES.home} aria-label="정경하 홈">
         JKH
       </Link>
-      <nav>
+      <nav className="primary-nav">
         {PRIMARY_NAV.map((item) => (
           <NavLink
             key={item.to}
@@ -39,12 +39,21 @@ function Header() {
         <ThemeToggle />
         <button
           type="button"
-          className="icon-button"
+          className="icon-button desktop-only"
           onClick={toggleHelp}
           aria-label="키보드 단축키"
           title="키보드 단축키 (? 키)"
         >
           <Keyboard size={18} aria-hidden="true" />
+        </button>
+        <button
+          type="button"
+          className="icon-button menu-trigger"
+          onClick={toggleMenu}
+          aria-label="메뉴 열기"
+          title="메뉴"
+        >
+          <Menu size={18} aria-hidden="true" />
         </button>
       </div>
     </header>

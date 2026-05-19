@@ -19,6 +19,7 @@ function readInitialTheme() {
 export function UIProvider({ children }) {
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [theme, setThemeState] = useState(readInitialTheme);
 
   useEffect(() => {
@@ -34,6 +35,9 @@ export function UIProvider({ children }) {
   const closePalette = useCallback(() => setPaletteOpen(false), []);
   const toggleHelp = useCallback(() => setHelpOpen((open) => !open), []);
   const closeHelp = useCallback(() => setHelpOpen(false), []);
+  const openMenu = useCallback(() => setMenuOpen(true), []);
+  const closeMenu = useCallback(() => setMenuOpen(false), []);
+  const toggleMenu = useCallback(() => setMenuOpen((open) => !open), []);
   const cycleTheme = useCallback(() => {
     setThemeState((current) => THEMES[(THEMES.indexOf(current) + 1) % THEMES.length]);
   }, []);
@@ -50,6 +54,10 @@ export function UIProvider({ children }) {
         helpOpen,
         toggleHelp,
         closeHelp,
+        menuOpen,
+        openMenu,
+        closeMenu,
+        toggleMenu,
         theme,
         setTheme,
         cycleTheme,
