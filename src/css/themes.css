@@ -1,90 +1,90 @@
 /* ------------------------------------------------------------
- * Phase 3 — 테마 토큰 (다크·세피아)
- * Light는 index.css :root에 정의됨. 여기서는 dark/sepia만 추가.
+ * 테마 토큰 — Editorial Modern
+ * Light는 index.css :root에 정의됨. 여기는 dark/sepia만.
  * ------------------------------------------------------------ */
 
 :root[data-theme='dark'] {
-  --bg: #14171a;
-  --bg-alt: #1d2024;
-  --bg-cool: #252a31;
-  --bg-deep: #0a0c0e;
-  --text: #f4f1e8;
-  --text-soft: #b8bcc0;
-  --text-muted: #7d8388;
-  --accent-red: #e87964;
-  --accent-blue: #7ab0f0;
-  --accent-yellow: #f5c878;
-  --accent-green: #6dc6a8;
-  --border: rgba(244, 241, 232, 0.16);
-  --border-soft: rgba(244, 241, 232, 0.1);
-  --shadow-card: 0 14px 32px rgba(0, 0, 0, 0.45);
+  --bg: #0c0a09;
+  --bg-alt: #1c1917;
+  --bg-cool: #292524;
+  --bg-deep: #050403;
+  --text: #fafaf7;
+  --text-soft: #d6d3d1;
+  --text-muted: #a8a29e;
+  --accent-red: #fb923c;
+  --accent-blue: #93c5fd;
+  --accent-yellow: #fbbf24;
+  --accent-green: #86efac;
+  --border: #292524;
+  --border-soft: #1c1917;
+  --shadow-card: none;
   color-scheme: dark;
 }
 
 :root[data-theme='sepia'] {
-  --bg: #f3e7c9;
-  --bg-alt: #faf0d8;
-  --bg-cool: #e8d9bb;
+  --bg: #f5ebd6;
+  --bg-alt: #fdf6e3;
+  --bg-cool: #ecdfc5;
   --bg-deep: #3d2e1f;
   --text: #3d2e1f;
-  --text-soft: #5e4b35;
-  --text-muted: #846847;
+  --text-soft: #6b5b47;
+  --text-muted: #8b7355;
   --accent-red: #a83b1f;
   --accent-blue: #4a6d8a;
   --accent-yellow: #c98c1f;
   --accent-green: #5a7a4c;
-  --border: rgba(61, 46, 31, 0.2);
-  --border-soft: rgba(61, 46, 31, 0.12);
+  --border: #d8c8a8;
+  --border-soft: #e5d8be;
+  --shadow-card: none;
 }
 
-/* Body·global hard-coded → 토큰 기반으로 swap */
+/* ---------- 글로벌 색상·배경 토큰화 ---------- */
 html {
   background: var(--bg);
 }
 body {
   background: var(--bg);
   color: var(--text);
-  transition: background-color 240ms ease, color 240ms ease;
+  transition: background-color 200ms ease, color 200ms ease;
 }
 
-/* Hero 그리드 배경의 베이지 hard-code 제거 */
+/* Hero 그리드 배경 */
 .hero {
   background:
-    linear-gradient(90deg, color-mix(in srgb, var(--text) 6%, transparent) 1px, transparent 1px),
-    linear-gradient(180deg, color-mix(in srgb, var(--text) 5%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--text) 4%, transparent) 1px, transparent 1px),
+    linear-gradient(180deg, color-mix(in srgb, var(--text) 3%, transparent) 1px, transparent 1px),
     var(--bg);
 }
 
-/* Site nav 글래스 배경을 토큰 기반으로 */
+/* Nav 글래스 */
 .site-nav {
-  background: color-mix(in srgb, var(--bg) 92%, transparent);
-  border-bottom-color: var(--border-soft);
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  border-bottom-color: var(--border);
   color: var(--text-soft);
 }
 
-/* Site footer 다크 톤 */
+/* Site footer */
 .site-footer {
   background: var(--bg-deep);
+  color: color-mix(in srgb, var(--bg-alt) 78%, transparent);
 }
-
-/* 다크 테마에서 footer 텍스트 가독성 */
 :root[data-theme='dark'] .site-footer {
-  background: #050608;
-  color: rgba(244, 241, 232, 0.78);
+  background: #000;
+  color: var(--text-soft);
+}
+:root[data-theme='sepia'] .site-footer {
+  background: var(--bg-deep);
+  color: color-mix(in srgb, var(--bg-alt) 86%, transparent);
 }
 
-/* Profile panel — 하드코딩 box-shadow를 토큰 기반으로 */
+/* Profile panel — sharp border, no shadow */
 .profile-panel {
   background: var(--bg-alt);
-  border-color: var(--text);
-  box-shadow: 18px 18px 0 var(--text);
-}
-:root[data-theme='dark'] .profile-panel {
-  border-color: var(--accent-yellow);
-  box-shadow: 18px 18px 0 var(--accent-yellow);
+  border-color: var(--border);
+  box-shadow: none;
 }
 
-/* Proof strip 다크 배경 (라이트에서 이미 다크 — 모든 테마 동일) */
+/* Proof strip */
 .proof-strip {
   background: var(--bg-deep);
   color: var(--bg-alt);
@@ -95,70 +95,65 @@ body {
   color: var(--accent-yellow);
 }
 .proof-strip span {
-  color: color-mix(in srgb, var(--bg-alt) 74%, transparent);
+  color: color-mix(in srgb, var(--bg-alt) 72%, transparent);
 }
 
 /* Buttons */
+.button {
+  border-radius: var(--radius);
+  box-shadow: none;
+  transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+.button:hover {
+  transform: none;
+  box-shadow: none;
+  background: var(--bg-cool);
+}
 .button-primary {
   background: var(--text);
   color: var(--bg-alt);
   border-color: var(--text);
 }
+.button-primary:hover {
+  background: var(--text-soft);
+  color: var(--bg-alt);
+}
 .button-secondary {
-  background: var(--bg-alt);
+  background: transparent;
   color: var(--text);
+  border-color: var(--border);
+}
+.button-secondary:hover {
+  background: var(--bg-cool);
   border-color: var(--text);
 }
 
-/* Evidence section / sticky panels in dark */
-:root[data-theme='dark'] .evidence-section {
-  background: #1a1d22;
-}
-:root[data-theme='dark'] .paths-section,
-:root[data-theme='dark'] .logs-section {
+/* 섹션 배경 */
+.paths-section,
+.logs-section {
   background: var(--bg-alt);
 }
-:root[data-theme='dark'] .quality-section {
-  background: #1a1d22;
+.evidence-section,
+.quality-section {
+  background: var(--bg-cool);
 }
-:root[data-theme='dark'] .case-section {
+.case-section,
+.contact-section {
   background: var(--bg);
 }
 :root[data-theme='dark'] .contact-section {
   background: var(--bg-alt);
 }
 
-/* Sepia overrides for hard-coded section backgrounds */
-:root[data-theme='sepia'] .paths-section,
-:root[data-theme='sepia'] .logs-section {
-  background: var(--bg-alt);
-}
-:root[data-theme='sepia'] .evidence-section,
-:root[data-theme='sepia'] .quality-section {
-  background: var(--bg-cool);
-}
-:root[data-theme='sepia'] .case-section,
-:root[data-theme='sepia'] .contact-section {
-  background: var(--bg);
-}
-:root[data-theme='sepia'] .site-footer {
-  background: var(--bg-deep);
-  color: color-mix(in srgb, var(--bg-alt) 82%, transparent);
-}
-
-/* Eyebrow, role, headline 등 직접 색 지정된 텍스트들 */
+/* Eyebrow, role, accents */
 .eyebrow {
   color: var(--accent-red);
+  letter-spacing: 0.08em;
+  font-weight: 800;
 }
 .role {
   color: var(--accent-blue);
 }
-.headline,
-.summary {
-  /* keep — already inherits from .text via existing rules */
-}
-
-/* Case·log accent in dark/sepia */
 .case-topline,
 .log-date {
   color: var(--accent-blue);
@@ -172,7 +167,7 @@ body {
   color: var(--accent-yellow);
 }
 
-/* Impact box keep dark feel across themes */
+/* Impact box */
 .impact-box {
   background: var(--bg-deep);
   color: var(--bg-alt);
@@ -181,16 +176,17 @@ body {
   color: var(--accent-yellow);
 }
 .impact-box p {
-  color: color-mix(in srgb, var(--bg-alt) 82%, transparent);
+  color: color-mix(in srgb, var(--bg-alt) 80%, transparent);
 }
 .impact-box small {
-  color: color-mix(in srgb, var(--bg-alt) 62%, transparent);
+  color: color-mix(in srgb, var(--bg-alt) 60%, transparent);
 }
 
-/* Writing panel (logs-section sticky aside) */
+/* Writing panel */
 .writing-panel {
   background: var(--bg-deep);
   color: var(--bg-alt);
+  border-color: var(--bg-deep);
 }
 .writing-panel .panel-heading h3,
 .writing-panel h4 {
@@ -201,27 +197,36 @@ body {
   color: var(--accent-yellow);
 }
 .writing-panel small {
-  color: color-mix(in srgb, var(--bg-alt) 62%, transparent);
+  color: color-mix(in srgb, var(--bg-alt) 60%, transparent);
 }
 
-/* Borders that referenced rgba(21,23,25,...) */
+/* Borders — 토큰 통일 */
 .path-card,
+.case-card,
 .case-meta div,
 .case-narrative section,
 .evidence-card,
 .principles-panel,
-.writing-panel,
 .log-item,
 .quality-item {
   border-color: var(--border);
+  box-shadow: none;
 }
 
-/* Visitor path eyebrow color */
+/* Hover — translateY 미세화 + border accent */
+.path-card:hover,
+.case-card:hover {
+  transform: none;
+  border-color: var(--text);
+  box-shadow: none;
+}
+
+/* Visitor path accent */
 .path-card p {
   color: var(--accent-blue);
 }
 
-/* Smooth transition on theme switch */
+/* Smooth transitions */
 .site-nav,
 .profile-panel,
 .path-card,
@@ -243,7 +248,5 @@ body {
   transition:
     background-color 200ms ease,
     border-color 200ms ease,
-    color 200ms ease,
-    transform 160ms ease,
-    box-shadow 160ms ease;
+    color 200ms ease;
 }
