@@ -1,0 +1,26 @@
+{
+  "read": [
+    {
+      "title": "Building a Second Brain",
+      "author": "Tiago Forte",
+      "note": "PARA 구조보다도 'capture → distill → connect'의 흐름이 핵심이었다. 디지털 가든 운영 룰의 원형."
+    },
+    {
+      "title": "A Philosophy of Software Design",
+      "author": "John Ousterhout",
+      "note": "'복잡성은 누적된다'는 명제. 컴포넌트 경계를 어디에 그을지의 판단 기준으로 자주 회귀."
+    }
+  ],
+  "antilibrary": [
+    {
+      "title": "Patterns of Distributed Systems",
+      "author": "Unmesh Joshi",
+      "reason": "프론트엔드 위주로 일하지만 운영 데이터 흐름 이해의 갭을 메우려고."
+    },
+    {
+      "title": "Designing Data-Intensive Applications",
+      "author": "Martin Kleppmann",
+      "reason": "고전이지만 끝까지 본 적은 없음. 분기마다 한 챕터씩."
+    }
+  ]
+}

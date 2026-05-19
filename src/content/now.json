@@ -1,0 +1,16 @@
+{
+  "month": "2026.05",
+  "focusing": [
+    "이 사이트를 case study + digital garden 하이브리드로 리빌드",
+    "Claude 스킬 시스템(dispatch, ship, review-changes) 운영 워크플로우 정리",
+    "팀에서 공유 가능한 자동화 사례 1건을 공개 가능한 범위로 다듬기"
+  ],
+  "stopped": [
+    "기술 스택을 나열형으로 보여주는 포트폴리오 형식",
+    "글의 게시일 강조 — 게시일 대신 성숙도(🌱🌿🌳)로 표시"
+  ],
+  "reading": [
+    "Building a Second Brain — Tiago Forte",
+    "Maggie Appleton의 digital garden essays"
+  ]
+}

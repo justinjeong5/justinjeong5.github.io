@@ -1,0 +1,52 @@
+{
+  "name": "정경하",
+  "role": "Product-minded Frontend Engineer",
+  "headline": "제품 문제를 빠르게 구조화하고, 프론트엔드와 자동화를 연결해 실제 운영 흐름까지 개선합니다.",
+  "summary": "이 사이트는 이력서의 예쁜 버전이 아니라, 공개 가능한 업무 사례·노트·로그를 계속 쌓아가는 proof-of-work 허브입니다.",
+  "location": "Seoul, Korea",
+  "email": "justin.jeong5@gmail.com",
+  "github": "https://github.com/justinjeong5",
+  "avatar": "https://github.com/justinjeong5.png?size=512",
+  "currentFocus": [
+    "반복 운영 업무를 줄이는 자동화 시스템 설계",
+    "사용자 행동 데이터를 읽는 제품 개선 루프",
+    "작게 배포하고 검증하는 프론트엔드 워크플로우"
+  ],
+  "heroProof": [
+    {
+      "label": "What I optimize",
+      "value": "판단 속도",
+      "detail": "모호한 요청을 문제·사용자·성공 조건으로 쪼개 실행 가능한 단위로 만듭니다."
+    },
+    {
+      "label": "How I ship",
+      "value": "작은 배포",
+      "detail": "큰 개편도 먼저 검증 가능한 구조로 나누고, 빌드와 브라우저 확인까지 묶습니다."
+    },
+    {
+      "label": "What I record",
+      "value": "근거와 회고",
+      "detail": "성과 수치가 없으면 수치를 만들 계획까지 남겨 다음 개선의 입력으로 삼습니다."
+    }
+  ],
+  "visitorPaths": [
+    {
+      "audience": "Hiring manager",
+      "question": "이 사람에게 우리 제품 문제를 맡길 수 있을까?",
+      "answer": "케이스 스터디에서 문제·결정·산출물·임팩트를 10초 안에 확인합니다.",
+      "to": "/cases"
+    },
+    {
+      "audience": "Teammate",
+      "question": "같이 일하면 어떤 방식으로 움직일까?",
+      "answer": "About의 운영 원칙과 노트에서 협업·검증 습관을 봅니다.",
+      "to": "/about"
+    },
+    {
+      "audience": "Future me",
+      "question": "오늘의 판단을 어떻게 내일의 자산으로 만들까?",
+      "answer": "빌더 로그와 디지털 가든에 공개 가능한 사례를 축적합니다.",
+      "to": "/logs"
+    }
+  ]
+}

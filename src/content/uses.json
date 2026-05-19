@@ -1,0 +1,35 @@
+{
+  "intro": "지금 매일 손에 닿는 것들. 도구는 자주 바뀌므로 분기마다 한 번씩 정리합니다.",
+  "categories": [
+    {
+      "name": "Hardware",
+      "items": [
+        { "name": "MacBook Pro M-series", "why": "메인 작업 머신. 빌드·번들·MDX 핫리로드까지 부담 없음.", "since": "2024" },
+        { "name": "외장 4K 모니터", "why": "코드 + 디자인 + 콘솔 셋업이 동시에 보이게.", "since": "2023" }
+      ]
+    },
+    {
+      "name": "Editor & Terminal",
+      "items": [
+        { "name": "VS Code", "why": "프론트엔드 작업 기본. MDX·React·Tailwind 확장.", "link": "https://code.visualstudio.com" },
+        { "name": "Claude Code", "why": "코드·설계·리뷰의 AI 페어. 결정론적 루프와 dispatch 라우팅을 메인 스킬로.", "link": "https://claude.com/code" },
+        { "name": "ghostty", "why": "터미널. GPU 가속, 깔끔한 폰트 렌더링.", "link": "https://ghostty.org" }
+      ]
+    },
+    {
+      "name": "Productivity",
+      "items": [
+        { "name": "Raycast", "why": "런처 + 빠른 메모 + 스니펫.", "link": "https://raycast.com" },
+        { "name": "Obsidian", "why": "디지털 가든 초안 작성 → MDX 옮기는 순서.", "link": "https://obsidian.md" }
+      ]
+    },
+    {
+      "name": "This site",
+      "items": [
+        { "name": "React 19 + Vite", "why": "빠른 빌드 + HMR. SPA로 충분." },
+        { "name": "MDX", "why": "글 안에 컴포넌트 임베드. 케이스 차트·다이어그램 표현용.", "link": "https://mdxjs.com" },
+        { "name": "GitHub Pages", "why": "무료 호스팅 + 자동 배포. gh-pages 브랜치에 빌드 결과 푸시." }
+      ]
+    }
+  ]
+}
