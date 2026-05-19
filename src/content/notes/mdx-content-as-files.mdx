@@ -1,0 +1,40 @@
+---
+title: 콘텐츠 = 파일 — MDX + Vite의 자동 확장 패턴
+growth: Budding
+topics: [frontend, mdx, vite, content-architecture]
+summary: 콘텐츠 한 개 = MDX 파일 한 개. import.meta.glob으로 자동 인덱싱하면 코드 수정 없이 사이트가 확장된다.
+plantedAt: 2026-05-15
+lastTendedAt: 2026-05-19
+---
+
+## 패턴
+
+```js
+const noteModules = import.meta.glob('../content/notes/*.mdx', { eager: true });
+
+export const getAllNotes = () =>
+  Object.entries(noteModules).map(([path, mod]) => ({
+    slug: extractSlug(path),
+    ...(mod.frontmatter || {}),
+    Component: mod.default,
+  }));
+```
+
+새 노트 = 새 MDX 파일 1개. 컴포넌트·라우팅·인덱스 수정 0건.
+
+## 왜 이게 강한가
+
+- **콘텐츠 작성 부담 ↓**: 마크다운 + frontmatter만 알면 된다
+- **재사용 가능 컴포넌트 임베드**: 본문 안에 차트·다이어그램·인터랙티브 도식
+- **빌드 타임 정적 분석**: Fuse.js 검색 인덱스도 빌드 시 한 번에
+- **Git diff가 깔끔**: 콘텐츠 변경이 코드 변경과 섞이지 않음
+
+## 함정
+
+- `import.meta.glob`은 빌드 시 평가. dev에서 HMR로 잘 따라오지만 production은 dist에 박힘.
+- `eager: true`로 모든 모듈 즉시 import → 콘텐츠 100개+ 되면 번들 크기 ↑. lazy 옵션 검토.
+- frontmatter 스키마 통일 안 하면 컴포넌트에서 옵셔널 체이닝 지옥.
+
+## 한계
+
+콘텐츠가 1000개를 넘으면 빌드 타임이 길어진다. 그 시점에는 별도 콘텐츠 DB나 SSG (Next.js·Astro) 고려.

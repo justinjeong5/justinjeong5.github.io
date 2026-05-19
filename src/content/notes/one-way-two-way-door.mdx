@@ -1,0 +1,44 @@
+---
+title: One-way vs Two-way Door — Bezos의 의사결정 분류
+growth: Budding
+topics: [decision-making, tradeoff, leadership]
+summary: 되돌릴 수 있는 결정(two-way)은 빠르게, 되돌릴 수 없는 결정(one-way)은 신중하게. 대부분의 결정은 two-way인데 사람들은 one-way처럼 다룬다.
+plantedAt: 2026-04-12
+lastTendedAt: 2026-05-19
+---
+
+## Bezos의 분류
+
+Jeff Bezos가 Amazon 주주 서한(1997, 2015 재강조)에서 제안:
+
+- **Two-way door**: 시도하고 나쁘면 되돌릴 수 있는 결정. 빠르게 결정하고 실험.
+- **One-way door**: 되돌릴 수 없거나 비용이 큰 결정. 신중하게, 가능한 정보를 다 모으고.
+
+> 대부분의 결정은 two-way door인데, 사람들은 one-way처럼 신중하게 다룬다. 결과는 느린 의사결정과 잃어버린 기회.
+
+## 적용 예시
+
+| 결정 | 분류 |
+|---|---|
+| 새 라이브러리 도입 시도 | Two-way (안 맞으면 빼면 됨) |
+| 데이터베이스 마이그레이션 | One-way (롤백 매우 어려움) |
+| PoC 만들기 | Two-way (실패해도 학습 자산) |
+| 공개 사이트에 자동 발행 | **One-way** (git history 영구, Wayback Machine) |
+| 새 디자인 리뉴얼 | Two-way (안 맞으면 되돌리기 한 commit) |
+| 회사 동료 정보 노출 | **One-way** (한 번 인터넷에 올라가면 회수 불가) |
+
+## 실용 규칙
+
+- Two-way door라면 **시도하기 vs 분석하기** 중 시도하기를 우선
+- One-way door라면 **분석·페르소나 토론·quality-gate** 전부 동원
+- 의심스러우면 "되돌리는 비용은?"으로 자문
+
+## 함정
+
+- "되돌릴 수 있다"라 생각했는데 실제론 정치·관계·평판 비용이 크면 사실상 one-way
+- One-way라도 부분적으로 two-way로 만들 수 있다 (예: dry-run, staging, feature flag)
+- 두 종류 모두 한 가지 양식으로 다루면 비용 증대 + 기회 손실
+
+## 관련
+
+[자동화 시스템 vs 거버넌스 부담](/notes/automation-vs-governance) — 자동 발행은 one-way라 4주 dry-run 필수

@@ -1,0 +1,38 @@
+---
+title: Essential vs Accidental Complexity — Brooks가 가르쳐준 것
+growth: Budding
+topics: [swe, tradeoff, design-process]
+summary: 본질 복잡도(essential)는 문제 자체의 어려움이고, 우발 복잡도(accidental)는 도구·환경에서 오는 어려움이다. 둘을 구분하지 못하면 가짜 일에 시간을 쓴다.
+plantedAt: 2026-04-08
+lastTendedAt: 2026-05-19
+---
+
+## 핵심 구분
+
+Brooks가 *No Silver Bullet* (1986)에서 제안:
+
+- **Essential complexity**: 문제 자체가 가진 복잡도. "사용자 인증·결제·환불 흐름"처럼 도메인이 본질적으로 복잡.
+- **Accidental complexity**: 도구·언어·환경에서 오는 복잡도. "이 라이브러리 버그", "빌드 설정 깨짐", "타입 추론 실패".
+
+## 왜 중요한가
+
+- Essential은 줄일 수 없다. 도구를 바꿔도 본질 문제는 그대로.
+- Accidental은 줄일 수 있다. 더 나은 도구·추상화·자동화로.
+
+대부분의 "리팩토링"은 accidental complexity를 줄이는 일이다. 진짜 가치는 essential complexity를 정확히 마주하는 데서 나온다.
+
+## 자기 점검 질문
+
+코드를 쓰면서:
+- "이 코드가 어려운 이유는 **문제가 어려워서**인가, **도구가 부족해서**인가?"
+- 후자라면 도구를 바꾸거나 자동화. 전자라면 받아들이고 정확히 풀기.
+
+## 함정
+
+- 자동화 인프라 자체가 essential인 줄 알지만 대부분 accidental. 자동화가 본 작업보다 무거워지면 의심.
+- "이것만 자동화하면 다 해결돼" — 본질 문제를 회피하는 신호.
+- Premature abstraction. 본질이 명확해지기 전 추상화는 accidental만 늘림.
+
+## 함의
+
+엔지니어의 가장 큰 가치는 essential complexity를 **정확히 좁히는** 능력. 도메인 이해 + 본질 추출. 도구를 잘 다루는 건 보조적이다.

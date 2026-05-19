@@ -1,0 +1,51 @@
+---
+title: GitHub Pages에서 SPA 라우팅을 동작시키는 404 트릭
+growth: Seedling
+topics: [frontend, github-pages, routing, deployment]
+summary: GitHub Pages는 SSR이 없어 클라이언트 라우팅 새로고침 시 404가 뜬다. public/404.html에 SPA fallback redirect를 두면 해결.
+plantedAt: 2026-05-19
+lastTendedAt: 2026-05-19
+---
+
+## 문제
+
+React SPA를 GitHub Pages에 배포 → `/cases/proof-hub` 깊은 링크 새로고침 → **404**.
+
+원인: GitHub Pages는 정적 파일 서버라 `/cases/proof-hub` 경로 자체를 모름. SPA 라우팅은 클라이언트에서만 동작하므로 서버가 `/index.html`을 못 반환.
+
+## 해결 — spa-github-pages 패턴
+
+`public/404.html`에 redirect 스크립트:
+
+```html
+<script>
+  var l = window.location;
+  l.replace(
+    l.protocol + '//' + l.hostname + l.pathname.split('/').slice(0, 1).join('/') +
+    '/?/' + l.pathname.slice(1) + (l.search ? '&' + l.search.slice(1) : '') + l.hash,
+  );
+</script>
+```
+
+`index.html` `<head>`에 복원 스크립트:
+
+```js
+(function (l) {
+  if (l.search[1] === '/') {
+    var decoded = l.search.slice(1).split('&').join('?');
+    window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+  }
+})(window.location);
+```
+
+흐름: 404 → 쿼리로 변환 → SPA mount → history API로 URL 복원.
+
+## 함정
+
+- `pathSegmentsToKeep` — user/org site (`*.github.io`)는 `0`, project site는 `1`
+- 검색엔진은 404 redirect를 그대로 따라오지 못할 수 있음 (SEO 약함)
+- 메타 OG 태그는 모두 index.html 기본값만 적용 (페이지별 동적 OG 불가)
+
+## 대안
+
+진짜 SEO·동적 OG가 필요하면 Next.js SSG 또는 Astro로 빌드 후 GitHub Pages. 다만 빌드 복잡도 ↑.

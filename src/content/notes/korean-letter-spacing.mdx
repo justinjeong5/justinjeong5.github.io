@@ -1,0 +1,37 @@
+---
+title: 한국어 letter-spacing — Pretendard에서 -0.025em이 상한
+growth: Seedling
+topics: [typography, korean, design, frontend]
+summary: 영문 헤딩의 -0.04em letter-spacing은 한국어에 적용하면 받침 있는 자모가 뭉친다. -0.02em ~ -0.025em이 한글 균형점.
+plantedAt: 2026-05-19
+lastTendedAt: 2026-05-19
+---
+
+## 문제
+
+모던 영문 디자인 시스템은 헤딩에 `letter-spacing: -0.03em ~ -0.04em`을 자주 쓴다. Linear, Vercel, Stripe 모두.
+
+같은 값을 한국어 헤딩에 적용하면 **받침 있는 자모**가 뭉쳐 보인다. 특히 "정경하" 같은 받침 많은 단어.
+
+## 원인
+
+영문 글리프는 letter 간 여백이 광활. 마이너스 spacing이 자연스럽게 균형 잡힘. 한글 글리프는 이미 사각형 박스에 꽉 차 있어서 음수 spacing이 박스끼리 겹친다.
+
+## 가이드
+
+| 영역 | 추천 letter-spacing |
+|---|---|
+| h1 (큰 헤딩) | -0.02em ~ -0.025em |
+| h2, h3 | -0.015em ~ -0.02em |
+| 본문 | 0 ~ -0.005em |
+| 작은 라벨 (eyebrow) | +0.08em ~ +0.12em (uppercase) |
+
+## 검증
+
+이 사이트 quality-gate에서 디자이너 페르소나가 지적: "h1/h2의 letter-spacing -0.035em이 한국어 글리프(특히 받침 있는 자모)를 뭉개". 모바일 헤딩은 `-0.025em`으로 추가 완화.
+
+## 함정
+
+- 영문 디자인 영감을 그대로 카피하면 한국어 사이트에서 가독성 손해
+- Pretendard variable의 `font-feature-settings: 'ss06' on` 같은 옵션 활용 시 미세 조정 가능
+- letter-spacing은 viewport 크기에 따라 다르게 — 모바일은 더 보수적으로
