@@ -1,0 +1,83 @@
+---
+title: runbook은 장애 직후 24h 안에 쓴다
+growth: Seedling
+topics: [incident, runbook, operations, postmortem]
+summary: 장애 끝나면 "나중에 정리" → 안 한다. 24h 안에 기억이 휘발되기 전 쓰는 게 다음 새벽 본인을 살린다.
+plantedAt: 2026-05-15
+lastTendedAt: 2026-05-20
+---
+
+## 문제 — "나중에 정리할게요"
+
+장애가 끝나고 임시 패치까지 들어가면 안도감이 온다. 잠도 자야 한다. "회고는 내일 아침에", "runbook은 다음 주에".
+
+대부분 안 한다. 일주일 지나면:
+
+- 정확한 명령어가 안 기억남
+- "이게 왜 깨졌는지"에 대한 추리 과정이 사라짐
+- 새벽 4시 본인이 했던 시도들이 휘발
+
+## 24h 안에 쓰는 이유
+
+기억 곡선 (forgetting curve)은 첫 24h 안에 가장 가파르다.
+
+- 1h 후: 사용한 명령어·추리 흐름 80% 기억
+- 24h 후: 50% 미만
+- 1주 후: 큰 줄거리만, 디테일 0
+
+runbook의 가치는 **디테일**에 있다. "어떤 명령으로 확인했고 어떤 결과를 보고 어떻게 판단했나." 1주 후 쓴 runbook은 디테일이 빠진 일반론.
+
+## runbook 최소 항목
+
+새벽 4시 알람 받은 본인 / 동료가 처음부터 추리하지 않게 만드는 최소 정보.
+
+```
+## 증상
+- 사용자가 X 못 함, Y 페이지 5xx
+
+## 확인 명령
+- dashboard URL
+- `kubectl get pods -n payment | grep error`
+- recent deploys 10분 안
+
+## 임시 패치
+- rollback: `kubectl rollout undo deployment/payment`
+- 또는 feature flag off: `payment.new_flow = false`
+
+## 근본 수정
+- (issue 링크) 다음 sprint
+
+## 회피 조건
+- 신규 코드 deploy 후 10분 안에 5xx 비율 ↑면 즉시 rollback
+```
+
+5가지만 있어도 다음 새벽이 다르다.
+
+## 회고와 한 자리에서
+
+장애 회고는 보통 사람을 모은다. runbook은 그 회고와 **한 자리에서** 쓴다. 회고 끝나면 항목들이 다 모여 있다. 다른 시점에 다시 모을 필요가 없다.
+
+회고 마지막 30분은 runbook 작성. 항상.
+
+## 미루면 안 쓰는 이유
+
+"내일 좀 더 정신 맑을 때"는 함정이다.
+
+- 내일은 다른 일이 들어옴
+- 잊지 않을 거라는 확신은 매번 깨짐
+- 회고 자리의 동료들이 흩어지면 다시 모으기 어려움
+
+24h가 절대 임계는 아니지만, **회고 직후 한 자리에서**가 가장 안 미루는 방법.
+
+## 함정
+
+- **너무 자세하게 쓰려다 안 쓰게 됨**: 5분짜리 임시 runbook이 30분짜리 완벽 runbook보다 100배 가치 있다. 다음에 보강.
+- **1인 단위 runbook**: "(나만 아는 명령어)"가 들어가면 동료가 새벽에 못 따라간다. 명령어 풀로.
+- **runbook 링크 알람에 없음**: runbook은 있는데 알람 페이로드에 링크 없으면 새벽에 못 찾는다. 알람 룰에 runbook URL 박는다.
+- **6개월 후 runbook이 stale**: 시스템 바뀌면 runbook도 바뀌어야. 분기 1회 readthrough.
+
+## 핵심
+
+> runbook은 **다음 새벽 4시의 본인**을 위한 선물이다. 24h 안에 쓰지 않으면 그 선물은 없는 것과 같다.
+
+관련: [/notes/good-alert-four-criteria](/notes/good-alert-four-criteria), [/notes/incident-temp-vs-root](/notes/incident-temp-vs-root), [/notes/incident-monitoring-gap](/notes/incident-monitoring-gap)
