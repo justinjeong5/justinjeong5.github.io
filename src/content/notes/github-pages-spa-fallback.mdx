@@ -9,9 +9,9 @@ lastTendedAt: 2026-05-19
 
 ## 문제
 
-React SPA를 GitHub Pages에 배포 → `/cases/proof-hub` 깊은 링크 새로고침 → **404**.
+React SPA를 GitHub Pages에 배포 → `/cases/proof-hub-rebuild` 깊은 링크 새로고침 → **404**.
 
-원인: GitHub Pages는 정적 파일 서버라 `/cases/proof-hub` 경로 자체를 모름. SPA 라우팅은 클라이언트에서만 동작하므로 서버가 `/index.html`을 못 반환.
+원인: GitHub Pages는 정적 파일 서버라 `/cases/proof-hub-rebuild` 경로 자체를 모름. SPA 라우팅은 클라이언트에서만 동작하므로 서버가 `/index.html`을 못 반환.
 
 ## 해결 — spa-github-pages 패턴
 
