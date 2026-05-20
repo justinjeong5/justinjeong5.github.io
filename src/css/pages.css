@@ -405,6 +405,10 @@
   color: var(--text-soft);
   line-height: 1.66;
 }
+.essay-card .eyebrow {
+  display: block;
+  margin-bottom: 8px;
+}
 
 /* ---------- Logs (full page) ---------- */
 .log-list {

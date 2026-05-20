@@ -22,11 +22,11 @@ function EssaysPage() {
           {essays.map((essay) => (
             <li key={essay.slug}>
               <Link to={ROUTES.essayDetail(essay.slug)} className="essay-card">
+                {essay.readingTime ? (
+                  <span className="eyebrow">{essay.readingTime}</span>
+                ) : null}
                 <h2>{essay.title}</h2>
                 <p>{essay.summary}</p>
-                {essay.readingTime ? (
-                  <span className="meta">{essay.readingTime}</span>
-                ) : null}
                 <span className="see-detail">
                   읽기 <ArrowUpRight size={14} aria-hidden="true" />
                 </span>
