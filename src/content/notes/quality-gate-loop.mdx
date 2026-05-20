@@ -41,3 +41,17 @@ lastTendedAt: 2026-05-19
 
 - 페르소나가 코드만 보고 평가하면 실제 사용감 일부 놓침. 라이브 디바이스 검증이 종종 필요.
 - 같은 페르소나가 두 사이클 연속 평가하면 confirmation bias 생김 — 변경 요약을 명확히 전달해 판단 기준 재설정 필요.
+
+## 함정
+
+- **rubric이 너무 복잡 → 평가가 노이즈**: 7축 이상은 채점 분산이 커지고 일관성이 떨어짐. 4-6축이 적정.
+- **평균만 보고 최저 4 무시**: 평균 4.7이라도 한 항목 2점이면 사용자 체감 큰 약점. 통과 기준에 "모든 항목 ≥ 4" 포함.
+- **사이클 무한 반복**: 진전 없는데 3사이클 이상 굴리면 시간만 소비. "3 사이클 매몰" 룰 강제.
+- **같은 페르소나가 두 번 평가**: confirmation bias. 변경 요약을 명확히 전달해 기준 재설정.
+- **BLOCKING 표시 안 함**: 평균 통과해도 BLOCKING 4점 미만이면 게이트 닫혀야 한다. 사전에 BLOCKING 항목 명시.
+
+## 관련
+
+[/notes/deterministic-loop](/notes/deterministic-loop) — quality-gate가 적용하는 일반 검증 루프
+[/notes/codex-competition](/notes/codex-competition) — 페르소나 평가의 모델 다양성 버전
+[/notes/dispatch-routing-pattern](/notes/dispatch-routing-pattern) — 라우팅 결정에도 평가 루프

@@ -1,0 +1,72 @@
+---
+title: CI 캐시·incremental build — 빌드 30분을 5분으로
+growth: Seedling
+topics: [devops, ci, build, performance]
+summary: monorepo CI 시간은 모든 PR의 비용. 캐시 레이어·incremental build·병렬화로 절감. 작업 시간이 아니라 cumulative cost로 보면 절감 가치가 압도적.
+plantedAt: 2026-05-02
+lastTendedAt: 2026-05-20
+---
+
+## 문제 — CI 30분의 진짜 비용
+
+monorepo의 CI가 PR당 30분이라면:
+
+- 하루 PR 20건 = CI 시간 600분 = 10시간
+- 평일 한 달 = 200시간 ≈ 25 worker day
+- 비용 (cloud CI): 시간당 $0.5라면 월 $100+ (worker 수 곱하기)
+- 개발자 대기 비용: 30분 × 20명 × 매일 = "PR review까지 30분 이상 기다림" 누적
+
+작업 시간으로만 보면 "30분이면 견딜만" 같지만 cumulative cost는 큼. 빌드 시간 단축의 임팩트는 비선형.
+
+## 절감 3축
+
+### 1. 캐시 레이어
+
+- **dependency cache**: `pnpm install` 결과 캐싱. 같은 lockfile이면 캐시 hit.
+- **build artifact cache**: turbo·nx·bazel 같은 monorepo 도구의 hash 기반 캐시. 변경되지 않은 패키지는 캐시에서 가져옴.
+- **Docker layer cache**: 이미지 빌드 시 변경되지 않은 layer 재사용.
+
+가장 큰 효과는 보통 dependency cache. install이 빌드 시간의 30-50% 차지.
+
+### 2. incremental build
+
+```bash
+turbo run build --filter=...[origin/main]
+```
+
+main과 비교해 변경된 패키지만 빌드. 1편 PR이 다른 50개 패키지를 빌드할 이유가 없다.
+
+monorepo가 작으면 효과 ↓, 크면 ↑. 100+ 패키지면 incremental이 핵심.
+
+### 3. 병렬화
+
+- **parallel job**: lint·typecheck·test 따로 job. 직렬 30분이 병렬 10분.
+- **matrix**: 여러 Node 버전·여러 OS 매트릭스 병렬.
+- **shard test**: 큰 테스트 suite을 N개로 split.
+
+## 측정 → 개선 → 재측정
+
+빌드 시간 측정 없이 개선하면 어디가 병목인지 모름.
+
+```
+CI 로그에서 각 step duration 확인
+가장 긴 step부터 절감
+보통 install / build / test 셋 중 하나가 50%+ 차지
+```
+
+## 함정
+
+- **캐시 hit 검증 안 함**: 캐시 설정만 했는데 실제 hit rate 0%인 경우 흔함. cache key가 잘못됐거나 invalidation이 매번. metric으로 확인.
+- **병렬화 과잉**: job 50개 병렬은 cloud 비용 ↑, queue 대기 ↑. 적정선(5-10) 찾기.
+- **incremental의 가짜 캐시 hit**: 의존성 변경 감지 못해서 stale build 사용. 의심스러우면 cold build로 검증.
+- **로컬 빌드 안 줄어듦**: CI는 빨라졌는데 로컬 dev 빌드는 그대로. 같은 도구가 양쪽에 적용되어야 효과 큼.
+- **30분이 "정상"이라고 받아들임**: 빌드 시간은 측정 대상이지 받아들일 대상 아님. 매월 한 번씩 회고.
+
+## 핵심
+
+> CI 빌드 시간 = PR 횟수 × 빌드 시간. **매일 누적되는 비용**이라 절감 임팩트가 비선형으로 크다.
+
+## 관련
+
+[/notes/vite-manual-chunks](/notes/vite-manual-chunks) — 빌드 사이즈 절감 (CI 시간과 다른 차원)
+[/notes/dead-dependency-hidden-cost](/notes/dead-dependency-hidden-cost) — install 시간을 만드는 누적 비용

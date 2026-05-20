@@ -1,0 +1,93 @@
+---
+title: graceful shutdown — SIGTERM 받고 5초 안에 죽기
+growth: Seedling
+topics: [backend, operations, deploy, reliability]
+summary: 배포 시 컨테이너가 죽을 때, in-flight 요청 끊기·DB connection 닫기·queue 정리를 해야 한다. SIGTERM → SIGKILL의 짧은 창에 다 해야 함.
+plantedAt: 2026-05-09
+lastTendedAt: 2026-05-20
+---
+
+## 문제 — 배포가 사용자에게 5xx를 던지는 이유
+
+Kubernetes 배포에서 새 pod이 ready되면 옛 pod에 SIGTERM. 옛 pod이 즉시 종료되면:
+
+- 처리 중인 HTTP 요청 → 500 (사용자 에러)
+- 쓰던 DB transaction → rollback (반쯤 적용된 데이터)
+- 보내던 message queue → 미전송 (이벤트 손실)
+- log buffer → flush 안 됨 (디버깅 단서 손실)
+
+배포 5번에 한 번씩 사용자가 에러를 본다면, 그건 배포의 문제다.
+
+## 흐름 — SIGTERM부터 SIGKILL까지
+
+```
+0s    SIGTERM 수신
+0-Ns  정상 shutdown 작업
+Ns    SIGKILL (강제 종료)
+```
+
+기본 N은 30초(Kubernetes `terminationGracePeriodSeconds` 기본값). 다만 cloud provider나 hosting platform에 따라 더 짧을 수 있다 (5-10초). 그 안에 다 해야 한다.
+
+## 해야 할 일 (순서)
+
+### 1. health check 즉시 fail
+
+```ts
+let isShuttingDown = false;
+process.on('SIGTERM', () => {
+  isShuttingDown = true;
+  // /readyz endpoint가 503 반환
+});
+```
+
+이러면 load balancer가 이 pod에 새 요청을 안 보낸다. **신규 트래픽 차단**.
+
+### 2. in-flight 요청 완료 대기
+
+```ts
+server.close(() => {
+  // 모든 in-flight 요청 끝나면 callback
+});
+```
+
+타임아웃 두기: 5-10초 안에 안 끝나면 강제. 너무 길게 두면 SIGKILL 받음.
+
+### 3. 외부 리소스 정리
+
+- DB connection pool drain
+- queue/cache connection 정리
+- 진행 중인 background job은 어떻게 할지 결정 (다른 worker로 양도? 다음에 재시도?)
+
+### 4. log flush
+
+```ts
+await logger.flush();
+```
+
+stdout buffer가 안 비워지면 마지막 에러 못 봄.
+
+## 패턴 — liveness vs readiness 분리
+
+`/healthz` (liveness)와 `/readyz` (readiness)를 분리한다.
+
+- **liveness**: 프로세스 살아있는지 — shutdown 시작해도 잠깐은 살아있어야 (in-flight 처리)
+- **readiness**: 새 요청 받을 준비 — shutdown 시작 즉시 false
+
+분리 안 하면 shutdown 시작과 동시에 liveness fail → Kubernetes가 즉시 죽임 → in-flight 요청 잃음.
+
+## 함정
+
+- **graceful shutdown 안 구현**: 기본 동작은 즉시 종료. 명시적 구현 필요.
+- **terminationGracePeriod이 너무 짧음**: 5초로 두면 in-flight 처리 못 끝남. 30초가 일반.
+- **DB connection 닫기 안 함**: connection leak이 누적. pool이 일찍 고갈.
+- **테스트 안 함**: SIGTERM 보내고 in-flight 요청이 200으로 끝나는지 검증해야. 보통 staging에서 `kill -TERM` 수동.
+- **shutdown 중에도 metric 보내려고 함**: log/metric 외부 전송 자체가 SIGTERM 후 멈춤. flush가 먼저.
+
+## 핵심
+
+> 배포가 사용자에게 안 보여야 좋은 배포다. **SIGTERM부터 SIGKILL까지의 5-30초를 어떻게 쓰느냐**가 그 차이를 만든다.
+
+## 관련
+
+[/notes/incident-temp-vs-root](/notes/incident-temp-vs-root) — 배포 장애의 임시 패치 vs 근본 수정
+[/notes/runbook-write-during-incident](/notes/runbook-write-during-incident) — graceful shutdown 실패도 runbook 대상
