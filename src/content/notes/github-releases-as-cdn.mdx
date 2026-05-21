@@ -1,0 +1,89 @@
+---
+title: GitHub Releases를 personal CDN으로 — 무료·무제한·영구
+growth: Seedling
+topics: [github, cdn, infrastructure, side-project]
+summary: HTML 리포트에 비디오·큰 이미지가 들어갈 때 어디에 호스팅하나. GitHub Releases는 파일당 2GB·무제한 트래픽·무료. 도메인 신뢰까지 따라온다.
+plantedAt: 2026-05-08
+lastTendedAt: 2026-05-21
+---
+
+## 문제 — large binary 어디에 둘 것인가
+
+HTML 리포트·블로그·문서를 만들다 보면 정적 이미지로 끝나지 않는 자료가 생긴다.
+
+- 데모 video (10-50MB)
+- 고해상도 스크린샷 (5-20MB)
+- 큰 PDF·디자인 파일
+- mp4 캡처본
+
+git repo에 직접 넣으면:
+
+- repo size 폭증 → clone 5분
+- diff 노이즈 (binary)
+- GitHub 100MB push 제한
+
+S3·Cloudflare R2는 좋지만 개인 프로젝트에 신용카드 결제·운영 비용. 무료 호스팅(Imgur 등)은 도메인이 외부·삭제 위험.
+
+## 해법 — GitHub Releases
+
+**Releases는 git history와 분리된 binary 저장소**다. 같은 repo의 부속 공간이지만 객체는 별도.
+
+- 파일당 **최대 2GB**
+- 트래픽 무제한 (공식 명시)
+- 무료
+- 영구 URL (release 삭제 안 하면)
+- GitHub 도메인 (`https://github.com/<user>/<repo>/releases/download/<tag>/<file>`)
+
+## 사용 패턴
+
+### 업로드
+
+```bash
+gh release create v1 video.mp4 image.png report.pdf \
+  --title "Assets v1" \
+  --notes "Initial upload"
+```
+
+### 다운로드 URL
+
+```
+https://github.com/<user>/<repo>/releases/download/v1/video.mp4
+```
+
+이 URL을 HTML 리포트의 `<video src>`나 마크다운 `![](...)` 에 직접 박는다.
+
+### 추가 업로드
+
+같은 release에 새 asset 추가:
+
+```bash
+gh release upload v1 new-screenshot.png
+```
+
+또는 새 release를 cut.
+
+## 별도 repo 권장
+
+asset 전용 repo(예: `cdn-assets`)를 두면:
+
+- 본 repo는 markdown·소스만 → clone 빠름
+- asset 삭제·교체가 본 repo history 영향 0
+- private asset이 필요하면 별도 repo만 private
+
+## 함정
+
+- **release 삭제하면 URL 깨짐**: 한 번 공유한 URL은 영구로 두는 게 안전. 새 버전이면 새 release.
+- **파일당 2GB 초과**: split해서 multiple file. 또는 더 큰 video는 별도 CDN.
+- **trafficked로 abuse 의심**: GitHub은 공식적으로 release traffic 무제한이지만, 정말 큰 traffic (millions/day) 보면 ToS 위반 가능. 개인 규모 OK.
+- **public visibility**: release asset은 repo가 public이면 URL 아는 누구나 접근. 비공개 자료 X.
+- **CDN edge caching 없음**: latency가 S3 backed CDN보다 살짝 느림. 대규모 user 대상 site엔 부적합.
+
+## 핵심
+
+> binary asset 호스팅에 신용카드 결제 0원. **GitHub Releases는 personal CDN의 사실상 표준**이다.
+
+## 관련
+
+[/notes/report-asset-split-repo](/notes/report-asset-split-repo) — asset 전용 repo로 본 repo 가볍게 유지
+[/notes/personal-infra-stack](/notes/personal-infra-stack) — Releases CDN을 포함한 개인 인프라 종합
+[/notes/notion-lightweight-backend](/notes/notion-lightweight-backend) — 같은 철학의 무료 backend

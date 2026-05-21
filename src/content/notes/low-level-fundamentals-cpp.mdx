@@ -1,0 +1,81 @@
+---
+title: 학부 C/C++ 프로젝트가 6년 후에도 가르치는 것
+growth: Seedling
+topics: [learning, fundamentals, career, education]
+summary: bptree·myshell·steganography. 학부 시절 C/C++ 프로젝트가 6년 후 프론트엔드 일에 어떻게 영향을 주나. fundamentals는 framework로 못 배운다.
+plantedAt: 2026-05-15
+lastTendedAt: 2026-05-21
+---
+
+## 6년 전 학부 코드
+
+GitHub에 6년 전 학부 시절 C/C++ 프로젝트가 남아있다.
+
+- **bptree**: B+ Tree 직접 구현 (DB indexing)
+- **myshell**: bash 흉내 shell 직접 구현 (OS process·signal)
+- **steganography**: 이미지에 비밀 메시지 숨기는 알고리즘 (bit manipulation)
+- **PS_inha**: 알고리즘 문제 풀이 (자료구조·DP)
+
+지금은 프론트엔드 일을 한다. React·TypeScript·Next.js. **C++ 한 줄 안 쓴다**. 그런데 이 학부 코드들이 지금도 영향을 준다.
+
+## 영향 1 — 메모리·시간 직관
+
+C에서 `malloc`/`free`를 직접 다뤘다. JavaScript는 GC가 다 해줘서 메모리 신경 안 쓰는 게 일반. 다만 어디서 메모리가 새고 어디서 GC pause가 발생하는지를 **느낌으로 안다**.
+
+React에서 `useMemo`/`useCallback`을 언제 써야 하는지를 결정할 때, 메모리 직관이 있으면 "이건 매 렌더 새 객체 → 자식 컴포넌트 prop 변경 → 불필요한 리렌더"를 즉시 추론한다. 메모리 신경 안 쓴 사람은 `useMemo`를 "성능 마법"으로만 사용.
+
+`bptree`에서 디스크 page 단위로 데이터 다뤘던 경험은 frontend에서 **virtualization·페이지네이션 설계**할 때 그대로 작동한다. 큰 리스트를 어떻게 chunk할지의 직관.
+
+## 영향 2 — 시스템 사고
+
+`myshell`에서 fork·exec·pipe·signal을 다뤘다. process가 어떻게 spawn되고 어떻게 통신하는지. signal handler가 어떻게 동작하는지.
+
+지금 graceful shutdown(SIGTERM 처리)이나 Worker thread, child process spawn 같은 영역을 만나면 학부 때 했던 것과 같은 모델이 동작한다. "process가 죽을 때 무슨 일이 일어나는지"를 머릿속에 그릴 수 있다.
+
+framework는 추상화한다. 추상화 안에서 무슨 일이 일어나는지 모르면 디버깅을 framework에 의존한다. **fundamentals를 알면 추상화가 깨지는 자리도 보인다**.
+
+## 영향 3 — 알고리즘 직관
+
+`PS_inha`에서 푼 알고리즘 문제 100개+가 머릿속에 패턴으로 남는다. "이 문제는 BFS·이건 DP·저건 greedy" 같은 분류.
+
+frontend에서 알고리즘 직접 쓸 일은 적다. 다만:
+
+- 대량 리스트 정렬·필터링 최적화
+- 컴포넌트 트리 traversal
+- 가상 DOM diff 이해
+- search·autocomplete
+
+매번 알고리즘이 필요하다.
+
+## 영향 4 — 디버깅 인내력
+
+C++에서 segfault·memory corruption 디버깅은 며칠씩 걸린다. gdb·valgrind를 며칠 돌려야 원인 찾음. 그 인내력이 frontend의 비동기·race condition·hydration mismatch 디버깅에도 그대로 작동.
+
+"이건 한 시간 안에 끝날 거"라는 expectation이 아니라 "이건 며칠 걸릴 수 있다, 인내심 + 도구 + 가설 + 검증"으로 접근하는 mindset.
+
+## 다른 학부생에게
+
+학부 시절 C/C++로 fundamentals를 한 번이라도 직접 만져본 사람과 안 만져본 사람의 6년 후 차이는 크다. 둘 다 프론트엔드 잘 할 수 있지만, 추상화가 깨지는 자리에서 갈라진다.
+
+- 직접 만져본 사람: 추상화 아래로 내려가 디버깅
+- 안 만져본 사람: 추상화를 "마법"으로 받아들이고 우회
+
+학부 시절은 framework 학습이 아니라 **fundamentals를 직접 만져볼 마지막 자리**다.
+
+## 함정
+
+- **학부 코드를 그대로 production에 가져가기**: 학부 코드는 학습용. production 안전성·테스트·확장성 없음. 직접 가져가지 마라.
+- **fundamentals를 framework로 학습**: React로 메모리 직관을 배우려 하면 너무 추상화돼 있어 잘 안 됨. 학부 시절 한 번이라도 C/C++.
+- **추상화 부정**: framework·라이브러리는 가치 있다. fundamentals 안다고 매번 직접 구현하면 비효율.
+- **학부 코드 archive 안 함**: 6년 전 코드가 메인 프로필에 그대로 노출. archive해서 흔적은 남기되 활성 작업과 분리.
+- **"학부생이 잘했을 리 없다"는 자기 평가절하**: 학부 코드는 학부 시점의 본인이 best였다. 부끄러워하지 말고 흔적으로 보존.
+
+## 핵심
+
+> framework는 framework가 가르치지만, **fundamentals는 fundamentals를 직접 만져야 배운다**. 학부 시절은 그 마지막 자리다.
+
+## 관련
+
+[/notes/learning-repo-sandbox-value](/notes/learning-repo-sandbox-value) — 학습 레포 일반론
+[/notes/archive-or-keep-old-repo](/notes/archive-or-keep-old-repo) — 6년 전 코드 정리
+[/notes/typescript-false-safety](/notes/typescript-false-safety) — 추상화가 가리는 것을 인식

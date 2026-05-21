@@ -1,0 +1,162 @@
+---
+title: npm 패키지 출시 체크리스트 — bin·files·engines·dry-run
+growth: Seedling
+topics: [npm, package, publishing, swe]
+summary: npm publish 한 번이 영구다. bin 경로·files glob·engines·--dry-run·SemVer 6가지를 사전 검증. 실수 한 줄이 100명의 install error를 만든다.
+plantedAt: 2026-05-10
+lastTendedAt: 2026-05-21
+---
+
+## 문제 — publish는 영구다
+
+`npm publish` 한 번이 영구다. unpublish는 24시간 안에만 가능, 그 후엔 다른 버전으로만 덮을 수 있다.
+
+문제는 패키지가 깨진 상태로 publish되면:
+
+- 모든 `npm install <pkg>` 실패
+- 다른 사람 CI 깨짐
+- npm registry에 영구히 stale 버전 남음
+
+publish 전 6가지를 사전 검증하면 거의 다 막힌다.
+
+## 1. `package.json` 필수 필드
+
+```json
+{
+  "name": "my-pkg",
+  "version": "1.0.0",
+  "description": "...",
+  "main": "index.js",
+  "bin": "cli.js",
+  "files": ["index.js", "cli.js", "*.json"],
+  "engines": { "node": ">=18" },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/<user>/<repo>.git"
+  },
+  "license": "MIT",
+  "keywords": ["..."]
+}
+```
+
+`repository`가 빠지면 npm 페이지에 GitHub 링크 안 보임. 신뢰도 ↓.
+
+## 2. `bin` 경로 검증
+
+```json
+"bin": "cli.js"
+```
+
+또는 명시적 이름:
+
+```json
+"bin": { "my-cli": "cli.js" }
+```
+
+함정: relative path에 `./` 붙이면 npm이 자동으로 제거한다 (warning). 그냥 `cli.js`만.
+
+`cli.js` 자체에 shebang 필수:
+
+```js
+#!/usr/bin/env node
+```
+
+shebang 없으면 직접 실행 안 됨. `chmod +x cli.js`도 권장.
+
+## 3. `files` glob — publish될 파일
+
+```json
+"files": ["cli.js", "index.js", "info.json", "README.md"]
+```
+
+`files`가 없으면 모든 파일 publish됨 (node_modules 제외). 의도하지 않은 파일이 들어가면 패키지 size 폭증.
+
+`.npmignore` 또는 `.gitignore`로 제외 가능하지만, **whitelist(`files`)가 blacklist보다 안전**.
+
+## 4. `--dry-run`으로 사전 검증
+
+```bash
+npm publish --dry-run
+```
+
+publish 안 하고 어떤 파일이 들어갈지 출력. 다음을 확인:
+
+- 파일 목록이 의도와 일치
+- 총 size가 합리적 (5MB 이하 권장)
+- warning이 없음 (`bin` 경로 etc)
+- `package.json` field 인식
+
+이걸 항상 본 publish 전에 실행. 한 줄 안전망.
+
+## 5. `engines` — Node 버전
+
+```json
+"engines": { "node": ">=18" }
+```
+
+사용자가 구 Node로 install 시 경고. 안 적으면 깨진 후에 사용자가 깨달음.
+
+`npm` 버전도 명시 가능:
+
+```json
+"engines": { "node": ">=18", "npm": ">=9" }
+```
+
+## 6. SemVer — major/minor/patch
+
+```
+1.0.0 → 1.0.1   patch (bug fix, backward compatible)
+1.0.0 → 1.1.0   minor (new feature, backward compatible)
+1.0.0 → 2.0.0   major (breaking change)
+```
+
+major bump 안 하고 breaking change publish하면 모든 caller의 `^1.x.x` 빌드가 깨짐. **breaking은 항상 major**.
+
+`npm version patch|minor|major`로 자동.
+
+## 출시 흐름
+
+```bash
+# 1. 사전 검증
+npm test
+npm run lint
+npm publish --dry-run
+
+# 2. 버전 bump
+npm version minor
+
+# 3. publish
+npm publish
+
+# 4. tag push (npm version이 자동 tag 생성)
+git push --follow-tags
+```
+
+## 함정
+
+- **publish 후 unpublish 불가 (24h 후)**: 잘못 publish하면 새 버전으로 fix만 가능.
+- **public default**: scope 없는 패키지는 public이 기본. private 의도면 `--access restricted`.
+- **2FA 설정 안 함**: npm 계정 탈취 시 영향 큼. `--auth-type web` 2FA 강제.
+- **README 누락**: npm 페이지가 빈 칸. README.md를 `files`에 포함.
+- **CHANGELOG 없음**: 사용자가 무엇이 바뀌었는지 모름. 매 release마다 짧게라도.
+- **`prepublishOnly` script 없음**: build·test·lint를 publish 전 자동 수행. 깨진 빌드 publish 방지.
+
+## prepublishOnly 패턴
+
+```json
+"scripts": {
+  "prepublishOnly": "npm test && npm run build"
+}
+```
+
+`npm publish` 호출 시 자동 실행. 깨지면 publish 중단.
+
+## 핵심
+
+> npm publish는 **영구 동작**이다. 6가지 사전 검증(필수 필드·bin·files·dry-run·engines·SemVer)을 매번 통과하면 깨진 publish가 거의 사라진다.
+
+## 관련
+
+[/notes/npx-name-business-card](/notes/npx-name-business-card) — npm 패키지로 명함 만들기
+[/notes/dead-dependency-hidden-cost](/notes/dead-dependency-hidden-cost) — 안 쓰는 의존성을 publish하면 사용자 install 비용
+[/notes/ci-cache-incremental-builds](/notes/ci-cache-incremental-builds) — prepublishOnly의 CI 시간 영향

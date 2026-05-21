@@ -1,0 +1,106 @@
+---
+title: chalk + boxen으로 터미널 시각 카드 — ANSI fallback까지
+growth: Seedling
+topics: [cli, npm, terminal, design]
+summary: 터미널은 평면 텍스트가 아니다. chalk(색)·boxen(박스)·figlet(ASCII art)로 잡지(magazine) 같은 카드. NO_COLOR·width 변동·이모지 깨짐 대비.
+plantedAt: 2026-05-11
+lastTendedAt: 2026-05-21
+---
+
+## 문제 — 터미널 출력은 보통 plain하다
+
+CLI 도구를 만들 때 출력은 보통 `console.log` 한 줄. 시각적 위계 없음.
+
+좋은 CLI는 시각적 위계가 있다.
+
+- 제목·강조는 색·굵게
+- 그룹은 박스로
+- 상태는 색·이모지
+
+3가지 라이브러리 조합으로 충분.
+
+## chalk — 색·스타일
+
+```js
+import chalk from 'chalk';
+
+console.log(chalk.bold.cyan('Title'));
+console.log(chalk.dim('subtitle'));
+console.log(chalk.green('✓ success'));
+console.log(chalk.red('✗ error'));
+```
+
+색 종류 16개 기본, RGB 256색, true color. 환경 감지 자동.
+
+## boxen — 박스 박스
+
+```js
+import boxen from 'boxen';
+
+console.log(boxen('Hello\nWorld', {
+  padding: 1,
+  margin: 1,
+  borderStyle: 'round',
+  borderColor: 'cyan',
+  align: 'center',
+}));
+```
+
+`borderStyle`: `single`·`double`·`round`·`bold`·`classic` 등. `round`가 가장 부드러움.
+
+## 조합 — 명함 카드 예시
+
+```js
+import chalk from 'chalk';
+import boxen from 'boxen';
+
+const card = [
+  chalk.bold.white('Justin Jeong') + chalk.dim(' / Senior FE'),
+  '',
+  chalk.cyan('github')  + '  github.com/justinjeong5',
+  chalk.cyan('email')   + '   justin@example.com',
+  chalk.cyan('site')    + '    justinjeong5.github.io',
+].join('\n');
+
+console.log(boxen(card, {
+  padding: 1,
+  margin: 1,
+  borderStyle: 'round',
+  borderColor: 'cyan',
+}));
+```
+
+30줄도 안 되는 코드가 시각적 카드가 된다.
+
+## ANSI fallback (NO_COLOR·CI)
+
+`NO_COLOR` 환경변수가 있거나 `process.stdout.isTTY === false` (pipe·redirect)면 색을 꺼야 한다.
+
+chalk은 자동 감지. 다만 boxen은 박스 문자 자체는 unicode라 일부 환경에서 깨짐.
+
+```js
+const supportsUnicode = process.env.TERM_PROGRAM === 'vscode' || process.platform !== 'win32';
+
+const borderStyle = supportsUnicode ? 'round' : 'classic';
+```
+
+`classic`은 ASCII (`+`, `-`, `|`) 기반이라 어디서나 동작.
+
+## 함정
+
+- **chalk v5+ ESM 전용**: CommonJS에서 `require('chalk')` 깨짐. v4까지가 CJS 호환. ESM 적용 안 됐으면 chalk@4.
+- **width 가정 hardcode**: 터미널 너비 80자 가정하면 좁은 창에서 줄바꿈 깨짐. `process.stdout.columns` 감지.
+- **이모지 환경 의존**: macOS·Linux는 OK, Windows cmd·일부 SSH는 깨짐. fallback char 준비.
+- **NO_COLOR 무시**: 색 강제하면 접근성 떨어짐. chalk default 따르기.
+- **boxen padding 0**: 텍스트가 박스 모서리에 붙으면 답답. padding 1+ 권장.
+- **너무 많은 색**: 5색 이상은 시각적 노이즈. 1-2색 강조 + 나머지 dim.
+
+## 핵심
+
+> 터미널 출력에 위계만 줘도 사용자 신뢰가 비선형으로 올라간다. **chalk + boxen 두 라이브러리면 충분**하다. NO_COLOR·width·이모지 fallback이 production 차이.
+
+## 관련
+
+[/notes/npx-name-business-card](/notes/npx-name-business-card) — 카드의 큰 그림
+[/notes/npm-publish-checklist](/notes/npm-publish-checklist) — 패키지로 publish할 때
+[/notes/ios-hig-touch-targets](/notes/ios-hig-touch-targets) — 같은 "platform 컨벤션 존중" 철학

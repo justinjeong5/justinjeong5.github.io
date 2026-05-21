@@ -1,0 +1,103 @@
+---
+title: 개인 인프라 스택 — 회사 인프라 없이도 production-grade
+growth: Seedling
+topics: [infrastructure, side-project, github, notion]
+summary: GitHub Pages(사이트) + Releases(CDN) + Notion(DB) + Actions(cron). 신용카드 0원으로 운영되는 personal stack. side project 시작 비용을 0으로 만든다.
+plantedAt: 2026-05-19
+lastTendedAt: 2026-05-21
+---
+
+## 회사 인프라 없이 개인이 무엇을 운영하나
+
+회사에선 AWS·GCP·Datadog·Slack이 다 있다. 그런데 사이드 프로젝트에 회사 계정 안 쓰면 처음부터 다 만들어야 한다. 신용카드 결제·계정 발급·요금 모니터링 — 시작 비용이 압박이다.
+
+그래서 처음부터 무료 stack을 조합한다. **신용카드 0원**으로 personal grade infra를 갖춘다.
+
+## 4-Layer Personal Stack
+
+### 1. Hosting — GitHub Pages
+
+정적 site (블로그·portfolio·리포트). 빌드 후 master 또는 gh-pages 브랜치에 push.
+
+- 무료, custom domain 지원
+- SSL 자동 (Let's Encrypt)
+- monthly bandwidth 100GB
+- build minutes 무제한
+
+부족: SSR·동적 라우팅·서버 사이드. 그건 static + client routing(SPA fallback)으로 우회.
+
+### 2. CDN — GitHub Releases
+
+video·고해상도 image·PDF 등 binary asset. release tag로 versioning.
+
+- 파일당 2GB
+- 트래픽 무제한
+- 영구 URL
+
+### 3. Backend — Notion API
+
+작은 데이터셋 (수천 행). 노션 DB가 lightweight backend.
+
+- 무료 무제한 row (UI는 ~1만 행 부드러움)
+- 시각화·모바일 앱 자동
+- API 3 req/sec
+
+### 4. Scheduler — GitHub Actions cron
+
+주기 작업(데이터 수집·report 생성·deploy).
+
+- public repo는 무제한 minutes
+- private도 월 2,000분 무료
+- secret 관리, matrix 빌드
+
+## 실제 조합 예시
+
+홈레이더 시스템:
+- **GH Actions cron**: 주1회 발동
+- **외부 API 7개** fetch (국토부·네이버·카카오 등)
+- **Notion DB 7개**에 결과 저장
+- **본 결과 차트는 GitHub Pages site에서 노출** (계획)
+- **demo video는 cdn-assets Releases**에 호스팅
+
+신용카드 결제: **0원**.
+
+## 회사 stack 대비
+
+| 영역 | 회사 stack | Personal stack |
+|---|---|---|
+| Hosting | Vercel·Netlify Pro | GH Pages |
+| CDN | Cloudflare R2·S3 | GH Releases |
+| DB | Postgres·DynamoDB | Notion API |
+| Scheduler | EventBridge·Cron | GH Actions |
+| Monitoring | Datadog·Sentry | Console·email |
+| Auth | Auth0·Cognito | (없음) |
+
+부족한 게 있다. monitoring·auth·실시간 처리. 다만 side project 규모에선 미충족 영역이 critical이 아닌 경우가 많음.
+
+## 함정
+
+- **vendor lock-in to GitHub**: 모든 게 GitHub에 묶임. GitHub policy 변경 시 영향. 다만 git 원본은 옮기기 쉬움.
+- **공개·private 경계 혼동**: Notion DB는 노션 계정 안에만, GH는 공개 시 누구나 접근. 데이터 민감도 분류 필수.
+- **API rate limit이 critical path**: 모든 layer에 rate limit 있음. 동기 처리는 자주 막힘. async + batch.
+- **scale up 안 됨**: 만 명 user 대응 X. side project 초기에만 OK.
+- **monitoring 부재**: 깨져도 모름. cron 실패 → email alert 최소.
+
+## 언제 production stack으로 이전하나
+
+- DAU 100+ 사용자 (rate limit·UI 부담)
+- 데이터 민감도 ↑ (auth·암호화 필수)
+- 다른 사람과 collaboration (Notion 권한 부족)
+- 시간 비용보다 SaaS 결제가 저렴해질 때
+
+그 전까지는 personal stack으로 충분.
+
+## 핵심
+
+> 개인 사이드 프로젝트는 **신용카드 0원으로 시작 가능**하다. GitHub + Notion의 무료 한계를 정확히 알고 쓰면 production-grade 흉내까지는 된다.
+
+## 관련
+
+[/notes/github-releases-as-cdn](/notes/github-releases-as-cdn) — CDN layer
+[/notes/notion-lightweight-backend](/notes/notion-lightweight-backend) — DB layer
+[/notes/public-api-integration-patterns](/notes/public-api-integration-patterns) — 외부 API 통합 패턴
+[/notes/report-asset-split-repo](/notes/report-asset-split-repo) — repo 분리 패턴

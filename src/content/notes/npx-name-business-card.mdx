@@ -1,0 +1,106 @@
+---
+title: npx <name> — SWE 첫 인상의 새 형태
+growth: Seedling
+topics: [career, npm, branding, side-project]
+summary: 명함을 npm 패키지로. `npx justinjeong` 한 줄이 GitHub 링크보다 강한 인상을 준다. 터미널이 만남의 자리인 SWE 사이에서.
+plantedAt: 2026-05-10
+lastTendedAt: 2026-05-21
+---
+
+## 아이디어 — 명함이 명령어
+
+평범한 자기소개: "github.com/justinjeong5 보세요."
+
+다른 자기소개:
+
+```bash
+npx justinjeong
+```
+
+한 줄 실행. 터미널에 ANSI box로 자기 소개·역할·연락처가 펼쳐진다.
+
+이게 왜 더 강한가? **SWE는 터미널에서 만난다**. 이력서·LinkedIn보다 터미널 명령어가 자연스러운 자리.
+
+## 어떻게 만드나
+
+### 1. npm 패키지로 등록
+
+`package.json`에 `bin` field 추가:
+
+```json
+{
+  "name": "justinjeong",
+  "version": "2.0.0",
+  "bin": "cli.js",
+  "files": ["cli.js", "index.js", "info.json"]
+}
+```
+
+`cli.js`는 #!/usr/bin/env node shebang + 카드 출력 로직.
+
+### 2. 카드 렌더링
+
+```js
+import chalk from 'chalk';
+import boxen from 'boxen';
+import info from './info.json';
+
+const card = `${chalk.bold(info.name)}
+${chalk.dim(info.role)}
+
+${chalk.cyan('github')}  ${info.github}
+${chalk.cyan('email')}   ${info.email}
+${chalk.cyan('site')}    ${info.site}`;
+
+console.log(boxen(card, { padding: 1, borderStyle: 'round' }));
+```
+
+chalk·boxen 조합으로 색상 + 박스. 30줄 안 넘는다.
+
+### 3. npm publish
+
+```bash
+npm publish --dry-run  # 검증
+npm publish            # 발행
+```
+
+이름이 username과 같으면 (`npm install -g justinjeong` 또는 `npx justinjeong`) 기억하기 쉬움.
+
+## 왜 효과 있나
+
+### 1. 강한 첫 인상
+
+"명함 카드 깔끔하다"는 동료들이 두 번째 만남에서 기억한다. 일반 LinkedIn 링크는 그렇게 기억 안 됨.
+
+### 2. proof-of-work
+
+`npx <name>`이 동작한다는 것 자체가 npm publish·CLI 작성·color/box 다룰 줄 안다는 증명. 코드 한 줄 안 보여줘도 capability 신호.
+
+### 3. 갱신 가능
+
+회사·역할·기술 스택이 바뀌면 `npm publish` 한 번이면 모든 사용자에게 최신본 전달. 정적 PDF 명함은 갱신 어려움.
+
+## 함정
+
+- **이름 충돌**: npm은 first-come-first-served. 이미 점유된 이름이면 다른 이름 또는 scope (`@user/card`).
+- **maintenance burden**: 한 번 publish하면 영구. 회사·역할 안 갱신하면 stale.
+- **터미널 안 쓰는 사람에겐 무용**: 채용 담당자 일부는 터미널 미사용. 그들에겐 일반 portfolio site가 1순위.
+- **chalk v5 ESM-only**: chalk@4까지는 CommonJS. v5+는 ESM. package.json `type` 일치 필요.
+- **이모지·유니코드 깨짐**: Windows cmd·일부 SSH 세션에서 ANSI 일부 안 됨. fallback ASCII art 또는 색상 없는 plain.
+- **package size 너무 큼**: chalk·boxen만 써도 의존성 적당. lodash·moment 같은 무거운 라이브러리 의존 X.
+
+## 운영
+
+- 매 분기 한 번 `npm publish` (역할·tagline 갱신)
+- README에도 카드 미리보기 (스크린샷 또는 ANSI demo)
+- GitHub Action으로 npm publish 자동화 (tag push 시)
+
+## 핵심
+
+> 명함은 시각 자료가 아니라 **터미널에서 실행되는 객체**일 수 있다. `npx <name>` 한 줄이 portfolio 링크 10개보다 강하다.
+
+## 관련
+
+[/notes/chalk-boxen-terminal-card](/notes/chalk-boxen-terminal-card) — 카드 시각화 디테일
+[/notes/npm-publish-checklist](/notes/npm-publish-checklist) — silent fail 방지
+[/notes/recruiter-10-seconds](/notes/recruiter-10-seconds) — 채용 담당자 첫 인상 시간

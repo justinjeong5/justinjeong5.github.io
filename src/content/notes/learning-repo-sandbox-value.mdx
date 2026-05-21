@@ -1,0 +1,79 @@
+---
+title: 학습 레포는 회사에서 못 쓰는 기술의 실험장
+growth: Seedling
+topics: [learning, side-project, career, sandbox]
+summary: 회사 코드는 가드레일이 많다. 학습 레포는 자유. Module Federation·실험적 hook·새 framework를 자유롭게 만져보고, 한 번 쓰면 회사 코드로 옮겨간다.
+plantedAt: 2026-05-13
+lastTendedAt: 2026-05-21
+---
+
+## 회사 코드의 자유도 한계
+
+회사 코드베이스에서는 새 기술을 함부로 쓸 수 없다.
+
+- 팀 컨벤션·아키텍처 결정 필요
+- 다른 팀원 학습 비용
+- production 안전성 검증
+- 배포 파이프라인 호환
+
+새 라이브러리 한 번 추가하려면 RFC·논의·합의. 3주 걸린다. **합당한 가드레일이지만 학습 속도엔 적**.
+
+## 학습 레포의 진짜 가치
+
+학습 레포(개인 GitHub 공개 또는 private)는 가드레일 0.
+
+- 새 framework 시도 (Solid·Svelte·Qwik 등)
+- 실험적 hook 패턴
+- 미해본 build tool (Bun·esbuild·rolldown)
+- low-level 알고리즘 직접 구현
+- Module Federation·module loader 직접 만들기
+
+production 안 가니까 안전성 검증 필요 없음. 컨벤션 결정 필요 없음. **그냥 만든다**.
+
+## 학습 레포 → 회사 코드 흐름
+
+전형적 흐름:
+
+1. 학습 레포에서 새 기술 spike (한 주말)
+2. 한계·함정·실용성 파악
+3. 회사 코드에서 작은 적용 자리 발견
+4. 학습 레포 경험으로 짧은 RFC 작성
+5. 팀 합의 + 도입
+
+학습 레포 경험 없이 회사에 RFC 던지면 "왜 우리한테 적용하나"를 설명 못 한다. 실제 만져본 사람만이 trade-off를 안다.
+
+## 예시 — 같은 패턴이 회사로 흘러간 케이스
+
+개인 학습 → 회사 적용 예시:
+
+- **Module Federation 학습 → 사내 micro frontend 도입**: mfp 같은 학습 레포가 사내 도입 시 RFC 근거
+- **zod boundary 검증 → API 응답 검증**: 사이드 프로젝트에서 익숙해진 zod이 회사 코드에도 자연 도입
+- **bottleneck rate limit → 외부 API 통합 안정성**: 홈레이더 같은 사이드 프로젝트의 패턴
+- **chalk·boxen CLI 시각화 → 사내 CLI 도구 UX 개선**
+
+회사 코드는 안전한 일관성. 학습 레포는 새로움. 둘은 짝.
+
+## 함정
+
+- **학습 레포만 만들고 정리 안 함**: 6년 누적 30+ 레포가 archive·정리 없이 쌓이면 나쁜 신호. 정기 정리.
+- **완성 압박**: 학습 레포는 "spike" 단계로 끝나도 됨. "완성" 강박이 학습 속도 ↓.
+- **회사 코드 옮기지 않음**: 학습은 했는데 회사 코드는 그대로. 학습이 자산화 안 됨. 작은 적용 자리부터 찾기.
+- **너무 큰 학습 프로젝트**: "이번엔 풀스택 앱 만들어볼게"가 한 달 후 안 끝남. spike는 작게.
+- **학습 자체가 목적이 됨**: 새 기술을 배우는 게 즐거워서 회사 적용은 안 함. 학습은 도구이지 목적 아님.
+
+## 운영 룰
+
+- spike는 한 주말 안에 끝낼 사이즈로
+- 결과는 짧은 README + main.js 위주 (정성껏 안 만듦)
+- 회사 적용 자리를 항상 1개는 떠올리고 시작
+- 정기 archive (분기 1회): 1년 안 만진 + 학습 가치 0 → archive
+
+## 핵심
+
+> 학습 레포는 **회사 코드의 안전망 위에서 만들 수 없는 것**을 만드는 곳이다. 만들어야 옮길 수 있다.
+
+## 관련
+
+[/notes/spike-throwaway-code](/notes/spike-throwaway-code) — spike의 일반 패턴
+[/notes/archive-or-keep-old-repo](/notes/archive-or-keep-old-repo) — 학습 레포 정리 기준
+[/notes/incrementally-correct](/notes/incrementally-correct) — 학습도 한 번에 완성하지 않는다

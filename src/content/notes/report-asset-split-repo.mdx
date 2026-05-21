@@ -1,0 +1,79 @@
+---
+title: HTML 리포트와 binary asset 분리 저장소 — diff 노이즈·clone 시간 ↓
+growth: Seedling
+topics: [github, repo-structure, infrastructure]
+summary: 본 repo는 가볍게(markdown·source), asset은 별도 저장소(Releases). cross-repo 참조 한 줄로 clone 5분이 10초가 된다.
+plantedAt: 2026-05-12
+lastTendedAt: 2026-05-21
+---
+
+## 문제 — repo가 binary로 무거워진다
+
+블로그·리포트·문서 repo에 자연스럽게 쌓이는 것들.
+
+- 스크린샷 (한 글당 5-10장)
+- 데모 video (글당 1-2개, 50MB+)
+- 디자인 export (PSD·Figma)
+- PDF·발표 자료
+
+half year 쌓이면 repo size가 GB 단위. clone에 5분, push에 2분.
+
+## 해법 — 분리 저장소 (mono asset repo)
+
+본 repo는 **source repo**, asset 전용 repo를 **cdn repo**로 분리.
+
+- source repo: markdown·코드·configs (KB 단위)
+- cdn repo: video·png·pdf (GB 단위, GitHub Releases에 저장)
+
+source repo 안에서는 asset을 cross-repo URL로 참조.
+
+```markdown
+![demo](https://github.com/<user>/cdn-assets/releases/download/v1/demo.mp4)
+```
+
+또는 HTML.
+
+## 효과
+
+- source repo clone: **5분 → 10초**
+- PR diff 깔끔: binary 안 보임
+- 동시에 한 사람만 작업해도 conflict 거의 0 (binary lock 불필요)
+- source repo size: 100MB 이내 유지 가능
+
+## 워크플로우
+
+```bash
+# asset 작업
+cd ~/Workspace/cdn-assets
+gh release upload v1 new-demo.mp4
+
+# 본 글 작성 (다른 repo)
+cd ~/Workspace/my-blog
+# markdown에 cross-repo URL 박기
+```
+
+asset과 source가 다른 commit에 들어감. 각자 독립적으로 versioning.
+
+## 함정
+
+- **asset 삭제하면 source의 링크 깨짐**: asset URL은 한 번 발행하면 영구로 두기. 교체는 새 release/새 파일.
+- **cross-repo 참조 stale**: source의 markdown에 old asset URL이 남아있을 수 있음. asset rename 시 source에서 grep.
+- **asset repo가 private이면 URL 접근 불가**: source가 public이어도 asset이 private이면 cross-repo 링크 깨짐. visibility 일치 필요.
+- **CI에서 asset fetch**: source repo CI가 asset 필요하면 cross-repo 인증 필요. 대부분의 정적 site builder는 fetch 안 하고 URL만 박음.
+- **너무 작은 binary까지 분리**: 1KB favicon까지 분리하면 오히려 관리 복잡. 100KB+ 정도 임계.
+
+## 언제 안 쓰나
+
+- monorepo 톤이 있는 프로젝트 (Next.js 등은 `public/`에 직접)
+- asset이 5개 이하의 작은 프로젝트
+- offline build가 필수인 경우 (cross-repo fetch 안 됨)
+
+## 핵심
+
+> binary는 source의 history에 들어갈 게 아니다. **분리 저장소 한 번 만들고 cross-repo URL로 참조**하면 repo가 평생 가볍다.
+
+## 관련
+
+[/notes/github-releases-as-cdn](/notes/github-releases-as-cdn) — asset repo의 Releases가 사실상 CDN
+[/notes/personal-infra-stack](/notes/personal-infra-stack) — 개인 인프라 전체 구조
+[/notes/vite-manual-chunks](/notes/vite-manual-chunks) — code도 분리하면 비슷한 효과
