@@ -1,0 +1,128 @@
+---
+title: 외부 공개 API 통합 — rate limit·재시도·zod boundary
+growth: Seedling
+topics: [api, integration, backend, side-project]
+summary: 다수 외부 API를 한 시스템에 통합할 때의 일반 패턴. bottleneck으로 rate limit, axios-retry로 재시도, zod로 응답 schema 검증. 5+ API라면 boundary가 안전망.
+plantedAt: 2026-05-18
+lastTendedAt: 2026-05-21
+---
+
+## 문제 — 5+ 외부 API 통합
+
+홈레이더 같은 시스템은 공개 API 7개를 통합한다. 국토부 RTMS, 네이버 Cloud Maps, 카카오 모빌리티, 학교알리미, 한국은행 ECOS 등.
+
+각 API의 정책이 다르다.
+
+- rate limit이 다름 (초당 3·10·100·무제한)
+- 응답 schema가 다름 (JSON·XML·둘 다)
+- 에러 표현이 다름 (status code·body field·둘 다)
+- 인증이 다름 (header·query·subkey)
+
+단일 패턴으로 다 다루지 않으면 코드가 case문 더미가 된다.
+
+## 패턴 1 — bottleneck으로 rate limit
+
+```ts
+import Bottleneck from 'bottleneck';
+
+const naverLimiter = new Bottleneck({
+  minTime: 100, // 10 req/sec
+  maxConcurrent: 1,
+});
+
+await naverLimiter.schedule(() => axios.get(url));
+```
+
+API별 limiter 분리. 한 API가 burst 받아도 다른 API는 영향 0.
+
+## 패턴 2 — 자동 재시도
+
+429·5xx·timeout은 일시적일 가능성 ↑. axios-retry 또는 직접 구현.
+
+```ts
+import axiosRetry from 'axios-retry';
+
+axiosRetry(axios, {
+  retries: 3,
+  retryDelay: axiosRetry.exponentialDelay,
+  retryCondition: (err) =>
+    err.response?.status === 429 || err.response?.status >= 500,
+});
+```
+
+429는 exponential backoff. 4xx는 일반적으로 재시도 안 함 (영구 에러).
+
+## 패턴 3 — zod로 응답 boundary 검증
+
+외부 응답을 그대로 믿으면 schema 바뀔 때 런타임에 깨짐. zod로 boundary에서 검증.
+
+```ts
+import { z } from 'zod';
+
+const PriceSchema = z.object({
+  aptName: z.string(),
+  dealAmount: z.string().transform((s) => parseInt(s.replace(/,/g, ''))),
+  dealYear: z.number(),
+});
+
+const data = PriceSchema.parse(response.data); // 깨지면 여기서 명확한 에러
+```
+
+장점:
+
+- 외부 schema 변경 시 즉시 감지 (다음 cron에 alert)
+- `any` 전염 차단
+- 응답 transform(string→number 등) 한 자리
+
+## 패턴 4 — 페이지네이션 일반화
+
+API마다 페이지네이션이 다르다 (cursor·offset·page-token). 한 함수로 추상화하면 호출자가 모름.
+
+```ts
+async function* paginate(api: string, params: object) {
+  let cursor: string | undefined;
+  while (true) {
+    const { items, nextCursor } = await fetchPage(api, params, cursor);
+    yield* items;
+    if (!nextCursor) break;
+    cursor = nextCursor;
+  }
+}
+
+for await (const item of paginate('rtms', { region: 'A' })) {
+  // process
+}
+```
+
+호출자는 페이지 신경 안 씀. for-await가 자연스럽게 종료.
+
+## 패턴 5 — 구조화 로그
+
+winston·pino로 JSON 로그. 에러 발생 시 어느 API·어느 단계인지 즉시 파악되어야.
+
+```ts
+logger.info('api.request', { api: 'naver_maps', endpoint: 'geocode', params });
+logger.error('api.error', { api: 'naver_maps', status: err.status, body: err.response?.data });
+```
+
+production에서 디버깅 시간이 비선형으로 줄어든다.
+
+## 함정
+
+- **rate limit을 단일 limiter로 통합**: 한 API의 burst가 다른 API를 막음. API별 분리.
+- **재시도 무한**: 영구 에러(4xx)도 재시도하면 무한 루프 + ban 위험. retryCondition 명확.
+- **zod 안 쓰고 `as` 캐스팅**: 거짓 안전감. 외부 schema 변경 시 못 감지.
+- **API key를 코드에 hardcode**: env var + GitHub Secrets. log에 redact.
+- **에러 응답 본문 무시**: API마다 에러를 body field에 담음 (status=200인데 body에 error 코드). 응답 검증 시 함께.
+- **timeout 설정 누락**: 외부 API hang이 cron 전체를 멈춤. axios timeout 명시.
+
+## 핵심
+
+> 5+ 외부 API 통합은 정책 다양성 자체가 비용이다. **rate limit·재시도·boundary 검증을 라이브러리 수준으로 일반화**해야 case문 더미를 피한다.
+
+## 관련
+
+[/notes/typescript-false-safety](/notes/typescript-false-safety) — 외부 데이터를 컴파일러가 못 잡는 이유
+[/notes/notion-lightweight-backend](/notes/notion-lightweight-backend) — 같은 rate limit 한계의 다른 케이스
+[/notes/incident-monitoring-gap](/notes/incident-monitoring-gap) — 외부 API 깨짐도 모니터링 갭이 됨
+[/notes/graceful-shutdown](/notes/graceful-shutdown) — cron job의 graceful 종료도 같은 맥락

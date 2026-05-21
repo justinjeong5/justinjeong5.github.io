@@ -1,0 +1,92 @@
+---
+title: 노션을 lightweight backend로 — DB 7개로 만든 무료 백엔드
+growth: Seedling
+topics: [notion, backend, side-project, automation]
+summary: 직접 DB·서버를 띄우지 않고 노션 API + DB로 backend를 대체. 무료·시각화·모바일 앱이 따라오지만 PK·쿼리·rate limit 한계를 안다.
+plantedAt: 2026-05-15
+lastTendedAt: 2026-05-21
+---
+
+## 언제 쓰나
+
+개인 프로젝트, side project, prototype에서 백엔드 비용을 줄이고 싶을 때.
+
+- 작은 데이터셋 (수천 행 이하)
+- 읽기보다 쓰기 적음 (배치 cron이 적합)
+- UI를 직접 안 만들어도 됨 (노션이 자동)
+- 모바일 접근 필요 (노션 앱 자동)
+
+production scale, real-time, 복잡한 쿼리는 부적합.
+
+## 7-DB 설계 예시
+
+홈레이더의 경우 다음 7개 DB로 나눔.
+
+- **Apartments_{REGION}** × 5: 지역별 단지 정보 (정적)
+- **PriceSnapshots_{YEAR}**: 가격 시계열 (year-partition)
+- **LocationStats**: 단지별 입지 메타 (한 번 계산 후 cache)
+
+DB를 나누는 이유:
+
+- 노션 DB 1개의 행 수 한계 (~1만 행 넘으면 UI가 느림)
+- region·year로 분리하면 쿼리 비용 ↓
+- 한 DB 깨져도 나머지 영향 0
+
+## API + axios 패턴
+
+```ts
+import { Client } from '@notionhq/client';
+
+const notion = new Client({ auth: process.env.NOTION_API_KEY });
+
+await notion.pages.create({
+  parent: { database_id: dbId },
+  properties: {
+    name: { title: [{ text: { content: '단지명' } }] },
+    price: { number: 95000 },
+  },
+});
+```
+
+rate limit이 있다. 평균 3 req/sec, burst 가능. bottleneck으로 throttle.
+
+## 한계
+
+### PK·FK 없음
+
+노션 DB는 relational DB가 아니다. PK 강제 없음. 직접 unique constraint 검증해야.
+
+홈레이더 Phase 2.5 hotfix는 이 한계 때문이었음. 같은 단지가 두 번 insert되는 race.
+
+처방: insert 전 `databases.query({ filter: { property: 'name', equals: ... } })`로 존재 확인. 또는 unique key를 page id로 캐싱.
+
+### 쿼리 약함
+
+SQL JOIN 없음. region별 평균 가격 같은 집계는 application 단에서 처리. 노션 view의 필터·정렬은 가벼운 UI 용이라 데이터 처리는 코드에서.
+
+### Rate limit이 빌드 시간 결정
+
+API 3 req/sec → 1000개 행 처리에 5-6분. cron 자동화면 OK, 동기 처리면 느림.
+
+### 노션 schema 변경 시 코드 깨짐
+
+property 이름 바뀌면 모든 코드 동시 수정. **노션 schema를 source of truth로 두지 말고 코드 schema를 source로**. setup script가 노션 DB를 만들도록.
+
+## 함정
+
+- **PK 없다고 dedupe 안 함**: 같은 행이 매주 새로 들어옴. unique 검증 필수.
+- **rate limit 무시**: 429 받으면 retry 안 함 → 데이터 누락. bottleneck + retry.
+- **노션 API key를 코드에 hardcode**: env var + GitHub Secrets.
+- **노션 UI에서 schema 변경**: 코드가 모르는 사이 깨짐. schema 변경은 코드 → API로만.
+- **DB 1개에 10만 행 쌓기**: 노션 UI가 느려짐. year/region partition.
+- **삭제된 page도 남음**: 노션 page 삭제는 trash로 이동. archived 상태 검증 필요.
+
+## 핵심
+
+> 노션은 backend 대체재가 아니라 **백엔드 비용을 0원으로 만드는 도구**다. 한계를 알고 쓰면 side project 인프라가 압도적으로 가벼워진다.
+
+## 관련
+
+[/notes/public-api-integration-patterns](/notes/public-api-integration-patterns) — 외부 API 통합 시 같은 rate limit 한계
+[/notes/incrementally-correct](/notes/incrementally-correct) — Phase 단위로 작게 쌓는 운영 철학
+[/notes/typescript-false-safety](/notes/typescript-false-safety) — 외부 API schema도 컴파일러가 못 봄

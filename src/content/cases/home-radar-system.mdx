@@ -1,0 +1,62 @@
+---
+title: 홈레이더 — 5개 지역 아파트 자동 추적 시스템
+status: Live
+role: 기획·아키텍처·구현·운영
+period: 2026.05
+summary: 관심 지역 5곳의 아파트 실거래가·평수·세대수·주차·학군·교통을 공개 API 7곳에서 주1회 자동 수집해 노션 DB에 정리. 거시지표·정책 레지스트리까지 포함한 personal real estate intelligence.
+date: 2026-05-21
+tags: [side-project, automation, notion, github-actions, typescript]
+---
+
+## 문제
+
+이사 시기가 오면 매번 같은 지역을 검색한다. 호갱노노·KB부동산·네이버부동산을 돌며 같은 단지의 실거래가·평수·세대수·주차·학군·역세권을 확인한다. 한 단지당 10-15분, 5곳을 보면 1-2시간.
+
+매주 같은 작업을 반복하는데 시간이 누적된다. 더 큰 문제는 비교 기준이 매번 달라지는 것. 어떤 단지는 학군만 봤고 어떤 단지는 교통만 봤다면 의사결정 일관성이 깨진다.
+
+## 결정
+
+**노션을 lightweight backend로**: 직접 DB·서버를 띄우는 대신 노션 API + 노션 DB 7개를 백엔드로. 무료, 시각화 자동, 모바일 앱 자동.
+
+**5개 관심 지역으로 좁힘**: 하남 미사, 송파 오금/개롱, 용인 수지, 인천 구월, 화성 동탄. 5곳 이상은 데이터 노이즈만 늘림.
+
+**YAML 설정으로 단지 추가**: `apartments.yml`만 수정하면 새 단지 추가 — 코드 수정 0.
+
+**Phase 단위 점진 빌드**: Phase 0(기반) → 1(MVP) → 2(enrichment) → 2.5(hotfix) → 3-A(가격 영향 metric) → 3-B(거시지표·정책). 매 phase는 PR 단위.
+
+**무료 인프라**: GitHub Actions cron(주1회) + Notion 무료 플랜. 운영 비용 0원.
+
+## 산출물
+
+- TypeScript + axios + bottleneck + zod + winston (production 패턴)
+- 노션 DB 7개: 지역별 Apartments 5개 + PriceSnapshots_2026 + LocationStats
+- 공개 API 7개 통합: 국토부 RTMS, 네이버 Cloud Maps, 네이버 Search Local, 카카오 모빌리티, 카카오 로컬, 학교알리미, 한국은행 ECOS
+- GitHub Actions cron + pending poll(15분)
+- Phase 3-A 가격 영향 metric 9개: 시장 동학 + 입지 + 기피 시설
+- Phase 3-B: 한국은행 거시지표 + 정책 레지스트리(region × 규제 × timeline)
+- CodeRabbit 자동 PR 리뷰
+- vitest 테스트 + ESLint
+
+## 임팩트
+
+- 매주 1-2시간 검색 작업 → 0분 (자동)
+- 비교 기준 일관 (같은 metric으로 5개 지역)
+- 3년 가격 추이 자동 차트 (RTMS 백필)
+- 거시지표·정책 변화가 자동 트래킹 (Phase 3-B)
+- **의사결정 시 한 곳에서 데이터를 본다**는 것 자체가 큰 변화
+
+## 다음
+
+- 알림 채널 통합 (Slack/email)
+- 더 많은 metric (전세가율 추이·갭투자 적합도)
+- ML 기반 단지 추천 (현재 metric 9개 → 가중치 학습)
+
+## 배운 것
+
+side project가 production 패턴을 가르친다. 회사 코드에선 자유롭게 쓰기 어려운 zod boundary 검증·bottleneck rate limit·winston 구조화 로그를 자유롭게 실험. 한 번 쓰면 회사 코드에도 자연스럽게 옮겨가는 게 진짜 학습.
+
+또 하나: **Phase 단위 점진 빌드**가 매몰을 막는다. Phase 1 MVP에서 모든 걸 다 만들려고 했다면 한 달 후에도 안 끝났을 것. Phase 0 → 1 → 2 → 2.5 hotfix → 3-A → 3-B 순서로 매번 작은 PR을 머지하면서 자라난 형태가 sustained delivery의 답이다.
+
+레포: [github.com/justinjeong5/j-home-radar](https://github.com/justinjeong5/j-home-radar)
+
+관련: [/notes/notion-lightweight-backend](/notes/notion-lightweight-backend), [/notes/public-api-integration-patterns](/notes/public-api-integration-patterns), [/notes/incrementally-correct](/notes/incrementally-correct)
