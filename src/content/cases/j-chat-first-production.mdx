@@ -1,0 +1,146 @@
+---
+title: J-Chat — 첫 프로덕션 배포의 회고 (2024)
+status: Archived
+role: 전체 (기획·설계·구현·운영)
+period: 2024
+summary: 학부에서 회사로 넘어가던 2024년, j-chat이라는 실시간 채팅 서비스를 직접 배포했다. 첫 production이 가르친 5가지. 학부 코드와 실서비스 코드의 거리는 한 줄로 요약되지 않는다.
+date: 2026-05-28
+tags: [career, production, learning, retrospective, websocket]
+---
+
+## 문제
+
+2024년 첫 회사로 옮기던 시점에 사이드 프로젝트로 j-chat을 만들었다. 단순한 채팅 서비스. MERN 스택(MongoDB·Express·React·Node) + WebSocket. 학부 시절 React/Express는 만져봤지만 **실제로 사람에게 배포해본 적이 없었다**.
+
+목표는 두 가지였다.
+1. 친구 5-10명이 실제로 쓸 수 있는 채팅 서비스
+2. 본인이 프로덕션 운영을 체험해보기
+
+학부에서 만든 코드는 localhost에서 돌면 끝이었다. 프로덕션이라는 환경이 어떤 건지 감이 없었다. j-chat은 그걸 체험하는 자리였다.
+
+## 역할
+
+전부 혼자. 기획·설계·구현·배포·운영·디버깅·CS(친구가 "안 돼"라고 메시지 보내는 거 받기).
+
+학부 시절 코드와 다른 점:
+- 학부: 과제 제출 후 끝
+- j-chat: 매일 사람이 쓰고 있음
+
+## 접근
+
+### 버린 선택지
+
+- **AWS 직접 셋업**: 첫 production에 EC2·VPC·Security Group까지 다 만들면 한 달 걸린다. 학습 가치는 있지만 친구가 못 쓰게 됨.
+- **Firebase**: 너무 마법 같음. 실제로 어떻게 동작하는지 체험할 자리가 안 됨.
+
+### 채택 — Heroku + MongoDB Atlas
+
+- Heroku에 Node + Express 배포 (무료 dyno)
+- MongoDB Atlas free tier
+- WebSocket은 Socket.io
+- React는 Vercel에 frontend 분리 배포
+
+**선택 이유**: 인프라가 추상화돼 있어서 한 주에 배포 가능. 단 추상화 안에서 무슨 일이 일어나는지는 체험 가능 (env var, build pipeline, log, DB connection).
+
+### Phase
+
+- Week 1: 로컬에서 채팅 동작
+- Week 2: Heroku 배포 + MongoDB Atlas 연결
+- Week 3: Socket.io reconnection 처리
+- Week 4: 친구 10명에게 공유, 운영 시작
+
+## 결과
+
+**운영 데이터** (3개월간):
+- 사용자: 친구 10명 + 본인
+- 메시지: 약 3,000개
+- 다운타임: 6번 (대부분 Heroku free dyno sleep)
+- 버그 리포트: 12건
+
+**기술 산출물**:
+- WebSocket 기반 실시간 채팅
+- 메시지 영속화 (MongoDB)
+- reconnection 처리
+- 채팅방 join/leave
+- 간단한 닉네임 시스템 (로그인 X)
+
+## 회고
+
+### 배운 것 1 — 코드를 쓰는 시간 vs 디버깅 시간
+
+학부 코드는 작성 80% / 디버깅 20%였다. j-chat은 작성 30% / 디버깅 70%였다.
+
+같은 코드를 작성하는데 디버깅에 압도적으로 시간이 더 든다. 이유는:
+- 환경이 다른 곳에서 돌아서 (localhost vs Heroku)
+- 외부 의존(MongoDB Atlas)이 가끔 끊김
+- 사용자가 예측 못 한 입력을 함
+- 여러 사용자가 동시에 사용하면 race condition
+
+학부에서는 본인 입력만 다뤘다. 프로덕션은 **본인 예측 밖의 입력 + 본인 환경 밖의 인프라**가 변수다.
+
+### 배운 것 2 — log의 가치
+
+처음 운영 시작했을 때 log를 거의 안 찍었다. "에러가 나면 보이겠지" 같은 안일함.
+
+3주 후 친구가 "메시지가 안 보낸 사람한테도 가는 것 같다"는 버그를 리포트. 재현이 안 됨. 로그가 없어서 원인 파악 불가.
+
+그때 log를 모든 socket event마다 찍기 시작했다. 그러자 다음 비슷한 버그는 1시간 안에 원인 파악. log는 **사후 진단의 유일한 자산**이다.
+
+지금 회사 코드에서 winston·structured logging을 자유롭게 쓰는 직관은 그때부터 시작됐다.
+
+### 배운 것 3 — env var의 무거움
+
+학부 코드는 `const DB = 'mongodb://localhost:27017'`였다. j-chat은 `process.env.MONGODB_URI`였다. 한 줄 차이지만 운영 의미가 다르다.
+
+- `.env` 파일이 .gitignore에 있어야 함
+- Heroku dashboard에 별도로 env 설정
+- 로컬 / staging / production이 다른 값
+- env var 누락 시 어떻게 fallback하는가
+
+env var 한 번 잘못 설정해서 DB가 안 연결돼 본 후로, **boundary에서 env 검증**이 첫 번째 코드가 됐다. zod로 env schema 검증하는 패턴은 j-chat의 잘못 설정 사고에서 시작됐다.
+
+### 배운 것 4 — 사용자는 본인이 예측 못 한 짓을 한다
+
+본인이 만든 시나리오: "메시지 보내기 → 받기."
+
+친구들이 실제로 한 것:
+- 같은 채팅방 같은 닉네임으로 두 명 입장 (race)
+- 빈 메시지 보내기
+- 매우 긴 메시지 보내기 (10,000자+)
+- 채팅 도중 브라우저 새로고침
+- 두 탭에서 동시에 열기
+- 모바일과 데스크톱에서 동시에
+
+전부 본인이 예측 못 한 입력이었다. j-chat은 이걸 다 처리하기 위해 시간의 절반을 썼다. 그래서 **edge case는 추측이 아니라 사용자가 가르친다**는 직관이 생겼다.
+
+### 배운 것 5 — Heroku free dyno sleep의 진짜 의미
+
+Heroku free tier dyno는 30분 idle하면 sleep한다. 다시 접속하면 콜드 스타트(약 10-15초). 첫 사용자가 항상 "안 돼"라고 한다.
+
+이게 단순 무료 정책이 아니라 **production의 cold start 일반 문제**다. AWS Lambda·Cloud Run·Vercel serverless 다 같은 문제를 가진다.
+
+j-chat에서는 무료라 그대로 뒀다. 회사 코드에서는 cold start 회피(min instance·warm-up cron)가 첫 production 작업이 됐다. j-chat이 그 문제를 미리 만나게 해줬다.
+
+## 지금이라면 다르게 할 점
+
+- **monitoring 처음부터**: free tier여도 UptimeRobot 같은 거 붙이기. "안 돼" 보고를 친구가 아니라 시스템이 알려주게.
+- **graceful shutdown**: SIGTERM 처리 안 하면 in-flight 메시지가 사라진다. 사이드 프로젝트라도 graceful shutdown.
+- **typescript 처음부터**: JS로 시작한 j-chat은 6개월 후 리팩토링 비용이 컸다. 처음부터 TS면 그 비용 회피.
+- **테스트 0에서 일부라도**: socket reconnection 같은 핵심 로직만이라도 단위 테스트.
+- **error tracking**: Sentry 무료 plan이라도. log + error tracker는 다르다.
+
+## 전이된 인사이트
+
+j-chat 한 사이드 프로젝트가 **회사 코드의 무의식적 baseline**을 만들었다. log 어디에 찍을지, env var 어떻게 검증할지, edge case 어떻게 다룰지, cold start 어떻게 회피할지. 모든 기본기가 j-chat에서 한 번 실패해본 후 회사로 옮겨졌다.
+
+학부에서 회사로 가는 사이의 사이드 프로젝트가 **production의 baseline을 미리 체험하는 자리**다. 회사에 가서 처음 production을 만나면 그 학습 곡선을 회사 코드에서 부담해야 한다. 사이드 프로젝트에서 미리 부담하면 회사에서는 다음 단계를 다룰 수 있다.
+
+## 핵심
+
+> 학부 코드와 프로덕션 코드의 거리는 한 줄로 요약되지 않는다. **log·env·edge case·cold start·monitoring** — 학부에서 안 만져본 5가지를 미리 사이드 프로젝트에서 부딪혀본 게, 첫 회사에서 다음 단계로 갈 수 있게 한 자리였다.
+
+j-chat 자체는 지금 archive다. 친구들은 더 이상 안 쓴다. 그런데 j-chat이 가르친 5가지는 지금 회사 코드에 매일 적용된다. **레포는 archive하되 인사이트는 살아있다**는 게 정확히 이 케이스다.
+
+레포: 본인 GitHub 프로필 (archived)
+
+관련: [/notes/archive-or-keep-old-repo](/notes/archive-or-keep-old-repo), [/notes/learning-repo-sandbox-value](/notes/learning-repo-sandbox-value), [/notes/graceful-shutdown](/notes/graceful-shutdown), [/notes/small-deploy-reread](/notes/small-deploy-reread)
