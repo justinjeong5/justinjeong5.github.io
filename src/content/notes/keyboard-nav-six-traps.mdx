@@ -1,0 +1,176 @@
+---
+title: Keyboard navigation 6가지 함정 — 마우스 없이 사이트를 쓸 수 있나
+growth: Seedling
+topics: [accessibility, frontend, a11y, ux]
+summary: Tab으로 사이트를 끝까지 쓸 수 있는가. 6가지 흔한 함정이 키보드 사용자를 막는다. 각 함정의 진단법과 수정 패턴.
+plantedAt: 2026-05-29
+lastTendedAt: 2026-05-29
+---
+
+## 왜 검증해야 하나
+
+마우스로만 테스트하면 사이트의 절반이 동작 안 함이 안 보인다.
+
+키보드 사용자:
+- 시각 장애 (스크린 리더 + 키보드)
+- 운동 장애 (마우스 사용 어려움)
+- 파워 유저 (마우스보다 키보드가 빠름)
+
+법적으로도 WCAG 2.1 AA가 키보드 접근 요구. 그러나 가장 큰 이유는 — 본인이 마우스 못 쓰는 30분만 살아봐도 사이트가 망가졌다는 게 보인다.
+
+## 빠른 점검
+
+마우스 안 쓰고 사이트를 한 번 끝까지 사용해본다.
+
+- Tab으로 모든 인터랙티브 요소 도달 가능?
+- Enter/Space로 동작?
+- focus가 시각적으로 보임?
+- 모달 열고 닫기 가능?
+- form 제출 가능?
+
+대부분 사이트가 이 점검에서 막힌다. 6가지 흔한 함정.
+
+## 함정 1 — `<div onClick>` 패턴
+
+```jsx
+// 키보드 안 됨
+<div onClick={handleClick}>버튼</div>
+
+// 키보드 OK
+<button onClick={handleClick}>버튼</button>
+```
+
+`<div>`는 기본적으로 focusable 아님. Tab 도달 안 함.
+
+**고치는 법**:
+- `<button>` 또는 `<a>` 사용 (네이티브 요소)
+- 진짜 `<div>` 필요하면: `tabIndex={0}` + `role="button"` + `onKeyDown` (Enter/Space 처리)
+
+## 함정 2 — focus 표시 제거
+
+```css
+/* 안 됨 */
+*:focus { outline: none; }
+button:focus { outline: 0; }
+```
+
+이거 디자인 정리 위해 자주 쓰지만 키보드 사용자에게 치명적. focus가 어디 있는지 안 보임.
+
+**고치는 법**:
+- outline 제거 시 대체 시각 표시 (예: box-shadow·border·background)
+- `:focus-visible` 사용 (마우스 클릭엔 outline 안 보이고 키보드 focus에만 보임)
+
+```css
+button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+```
+
+## 함정 3 — Tab 순서 깨짐
+
+CSS `order`, `flex-direction: row-reverse`, `position: absolute`로 시각적 순서를 바꾸면 DOM 순서와 Tab 순서가 안 맞는다.
+
+```html
+<!-- 화면: B → A 순서로 보임 (CSS order) -->
+<!-- Tab: A → B (DOM 순서) -->
+<div style="display:flex; flex-direction: row-reverse">
+  <button>A</button>
+  <button>B</button>
+</div>
+```
+
+키보드 사용자는 "화면에 보이는 순서대로" 이동할 거라 예상. 안 맞으면 혼란.
+
+**고치는 법**:
+- DOM 순서를 시각 순서와 맞추기
+- `tabIndex={-1}`로 일부 제외 (단, 인터랙티브 요소가 아닐 때만)
+
+## 함정 4 — focus trap 없는 모달
+
+모달이 열렸을 때 Tab을 누르면 모달 뒤의 페이지 요소로 focus가 빠진다. 키보드 사용자는 모달이 "닫혔는지" 알 수 없음.
+
+**고치는 법**:
+- 모달 안에 focus trap (Tab이 모달 안에서 순환)
+- ESC로 닫기
+- 모달 닫힐 때 trigger 버튼으로 focus 복원
+- 모달 열림 시 첫 focusable 요소로 focus 이동
+
+```js
+// 라이브러리: focus-trap, react-focus-lock
+import FocusTrap from 'focus-trap-react';
+
+<FocusTrap>
+  <div className="modal">...</div>
+</FocusTrap>
+```
+
+## 함정 5 — skip link 없음
+
+매 페이지 navigation을 Tab으로 통과해야 본문 도달.
+
+```html
+<!-- 페이지 첫 요소 -->
+<a href="#main" class="skip-link">본문으로 이동</a>
+```
+
+```css
+.skip-link {
+  position: absolute;
+  left: -9999px; /* 평소 안 보임 */
+}
+.skip-link:focus {
+  left: 0; /* focus 시 보임 */
+}
+```
+
+키보드 사용자는 첫 Tab에서 skip link → Enter로 본문 직행.
+
+## 함정 6 — hover 전용 인터랙션
+
+```css
+.dropdown:hover .menu { display: block; }
+```
+
+마우스 hover에만 메뉴 보임. 키보드 사용자는 메뉴 못 봄.
+
+**고치는 법**:
+- `:focus-within`도 같이
+- 또는 click/Enter로 토글
+
+```css
+.dropdown:hover .menu,
+.dropdown:focus-within .menu {
+  display: block;
+}
+```
+
+## 검증 방법
+
+```
+1. 사이트 첫 페이지부터 Tab만 눌러서 끝까지 사용
+2. 모든 인터랙티브 요소에 도달?
+3. focus가 시각적으로 보임? (탭 누를 때마다 어디 있는지)
+4. Enter/Space로 동작?
+5. 모달이 열린 후 ESC로 닫기 + Tab이 모달 안에 갇힘?
+6. screen reader 켜고 한 번 더 (VoiceOver·NVDA)
+```
+
+이 5분 점검이 a11y의 80%다.
+
+## 함정 (메타)
+
+- **자동 도구만 신뢰**: axe·Lighthouse는 일부만 잡음. 수동 키보드 테스트가 필수.
+- **a11y를 마지막에**: 처음부터 `<button>` 쓰면 비용 0. 마지막에 `<div>`를 `<button>`으로 바꾸면 큰 작업.
+- **screen reader 무시**: 키보드만 보고 screen reader 안 쓰면 ARIA 사용 잘못이 안 보임.
+- **너무 많은 ARIA**: 네이티브 요소 쓰면 ARIA 거의 필요 없음. ARIA는 보조 수단이지 대체 수단 아님.
+- **mobile a11y 무시**: 모바일도 키보드(외부 키보드·VoiceOver swipe) 사용자 있음.
+
+## 핵심
+
+> 5분 동안 마우스 안 쓰고 사이트를 써본다. **6가지 함정** 중 하나라도 걸리면 키보드 사용자에게 동작 안 함. `<button>` 쓰기·`:focus-visible`·focus trap이 80%를 해결.
+
+## 관련
+
+[/notes/ios-hig-touch-targets](/notes/ios-hig-touch-targets) — 모바일 인터랙션 디테일
+[/notes/css-color-scheme-native](/notes/css-color-scheme-native) — 다크 모드와 focus 색 보정
