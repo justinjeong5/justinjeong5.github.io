@@ -4,7 +4,7 @@ growth: Seedling
 topics: [typography, korean, design, frontend]
 summary: 영문 헤딩의 -0.04em letter-spacing은 한국어에 적용하면 받침 있는 자모가 뭉친다. -0.02em ~ -0.025em이 한글 균형점.
 plantedAt: 2026-05-19
-lastTendedAt: 2026-05-19
+lastTendedAt: 2026-05-28
 ---
 
 ## 문제
@@ -26,6 +26,50 @@ lastTendedAt: 2026-05-19
 | 본문 | 0 ~ -0.005em |
 | 작은 라벨 (eyebrow) | +0.08em ~ +0.12em (uppercase) |
 
+## letter-spacing 외 같이 잡아야 할 디테일
+
+letter-spacing만 잡아도 한국어가 산뜻해지지 않는다. 3가지가 같이 와야 한다.
+
+### line-height
+
+한국어는 글자 박스가 사각형이고 받침이 아래로 내려가서 영문보다 line-height가 더 필요하다.
+
+| 영역 | 영문 | 한국어 |
+|---|---|---|
+| h1 | 1.1 | 1.25 |
+| 본문 | 1.5 | 1.65-1.75 |
+| 작은 텍스트 | 1.4 | 1.55 |
+
+영문 디자인 시스템의 line-height 그대로 적용하면 한국어 본문이 답답하게 보인다.
+
+### word-break / line-break
+
+한국어는 영문과 달리 단어 간 공백이 적고 한 문장이 길어지면 줄바꿈 위치가 어색해진다.
+
+```css
+word-break: keep-all;  /* 단어 단위 줄바꿈 (영문 디폴트는 break-word) */
+line-break: auto;
+```
+
+`keep-all`이 없으면 단어 중간에서 줄바꿈이 일어나 가독성 ↓.
+
+### viewport별 보정
+
+모바일에서는 letter-spacing을 더 보수적으로.
+
+```css
+h1 {
+  letter-spacing: -0.025em;
+}
+@media (max-width: 768px) {
+  h1 {
+    letter-spacing: -0.015em;  /* 모바일은 더 보수 */
+  }
+}
+```
+
+모바일은 글자가 작아서 음수 spacing이 가독성을 더 깎는다.
+
 ## 검증
 
 이 사이트 quality-gate에서 디자이너 페르소나가 지적: "h1/h2의 letter-spacing -0.035em이 한국어 글리프(특히 받침 있는 자모)를 뭉개". 모바일 헤딩은 `-0.025em`으로 추가 완화.
@@ -35,6 +79,8 @@ lastTendedAt: 2026-05-19
 - 영문 디자인 영감을 그대로 카피하면 한국어 사이트에서 가독성 손해
 - Pretendard variable의 `font-feature-settings: 'ss06' on` 같은 옵션 활용 시 미세 조정 가능
 - letter-spacing은 viewport 크기에 따라 다르게 — 모바일은 더 보수적으로
+- letter-spacing만 잡고 line-height·word-break 안 잡으면 절반의 개선. 3가지가 묶음.
+- 영문 폰트(Inter·SF Pro 등) + 한국어 폰트(Pretendard)를 같이 쓸 때 각 언어별 letter-spacing이 달라야 함. font-family fallback에 의존하지 말고 명시.
 
 ## 관련
 

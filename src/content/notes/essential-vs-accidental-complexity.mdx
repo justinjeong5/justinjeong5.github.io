@@ -4,7 +4,7 @@ growth: Budding
 topics: [swe, tradeoff, design-process]
 summary: 본질 복잡도(essential)는 문제 자체의 어려움이고, 우발 복잡도(accidental)는 도구·환경에서 오는 어려움이다. 둘을 구분하지 못하면 가짜 일에 시간을 쓴다.
 plantedAt: 2026-04-08
-lastTendedAt: 2026-05-19
+lastTendedAt: 2026-05-28
 ---
 
 ## 핵심 구분
@@ -27,11 +27,33 @@ Brooks가 *No Silver Bullet* (1986)에서 제안:
 - "이 코드가 어려운 이유는 **문제가 어려워서**인가, **도구가 부족해서**인가?"
 - 후자라면 도구를 바꾸거나 자동화. 전자라면 받아들이고 정확히 풀기.
 
+## 실무 사례
+
+### Case 1 — 권한 시스템
+
+권한 시스템은 본질적으로 복잡하다. 사용자×역할×리소스×액션의 cartesian product. RBAC·ABAC·ReBAC 어떤 모델을 골라도 본질 복잡도가 사라지지 않는다.
+
+이 자리에서 "더 나은 라이브러리"를 찾는 건 accidental 줄이기지 essential 줄이기 아님. **모델 자체를 도메인에 맞게 좁히는 것**(이 시스템에서 필요한 권한 차원만)이 essential을 정확히 마주하는 일.
+
+### Case 2 — 비동기 race condition
+
+같은 화면에서 두 요청이 동시에 일어나는 race는 본질적으로 복잡하다. mutex·lock·optimistic concurrency·CRDT — 어떤 방법이든 race의 본질을 다뤄야 함.
+
+여기서 "Promise.all로 합치면 깔끔"이라는 도구 해결책은 race 자체를 피하는 것. 본질을 회피하면 다른 자리에서 같은 race가 다시 나타난다.
+
+### Case 3 — TypeScript 타입 vs 비즈니스 로직
+
+복잡한 타입을 작성하다 보면 "타입이 어려운 거" 같다. 사실은 비즈니스 로직 자체가 복잡한 것을 타입이 노출한 것. 타입을 단순화해서 회피하면 비즈니스 로직의 복잡도가 다른 자리(런타임 버그·테스트)에서 나타남.
+
+타입의 복잡도는 essential의 신호일 때가 많다. accidental로 오인하지 말 것.
+
 ## 함정
 
 - 자동화 인프라 자체가 essential인 줄 알지만 대부분 accidental. 자동화가 본 작업보다 무거워지면 의심.
 - "이것만 자동화하면 다 해결돼" — 본질 문제를 회피하는 신호.
 - Premature abstraction. 본질이 명확해지기 전 추상화는 accidental만 늘림.
+- **essential을 accidental로 오인**: "이거 도구 바꾸면 쉬워질 것 같은데"가 본질 회피일 수 있음. 도구 3개 갈아끼워도 여전히 어렵다면 essential.
+- **accidental을 essential로 오인**: "이건 원래 어려운 일"이라 체념했는데 사실 도구만 바꾸면 한 시간 일. 주변 동료한테 한 번 물어보는 게 빠른 검증.
 
 ## 함의
 

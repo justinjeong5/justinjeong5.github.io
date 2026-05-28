@@ -4,7 +4,7 @@ growth: Budding
 topics: [frontend, mdx, vite, content-architecture]
 summary: 콘텐츠 한 개 = MDX 파일 한 개. import.meta.glob으로 자동 인덱싱하면 코드 수정 없이 사이트가 확장된다.
 plantedAt: 2026-05-15
-lastTendedAt: 2026-05-19
+lastTendedAt: 2026-05-28
 ---
 
 ## 패턴
@@ -34,10 +34,43 @@ export const getAllNotes = () =>
 - `import.meta.glob`은 빌드 시 평가. dev에서 HMR로 잘 따라오지만 production은 dist에 박힘.
 - `eager: true`로 모든 모듈 즉시 import → 콘텐츠 100개+ 되면 번들 크기 ↑. lazy 옵션 검토.
 - frontmatter 스키마 통일 안 하면 컴포넌트에서 옵셔널 체이닝 지옥.
+- 빌드 시 frontmatter 검증 누락 → 누락된 필드가 production에서야 발견.
+- 슬러그 변경 시 cross-link이 깨짐. 슬러그는 한 번 정하면 안 바꾸는 게 안전.
 
-## 한계
+## lazy 옵션으로 번들 분할
 
-콘텐츠가 1000개를 넘으면 빌드 타임이 길어진다. 그 시점에는 별도 콘텐츠 DB나 SSG (Next.js·Astro) 고려.
+콘텐츠가 100개+ 되면 `eager: false`로 전환.
+
+```js
+const noteModules = import.meta.glob('../content/notes/*.mdx');
+// eager 없음 → 각 노트가 동적 import로 코드 분할됨
+
+export const loadNote = async (slug) => {
+  const path = `../content/notes/${slug}.mdx`;
+  const mod = await noteModules[path]();
+  return { slug, ...(mod.frontmatter || {}), Component: mod.default };
+};
+```
+
+라우터의 lazy load와 결합하면 첫 페이지 로드 시 모든 노트를 import하지 않게 된다.
+
+대가: 라우팅 시 약간의 지연 (각 노트 첫 방문 시 fetch). 단, 빌드는 가벼워지고 첫 페이지 번들이 작아진다.
+
+## 한계와 전환 시그널
+
+콘텐츠 규모별 적정 도구:
+
+| 규모 | 도구 | 빌드 시간 |
+|---|---|---|
+| ~100편 | Vite + MDX + eager | < 5초 |
+| 100-500편 | Vite + MDX + lazy | < 15초 |
+| 500-2000편 | Next.js / Astro (SSG) | 30초-2분 |
+| 2000편+ | Headless CMS + ISR | 점진 빌드 |
+
+전환 시그널:
+- **빌드 시간 > 1분**: 매 변경마다 1분 기다리면 dev loop이 깨진다.
+- **frontmatter 검증 누락 사고 자주**: 정적 타입 + schema 검증이 필요한 단계.
+- **콘텐츠 작성자 ≠ 개발자**: 비개발자도 작성하면 CMS 인터페이스 필요.
 
 ## 관련
 
