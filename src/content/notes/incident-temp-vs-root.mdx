@@ -4,7 +4,7 @@ growth: Seedling
 topics: [incident, debugging, swe, decision-making]
 summary: 새벽에 장애 알람을 받으면 "지금 멈춰야 한다 vs 제대로 고쳐야 한다"가 충돌한다. 두 단계로 분리하면 의사결정이 빨라진다.
 plantedAt: 2026-05-19
-lastTendedAt: 2026-05-20
+lastTendedAt: 2026-05-29
 ---
 
 ## 두 가지 시간 척도
@@ -49,8 +49,26 @@ lastTendedAt: 2026-05-20
 - **임시 패치 후 그대로 두고 끝**: 24h 안에 root fix 안 하면 임시가 영구가 됨
 - **"새벽이라 정확해야 한다"는 압박**: 정확함보다 멈춤이 먼저
 
+## 임시 패치가 one-way로 굳는 순간
+
+임시 패치는 본래 two-way door(되돌릴 수 있는 결정)다. 24시간 안에 root fix로 대체할 거니까. 그런데 24시간이 일주일이 되고 한 달이 되면 임시 패치가 **사실상 one-way로 굳는다**. 다른 코드가 그 임시 동작에 의존하기 시작하면 되돌리는 비용이 비선형으로 커진다.
+
+그래서 임시 패치에는 **만료 신호**를 박는다.
+
+- 코드에 `// TEMP: 2026-06-05까지, 미처리 시 알람` 주석
+- 임시 패치 PR에 follow-up 이슈 링크 + 기한
+- 기한 넘으면 알람 (린트 룰 또는 cron)
+
+만료 신호가 없으면 "임시"가 "영구"가 되는 게 기본값이다.
+
 ## 핵심
 
 > 새벽엔 멈춘다. 정확한 수정은 깨어있을 때.
 
-관련: [/notes/incident-ai-pair-debugging](/notes/incident-ai-pair-debugging), [/notes/runbook-write-during-incident](/notes/runbook-write-during-incident), [/notes/incident-monitoring-gap](/notes/incident-monitoring-gap), [/notes/good-alert-four-criteria](/notes/good-alert-four-criteria)
+## 관련
+
+[/notes/incident-ai-pair-debugging](/notes/incident-ai-pair-debugging) — 새벽 결정 cross-check
+[/notes/runbook-write-during-incident](/notes/runbook-write-during-incident) — 임시 패치 timeline을 runbook으로
+[/notes/incident-monitoring-gap](/notes/incident-monitoring-gap) — 회고가 다음 알람 룰
+[/notes/good-alert-four-criteria](/notes/good-alert-four-criteria) — 알람이 새벽을 부르는 기준
+[/notes/one-way-two-way-door](/notes/one-way-two-way-door) — 임시 패치가 one-way로 굳는 의사결정 분류

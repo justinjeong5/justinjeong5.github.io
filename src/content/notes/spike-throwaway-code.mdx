@@ -4,7 +4,7 @@ growth: Budding
 topics: [swe, prototyping, learning]
 summary: 모르는 기술/API/문제는 바로 v1.0을 만들 수 없다. 30분~2시간짜리 spike로 한 가지만 배우고 버린다. 본 구현은 그 학습 위에 처음부터 다시.
 plantedAt: 2026-04-25
-lastTendedAt: 2026-05-20
+lastTendedAt: 2026-05-29
 ---
 
 ## 문제 — 모르는 영역에서 바로 v1.0
@@ -51,6 +51,23 @@ spike는 시간이 아니라 **진전**으로 끝낸다.
 
 시간 박스만 두면 의미 없이 시간 채우게 됨. 진전 박스가 진짜.
 
+## 구체 예시 — 새 API 응답 형식 spike
+
+홈레이더에서 국토부 RTMS API를 처음 붙일 때. 문서가 빈약하고 응답 형식이 불명확했다.
+
+바로 v1.0(zod 스키마 + 에러 처리 + 재시도)을 만들기 시작하면, 응답 형식을 잘못 가정한 채 정교한 구조를 쌓는다. 실제 응답을 받아보면 가정이 틀려서 절반을 다시 만든다.
+
+대신 30분 spike:
+
+```ts
+// spike.ts — 버릴 코드. 에러 처리 0, 타입 0.
+const res = await fetch(RTMS_URL + params);
+const text = await res.text();
+console.log(text);  // 진짜 응답 형식만 본다
+```
+
+답 한 가지만 얻는다: "응답이 XML이구나, 거래가 배열은 `<items>` 안에 있고, 빈 결과는 `<items/>` 빈 태그구나." 이 학습 후 spike를 **버리고** 본 구현을 zod 스키마부터 처음 만든다. 가정이 아니라 사실 위에 쌓으니 다시 만들 일이 없다.
+
 ## 함정
 
 - **spike를 정성껏 만드는 것**: 30분짜리 spike가 4시간이 되면 spike의 의미가 없다.
@@ -62,4 +79,10 @@ spike는 시간이 아니라 **진전**으로 끝낸다.
 
 > spike는 **무엇을 모르는지 알아내는** 도구다. 버릴 각오로 만들 때만 효과가 있다.
 
-관련: [/notes/incrementally-correct](/notes/incrementally-correct), [/notes/small-deploy-reread](/notes/small-deploy-reread), [/notes/incident-ai-pair-debugging](/notes/incident-ai-pair-debugging)
+## 관련
+
+[/notes/incrementally-correct](/notes/incrementally-correct) — spike 학습 위에 점진적으로 정확해지기
+[/notes/small-deploy-reread](/notes/small-deploy-reread) — 작게 배포하고 다시 읽기
+[/notes/plan-mode-one-shot](/notes/plan-mode-one-shot) — spike로 학습 후 Plan Mode로 본 구현 1-shot
+[/notes/public-api-integration-patterns](/notes/public-api-integration-patterns) — 새 API 붙이기의 일반 패턴
+[/notes/essential-vs-accidental-complexity](/notes/essential-vs-accidental-complexity) — spike가 본질 복잡도를 노출한다

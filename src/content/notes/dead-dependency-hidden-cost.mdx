@@ -4,7 +4,7 @@ growth: Seedling
 topics: [dependencies, swe, build, security]
 summary: package.json에 있는데 import 0건인 패키지는 단순 dead code가 아니다. install 시간·lockfile 부피·transitive CVE·supply chain 표면적이 모두 누적된다. 정리는 정기 작업.
 plantedAt: 2026-05-03
-lastTendedAt: 2026-05-20
+lastTendedAt: 2026-05-29
 ---
 
 ## 문제 — "있어도 그만"이 아니다
@@ -63,8 +63,25 @@ npx ts-prune             # ts 미사용 export
 - **dev dependency 무시**: dev도 install·lockfile에 영향. 똑같이 정리 대상.
 - **"transitive라 영향 낮음" 회피**: 회피가 누적되면 정리할 패키지가 10개+. 직접 의존 정리가 transitive도 같이 줄인다.
 
+## supply chain이 진짜 위험
+
+4가지 비용 중 가장 과소평가되는 게 supply chain 표면적이다. 안 쓰는 의존성도 `npm install`에 포함되어 빌드 머신·CI에서 **install 시점에 코드를 실행**할 수 있다(postinstall script).
+
+2021년 이후 npm 생태계의 공급망 공격은 대부분 이 경로다.
+
+- 인기 패키지가 compromise → 악성 postinstall → CI secret 탈취
+- 직접 안 쓰는 transitive 의존성이어도 install되면 노출
+
+→ 안 쓰는 직접 의존성을 제거하면 그 transitive 트리 전체가 install에서 빠진다. dead dependency 정리는 코드 위생이 아니라 **보안 작업**이다. `--ignore-scripts` install + 명시적 allowlist도 같이 검토.
+
 ## 핵심
 
 > 안 쓰는 의존성은 **install·lockfile·CVE·supply chain** 4가지 비용을 동시에 만든다. 코드 정리만큼 정기적이어야 한다.
 
-관련: [/notes/incrementally-correct](/notes/incrementally-correct), [/notes/typescript-false-safety](/notes/typescript-false-safety), [/notes/vite-manual-chunks](/notes/vite-manual-chunks)
+## 관련
+
+[/notes/incrementally-correct](/notes/incrementally-correct) — 한 PR에 한 패키지씩 점진 정리
+[/notes/typescript-false-safety](/notes/typescript-false-safety) — 추상화가 가리는 비용
+[/notes/vite-manual-chunks](/notes/vite-manual-chunks) — 번들에서 의존성 비용
+[/notes/dev-warning-noise-cost](/notes/dev-warning-noise-cost) — 의존성 호환성 경고의 누적
+[/notes/jwt-vs-session-tradeoffs](/notes/jwt-vs-session-tradeoffs) — 보안 표면적을 줄이는 다른 결정

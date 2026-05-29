@@ -4,7 +4,7 @@ growth: Seedling
 topics: [database, backend, performance, orm]
 summary: 1개의 쿼리로 끝날 일이 N+1번 도는 패턴. ORM의 추상화가 자동으로 만들고, 같은 ORM이 자동으로 못 잡는다. detect는 도구로, fix는 패턴으로.
 plantedAt: 2026-04-30
-lastTendedAt: 2026-05-20
+lastTendedAt: 2026-05-29
 ---
 
 ## 문제 — 1번의 의도가 N+1번이 되는 순간
@@ -73,6 +73,23 @@ const users = await prisma.user.findMany({ where: { id: { in: userIds } } });
 - **production에서만 재현**: 로컬 DB는 작아서 안 드러남. staging에 production-like 데이터 필요.
 - **fix 후 EXPLAIN 안 봄**: ORM이 만든 join이 inefficient한 경우. 큰 테이블끼리 join하면 index 안 맞아 더 느릴 수 있음.
 
+## 회귀 방지 — 쿼리 수를 테스트로 고정
+
+N+1은 한 번 고쳐도 다음 PR에서 쉽게 재발한다. 누가 include를 빼거나 루프 안에 쿼리를 추가하면 조용히 N+1로 돌아온다. 코드 리뷰로는 안 잡힌다(추상화에 숨어서).
+
+→ **쿼리 수를 assertion으로 고정**한다.
+
+```ts
+test('주문 목록은 쿼리 2개 이하', async () => {
+  const queries = await captureQueries(() =>
+    getOrdersWithUsers({ status: 'paid' })
+  );
+  expect(queries.length).toBeLessThanOrEqual(2);
+});
+```
+
+이게 flaky test 진단과 짝이다 — 쿼리 수 테스트가 없으면 N+1 회귀가 "가끔 느린 endpoint"라는 flaky 증상으로만 나타나고 원인 진단이 어렵다. 결정론적 쿼리 수 검증이 회귀를 PR에서 막는다.
+
 ## 핵심
 
 > ORM은 N+1을 자동으로 만들고 자동으로 못 잡는다. **detect는 도구, fix는 패턴**으로 따로 도입해야 한다.
@@ -81,3 +98,6 @@ const users = await prisma.user.findMany({ where: { id: { in: userIds } } });
 
 [/notes/incident-monitoring-gap](/notes/incident-monitoring-gap) — production에서만 드러나는 성능 결함
 [/notes/typescript-false-safety](/notes/typescript-false-safety) — 추상화가 만드는 거짓 안전감의 다른 예
+[/notes/postgres-transaction-isolation](/notes/postgres-transaction-isolation) — ORM 아래 DB 동작을 이해하기
+[/notes/flaky-test-diagnosis](/notes/flaky-test-diagnosis) — 쿼리 수 회귀가 flaky 증상으로 나타날 때
+[/notes/deterministic-loop](/notes/deterministic-loop) — 쿼리 수를 결정론적으로 검증
