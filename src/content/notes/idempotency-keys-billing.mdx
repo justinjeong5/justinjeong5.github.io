@@ -1,0 +1,120 @@
+---
+title: 멱등성 키 — 중복 과금·이벤트를 막는 설계
+growth: Seedling
+topics: [backend, distributed, billing, advertising]
+summary: 네트워크는 재시도하고 재시도는 중복을 만든다. 정산·결제·광고 이벤트에서 중복은 돈 문제다. 멱등성 키의 설계 — 키 생성·저장·윈도우·응답 재현.
+plantedAt: 2026-05-29
+lastTendedAt: 2026-05-29
+---
+
+## 왜 중복이 생기나
+
+분산 시스템에서 "정확히 한 번"은 어렵다. 클라이언트가 요청을 보내고 응답을 못 받으면(timeout) 재시도한다. 그런데 서버는 첫 요청을 이미 처리했을 수 있다.
+
+```
+클라이언트 → POST /charge (amount=100)
+서버: 과금 처리 완료
+서버 → 응답 (네트워크 손실)
+클라이언트: 응답 못 받음 → 재시도
+클라이언트 → POST /charge (amount=100)  ← 중복 과금!
+```
+
+결제·정산·광고 이벤트 집계에서 이 중복은 곧 돈이다. 멱등성 키가 해결한다.
+
+## 멱등성 키의 핵심
+
+클라이언트가 요청마다 고유 키를 생성해서 보낸다. 서버는 같은 키의 요청을 한 번만 처리한다.
+
+```
+POST /charge
+Idempotency-Key: 7f3a9c2e-...
+{ amount: 100 }
+```
+
+```python
+def charge(idempotency_key, amount):
+    existing = store.get(idempotency_key)
+    if existing:
+        return existing.response  # 재처리 없이 저장된 응답 재현
+    result = do_charge(amount)
+    store.set(idempotency_key, result, ttl=24h)
+    return result
+```
+
+재시도가 와도 같은 키면 저장된 응답을 돌려준다. 과금은 한 번만.
+
+## 설계 결정 4가지
+
+### 1. 키를 누가 생성하나
+
+**클라이언트가 생성**한다. 서버가 생성하면 재시도 시 새 키가 되어 의미 없다. 클라이언트가 "이 작업"에 대한 키를 한 번 만들고 재시도 시 같은 키 재사용.
+
+UUID v4 또는 `(operation, business_id, timestamp_bucket)` 해시.
+
+### 2. 무엇을 저장하나
+
+키만 저장하면 부족하다. **요청 응답까지** 저장해서 재시도 시 같은 응답을 재현.
+
+```
+key → { status: completed, response: {...}, request_hash: ... }
+```
+
+`request_hash`도 저장하는 이유: 같은 키로 **다른 body**가 오면 에러를 던지기 위함. 같은 키 + 다른 amount는 클라이언트 버그 신호.
+
+### 3. 윈도우(TTL)
+
+멱등성 키를 영원히 저장하면 스토리지 무한 증가. TTL을 둔다.
+
+- 결제: 24시간~7일 (재시도가 그 안에 끝남)
+- 광고 이벤트: 시간~일 단위 (이벤트 dedup 윈도우와 일치)
+
+TTL이 너무 짧으면 늦은 재시도가 중복을 만들고, 너무 길면 스토리지 부담. 재시도 정책의 최대 윈도우보다 약간 길게.
+
+### 4. 동시 요청 처리
+
+같은 키의 두 요청이 **동시에** 오면? (재시도가 첫 요청과 겹침)
+
+```python
+# race condition
+existing = store.get(key)  # 둘 다 None
+# 둘 다 처리 → 중복
+```
+
+→ 원자적 연산 필요. Redis `SET key value NX`(없을 때만 set) 또는 DB unique constraint + insert. 첫 요청이 키를 선점하고, 둘째는 "처리 중" 또는 선점 실패를 받음.
+
+```python
+acquired = redis.set(key, "processing", nx=True, ex=ttl)
+if not acquired:
+    # 이미 처리 중이거나 완료 → 대기 후 결과 조회 또는 409
+    return wait_or_conflict(key)
+```
+
+## 광고 이벤트에 적용
+
+광고 클릭/전환 집계도 같은 패턴.
+
+- 클라이언트가 이벤트마다 event_id 생성
+- 서버가 event_id로 dedup (시간 버킷 윈도우)
+- 같은 event_id 재전송은 무시
+
+차이: 결제는 강한 일관성(즉시 dedup)이 필요하고, 광고 집계는 보통 **eventual dedup**(배치에서 중복 제거)도 허용된다. 정산 직전에 최종 dedup.
+
+## 함정
+
+- **서버가 키 생성**: 재시도 시 새 키 → 멱등성 무의미. 클라이언트 생성.
+- **응답 저장 안 함**: 키만 저장하면 재시도 시 "이미 처리됨"만 알고 원래 응답을 못 돌려줌. 응답까지 저장.
+- **같은 키 다른 body 허용**: request_hash 검증 없으면 클라이언트 버그가 조용히 통과.
+- **동시 요청 race**: get-then-set은 race. 원자적 SET NX 또는 unique constraint.
+- **TTL 없음**: 멱등성 스토리지 무한 증가. 재시도 윈도우 기준 TTL.
+- **멱등성 ≠ exactly-once**: 멱등성은 중복을 흡수할 뿐 메시지 손실은 못 막는다. at-least-once 전달 + 멱등성 = effectively-once.
+
+## 핵심
+
+> 네트워크 재시도는 중복을 만들고, 돈이 걸린 작업에서 중복은 사고다. **클라이언트 생성 키 + 응답 저장 + 원자적 선점 + TTL**이 멱등성의 네 기둥. 멱등성 + at-least-once 전달이 실질적 exactly-once다.
+
+## 관련
+
+[/notes/exactly-once-delivery-myth](/notes/exactly-once-delivery-myth) — exactly-once가 환상인 이유와 멱등성의 역할
+[/notes/ad-metric-traps](/notes/ad-metric-traps) — 정산 dedup에 멱등성 키 적용
+[/notes/postgres-transaction-isolation](/notes/postgres-transaction-isolation) — 동시 요청의 격리 수준
+[/notes/n-plus-one-query-trap](/notes/n-plus-one-query-trap) — ORM이 숨기는 또 다른 백엔드 함정
