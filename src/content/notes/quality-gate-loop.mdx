@@ -4,7 +4,7 @@ growth: Evergreen
 topics: [workflow, verification, ai, design]
 summary: 모호한 품질 목표를 측정 가능한 rubric으로 바꾸고, 페르소나 평가로 채점한 뒤, 통과까지 개선·재평가하는 패턴.
 plantedAt: 2026-03-22
-lastTendedAt: 2026-05-19
+lastTendedAt: 2026-05-29
 ---
 
 ## 핵심 명제
@@ -37,6 +37,20 @@ lastTendedAt: 2026-05-19
 
 **rubric을 사전에 명확히 정의하지 않으면 평가가 흔들린다.** "터치 타겟"이라는 단어만으로는 부족하고 "iOS HIG 44×44 + 간격 충분"으로 명세해야 채점 분산이 줄어든다.
 
+## 임계를 어떻게 정하나 — 4.5 vs 4.7
+
+통과 임계(평균 4.5? 4.7?)는 고정값이 아니라 **작업의 외부 노출도**로 정한다.
+
+| 임계 | 적용 |
+|---|---|
+| 4.5 | 내부 작업, 되돌릴 수 있는 결정, 빠른 반복 |
+| 4.7 | 외부 게시, 포트폴리오, 신뢰가 자산인 산출물 |
+| 4.8+ | 한 번 나가면 회수 불가 (one-way door) |
+
+임계를 높이면 사이클이 늘고 비용이 커진다. 그래서 "무조건 높게"가 아니라 노출도에 맞춘다. 외부 게시 콘텐츠를 4.7로 두는 건 — 게시 후 회수가 [one-way door](/notes/one-way-two-way-door)에 가깝고 신뢰 비용이 크기 때문이다.
+
+rubric 차원도 작업마다 다르다. 콘텐츠라면 "일반화 가능성"(독자에게 전이되는가)을 별도 축으로 두면 자기 참조적 글이 자동으로 걸러진다. 모호한 "좋은 글"을 [측정 가능한 차원으로 번역](/notes/operationalizing-vague-requests)하는 게 rubric 설계의 핵심.
+
 ## 한계
 
 - 페르소나가 코드만 보고 평가하면 실제 사용감 일부 놓침. 라이브 디바이스 검증이 종종 필요.
@@ -55,3 +69,5 @@ lastTendedAt: 2026-05-19
 [/notes/deterministic-loop](/notes/deterministic-loop) — quality-gate가 적용하는 일반 검증 루프
 [/notes/codex-competition](/notes/codex-competition) — 페르소나 평가의 모델 다양성 버전
 [/notes/dispatch-routing-pattern](/notes/dispatch-routing-pattern) — 라우팅 결정에도 평가 루프
+[/notes/operationalizing-vague-requests](/notes/operationalizing-vague-requests) — rubric은 모호한 목표의 번역
+[/notes/self-persona-evaluation](/notes/self-persona-evaluation) — rubric에 본인 차원을 넣어 솔직한 BLOCKING 노출

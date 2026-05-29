@@ -4,7 +4,7 @@ growth: Budding
 topics: [claude, workflow, ai, verification]
 summary: 코딩·추론·리뷰 등 모든 작업에서 Codex와 Claude를 병렬 실행하고 결과를 교차 검증. 토큰 비용은 늘지만 사각지대가 줄어든다.
 plantedAt: 2026-04-25
-lastTendedAt: 2026-05-19
+lastTendedAt: 2026-05-29
 ---
 
 ## 왜 경쟁시키는가
@@ -33,13 +33,21 @@ lastTendedAt: 2026-05-19
   2. 일치하는 부분 채택
   3. 갈리는 부분만 사람이 결정 (또는 더 깊이 분석)
 
+## 단일 모델 수렴을 깨는 도구
+
+경쟁의 또 다른 가치는 [단일 모델 mode collapse](/notes/ai-output-mode-collapse)를 깨는 것이다. 한 모델을 반복 호출하면 그 모델 분포의 중심으로 수렴한다. 다른 모델(Codex)은 다른 분포를 가져서, 한쪽이 빠진 영역을 다른 쪽이 채운다.
+
+그래서 경쟁은 검증 도구이자 **다양성 도구**다. 같은 작업을 두 모델이 다르게 풀면, 그 차이 자체가 단일 모델로는 안 보였을 선택지 공간을 드러낸다.
+
 ## 함정
 
 - 두 모델이 같은 학습 데이터 기반이면 같은 편향 공유 가능. 진짜 다른 관점이 아닐 수 있다.
 - 종합 단계에서 "둘 다 비슷하니까 OK"로 빠지면 경쟁의 의미가 사라짐. **일치 자체가 검증은 아님**, 일치하는 *근거*가 검증.
+- 두 결과가 갈릴 때 "더 그럴듯한 쪽"을 고르면 confirmation bias. 갈리는 *지점*을 더 깊이 파야 검증.
 
 ## 관련
 
 [/notes/deterministic-loop](/notes/deterministic-loop) — 사람 개입 없이 검증되는 루프
 [/notes/quality-gate-loop](/notes/quality-gate-loop) — 결과 비교를 평가 rubric으로
 [/notes/dispatch-routing-pattern](/notes/dispatch-routing-pattern) — 라우팅도 경쟁으로
+[/notes/ai-output-mode-collapse](/notes/ai-output-mode-collapse) — 단일 모델 수렴을 경쟁으로 깬다
