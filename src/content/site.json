@@ -1,7 +1,7 @@
 {
   "name": "정경하",
   "role": "Product-minded Frontend Engineer",
-  "headline": "제품 문제를 빠르게 구조화하고, 프론트엔드와 자동화를 연결해 실제 운영 흐름까지 개선합니다.",
+  "headline": "제품 문제를 빠르게 구조화하고, 프론트엔드를 중심으로 백엔드·자동화까지 연결해 실제 운영 흐름을 개선합니다.",
   "summary": "이 사이트는 이력서의 예쁜 버전이 아니라, 공개 가능한 업무 사례·노트·로그를 계속 쌓아가는 proof-of-work 허브입니다.",
   "location": "Seoul, Korea",
   "email": "justin.jeong5@gmail.com",
@@ -33,7 +33,7 @@
     {
       "audience": "Hiring manager",
       "question": "이 사람에게 우리 제품 문제를 맡길 수 있을까?",
-      "answer": "케이스 스터디에서 문제·결정·산출물·임팩트를 10초 안에 확인합니다.",
+      "answer": "케이스의 '제품·실무'에서 문제·결정·산출물·임팩트를, '빌더 로그'에서 일하는 방식을 확인합니다.",
       "to": "/cases"
     },
     {
