@@ -172,3 +172,6 @@ dev.js
 build
 uploads
 firebase.js
+
+# Local Claude Code config
+.claude/
