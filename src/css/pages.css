@@ -193,6 +193,24 @@
 }
 
 /* ---------- Cases: list ---------- */
+.case-group {
+  margin-top: 36px;
+}
+.case-group:first-of-type {
+  margin-top: 8px;
+}
+.case-group-head {
+  margin-bottom: 16px;
+}
+.case-group-title {
+  font-size: 1.05rem;
+  margin: 0 0 4px;
+}
+.case-group-blurb {
+  margin: 0;
+  color: var(--text-muted, #71717a);
+  font-size: 0.9rem;
+}
 .case-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));

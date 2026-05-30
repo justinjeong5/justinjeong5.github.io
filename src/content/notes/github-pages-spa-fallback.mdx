@@ -4,7 +4,7 @@ growth: Seedling
 topics: [frontend, github-pages, routing, deployment]
 summary: GitHub Pages는 SSR이 없어 클라이언트 라우팅 새로고침 시 404가 뜬다. public/404.html에 SPA fallback redirect를 두면 해결.
 plantedAt: 2026-05-19
-lastTendedAt: 2026-05-19
+lastTendedAt: 2026-05-30
 ---
 
 ## 문제
@@ -40,6 +40,17 @@ React SPA를 GitHub Pages에 배포 → `/cases/proof-hub-rebuild` 깊은 링크
 
 흐름: 404 → 쿼리로 변환 → SPA mount → history API로 URL 복원.
 
+## 이 사이트에서 — 실제 적용 기록
+
+이 노트는 일반론이 아니라 **이 사이트가 지금 쓰는 패턴**이다. justinjeong5.github.io는 user site(`*.github.io`)라 `pathSegmentsToKeep = 0`. `public/404.html`이 redirect를, `index.html` `<head>`가 복원을 담당한다.
+
+실제로 겪은 두 가지:
+
+- **빌드 산출물에 404.html이 들어가야 한다**: Vite `public/`에 두면 `dist/404.html`로 복사된다. 처음엔 `src`에 뒀다가 dist에 안 들어가 deep-link가 계속 404. `public/`이 정답.
+- **로컬 dev에선 재현 안 됨**: Vite dev 서버는 SPA fallback을 자동 처리해서 `/cases/x` 새로고침이 로컬에선 멀쩡하다. **GitHub Pages 배포 후에야 404가 드러난다.** 그래서 로컬 통과 = 안전이 아니다 — 배포 후 deep-link 새로고침을 반드시 수동 확인.
+
+이 트릭 덕분에 `/cases/*`·`/notes/*` 깊은 링크를 공유해도 새로고침이 깨지지 않는다.
+
 ## 함정
 
 - `pathSegmentsToKeep` — user/org site (`*.github.io`)는 `0`, project site는 `1`
@@ -54,3 +65,5 @@ React SPA를 GitHub Pages에 배포 → `/cases/proof-hub-rebuild` 깊은 링크
 
 [/notes/mdx-content-as-files](/notes/mdx-content-as-files) — 콘텐츠를 파일로 두고 라우팅과 분리하면 SPA fallback과도 잘 맞물린다
 [/notes/vite-manual-chunks](/notes/vite-manual-chunks) — fallback 흐름에 함께 영향 받는 첫 로드 청크 크기 다루기
+[/notes/small-deploy-reread](/notes/small-deploy-reread) — "로컬 통과 ≠ 배포 안전" — 배포 후 재확인의 같은 교훈
+[/cases/proof-hub-rebuild](/cases/proof-hub-rebuild) — 이 라우팅이 적용된 사이트 리빌드 케이스
