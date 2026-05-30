@@ -1,0 +1,41 @@
+---
+title: 밸런스 분석으로 빈 영역 채우기 + 가든 hygiene 정량화
+date: '2026-05-29 18:00'
+type: Shipped
+summary: 콘텐츠 분포를 측정하니 Backend·Security·Testing·A11y가 비어 있었다. 강한 곳(frontend) 대신 빈 곳을 채우고, Seedling 승급·Essay 게시를 정량 기준으로 처리했다.
+---
+
+## 한 일
+
+먼저 분포를 측정했다. 토픽·형식·growth·status를 집계.
+
+- frontend 10 / workflow 9 vs backend 4 / **security 1 / testing 1 / a11y 0**
+- Notes growth: Seedling 73% (정착 노트 거의 없음)
+- Essays: 10편 전부 Draft
+
+측정이 빈 영역을 드러냈다. 그걸 기준으로 작업.
+
+- **부재 영역 5편**: postgres isolation, jwt vs session, oauth 함정, flaky test, keyboard nav — Backend·Security·Testing·A11y
+- **가든 hygiene**: Seedling → Budding 7편 승급 (정량 기준: 본문 80줄+ / cross-link 3+ / 코드·표 4+), Essay Draft → Published 3편
+- **광고 시리즈 시작**: 양면 시장 의사결정 에세이 1편
+
+## 측정
+
+| 항목 | 수치 |
+|---|---|
+| 부재 영역 신규 | 5편 |
+| Seedling → Budding | 7편 |
+| Draft → Published | 3편 |
+| Essay Published 비율 | 0% → 약 23% |
+
+## 임팩트
+
+- "골고루 쓰고 있다"는 착각이 측정으로 깨짐 — 실제론 frontend·workflow 편향
+- 승급/게시를 직관이 아니라 정량 기준으로 → 임의 선별 방지
+- security·testing 클러스터가 0~1에서 의미 있는 크기로
+
+## 회고
+
+사람은 잘하는 영역에 더 쌓고 빈 곳은 못 본다. 분포를 측정하지 않았으면 frontend 글만 더 늘렸을 것. "개선"을 정량 기준 없이 하면 임의 선별이 된다는 것도 이때 확인 — 승급 기준을 숫자로 정의하고 나서야 자동 판정이 가능했다.
+
+관련: [/notes/coverage-gap-analysis](/notes/coverage-gap-analysis), [/notes/jwt-vs-session-tradeoffs](/notes/jwt-vs-session-tradeoffs), [/notes/flaky-test-diagnosis](/notes/flaky-test-diagnosis), [/essays/two-sided-market-decisions](/essays/two-sided-market-decisions)

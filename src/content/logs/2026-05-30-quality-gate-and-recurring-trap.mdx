@@ -1,0 +1,41 @@
+---
+title: quality-gate 4.7 적용 + 대화 마이닝 + YAML 함정 3회차
+date: '2026-05-30 17:00'
+type: Shipped
+summary: 광고 플랫폼 시리즈를 심화하고, 지난 2주 AI 협업 경험을 일반화 노트로 추출했다. 품질 기준을 4.7로 올려 평가-개선 루프를 돌렸고, YAML 따옴표 함정이 3번째로 재발해 빌드 전 점검을 자산화했다.
+---
+
+## 한 일
+
+두 라운드(R7·R8)를 묶었다.
+
+- **광고 플랫폼 시리즈**: ad-metric-traps, idempotency-keys-billing, exactly-once-delivery-myth, frequency-capping + incident 클러스터 10편 개편(그래프 연결)
+- **대화 마이닝**: 지난 2주 AI 협업 경험을 일반화 교훈 5편으로 — mode collapse, 모호한 지시의 정량화, 재발 함정, 커버리지 갭, 위임 자율성 보정
+- **quality-gate 4.7**: 새 글에 6차원 rubric을 4.7 임계로 적용 (기존 4.5보다 높게 — 외부 게시 콘텐츠라)
+
+## 측정
+
+| 항목 | 수치 |
+|---|---|
+| 신규 (R7+R8) | 10편 (Note 8 + Essay 2) |
+| 개편 | 15편 (incident 10 + AI 클러스터 5) |
+| quality-gate | 5편 평균 4.83~5.0, 모든 항목 4+ |
+
+## YAML 함정 3회차
+
+frontmatter `summary`가 큰따옴표로 시작 → YAML이 quoted scalar로 오해 → 빌드 실패. css-color-scheme-native(5/19), frequency-capping(R7)에 이어 **3번째**. 공교롭게도 "재발 함정은 자동 검사가 된다"는 노트를 쓰는 중에 그 노트의 summary에서 재발.
+
+- 대응: 빌드 전 `grep -rnE '^(title|summary): "' src/content/`를 검증 루프에 고정
+- 이 점검이 3회차를 커밋 전에 잡았다 — 검사가 작동
+
+## 임팩트
+
+- 대화(메타 작업)도 일반화하면 게시 가능한 콘텐츠가 됨 — 단 "내가 한 일"이 아니라 전이되는 교훈으로
+- 품질 기준을 노출도에 맞춰 조정(내부 4.5 / 외부 4.7)하는 운영 확립
+- 반복 함정이 grep 한 줄로 봉인됨
+
+## 회고
+
+navel-gazing 위험과 재발 함정이 같은 세션에서 둘 다 실현됐고 둘 다 막혔다 — quality-gate의 "일반화 가능성" 차원이 자기 참조적 서술을 눌렀고, grep 점검이 YAML 함정 3회차를 잡았다. 검사를 글로만 쓰지 않고 검증 루프에 박은 게 효과를 봤다.
+
+관련: [/notes/recurring-trap-to-checklist](/notes/recurring-trap-to-checklist), [/notes/ai-output-mode-collapse](/notes/ai-output-mode-collapse), [/notes/operationalizing-vague-requests](/notes/operationalizing-vague-requests), [/notes/quality-gate-loop](/notes/quality-gate-loop)

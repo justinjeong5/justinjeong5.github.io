@@ -1,0 +1,32 @@
+---
+title: 홈레이더 케이스 + 개인 레포 9편 자산화 + CodeRabbit 도입
+date: '2026-05-21 20:00'
+type: Shipped
+summary: 사이드 프로젝트(홈레이더)를 케이스로 정리하고, 6년치 개인 GitHub 레포 3개를 인터뷰 형식 9편으로 추출했다. 사이트 PR에 CodeRabbit 자동 리뷰를 붙였다.
+---
+
+## 한 일
+
+- **홈레이더 케이스 스터디**: 5개 지역 아파트 자동 추적 시스템(공개 API 7곳 + 노션 백엔드 + GitHub Actions cron)을 Case 1편 + 보조 Note 2편으로
+- **개인 레포 인터뷰**: 6년치 레포 중 대표 3개를 골라 각 3편(본질·학습·함정) = 9편 노트로 추출
+- **CodeRabbit 도입**: `.coderabbit.yaml` 추가 — 이 사이트 PR에 라인 단위 자동 리뷰 (기존 Cubic과 이중)
+
+## 측정
+
+| 항목 | 수치 |
+|---|---|
+| 홈레이더 | Case 1 + Note 2 |
+| 개인 레포 | 3 레포 × 3편 = 9 Note |
+| 툴링 | CodeRabbit config 1 |
+
+## 임팩트
+
+- "이 레포 왜 만들었어?"에 매번 새로 답하던 걸 인터뷰 9편으로 고정 — 레포 자체보다 추출된 노트가 더 큰 자산
+- 사이드 프로젝트가 production 패턴(zod·bottleneck·winston) 실험장이었음을 케이스로 명시
+- CodeRabbit + Cubic 이중 자동 리뷰의 시야 차이를 체감 시작 (라인 vs 흐름)
+
+## 회고
+
+6년 누적 레포는 archive vs delete 2분법이 아니라 "레포는 archive하되 인사이트는 노트로 추출"하는 3분법이 답이었다. 인터뷰 형식(질문 3개 고정)이 9편을 일관된 구조로 만들어서 기계적으로 진행 가능했다. 한 레포를 4시간 들여 완벽히 쓰는 것보다 3개를 빠르게 추출한 게 옳았다.
+
+관련: [/cases/home-radar-system](/cases/home-radar-system), [/cases/personal-repos-interview](/cases/personal-repos-interview), [/notes/archive-or-keep-old-repo](/notes/archive-or-keep-old-repo), [/notes/coderabbit-cubic-double-review](/notes/coderabbit-cubic-double-review)
