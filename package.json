@@ -21,7 +21,9 @@
     "start": "vite --host 0.0.0.0",
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0",
-    "deploy": "npm run build && gh-pages -d dist"
+    "deploy": "npm run build && gh-pages -d dist",
+    "test": "node --test scripts/garden-tender/decide.test.mjs",
+    "tend": "node scripts/garden-tender/garden-tender.mjs"
   },
   "homepage": "https://justinjeong5.github.io/",
   "browserslist": {

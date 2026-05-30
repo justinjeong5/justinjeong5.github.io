@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Garden Tender 주 1회 스케줄 (macOS launchd).
+  사용 전 REPO_PATH_PLACEHOLDER를 레포 절대경로로 치환:
+    sed -i '' "s#REPO_PATH_PLACEHOLDER#$(pwd)#g" com.garden-tender.weekly.plist
+  로그인 셸(-lc)로 실행해 nvm/homebrew node를 PATH에서 찾는다.
+-->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.garden-tender.weekly</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/zsh</string>
+    <string>-lc</string>
+    <string>cd REPO_PATH_PLACEHOLDER &amp;&amp; node scripts/garden-tender/garden-tender.mjs</string>
+  </array>
+
+  <!-- 매주 일요일 10:00 -->
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Weekday</key>
+    <integer>0</integer>
+    <key>Hour</key>
+    <integer>10</integer>
+    <key>Minute</key>
+    <integer>0</integer>
+  </dict>
+
+  <key>StandardOutPath</key>
+  <string>REPO_PATH_PLACEHOLDER/.cache/garden-tender/launchd.log</string>
+  <key>StandardErrorPath</key>
+  <string>REPO_PATH_PLACEHOLDER/.cache/garden-tender/launchd.log</string>
+
+  <key>RunAtLoad</key>
+  <false/>
+</dict>
+</plist>
