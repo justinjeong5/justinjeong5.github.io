@@ -11,6 +11,7 @@ import {
   collectUrls,
   buildXml,
 } from './generate-sitemap.mjs';
+import { ROUTES } from '../src/lib/routes.js';
 
 // 임시 content 디렉토리에 fixture mdx 파일을 만든다.
 function makeFixtureContent() {
@@ -122,4 +123,12 @@ test('lastmod가 없는 URL은 <lastmod> 태그를 생략한다', () => {
   const xml = buildXml([{ loc: `${BASE}/uses`, lastmod: null }]);
   assert.ok(!xml.includes('<lastmod>'), 'lastmod 없으면 태그 생략');
   assert.match(xml, /<loc>https:\/\/justinjeong5\.github\.io\/uses<\/loc>/);
+});
+
+test('STATIC_PATHS는 routes.js의 정적 경로와 일치한다 (parity)', () => {
+  // ROUTES의 string 값(함수형 동적 라우트 제외)이 정적 경로다.
+  const staticRoutes = Object.values(ROUTES)
+    .filter((v) => typeof v === 'string')
+    .sort();
+  assert.deepEqual([...STATIC_PATHS].sort(), staticRoutes);
 });
