@@ -121,6 +121,12 @@ typings/
 .nuxt
 dist
 
+# SSR 빌드 중간 산출물 — prerender 입력용, 배포물 아님
+dist-ssr
+
+# Playwright MCP 검증 산출물 (스냅샷/콘솔 로그)
+.playwright-mcp
+
 # Gatsby files
 .cache/
 # Comment in the public line in if your project uses Gatsby and not Next.js

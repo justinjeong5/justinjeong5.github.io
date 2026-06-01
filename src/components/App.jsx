@@ -25,36 +25,42 @@ import MobileMenu from './ui/MobileMenu';
 
 const mdxComponents = {};
 
-function App() {
+export function AppRoutes() {
   return (
     <UIProvider>
       <MDXProvider components={mdxComponents}>
-        <BrowserRouter>
-          <GlobalShortcuts />
-          <Routes>
-            <Route element={<Layout />}>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/cases" element={<CasesPage />} />
-              <Route path="/cases/:slug" element={<CaseDetailPage />} />
-              <Route path="/notes" element={<NotesPage />} />
-              <Route path="/notes/:slug" element={<NoteDetailPage />} />
-              <Route path="/essays" element={<EssaysPage />} />
-              <Route path="/essays/:slug" element={<EssayDetailPage />} />
-              <Route path="/logs" element={<LogsPage />} />
-              <Route path="/uses" element={<UsesPage />} />
-              <Route path="/now" element={<NowPage />} />
-              <Route path="/reading" element={<ReadingPage />} />
-              <Route path="/about" element={<AboutPage />} />
-              <Route path="/cv" element={<CvPage />} />
-              <Route path="*" element={<NotFoundPage />} />
-            </Route>
-          </Routes>
-          <CommandPalette />
-          <ShortcutHelp />
-          <MobileMenu />
-        </BrowserRouter>
+        <GlobalShortcuts />
+        <Routes>
+          <Route element={<Layout />}>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/cases" element={<CasesPage />} />
+            <Route path="/cases/:slug" element={<CaseDetailPage />} />
+            <Route path="/notes" element={<NotesPage />} />
+            <Route path="/notes/:slug" element={<NoteDetailPage />} />
+            <Route path="/essays" element={<EssaysPage />} />
+            <Route path="/essays/:slug" element={<EssayDetailPage />} />
+            <Route path="/logs" element={<LogsPage />} />
+            <Route path="/uses" element={<UsesPage />} />
+            <Route path="/now" element={<NowPage />} />
+            <Route path="/reading" element={<ReadingPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/cv" element={<CvPage />} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Route>
+        </Routes>
+        <CommandPalette />
+        <ShortcutHelp />
+        <MobileMenu />
       </MDXProvider>
     </UIProvider>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AppRoutes />
+    </BrowserRouter>
   );
 }
 

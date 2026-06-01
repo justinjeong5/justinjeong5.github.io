@@ -20,7 +20,13 @@ export function UIProvider({ children }) {
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [theme, setThemeState] = useState(readInitialTheme);
+  // SSR(prerender)과 hydrate 시점의 theme을 'light'로 통일해 hydration mismatch를 0으로 만든다.
+  // 실제 테마는 mount 직후 적용 (CSS 테마는 index.html 인라인 스크립트가 이미 올바르게 설정).
+  const [theme, setThemeState] = useState('light');
+
+  useEffect(() => {
+    setThemeState(readInitialTheme());
+  }, []);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);

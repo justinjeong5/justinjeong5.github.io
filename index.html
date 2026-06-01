@@ -33,6 +33,19 @@
     />
     <link rel="canonical" href="https://justinjeong5.github.io/" />
     <title>정경하 | Product-minded Frontend Engineer</title>
+    <script>
+      // 테마 사전 설정 — prerender된 HTML에 data-theme를 즉시 적용해 CSS flash를 막는다.
+      // (다른 스크립트보다 먼저 실행되어야 한다.)
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
     <script type="text/javascript">
       // Single Page Apps for GitHub Pages — restore deep-link path written by 404.html
       // https://github.com/rafgraph/spa-github-pages

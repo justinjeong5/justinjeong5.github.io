@@ -19,7 +19,7 @@
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "start": "vite --host 0.0.0.0",
-    "build": "node scripts/generate-sitemap.mjs && vite build",
+    "build": "node scripts/generate-sitemap.mjs && vite build && vite build --ssr src/entry-server.jsx --outDir dist-ssr && node scripts/prerender.mjs",
     "preview": "vite preview --host 0.0.0.0",
     "deploy": "npm run build && gh-pages -d dist",
     "test": "node --test \"scripts/**/*.test.mjs\" \"src/**/*.test.mjs\"",
