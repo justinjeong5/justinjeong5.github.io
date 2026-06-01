@@ -7,6 +7,7 @@ import {
   getAllNotes,
 } from './content';
 import { ROUTES } from './routes';
+import { logUrl } from './log-url';
 
 let cachedIndex = null;
 let cachedDocs = null;
@@ -48,7 +49,7 @@ function buildDocs() {
     summary: entry.summary || '',
     topics: [],
     date: entry.date,
-    url: ROUTES.logs,
+    url: logUrl(entry.slug, ROUTES.logs),
   }));
   return [...cases, ...notes, ...essays, ...logs];
 }

@@ -1,9 +1,36 @@
+import { useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Sprout } from 'lucide-react';
 
 import { getAllLogs } from '../lib/content';
 
+const SCROLL_MARGIN_TOP = '88px';
+
 function LogsPage() {
   const logs = getAllLogs();
+  const { hash } = useLocation();
+  const detailsRefs = useRef(new Map());
+
+  useEffect(() => {
+    const raw = hash ? hash.replace(/^#/, '') : '';
+    if (!raw) return undefined;
+
+    let slug = '';
+    try {
+      slug = decodeURIComponent(raw);
+    } catch {
+      return undefined;
+    }
+
+    const frame = window.requestAnimationFrame(() => {
+      const card = document.getElementById(slug);
+      if (!card) return;
+      const details = detailsRefs.current.get(slug);
+      if (details) details.open = true;
+      card.scrollIntoView({ block: 'start' });
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [hash]);
 
   return (
     <div className="page page-list">
@@ -20,7 +47,12 @@ function LogsPage() {
           {logs.map((log) => {
             const { Component } = log;
             return (
-              <li key={log.slug} className="log-item-card">
+              <li
+                key={log.slug}
+                id={log.slug}
+                className="log-item-card"
+                style={{ scrollMarginTop: SCROLL_MARGIN_TOP }}
+              >
                 <header className="log-item-header">
                   <span className="log-date">{log.date}</span>
                   <span className={`log-type log-type-${(log.type || 'building').toLowerCase()}`}>
@@ -31,7 +63,13 @@ function LogsPage() {
                 <h2>{log.title}</h2>
                 <p>{log.summary}</p>
                 {Component ? (
-                  <details className="log-body-toggle">
+                  <details
+                    className="log-body-toggle"
+                    ref={(el) => {
+                      if (el) detailsRefs.current.set(log.slug, el);
+                      else detailsRefs.current.delete(log.slug);
+                    }}
+                  >
                     <summary>자세히</summary>
                     <div className="prose log-body">
                       <Component />

@@ -13,8 +13,9 @@ function Layout() {
 
   return (
     <>
+      <a href="#main-content" className="skip-link">본문 바로가기</a>
       <Header />
-      <main>
+      <main id="main-content" tabIndex={-1}>
         <Outlet />
       </main>
       <Footer />
