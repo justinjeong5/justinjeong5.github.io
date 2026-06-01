@@ -40,4 +40,12 @@ export const getEssay = (slug) => getAllEssays().find((entry) => entry.slug === 
 
 export const getAllLogs = () => toEntries(logModules);
 
+export function getLastUpdated() {
+  const dates = [...getAllCases(), ...getAllNotes(), ...getAllEssays(), ...getAllLogs()]
+    .map(pickDate)
+    .filter(Boolean)
+    .sort();
+  return dates.at(-1) || '';
+}
+
 export { usesData, nowData, readingData, cvData, aboutData, siteData };

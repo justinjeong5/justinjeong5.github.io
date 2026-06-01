@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { BookOpenText, CalendarClock, Sparkles } from 'lucide-react';
 
-import { siteData } from '../../lib/content';
+import { siteData, getLastUpdated } from '../../lib/content';
 import { SECONDARY_NAV } from '../../lib/routes';
 
 function Footer() {
@@ -26,7 +26,7 @@ function Footer() {
       </nav>
       <span className="footer-meta">
         <CalendarClock size={16} aria-hidden="true" />
-        Updated {new Date().getFullYear()}
+        Updated {getLastUpdated() || new Date().getFullYear()}
       </span>
     </footer>
   );
