@@ -19,10 +19,10 @@
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "start": "vite --host 0.0.0.0",
-    "build": "vite build",
+    "build": "node scripts/generate-sitemap.mjs && vite build",
     "preview": "vite preview --host 0.0.0.0",
     "deploy": "npm run build && gh-pages -d dist",
-    "test": "node --test scripts/garden-tender/decide.test.mjs",
+    "test": "node --test \"scripts/**/*.test.mjs\" \"src/**/*.test.mjs\"",
     "tend": "node scripts/garden-tender/garden-tender.mjs"
   },
   "homepage": "https://justinjeong5.github.io/",
