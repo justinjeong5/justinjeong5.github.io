@@ -22,8 +22,8 @@ production scale, real-time, 복잡한 쿼리는 부적합.
 
 홈레이더의 경우 다음 7개 DB로 나눔.
 
-- **Apartments_{REGION}** × 5: 지역별 단지 정보 (정적)
-- **PriceSnapshots_{YEAR}**: 가격 시계열 (year-partition)
+- **Apartments_\{REGION\}** × 5: 지역별 단지 정보 (정적)
+- **PriceSnapshots_\{YEAR\}**: 가격 시계열 (year-partition)
 - **LocationStats**: 단지별 입지 메타 (한 번 계산 후 cache)
 
 DB를 나누는 이유:
