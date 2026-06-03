@@ -14,7 +14,10 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-export const BASE = 'https://justinjeong5.github.io';
+import { SITE_URL, toCanonical } from '../src/lib/seo.js';
+
+// 하위 호환: 기존 import 경로 유지. URL 정본 규칙은 seo.js(toCanonical)가 단일 소스다.
+export const BASE = SITE_URL;
 
 const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const CONTENT_DIR = join(REPO_ROOT, 'src', 'content');
@@ -75,11 +78,13 @@ export function collectSlugs(type, { contentDir = CONTENT_DIR } = {}) {
 }
 
 // 모든 공개 URL을 { loc, lastmod } 형태로 모은다.
+// loc은 toCanonical로 정본 URL(trailing-slash)을 생성해 canonical과 일치시킨다
+// (GitHub Pages의 /path → /path/ 301 1홉 제거).
 export function collectUrls({ contentDir = CONTENT_DIR } = {}) {
-  const urls = STATIC_PATHS.map((path) => ({ loc: `${BASE}${path}`, lastmod: null }));
+  const urls = STATIC_PATHS.map((path) => ({ loc: toCanonical(path), lastmod: null }));
   for (const type of DETAIL_TYPES) {
     for (const { slug, lastmod } of collectSlugs(type, { contentDir })) {
-      urls.push({ loc: `${BASE}/${type}/${slug}`, lastmod });
+      urls.push({ loc: toCanonical(`/${type}/${slug}`), lastmod });
     }
   }
   return urls;

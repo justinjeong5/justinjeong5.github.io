@@ -12,6 +12,7 @@ import {
   buildXml,
 } from './generate-sitemap.mjs';
 import { ROUTES } from '../src/lib/routes.js';
+import { toCanonical } from '../src/lib/seo.js';
 
 // 임시 content 디렉토리에 fixture mdx 파일을 만든다.
 function makeFixtureContent() {
@@ -69,10 +70,11 @@ test('collectUrls는 정적 라우트를 모두 포함하고 BASE prefix를 붙�
     const urls = collectUrls({ contentDir: root });
     const locs = urls.map((u) => u.loc);
     for (const path of STATIC_PATHS) {
-      assert.ok(locs.includes(`${BASE}${path}`), `정적 URL 누락: ${path}`);
+      assert.ok(locs.includes(toCanonical(path)), `정적 URL 누락: ${path}`);
     }
     for (const loc of locs) {
       assert.ok(loc.startsWith(BASE), `BASE prefix 없음: ${loc}`);
+      assert.ok(loc.endsWith('/'), `정본 URL은 trailing-slash여야 함: ${loc}`);
     }
   } finally {
     rmSync(root, { recursive: true, force: true });
@@ -83,10 +85,10 @@ test('collectUrls는 cases/notes/essays 상세 URL을 포함한다', () => {
   const root = makeFixtureContent();
   try {
     const locs = collectUrls({ contentDir: root }).map((u) => u.loc);
-    assert.ok(locs.includes(`${BASE}/cases/my-case`));
-    assert.ok(locs.includes(`${BASE}/notes/a-note`));
-    assert.ok(locs.includes(`${BASE}/notes/b-note`));
-    assert.ok(locs.includes(`${BASE}/essays/my-essay`));
+    assert.ok(locs.includes(`${BASE}/cases/my-case/`));
+    assert.ok(locs.includes(`${BASE}/notes/a-note/`));
+    assert.ok(locs.includes(`${BASE}/notes/b-note/`));
+    assert.ok(locs.includes(`${BASE}/essays/my-essay/`));
   } finally {
     rmSync(root, { recursive: true, force: true });
   }
@@ -96,9 +98,10 @@ test('로그는 개별 URL을 생성하지 않는다 (/logs 단일 페이지만)
   const root = makeFixtureContent();
   try {
     const locs = collectUrls({ contentDir: root }).map((u) => u.loc);
-    assert.ok(locs.includes(`${BASE}/logs`), '/logs 정적 페이지는 있어야 함');
+    assert.ok(locs.includes(`${BASE}/logs/`), '/logs 정적 페이지는 있어야 함');
     assert.ok(
-      !locs.some((l) => l.startsWith(`${BASE}/logs/`)),
+      // /logs/ 정본은 허용하되, /logs/{slug}/ 같은 개별 로그 URL은 없어야 한다.
+      !locs.some((l) => l.startsWith(`${BASE}/logs/`) && l !== `${BASE}/logs/`),
       '로그 개별 URL이 생성되면 안 됨',
     );
   } finally {
@@ -109,20 +112,20 @@ test('로그는 개별 URL을 생성하지 않는다 (/logs 단일 페이지만)
 test('buildXml은 sitemap 0.9 스키마 구조를 출력한다', () => {
   const xml = buildXml([
     { loc: `${BASE}/`, lastmod: null },
-    { loc: `${BASE}/notes/x`, lastmod: '2026-05-28' },
+    { loc: `${BASE}/notes/x/`, lastmod: '2026-05-28' },
   ]);
   assert.match(xml, /^<\?xml version="1\.0" encoding="UTF-8"\?>/);
   assert.match(xml, /<urlset xmlns="http:\/\/www\.sitemaps\.org\/schemas\/sitemap\/0\.9">/);
   assert.match(xml, /<loc>https:\/\/justinjeong5\.github\.io\/<\/loc>/);
-  assert.match(xml, /<loc>https:\/\/justinjeong5\.github\.io\/notes\/x<\/loc>/);
+  assert.match(xml, /<loc>https:\/\/justinjeong5\.github\.io\/notes\/x\/<\/loc>/);
   assert.match(xml, /<lastmod>2026-05-28<\/lastmod>/);
   assert.match(xml, /<\/urlset>\n$/);
 });
 
 test('lastmod가 없는 URL은 <lastmod> 태그를 생략한다', () => {
-  const xml = buildXml([{ loc: `${BASE}/uses`, lastmod: null }]);
+  const xml = buildXml([{ loc: `${BASE}/uses/`, lastmod: null }]);
   assert.ok(!xml.includes('<lastmod>'), 'lastmod 없으면 태그 생략');
-  assert.match(xml, /<loc>https:\/\/justinjeong5\.github\.io\/uses<\/loc>/);
+  assert.match(xml, /<loc>https:\/\/justinjeong5\.github\.io\/uses\/<\/loc>/);
 });
 
 test('STATIC_PATHS는 routes.js의 정적 경로와 일치한다 (parity)', () => {
