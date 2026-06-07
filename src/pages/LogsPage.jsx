@@ -70,7 +70,7 @@ function LogsPage() {
                       else detailsRefs.current.delete(log.slug);
                     }}
                   >
-                    <summary>자세히</summary>
+                    <summary aria-label={`${log.title} 자세히`}>자세히</summary>
                     <div className="prose log-body">
                       <Component />
                     </div>

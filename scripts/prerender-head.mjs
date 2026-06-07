@@ -16,12 +16,58 @@ export function htmlEscape(s) {
     .replace(/"/g, '&quot;');
 }
 
+// JSON-LD를 <script type="application/ld+json"> 태그로 직렬화한다.
+// JSON.stringify 후 </script> 종료 시퀀스를 막기 위해 '</' → '<\/' 치환(XSS-safe).
+export function serializeJsonLd(obj) {
+  const json = JSON.stringify(obj, null, 2).replace(/<\//g, '<\\/');
+  return `<script type="application/ld+json">\n${json}\n</script>`;
+}
+
+// 사이트 공통 Person 스텁(JSON-LD author 재사용).
+const PERSON_STUB = {
+  '@type': 'Person',
+  name: '정경하',
+  url: 'https://justinjeong5.github.io/',
+  jobTitle: 'Product-minded Frontend Engineer',
+  sameAs: ['https://github.com/justinjeong5'],
+};
+
+// 라우트 메타로 JSON-LD 구조화 데이터 객체를 생성한다.
+// - 홈('/'): Person 스키마
+// - 상세(ogType==='article'): Article 스키마
+// - 그 외: null(JSON-LD 생략)
+export function buildJsonLd({ canonical, ogType, title, description, datePublished, dateModified }) {
+  if (canonical === 'https://justinjeong5.github.io/') {
+    return {
+      '@context': 'https://schema.org',
+      ...PERSON_STUB,
+    };
+  }
+  if (ogType === 'article') {
+    const article = {
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: title,
+      description,
+      url: canonical,
+      mainEntityOfPage: canonical,
+      author: PERSON_STUB,
+    };
+    if (datePublished) article.datePublished = datePublished;
+    if (dateModified) article.dateModified = dateModified;
+    return article;
+  }
+  return null;
+}
+
 // 라우트 메타로 head의 SEO 블록 내용을 생성한다. 마커는 제거되고 메타 태그만 남는다.
 // 첫 줄 들여쓰기는 템플릿의 <!-- seo:start --> 줄 들여쓰기가 그대로 남으므로 생략한다.
-export function buildHeadMeta({ title, description, canonical }) {
+// ogType(기본 'website')을 og:type 태그로 항상 주입 — index.html 템플릿의 고정 og:type과 중복을 없앤다.
+export function buildHeadMeta({ title, description, canonical, ogType = 'website', datePublished, dateModified }) {
   const e = htmlEscape;
-  return [
+  const lines = [
     `<meta name="description" content="${e(description)}" />`,
+    `    <meta property="og:type" content="${e(ogType)}" />`,
     `    <meta property="og:title" content="${e(title)}" />`,
     `    <meta property="og:description" content="${e(description)}" />`,
     `    <meta property="og:url" content="${e(canonical)}" />`,
@@ -29,7 +75,14 @@ export function buildHeadMeta({ title, description, canonical }) {
     `    <meta name="twitter:description" content="${e(description)}" />`,
     `    <link rel="canonical" href="${e(canonical)}" />`,
     `    <title>${e(title)}</title>`,
-  ].join('\n');
+  ];
+
+  const ld = buildJsonLd({ canonical, ogType, title, description, datePublished, dateModified });
+  if (ld) {
+    lines.push(`    ${serializeJsonLd(ld)}`);
+  }
+
+  return lines.join('\n');
 }
 
 // 템플릿의 SEO 마커 블록을 라우트 메타로 치환한다.

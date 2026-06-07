@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { SITE_URL, DEFAULT_META, STATIC_META, toCanonical, normalizePath, resolveMeta } from './seo.js';
+import { SITE_URL, DEFAULT_META, STATIC_META, toCanonical, normalizePath, resolveMeta, isDetailPath } from './seo.js';
 import { ROUTES } from './routes.js';
 
 test('toCanonical: 홈/빈 경로는 루트 슬래시', () => {
@@ -98,4 +98,73 @@ test('resolveMeta: 서로 다른 경로는 서로 다른 canonical (홈 복제 �
     resolveMeta('/cases/known', stubGetters).canonical,
   ];
   assert.equal(new Set(canons).size, 4, '경로별 canonical이 고유해야 함');
+});
+
+// ---- ogType 분기 테스트 ----
+
+test('resolveMeta: 상세 페이지는 ogType=article', () => {
+  const m = resolveMeta('/cases/known', stubGetters);
+  assert.equal(m.ogType, 'article');
+});
+
+test('resolveMeta: notes 상세 페이지는 ogType=article', () => {
+  const m = resolveMeta('/notes/n1', stubGetters);
+  assert.equal(m.ogType, 'article');
+});
+
+test('resolveMeta: 목록 페이지는 ogType=website', () => {
+  assert.equal(resolveMeta('/cases', stubGetters).ogType, 'website');
+  assert.equal(resolveMeta('/notes', stubGetters).ogType, 'website');
+  assert.equal(resolveMeta('/essays', stubGetters).ogType, 'website');
+});
+
+test('resolveMeta: 홈은 ogType=website', () => {
+  assert.equal(resolveMeta('/', stubGetters).ogType, 'website');
+});
+
+test('resolveMeta: 정적 페이지(about, cv 등)는 ogType=website', () => {
+  assert.equal(resolveMeta('/about', stubGetters).ogType, 'website');
+  assert.equal(resolveMeta('/cv', stubGetters).ogType, 'website');
+});
+
+// ---- datePublished / dateModified 파이프라인 테스트 ----
+
+const stubGettersWithDates = {
+  cases: (slug) => {
+    if (slug === 'dated') return { title: '날짜 케이스', summary: '요약', date: '2024-05-01', updated: '2024-06-01' };
+    if (slug === 'nodates') return { title: '날짜 없음', summary: '요약' };
+    return undefined;
+  },
+  notes: () => undefined,
+  essays: () => undefined,
+};
+
+test('resolveMeta: 날짜 있는 상세 페이지는 datePublished/dateModified 포함', () => {
+  const m = resolveMeta('/cases/dated', stubGettersWithDates);
+  assert.equal(m.datePublished, '2024-05-01');
+  assert.equal(m.dateModified, '2024-06-01');
+});
+
+test('resolveMeta: 날짜 없는 상세 페이지는 datePublished/dateModified undefined', () => {
+  const m = resolveMeta('/cases/nodates', stubGettersWithDates);
+  assert.equal(m.datePublished, undefined);
+  assert.equal(m.dateModified, undefined);
+});
+
+test('resolveMeta: 정적 페이지는 datePublished/dateModified 없음', () => {
+  const m = resolveMeta('/cases', stubGetters);
+  assert.ok(!('datePublished' in m));
+  assert.ok(!('dateModified' in m));
+});
+
+// ---- isDetailPath 테스트 ----
+
+test('isDetailPath: 상세 경로 판별', () => {
+  assert.equal(isDetailPath('/cases/my-case'), true);
+  assert.equal(isDetailPath('/notes/note-slug'), true);
+  assert.equal(isDetailPath('/essays/essay-1'), true);
+  assert.equal(isDetailPath('/cases'), false);
+  assert.equal(isDetailPath('/'), false);
+  assert.equal(isDetailPath('/about'), false);
+  assert.equal(isDetailPath('/cases/'), false);
 });

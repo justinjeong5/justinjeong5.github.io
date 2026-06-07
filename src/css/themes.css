@@ -145,6 +145,15 @@ body {
   color: var(--text-muted);
 }
 
+/* accentYellow 다크배경 오버라이드 — proof-strip/case-index/writing-panel 배경이
+   var(--text)=#09090b 이므로 라이트값 #b45309(3.96:1)가 미달. 밝은 amber로 복구. */
+:root:not([data-theme='dark']) .proof-strip,
+:root:not([data-theme='dark']) .case-index,
+:root:not([data-theme='dark']) .writing-panel,
+:root:not([data-theme='dark']) .impact-box {
+  --accent-yellow: #f59e0b;
+}
+
 /* Smooth transitions */
 .site-nav,
 .profile-panel,

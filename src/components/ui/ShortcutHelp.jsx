@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { X } from 'lucide-react';
 
 import { useUI } from '../../lib/ui-context';
@@ -29,6 +29,7 @@ const SHORTCUTS = [
 
 function ShortcutHelp() {
   const { helpOpen, closeHelp } = useUI();
+  const closeButtonRef = useRef(null);
 
   useEffect(() => {
     if (!helpOpen) return undefined;
@@ -38,8 +39,10 @@ function ShortcutHelp() {
       document.querySelectorAll('body > #root > *:not(.modal-overlay)'),
     );
     bg.forEach((el) => el.setAttribute('inert', ''));
+    const id = window.requestAnimationFrame(() => closeButtonRef.current?.focus());
     return () => {
       document.body.style.overflow = '';
+      window.cancelAnimationFrame(id);
       bg.forEach((el) => el.removeAttribute('inert'));
       previouslyFocused?.focus?.();
     };
@@ -52,7 +55,7 @@ function ShortcutHelp() {
       <div className="modal-card help-modal" onClick={(e) => e.stopPropagation()}>
         <header className="modal-header">
           <h2>키보드 단축키</h2>
-          <button type="button" className="icon-button" onClick={closeHelp} aria-label="닫기">
+          <button ref={closeButtonRef} type="button" className="icon-button" onClick={closeHelp} aria-label="닫기">
             <X size={18} aria-hidden="true" />
           </button>
         </header>

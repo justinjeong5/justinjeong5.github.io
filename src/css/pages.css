@@ -173,7 +173,7 @@
   border-radius: var(--radius);
   background: var(--bg-alt);
 }
-.log-preview-item header {
+.log-preview-item .log-preview-header {
   display: flex;
   gap: 12px;
   margin-bottom: 8px;
@@ -240,7 +240,7 @@
   margin-bottom: 16px;
   color: var(--text-muted);
 }
-.case-card-link h2 {
+.case-card-link h3 {
   margin: 0 0 10px;
   color: var(--text);
   font-size: 1.45rem;

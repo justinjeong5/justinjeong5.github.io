@@ -30,7 +30,6 @@ export default defineConfig({
             if (id.includes('react-dom') || id.includes('/react/')) return 'react-vendor';
             if (id.includes('lucide-react')) return 'icons';
             if (id.includes('fuse.js')) return 'search';
-            if (id.includes('@mdx-js')) return 'mdx-runtime';
             if (id.includes('pretendard')) return 'pretendard';
             return 'vendor';
           }

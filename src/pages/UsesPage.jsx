@@ -18,8 +18,8 @@ function UsesPage() {
                 <div className="uses-name">
                   <strong>{item.name}</strong>
                   {item.link ? (
-                    <a href={item.link} target="_blank" rel="noreferrer">
-                      ↗
+                    <a href={item.link} target="_blank" rel="noreferrer" aria-label={`${item.name} 외부 링크`}>
+                      <span aria-hidden="true">↗</span>
                     </a>
                   ) : null}
                 </div>

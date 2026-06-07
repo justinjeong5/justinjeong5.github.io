@@ -70,6 +70,14 @@ export function normalizePath(url) {
   return pathOnly || '/';
 }
 
+// cases/notes/essays 슬러그 상세 경로 정규식 — isDetailPath와 resolveMeta가 공유한다.
+const DETAIL_PATH_RE = /^\/(cases|notes|essays)\/([^/]+)$/;
+
+// 경로가 상세 페이지(cases/notes/essays 슬러그)인지 판별한다.
+export function isDetailPath(path) {
+  return DETAIL_PATH_RE.test(path);
+}
+
 // 라우트별 head 메타를 해석한다. 상세 페이지는 주입된 getter로 frontmatter를 조회한다.
 // getters = { cases, notes, essays } (각 (slug) => entry|undefined).
 // vite 의존(content.js)을 entry-server 쪽에 두고 이 함수는 순수하게 유지해 단위 테스트한다.
@@ -77,7 +85,7 @@ export function resolveMeta(url, getters) {
   const path = normalizePath(url);
   const canonical = toCanonical(path);
 
-  const detail = path.match(/^\/(cases|notes|essays)\/([^/]+)$/);
+  const detail = path.match(DETAIL_PATH_RE);
   if (detail) {
     const entry = getters[detail[1]](detail[2]);
     // getAllPaths는 유효 slug만 생성한다. 매칭됐는데 콘텐츠가 없으면 회귀(콘텐츠 삭제 등)이므로
@@ -89,6 +97,9 @@ export function resolveMeta(url, getters) {
       title: `${entry.title} | 정경하`,
       description: entry.summary || DEFAULT_META.description,
       canonical,
+      ogType: 'article',
+      datePublished: entry.date || undefined,
+      dateModified: entry.updated || entry.date || undefined,
     };
   }
 
@@ -97,5 +108,6 @@ export function resolveMeta(url, getters) {
     title: meta.title,
     description: meta.description || DEFAULT_META.description,
     canonical,
+    ogType: 'website',
   };
 }

@@ -6,7 +6,7 @@ import { useUI } from '../../lib/ui-context';
 import ThemeToggle from '../ui/ThemeToggle';
 
 function Header() {
-  const { openPalette, toggleHelp, toggleMenu } = useUI();
+  const { openPalette, toggleHelp, helpOpen, toggleMenu, menuOpen } = useUI();
 
   return (
     <header className="site-nav" aria-label="Primary">
@@ -42,6 +42,8 @@ function Header() {
           className="icon-button desktop-only"
           onClick={toggleHelp}
           aria-label="키보드 단축키"
+          aria-expanded={helpOpen}
+          aria-haspopup="dialog"
           title="키보드 단축키 (? 키)"
         >
           <Keyboard size={18} aria-hidden="true" />
@@ -51,6 +53,8 @@ function Header() {
           className="icon-button menu-trigger"
           onClick={toggleMenu}
           aria-label="메뉴 열기"
+          aria-expanded={menuOpen}
+          aria-haspopup="dialog"
           title="메뉴"
         >
           <Menu size={18} aria-hidden="true" />

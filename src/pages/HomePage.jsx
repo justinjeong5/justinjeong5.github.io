@@ -149,7 +149,7 @@ function HomePage() {
             <li key={note.slug}>
               <Link to={ROUTES.noteDetail(note.slug)} className="note-preview-card">
                 <span className="growth-badge" title={note.growth} aria-label={note.growth}>
-                  {growthIcon[note.growth] || '🌱'}
+                  <span aria-hidden="true">{growthIcon[note.growth] || '🌱'}</span>
                 </span>
                 <h3>{note.title}</h3>
                 <p>{note.summary}</p>
@@ -171,13 +171,13 @@ function HomePage() {
         <ul className="log-preview-list">
           {recentLogs.map((log) => (
             <li key={log.slug} className="log-preview-item">
-              <header>
+              <div className="log-preview-header">
                 <span className="log-date">{log.date}</span>
                 <span className={`log-type log-type-${(log.type || 'building').toLowerCase()}`}>
                   <Sprout size={14} aria-hidden="true" />
                   {log.type}
                 </span>
-              </header>
+              </div>
               <h3>{log.title}</h3>
               <p>{log.summary}</p>
             </li>

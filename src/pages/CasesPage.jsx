@@ -28,7 +28,7 @@ function CaseCard({ study }) {
             </span>
             <BriefcaseBusiness size={18} aria-hidden="true" />
           </div>
-          <h2>{study.title}</h2>
+          <h3>{study.title}</h3>
           <p className="case-summary">{study.summary}</p>
           <dl className="case-mini-meta">
             <div>
