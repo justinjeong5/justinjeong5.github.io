@@ -1,0 +1,27 @@
+---
+title: 개인 프로젝트에도 보안 위생을 — 2주간 hardening 묶음
+date: '2026-06-03 21:00'
+type: Shipped
+summary: 사이드 프로젝트라고 보안이 면제되진 않는다. 청첩장과 알림 봇에서 인증·rate-limit·IP 신뢰·SSRF·토큰 노출을 한 묶음으로 손봤다.
+---
+
+## 맥락
+
+개인 프로젝트는 "나만 쓰는데 뭐"라는 핑계로 보안이 늘 뒤로 밀린다. 그런데 공개 URL을 가진 순간 인터넷 전체가 사용자다. 헬스체크를 돌리며 사이드 프로젝트 두 개의 신뢰 경계를 다시 봤다.
+
+## 한 일
+
+작지만 실재하는 구멍들을 한 라운드로 막았다.
+
+- 청첩장: RLS 잠금에서 기존 정책을 전면 정리하고 public 권한 회수, 관리자 브루트포스 분산 카운트 누적 버그 수정, rate-limit을 입력 검증 뒤로 이동, 방문자 IP 추출을 client-ip로 통일(스푸핑 차단).
+- 알림 봇: SSRF 차단 목록에 CGNAT(100.64.0.0/10) 등 비공인 대역 추가, 텔레그램 봇 토큰이 URL 경로에 남던 redaction 누락 수정.
+
+## 결정 — 신뢰 경계를 명시적으로
+
+"내부 호출이니까 믿는다", "헤더에 적힌 IP니까 믿는다" 같은 암묵적 신뢰를 전부 명시적 검증으로 바꿨다. 입력은 기본 불신, 권한은 기본 최소. 사이드 프로젝트에도 같은 기준을 적용한다.
+
+## 회고
+
+이 변경들은 기능을 하나도 안 늘렸다. 그래서 미루기 쉽고, 미룬 채 공개되기 쉽다. 보안 위생은 헬스체크처럼 주기적으로 한 묶음씩 처리하는 게, 사고 난 뒤 한꺼번에 막는 것보다 싸다.
+
+관련: [/essays/systems-thinking-from-incidents](/essays/systems-thinking-from-incidents), [/logs#2026-06-07-healthcheck-six-bots](/logs#2026-06-07-healthcheck-six-bots), [/essays/automation-doesnt-reduce-work](/essays/automation-doesnt-reduce-work)
