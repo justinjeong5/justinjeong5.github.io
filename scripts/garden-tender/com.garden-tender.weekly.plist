@@ -18,11 +18,11 @@
     <string>cd REPO_PATH_PLACEHOLDER &amp;&amp; node scripts/garden-tender/garden-tender.mjs</string>
   </array>
 
-  <!-- 매주 일요일 10:00 -->
+  <!-- 매주 월요일 10:00 (일요일엔 노트북이 꺼져 있어 월요일로 이동) -->
   <key>StartCalendarInterval</key>
   <dict>
     <key>Weekday</key>
-    <integer>0</integer>
+    <integer>1</integer>
     <key>Hour</key>
     <integer>10</integer>
     <key>Minute</key>
