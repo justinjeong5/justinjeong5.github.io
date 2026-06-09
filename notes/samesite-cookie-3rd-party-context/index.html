@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+    <meta name="author" content="정경하" />
+    <meta property="og:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="description" content="쿠키 SameSite 속성의 3가지 값(Lax·Strict·None)이 실제로 어떻게 다른지. 3rd party cookie deprecation 시대에 어떤 값을 골라야 하는지." />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="SameSite=Lax vs Strict — 3rd party context에서 일어나는 일 | 정경하" />
+    <meta property="og:description" content="쿠키 SameSite 속성의 3가지 값(Lax·Strict·None)이 실제로 어떻게 다른지. 3rd party cookie deprecation 시대에 어떤 값을 골라야 하는지." />
+    <meta property="og:url" content="https://justinjeong5.github.io/notes/samesite-cookie-3rd-party-context/" />
+    <meta name="twitter:title" content="SameSite=Lax vs Strict — 3rd party context에서 일어나는 일 | 정경하" />
+    <meta name="twitter:description" content="쿠키 SameSite 속성의 3가지 값(Lax·Strict·None)이 실제로 어떻게 다른지. 3rd party cookie deprecation 시대에 어떤 값을 골라야 하는지." />
+    <link rel="canonical" href="https://justinjeong5.github.io/notes/samesite-cookie-3rd-party-context/" />
+    <title>SameSite=Lax vs Strict — 3rd party context에서 일어나는 일 | 정경하</title>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "SameSite=Lax vs Strict — 3rd party context에서 일어나는 일 | 정경하",
+  "description": "쿠키 SameSite 속성의 3가지 값(Lax·Strict·None)이 실제로 어떻게 다른지. 3rd party cookie deprecation 시대에 어떤 값을 골라야 하는지.",
+  "url": "https://justinjeong5.github.io/notes/samesite-cookie-3rd-party-context/",
+  "mainEntityOfPage": "https://justinjeong5.github.io/notes/samesite-cookie-3rd-party-context/",
+  "author": {
+    "@type": "Person",
+    "name": "정경하",
+    "url": "https://justinjeong5.github.io/",
+    "jobTitle": "Product-minded Frontend Engineer",
+    "sameAs": [
+      "https://github.com/justinjeong5"
+    ]
+  }
+}
+</script>
+    <script>
+      // 테마 사전 설정 — prerender된 HTML에 data-theme를 즉시 적용해 CSS flash를 막는다.
+      // (다른 스크립트보다 먼저 실행되어야 한다.)
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages — restore deep-link path written by 404.html
+      // https://github.com/rafgraph/spa-github-pages
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
+    </script>
+    <script type="module" crossorigin src="/assets/index-CxYEBVj7.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-QTnfLwEv.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-cases-BgF-y5bM.js">
+    <link rel="modulepreload" crossorigin href="/assets/router-D75Vl-iJ.js">
+    <link rel="modulepreload" crossorigin href="/assets/search-CiN4C8Nu.js">
+    <link rel="modulepreload" crossorigin href="/assets/icons-C3lfSmZ3.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-BMBR_99R.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-essays-CipNEaqH.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-logs-Dm6M40WY.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-notes-CR1Uinql.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-sbCSPT96.css">
+    <link rel="stylesheet" crossorigin href="/assets/pretendard-NPFyShNs.css">
+  </head>
+  <body>
+    <div id="root"><a href="#main-content" class="skip-link">본문 바로가기</a><header class="site-nav" aria-label="Primary"><a class="brand" aria-label="정경하 홈" href="/" data-discover="true">JKH</a><nav class="primary-nav"><a class="nav-link" href="/cases" data-discover="true">Cases</a><a aria-current="page" class="nav-link is-active" href="/notes" data-discover="true">Notes</a><a class="nav-link" href="/essays" data-discover="true">Essays</a><a class="nav-link" href="/logs" data-discover="true">Logs</a><a class="nav-link" href="/about" data-discover="true">About</a></nav><div class="nav-actions"><button type="button" class="search-trigger" aria-label="검색" title="검색 (⌘K 또는 /)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg><span>검색</span><kbd>⌘K</kbd></button><button type="button" class="icon-button" aria-label="테마: 라이트. 클릭하여 변경" title="테마: 라이트 · T 키로도 전환"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg></button><button type="button" class="icon-button desktop-only" aria-label="키보드 단축키" aria-expanded="false" aria-haspopup="dialog" title="키보드 단축키 (? 키)"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-keyboard" aria-hidden="true"><path d="M10 8h.01"></path><path d="M12 12h.01"></path><path d="M14 8h.01"></path><path d="M16 12h.01"></path><path d="M18 8h.01"></path><path d="M6 8h.01"></path><path d="M7 16h10"></path><path d="M8 12h.01"></path><rect width="20" height="16" x="2" y="4" rx="2"></rect></svg></button><button type="button" class="icon-button menu-trigger" aria-label="메뉴 열기" aria-expanded="false" aria-haspopup="dialog" title="메뉴"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button></div></header><main id="main-content" tabindex="-1"><article class="page note-detail"><header class="page-header note-detail-header"><p class="eyebrow growth-eyebrow"><span aria-hidden="true">🌱</span>Seedling</p><h1>SameSite=Lax vs Strict — 3rd party context에서 일어나는 일</h1><p class="page-lead">쿠키 SameSite 속성의 3가지 값(Lax·Strict·None)이 실제로 어떻게 다른지. 3rd party cookie deprecation 시대에 어떤 값을 골라야 하는지.</p><ul class="topic-list" aria-label="topics"><li>#<!-- -->security</li><li>#<!-- -->browser</li><li>#<!-- -->cookie</li><li>#<!-- -->web</li></ul></header><div class="prose"><h2>SameSite의 핵심 질문</h2>
+<p>쿠키 SameSite 속성은 한 질문에 답한다.</p>
+<blockquote>
+<p>이 쿠키를 <strong>다른 사이트에서 우리 사이트로 가는 요청</strong>에 함께 보낼 것인가?</p>
+</blockquote>
+<p>이게 cross-site / 3rd party context의 정의다. SameSite의 세 값은 이 질문에 다른 답을 한다.</p>
+<h2>SameSite=Strict — 보낸 적이 없다</h2>
+<p>cross-site 요청에 <strong>절대 쿠키 안 보냄</strong>.</p>
+<pre><code>Set-Cookie: session=abc123; SameSite=Strict
+</code></pre>
+<p>다른 사이트에서 우리 사이트 링크를 클릭해서 들어와도 쿠키 안 보낸다. 즉, 사용자가 외부에서 들어오는 첫 요청에는 로그인 세션이 없다. 우리 사이트 안에서 다시 클릭해야 쿠키가 붙는다.</p>
+<p><strong>사용 케이스</strong>: 매우 민감한 작업(은행 송금, 비밀번호 변경). 일반 로그인 세션에는 과함.</p>
+<h2>SameSite=Lax — top-level navigation은 OK</h2>
+<p>cross-site 요청 중 <strong>사용자가 명시적으로 우리 사이트로 이동하는 경우</strong>에만 쿠키 보냄.</p>
+<p>구체적으로:</p>
+<ul>
+<li>✅ 다른 사이트에서 우리 사이트 링크 클릭 (top-level navigation, GET)</li>
+<li>✅ 주소창에 우리 사이트 URL 직접 입력</li>
+<li>❌ 다른 사이트의 iframe에서 우리 사이트 호출</li>
+<li>❌ 다른 사이트가 우리 사이트로 POST/PUT/DELETE</li>
+<li>❌ 다른 사이트의 <code>&lt;img src&gt;</code> 같은 sub-resource 요청</li>
+</ul>
+<pre><code>Set-Cookie: session=abc123; SameSite=Lax
+</code></pre>
+<p>대부분의 일반 로그인 세션은 Lax가 적절. CSRF 공격(다른 사이트가 우리 사이트로 POST)을 막으면서 사용자 흐름은 자연스럽다.</p>
+<p><strong>현재 브라우저 디폴트</strong>: SameSite 미지정 쿠키는 Chrome/Firefox/Safari가 자동으로 Lax 취급.</p>
+<h2>SameSite=None — 모든 cross-site에 보냄 (Secure 필수)</h2>
+<p>cross-site 요청 종류 무관하게 <strong>항상</strong> 쿠키 보냄. 단, 반드시 <code>Secure</code> 같이.</p>
+<pre><code>Set-Cookie: session=abc123; SameSite=None; Secure
+</code></pre>
+<p><code>Secure</code> 없으면 브라우저가 쿠키 자체를 거부한다.</p>
+<p><strong>사용 케이스</strong>: 진짜 cross-site 통신이 필요한 경우.</p>
+<ul>
+<li>iframe 안에서 동작하는 위젯 (chat·결제·comments)</li>
+<li>다른 도메인의 API를 호출하는 SPA (CORS + cookies)</li>
+<li>광고 SDK / 트래킹</li>
+</ul>
+<h2>3rd party cookie deprecation의 의미</h2>
+<p>Chrome이 3rd party 쿠키를 차단하는 흐름은 SameSite=None 쿠키가 <strong>결국 안 보내진다</strong>는 의미다. SameSite=None은 cross-site 쿠키이고 그게 곧 3rd party 쿠키니까.</p>
+<p>영향:</p>
+<ul>
+<li>iframe 위젯에서 자체 도메인 쿠키로 세션 유지가 안 됨</li>
+<li>광고 트래킹에 사용자 식별 어려움</li>
+<li>federated identity(SSO) 흐름 일부 깨짐</li>
+</ul>
+<p>대응:</p>
+<ul>
+<li><strong>First-party set 등록</strong>: 같은 회사 도메인을 한 묶음으로 등록 (Chrome First-Party Sets)</li>
+<li><strong>CHIPS (Partitioned Cookies)</strong>: <code>Set-Cookie: ...; Partitioned; SameSite=None; Secure</code> — 호출한 top-level 사이트별로 쿠키 분리</li>
+<li><strong>iframe 대신 popup</strong>: top-level navigation으로 우회</li>
+</ul>
+<h2>무엇을 골라야 하나</h2>
+<table><thead><tr><th>시나리오</th><th>추천</th></tr></thead><tbody><tr><td>일반 로그인 세션</td><td><code>Lax</code> (또는 미지정 → 자동 Lax)</td></tr><tr><td>송금·비밀번호 변경 같은 민감 작업</td><td><code>Strict</code> 별도 쿠키</td></tr><tr><td>iframe 위젯 / cross-site API</td><td><code>None; Secure</code> (deprecation 대비 CHIPS)</td></tr><tr><td>CSRF 토큰</td><td><code>Strict</code> (top-level navigation에서도 쿠키 안 가도 됨)</td></tr></tbody></table>
+<h2>함정</h2>
+<ul>
+<li><strong>Strict로 일반 세션 만들기</strong>: 사용자가 외부 링크로 들어오면 로그아웃 상태처럼 보임. UX 손상.</li>
+<li><strong>None만 쓰고 Secure 안 붙임</strong>: 브라우저가 쿠키 자체를 무시함. HTTP 환경에서 디버깅하다 빠지기 쉬운 함정.</li>
+<li><strong>3rd party cookie deprecation을 무시</strong>: iframe 위젯이나 cross-domain SPA가 어느 날 갑자기 동작 안 함. 사전 마이그레이션 (CHIPS, First-Party Sets) 필요.</li>
+<li><strong>CSRF 토큰을 Lax 쿠키로</strong>: Lax는 top-level GET에서 쿠키를 보낸다. CSRF 토큰을 Lax로 두면 GET 기반 CSRF 일부 시나리오에서 취약. Strict 권장.</li>
+<li><strong>개발 환경(localhost)에서 Secure 누락</strong>: Secure는 HTTPS 필수인데 localhost는 예외 처리(브라우저별 차이). 프로덕션에서 처음으로 Secure 누락 문제 발견하는 경우.</li>
+<li><strong>Lax 디폴트 가정을 모든 브라우저에 적용</strong>: Safari·Firefox·구버전 Chrome 동작이 살짝 다르다. 명시적으로 SameSite 값을 적는 게 안전.</li>
+</ul>
+<h2>핵심</h2>
+<blockquote>
+<p>SameSite는 <strong>CSRF 방어 + 사용자 흐름</strong>의 균형을 결정한다. 대부분 Lax가 정답이고, iframe·cross-site는 None+Secure+Partitioned, 민감 작업은 Strict 별도 쿠키. 3rd party cookie deprecation 시대엔 None 쿠키를 의식적으로 줄여야 한다.</p>
+</blockquote>
+<h2>관련</h2>
+<p><a href="/notes/dead-dependency-hidden-cost">/notes/dead-dependency-hidden-cost</a> — 보안 의존성의 숨은 비용
+<a href="/notes/n-plus-one-query-trap">/notes/n-plus-one-query-trap</a> — 흔한 백엔드 함정</p></div><section class="related-block"><h2>관련 노트</h2><ul class="note-grid"><li><a class="note-card" href="/notes/dead-dependency-hidden-cost" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->안 쓰는 의존성의 숨은 비용 — install·lockfile·transitive CVE·supply chain</h3><p>package.json에 있는데 import 0건인 패키지는 단순 dead code가 아니다. install 시간·lockfile 부피·transitive CVE·supply chain 표면적이 모두 누적된다. 정리는 정기 작업.</p></a></li><li><a class="note-card" href="/notes/jwt-vs-session-tradeoffs" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->JWT vs session — 스토리지·만료·revocation의 트레이드오프</h3><p>JWT가 stateless라 좋다는 말은 절반만 맞다. revocation·만료·스토리지를 같이 보면 session이 더 단순한 경우가 많다. 5가지 차원 비교.</p></a></li><li><a class="note-card" href="/notes/oauth-state-pkce-traps" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->OAuth state·PKCE 함정 — 흐름의 보안 디테일</h3><p>OAuth authorization code flow는 단순해 보이지만 state·PKCE·redirect URI 검증을 빼먹으면 CSRF·토큰 가로채기·open redirect 취약점. 5가지 함정.</p></a></li></ul></section><footer class="page-footer"><a class="see-all-link" href="/notes" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg> 노트 목록</a></footer></article></main><footer class="site-footer"><div class="footer-brand"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg>정경하</span><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open-text" aria-hidden="true"><path d="M12 7v14"></path><path d="M16 12h2"></path><path d="M16 8h2"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path><path d="M6 12h2"></path><path d="M6 8h2"></path></svg>Cases, notes, logs, and proof of work</span></div><nav class="footer-nav" aria-label="Secondary"><a href="/uses" data-discover="true">Uses</a><a href="/now" data-discover="true">Now</a><a href="/reading" data-discover="true">Reading</a><a href="/cv" data-discover="true">CV</a></nav><span class="footer-meta"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-clock" aria-hidden="true"><path d="M16 14v2.2l1.6 1"></path><path d="M16 2v4"></path><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"></path><path d="M3 10h5"></path><path d="M8 2v4"></path><circle cx="16" cy="16" r="6"></circle></svg>Updated <!-- -->2026-06-09 11:00</span></footer></div>
+  </body>
+</html>

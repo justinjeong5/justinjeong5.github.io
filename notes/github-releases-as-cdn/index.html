@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+    <meta name="author" content="정경하" />
+    <meta property="og:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="description" content="HTML 리포트에 비디오·큰 이미지가 들어갈 때 어디에 호스팅하나. GitHub Releases는 파일당 2GB·무제한 트래픽·무료. 도메인 신뢰까지 따라온다." />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="GitHub Releases를 personal CDN으로 — 무료·무제한·영구 | 정경하" />
+    <meta property="og:description" content="HTML 리포트에 비디오·큰 이미지가 들어갈 때 어디에 호스팅하나. GitHub Releases는 파일당 2GB·무제한 트래픽·무료. 도메인 신뢰까지 따라온다." />
+    <meta property="og:url" content="https://justinjeong5.github.io/notes/github-releases-as-cdn/" />
+    <meta name="twitter:title" content="GitHub Releases를 personal CDN으로 — 무료·무제한·영구 | 정경하" />
+    <meta name="twitter:description" content="HTML 리포트에 비디오·큰 이미지가 들어갈 때 어디에 호스팅하나. GitHub Releases는 파일당 2GB·무제한 트래픽·무료. 도메인 신뢰까지 따라온다." />
+    <link rel="canonical" href="https://justinjeong5.github.io/notes/github-releases-as-cdn/" />
+    <title>GitHub Releases를 personal CDN으로 — 무료·무제한·영구 | 정경하</title>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "GitHub Releases를 personal CDN으로 — 무료·무제한·영구 | 정경하",
+  "description": "HTML 리포트에 비디오·큰 이미지가 들어갈 때 어디에 호스팅하나. GitHub Releases는 파일당 2GB·무제한 트래픽·무료. 도메인 신뢰까지 따라온다.",
+  "url": "https://justinjeong5.github.io/notes/github-releases-as-cdn/",
+  "mainEntityOfPage": "https://justinjeong5.github.io/notes/github-releases-as-cdn/",
+  "author": {
+    "@type": "Person",
+    "name": "정경하",
+    "url": "https://justinjeong5.github.io/",
+    "jobTitle": "Product-minded Frontend Engineer",
+    "sameAs": [
+      "https://github.com/justinjeong5"
+    ]
+  }
+}
+</script>
+    <script>
+      // 테마 사전 설정 — prerender된 HTML에 data-theme를 즉시 적용해 CSS flash를 막는다.
+      // (다른 스크립트보다 먼저 실행되어야 한다.)
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages — restore deep-link path written by 404.html
+      // https://github.com/rafgraph/spa-github-pages
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
+    </script>
+    <script type="module" crossorigin src="/assets/index-CxYEBVj7.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-QTnfLwEv.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-cases-BgF-y5bM.js">
+    <link rel="modulepreload" crossorigin href="/assets/router-D75Vl-iJ.js">
+    <link rel="modulepreload" crossorigin href="/assets/search-CiN4C8Nu.js">
+    <link rel="modulepreload" crossorigin href="/assets/icons-C3lfSmZ3.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-BMBR_99R.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-essays-CipNEaqH.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-logs-Dm6M40WY.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-notes-CR1Uinql.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-sbCSPT96.css">
+    <link rel="stylesheet" crossorigin href="/assets/pretendard-NPFyShNs.css">
+  </head>
+  <body>
+    <div id="root"><a href="#main-content" class="skip-link">본문 바로가기</a><header class="site-nav" aria-label="Primary"><a class="brand" aria-label="정경하 홈" href="/" data-discover="true">JKH</a><nav class="primary-nav"><a class="nav-link" href="/cases" data-discover="true">Cases</a><a aria-current="page" class="nav-link is-active" href="/notes" data-discover="true">Notes</a><a class="nav-link" href="/essays" data-discover="true">Essays</a><a class="nav-link" href="/logs" data-discover="true">Logs</a><a class="nav-link" href="/about" data-discover="true">About</a></nav><div class="nav-actions"><button type="button" class="search-trigger" aria-label="검색" title="검색 (⌘K 또는 /)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg><span>검색</span><kbd>⌘K</kbd></button><button type="button" class="icon-button" aria-label="테마: 라이트. 클릭하여 변경" title="테마: 라이트 · T 키로도 전환"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg></button><button type="button" class="icon-button desktop-only" aria-label="키보드 단축키" aria-expanded="false" aria-haspopup="dialog" title="키보드 단축키 (? 키)"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-keyboard" aria-hidden="true"><path d="M10 8h.01"></path><path d="M12 12h.01"></path><path d="M14 8h.01"></path><path d="M16 12h.01"></path><path d="M18 8h.01"></path><path d="M6 8h.01"></path><path d="M7 16h10"></path><path d="M8 12h.01"></path><rect width="20" height="16" x="2" y="4" rx="2"></rect></svg></button><button type="button" class="icon-button menu-trigger" aria-label="메뉴 열기" aria-expanded="false" aria-haspopup="dialog" title="메뉴"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button></div></header><main id="main-content" tabindex="-1"><article class="page note-detail"><header class="page-header note-detail-header"><p class="eyebrow growth-eyebrow"><span aria-hidden="true">🌱</span>Seedling</p><h1>GitHub Releases를 personal CDN으로 — 무료·무제한·영구</h1><p class="page-lead">HTML 리포트에 비디오·큰 이미지가 들어갈 때 어디에 호스팅하나. GitHub Releases는 파일당 2GB·무제한 트래픽·무료. 도메인 신뢰까지 따라온다.</p><ul class="topic-list" aria-label="topics"><li>#<!-- -->github</li><li>#<!-- -->cdn</li><li>#<!-- -->infrastructure</li><li>#<!-- -->side-project</li></ul></header><div class="prose"><h2>문제 — large binary 어디에 둘 것인가</h2>
+<p>HTML 리포트·블로그·문서를 만들다 보면 정적 이미지로 끝나지 않는 자료가 생긴다.</p>
+<ul>
+<li>데모 video (10-50MB)</li>
+<li>고해상도 스크린샷 (5-20MB)</li>
+<li>큰 PDF·디자인 파일</li>
+<li>mp4 캡처본</li>
+</ul>
+<p>git repo에 직접 넣으면:</p>
+<ul>
+<li>repo size 폭증 → clone 5분</li>
+<li>diff 노이즈 (binary)</li>
+<li>GitHub 100MB push 제한</li>
+</ul>
+<p>S3·Cloudflare R2는 좋지만 개인 프로젝트에 신용카드 결제·운영 비용. 무료 호스팅(Imgur 등)은 도메인이 외부·삭제 위험.</p>
+<h2>해법 — GitHub Releases</h2>
+<p><strong>Releases는 git history와 분리된 binary 저장소</strong>다. 같은 repo의 부속 공간이지만 객체는 별도.</p>
+<ul>
+<li>파일당 <strong>최대 2GB</strong></li>
+<li>트래픽 무제한 (공식 명시)</li>
+<li>무료</li>
+<li>영구 URL (release 삭제 안 하면)</li>
+<li>GitHub 도메인 (<code>https://github.com/&lt;user&gt;/&lt;repo&gt;/releases/download/&lt;tag&gt;/&lt;file&gt;</code>)</li>
+</ul>
+<h2>사용 패턴</h2>
+<h3>업로드</h3>
+<pre><code class="language-bash">gh release create v1 video.mp4 image.png report.pdf \
+  --title &quot;Assets v1&quot; \
+  --notes &quot;Initial upload&quot;
+</code></pre>
+<h3>다운로드 URL</h3>
+<pre><code>https://github.com/&lt;user&gt;/&lt;repo&gt;/releases/download/v1/video.mp4
+</code></pre>
+<p>이 URL을 HTML 리포트의 <code>&lt;video src&gt;</code>나 마크다운 <code>![](...)</code> 에 직접 박는다.</p>
+<h3>추가 업로드</h3>
+<p>같은 release에 새 asset 추가:</p>
+<pre><code class="language-bash">gh release upload v1 new-screenshot.png
+</code></pre>
+<p>또는 새 release를 cut.</p>
+<h2>별도 repo 권장</h2>
+<p>asset 전용 repo(예: <code>cdn-assets</code>)를 두면:</p>
+<ul>
+<li>본 repo는 markdown·소스만 → clone 빠름</li>
+<li>asset 삭제·교체가 본 repo history 영향 0</li>
+<li>private asset이 필요하면 별도 repo만 private</li>
+</ul>
+<h2>함정</h2>
+<ul>
+<li><strong>release 삭제하면 URL 깨짐</strong>: 한 번 공유한 URL은 영구로 두는 게 안전. 새 버전이면 새 release.</li>
+<li><strong>파일당 2GB 초과</strong>: split해서 multiple file. 또는 더 큰 video는 별도 CDN.</li>
+<li><strong>trafficked로 abuse 의심</strong>: GitHub은 공식적으로 release traffic 무제한이지만, 정말 큰 traffic (millions/day) 보면 ToS 위반 가능. 개인 규모 OK.</li>
+<li><strong>public visibility</strong>: release asset은 repo가 public이면 URL 아는 누구나 접근. 비공개 자료 X.</li>
+<li><strong>CDN edge caching 없음</strong>: latency가 S3 backed CDN보다 살짝 느림. 대규모 user 대상 site엔 부적합.</li>
+</ul>
+<h2>핵심</h2>
+<blockquote>
+<p>binary asset 호스팅에 신용카드 결제 0원. <strong>GitHub Releases는 personal CDN의 사실상 표준</strong>이다.</p>
+</blockquote>
+<h2>관련</h2>
+<p><a href="/notes/report-asset-split-repo">/notes/report-asset-split-repo</a> — asset 전용 repo로 본 repo 가볍게 유지
+<a href="/notes/personal-infra-stack">/notes/personal-infra-stack</a> — Releases CDN을 포함한 개인 인프라 종합
+<a href="/notes/notion-lightweight-backend">/notes/notion-lightweight-backend</a> — 같은 철학의 무료 backend</p></div><section class="related-block"><h2>관련 노트</h2><ul class="note-grid"><li><a class="note-card" href="/notes/archive-or-keep-old-repo" data-discover="true"><h3><span aria-hidden="true">🌿</span> <!-- -->옛 레포 archive할까 keep할까 — 정리 기준</h3><p>6년 누적된 30+ 학습 레포. 모두 두면 신호 노이즈, 다 지우면 흔적 0. 4가지 분류 기준으로 archive/keep/private을 결정한다.</p></a></li><li><a class="note-card" href="/notes/npx-name-business-card" data-discover="true"><h3><span aria-hidden="true">🌿</span> <!-- -->npx &lt;name&gt; — SWE 첫 인상의 새 형태</h3><p>명함을 npm 패키지로. `npx justinjeong` 한 줄이 GitHub 링크보다 강한 인상을 준다. 터미널이 만남의 자리인 SWE 사이에서.</p></a></li><li><a class="note-card" href="/notes/personal-infra-stack" data-discover="true"><h3><span aria-hidden="true">🌿</span> <!-- -->개인 인프라 스택 — 회사 인프라 없이도 production-grade</h3><p>GitHub Pages(사이트) + Releases(CDN) + Notion(DB) + Actions(cron). 신용카드 0원으로 운영되는 personal stack. side project 시작 비용을 0으로 만든다.</p></a></li><li><a class="note-card" href="/notes/public-api-integration-patterns" data-discover="true"><h3><span aria-hidden="true">🌿</span> <!-- -->외부 공개 API 통합 — rate limit·재시도·zod boundary</h3><p>다수 외부 API를 한 시스템에 통합할 때의 일반 패턴. bottleneck으로 rate limit, axios-retry로 재시도, zod로 응답 schema 검증. 5+ API라면 boundary가 안전망.</p></a></li><li><a class="note-card" href="/notes/learning-repo-sandbox-value" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->학습 레포는 회사에서 못 쓰는 기술의 실험장</h3><p>회사 코드는 가드레일이 많다. 학습 레포는 자유. Module Federation·실험적 hook·새 framework를 자유롭게 만져보고, 한 번 쓰면 회사 코드로 옮겨간다.</p></a></li></ul></section><footer class="page-footer"><a class="see-all-link" href="/notes" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg> 노트 목록</a></footer></article></main><footer class="site-footer"><div class="footer-brand"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg>정경하</span><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open-text" aria-hidden="true"><path d="M12 7v14"></path><path d="M16 12h2"></path><path d="M16 8h2"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path><path d="M6 12h2"></path><path d="M6 8h2"></path></svg>Cases, notes, logs, and proof of work</span></div><nav class="footer-nav" aria-label="Secondary"><a href="/uses" data-discover="true">Uses</a><a href="/now" data-discover="true">Now</a><a href="/reading" data-discover="true">Reading</a><a href="/cv" data-discover="true">CV</a></nav><span class="footer-meta"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-clock" aria-hidden="true"><path d="M16 14v2.2l1.6 1"></path><path d="M16 2v4"></path><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"></path><path d="M3 10h5"></path><path d="M8 2v4"></path><circle cx="16" cy="16" r="6"></circle></svg>Updated <!-- -->2026-06-09 11:00</span></footer></div>
+  </body>
+</html>

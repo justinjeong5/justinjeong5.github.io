@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+    <meta name="author" content="정경하" />
+    <meta property="og:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="description" content="TypeScript 통과 = 안전이라는 직관. 그러나 런타임 데이터·외부 API·any 의 escape hatch는 컴파일러가 못 본다. 타입은 안전의 일부일 뿐." />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="TypeScript의 거짓 안전감 — 타입이 통과해도 버그는 남는다 | 정경하" />
+    <meta property="og:description" content="TypeScript 통과 = 안전이라는 직관. 그러나 런타임 데이터·외부 API·any 의 escape hatch는 컴파일러가 못 본다. 타입은 안전의 일부일 뿐." />
+    <meta property="og:url" content="https://justinjeong5.github.io/notes/typescript-false-safety/" />
+    <meta name="twitter:title" content="TypeScript의 거짓 안전감 — 타입이 통과해도 버그는 남는다 | 정경하" />
+    <meta name="twitter:description" content="TypeScript 통과 = 안전이라는 직관. 그러나 런타임 데이터·외부 API·any 의 escape hatch는 컴파일러가 못 본다. 타입은 안전의 일부일 뿐." />
+    <link rel="canonical" href="https://justinjeong5.github.io/notes/typescript-false-safety/" />
+    <title>TypeScript의 거짓 안전감 — 타입이 통과해도 버그는 남는다 | 정경하</title>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "TypeScript의 거짓 안전감 — 타입이 통과해도 버그는 남는다 | 정경하",
+  "description": "TypeScript 통과 = 안전이라는 직관. 그러나 런타임 데이터·외부 API·any 의 escape hatch는 컴파일러가 못 본다. 타입은 안전의 일부일 뿐.",
+  "url": "https://justinjeong5.github.io/notes/typescript-false-safety/",
+  "mainEntityOfPage": "https://justinjeong5.github.io/notes/typescript-false-safety/",
+  "author": {
+    "@type": "Person",
+    "name": "정경하",
+    "url": "https://justinjeong5.github.io/",
+    "jobTitle": "Product-minded Frontend Engineer",
+    "sameAs": [
+      "https://github.com/justinjeong5"
+    ]
+  }
+}
+</script>
+    <script>
+      // 테마 사전 설정 — prerender된 HTML에 data-theme를 즉시 적용해 CSS flash를 막는다.
+      // (다른 스크립트보다 먼저 실행되어야 한다.)
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages — restore deep-link path written by 404.html
+      // https://github.com/rafgraph/spa-github-pages
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
+    </script>
+    <script type="module" crossorigin src="/assets/index-CxYEBVj7.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-QTnfLwEv.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-cases-BgF-y5bM.js">
+    <link rel="modulepreload" crossorigin href="/assets/router-D75Vl-iJ.js">
+    <link rel="modulepreload" crossorigin href="/assets/search-CiN4C8Nu.js">
+    <link rel="modulepreload" crossorigin href="/assets/icons-C3lfSmZ3.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-BMBR_99R.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-essays-CipNEaqH.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-logs-Dm6M40WY.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-notes-CR1Uinql.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-sbCSPT96.css">
+    <link rel="stylesheet" crossorigin href="/assets/pretendard-NPFyShNs.css">
+  </head>
+  <body>
+    <div id="root"><a href="#main-content" class="skip-link">본문 바로가기</a><header class="site-nav" aria-label="Primary"><a class="brand" aria-label="정경하 홈" href="/" data-discover="true">JKH</a><nav class="primary-nav"><a class="nav-link" href="/cases" data-discover="true">Cases</a><a aria-current="page" class="nav-link is-active" href="/notes" data-discover="true">Notes</a><a class="nav-link" href="/essays" data-discover="true">Essays</a><a class="nav-link" href="/logs" data-discover="true">Logs</a><a class="nav-link" href="/about" data-discover="true">About</a></nav><div class="nav-actions"><button type="button" class="search-trigger" aria-label="검색" title="검색 (⌘K 또는 /)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg><span>검색</span><kbd>⌘K</kbd></button><button type="button" class="icon-button" aria-label="테마: 라이트. 클릭하여 변경" title="테마: 라이트 · T 키로도 전환"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg></button><button type="button" class="icon-button desktop-only" aria-label="키보드 단축키" aria-expanded="false" aria-haspopup="dialog" title="키보드 단축키 (? 키)"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-keyboard" aria-hidden="true"><path d="M10 8h.01"></path><path d="M12 12h.01"></path><path d="M14 8h.01"></path><path d="M16 12h.01"></path><path d="M18 8h.01"></path><path d="M6 8h.01"></path><path d="M7 16h10"></path><path d="M8 12h.01"></path><rect width="20" height="16" x="2" y="4" rx="2"></rect></svg></button><button type="button" class="icon-button menu-trigger" aria-label="메뉴 열기" aria-expanded="false" aria-haspopup="dialog" title="메뉴"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button></div></header><main id="main-content" tabindex="-1"><article class="page note-detail"><header class="page-header note-detail-header"><p class="eyebrow growth-eyebrow"><span aria-hidden="true">🌳</span>Evergreen</p><h1>TypeScript의 거짓 안전감 — 타입이 통과해도 버그는 남는다</h1><p class="page-lead">TypeScript 통과 = 안전이라는 직관. 그러나 런타임 데이터·외부 API·any 의 escape hatch는 컴파일러가 못 본다. 타입은 안전의 일부일 뿐.</p><ul class="topic-list" aria-label="topics"><li>#<!-- -->typescript</li><li>#<!-- -->swe</li><li>#<!-- -->testing</li></ul></header><div class="prose"><h2>거짓 안전감</h2>
+<p>TypeScript 통과 → 빌드 통과 → &quot;이제 안전&quot; 직관. 자주 틀린다.</p>
+<p>다음 케이스가 모두 컴파일러 통과:</p>
+<pre><code class="language-ts">const data = await fetch(&#x27;/api/user&#x27;).then(r =&gt; r.json());
+// data 타입은 any. 모든 접근 통과.
+
+const user = data as User;
+// 거짓 약속. 실제 응답이 User라는 보장 0.
+
+if (user.email.includes(&#x27;@&#x27;)) { ... }
+// email이 undefined여도 컴파일은 통과
+</code></pre>
+<p>타입은 컴파일 시 시점의 정적 약속. 런타임 데이터가 타입을 만족한다는 보장은 아니다.</p>
+<h2>컴파일러가 못 보는 것</h2>
+<ul>
+<li><strong>외부 API 응답</strong>: 서버가 schema 바꾸면 런타임에 깨짐</li>
+<li><strong>JSON.parse</strong>: 결과는 <code>any</code>. 그 후 캐스팅은 거짓 약속</li>
+<li><strong><code>as</code> 캐스팅</strong>: 명시적 컴파일러 우회</li>
+<li><strong><code>any</code> 전염</strong>: 한 곳에 <code>any</code> 있으면 그 변수 사용처 모두 <code>any</code></li>
+<li><strong>null/undefined의 비동기 race</strong>: 타입은 <code>User</code>인데 fetch가 안 끝남</li>
+<li><strong>외부 라이브러리 타입 거짓</strong>: <code>@types/foo</code>가 실제 API와 다름</li>
+</ul>
+<h2>진짜 안전을 위한 도구</h2>
+<ul>
+<li><strong>런타임 검증</strong>: zod·io-ts로 외부 데이터 검증</li>
+<li><strong><code>unknown</code></strong>: <code>any</code> 대신. 사용 전 검증 강제</li>
+<li><strong>유닛 테스트</strong>: 비즈니스 로직·엣지 케이스</li>
+<li><strong>E2E 테스트</strong>: 실제 통신·UI 시나리오</li>
+<li><strong>타입 ↔ 런타임 동기화</strong>: schema가 단일 source</li>
+</ul>
+<h2>타입의 진짜 가치</h2>
+<p>타입이 무용한 게 아니다. 다만 <strong>타입의 범위를 알고 쓰는 것</strong>이 중요하다.</p>
+<ul>
+<li><strong>타입이 잘 잡는 것</strong>: 내부 로직 일관성, 함수 시그니처, 리팩토링 안전성</li>
+<li><strong>타입이 못 잡는 것</strong>: 외부 데이터, 비즈니스 룰, 런타임 사이드 이펙트</li>
+</ul>
+<h2>함정</h2>
+<ul>
+<li>&quot;타입만 잘 잡으면 테스트 안 해도 됨&quot; — 거짓</li>
+<li><code>@ts-ignore</code> 한 줄이 그 함수 전체 안전 손상</li>
+<li>타입 통과한 코드를 &quot;검증 끝&quot;으로 받아들이는 PR 리뷰</li>
+</ul>
+<h2>핵심</h2>
+<blockquote>
+<p>TypeScript는 <strong>안전의 일부</strong>이지 안전 자체가 아니다. 외부 경계엔 zod, 비즈니스 룰엔 테스트, 통합엔 E2E — 타입은 가운데 한 층일 뿐.</p>
+</blockquote>
+<h2>관련</h2>
+<p><a href="/notes/test-or-types-first">/notes/test-or-types-first</a> — 타입과 테스트의 역할 분리
+<a href="/notes/react-19-use-hook">/notes/react-19-use-hook</a> — 타입이 잡지 못하는 use hook의 런타임 제약</p></div><section class="related-block"><h2>관련 노트</h2><ul class="note-grid"><li><a class="note-card" href="/notes/coverage-gap-analysis" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->커버리지 갭 분석 — 강한 곳 말고 빈 곳을 측정으로 찾기</h3><p>사람은 잘하는 영역에 더 추가하고 빈 영역은 못 본다. 작업물의 분포를 측정하면 어디가 비었는지 객관적으로 드러난다. 테스트·콘텐츠·문서·스킬 포트폴리오 공통.</p></a></li><li><a class="note-card" href="/notes/dead-dependency-hidden-cost" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->안 쓰는 의존성의 숨은 비용 — install·lockfile·transitive CVE·supply chain</h3><p>package.json에 있는데 import 0건인 패키지는 단순 dead code가 아니다. install 시간·lockfile 부피·transitive CVE·supply chain 표면적이 모두 누적된다. 정리는 정기 작업.</p></a></li><li><a class="note-card" href="/notes/flaky-test-diagnosis" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->Flaky test 진단 — 4가지 원인과 격리 패턴</h3><p>Flaky test는 보통 시간·상태·환경·외부 의존 4가지 원인. 어디서 깨졌는지 모르면 retry로 가린다. 원인별 진단 + 격리 패턴.</p></a></li><li><a class="note-card" href="/notes/incident-temp-vs-root" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->야간 장애의 두 단계 — 임시 패치 vs 근본 수정</h3><p>새벽에 장애 알람을 받으면 &quot;지금 멈춰야 한다 vs 제대로 고쳐야 한다&quot;가 충돌한다. 두 단계로 분리하면 의사결정이 빨라진다.</p></a></li><li><a class="note-card" href="/notes/npm-publish-checklist" data-discover="true"><h3><span aria-hidden="true">🌿</span> <!-- -->npm 패키지 출시 체크리스트 — bin·files·engines·dry-run</h3><p>npm publish 한 번이 영구다. bin 경로·files glob·engines·--dry-run·SemVer 6가지를 사전 검증. 실수 한 줄이 100명의 install error를 만든다.</p></a></li></ul></section><footer class="page-footer"><a class="see-all-link" href="/notes" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg> 노트 목록</a></footer></article></main><footer class="site-footer"><div class="footer-brand"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg>정경하</span><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open-text" aria-hidden="true"><path d="M12 7v14"></path><path d="M16 12h2"></path><path d="M16 8h2"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path><path d="M6 12h2"></path><path d="M6 8h2"></path></svg>Cases, notes, logs, and proof of work</span></div><nav class="footer-nav" aria-label="Secondary"><a href="/uses" data-discover="true">Uses</a><a href="/now" data-discover="true">Now</a><a href="/reading" data-discover="true">Reading</a><a href="/cv" data-discover="true">CV</a></nav><span class="footer-meta"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-clock" aria-hidden="true"><path d="M16 14v2.2l1.6 1"></path><path d="M16 2v4"></path><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"></path><path d="M3 10h5"></path><path d="M8 2v4"></path><circle cx="16" cy="16" r="6"></circle></svg>Updated <!-- -->2026-06-09 11:00</span></footer></div>
+  </body>
+</html>

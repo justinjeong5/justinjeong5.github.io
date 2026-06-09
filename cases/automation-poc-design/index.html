@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+    <meta name="author" content="정경하" />
+    <meta property="og:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="description" content="매일 Claude/Codex 대화에서 사이트 콘텐츠를 자동 추출하는 시스템 PoC를 4 페르소나로 평가. PLAN이 BLOCKING 2개 FAIL → v1 시연 + v2 운영 분리로 페르소나 충돌 해결." />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="일일 콘텐츠 자동화 PoC 설계 — personas + quality-gate 체인 적용 | 정경하" />
+    <meta property="og:description" content="매일 Claude/Codex 대화에서 사이트 콘텐츠를 자동 추출하는 시스템 PoC를 4 페르소나로 평가. PLAN이 BLOCKING 2개 FAIL → v1 시연 + v2 운영 분리로 페르소나 충돌 해결." />
+    <meta property="og:url" content="https://justinjeong5.github.io/cases/automation-poc-design/" />
+    <meta name="twitter:title" content="일일 콘텐츠 자동화 PoC 설계 — personas + quality-gate 체인 적용 | 정경하" />
+    <meta name="twitter:description" content="매일 Claude/Codex 대화에서 사이트 콘텐츠를 자동 추출하는 시스템 PoC를 4 페르소나로 평가. PLAN이 BLOCKING 2개 FAIL → v1 시연 + v2 운영 분리로 페르소나 충돌 해결." />
+    <link rel="canonical" href="https://justinjeong5.github.io/cases/automation-poc-design/" />
+    <title>일일 콘텐츠 자동화 PoC 설계 — personas + quality-gate 체인 적용 | 정경하</title>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "일일 콘텐츠 자동화 PoC 설계 — personas + quality-gate 체인 적용 | 정경하",
+  "description": "매일 Claude/Codex 대화에서 사이트 콘텐츠를 자동 추출하는 시스템 PoC를 4 페르소나로 평가. PLAN이 BLOCKING 2개 FAIL → v1 시연 + v2 운영 분리로 페르소나 충돌 해결.",
+  "url": "https://justinjeong5.github.io/cases/automation-poc-design/",
+  "mainEntityOfPage": "https://justinjeong5.github.io/cases/automation-poc-design/",
+  "author": {
+    "@type": "Person",
+    "name": "정경하",
+    "url": "https://justinjeong5.github.io/",
+    "jobTitle": "Product-minded Frontend Engineer",
+    "sameAs": [
+      "https://github.com/justinjeong5"
+    ]
+  },
+  "datePublished": "2026-05-19",
+  "dateModified": "2026-05-19"
+}
+</script>
+    <script>
+      // 테마 사전 설정 — prerender된 HTML에 data-theme를 즉시 적용해 CSS flash를 막는다.
+      // (다른 스크립트보다 먼저 실행되어야 한다.)
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages — restore deep-link path written by 404.html
+      // https://github.com/rafgraph/spa-github-pages
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
+    </script>
+    <script type="module" crossorigin src="/assets/index-CxYEBVj7.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-QTnfLwEv.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-cases-BgF-y5bM.js">
+    <link rel="modulepreload" crossorigin href="/assets/router-D75Vl-iJ.js">
+    <link rel="modulepreload" crossorigin href="/assets/search-CiN4C8Nu.js">
+    <link rel="modulepreload" crossorigin href="/assets/icons-C3lfSmZ3.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-BMBR_99R.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-essays-CipNEaqH.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-logs-Dm6M40WY.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-notes-CR1Uinql.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-sbCSPT96.css">
+    <link rel="stylesheet" crossorigin href="/assets/pretendard-NPFyShNs.css">
+  </head>
+  <body>
+    <div id="root"><a href="#main-content" class="skip-link">본문 바로가기</a><header class="site-nav" aria-label="Primary"><a class="brand" aria-label="정경하 홈" href="/" data-discover="true">JKH</a><nav class="primary-nav"><a aria-current="page" class="nav-link is-active" href="/cases" data-discover="true">Cases</a><a class="nav-link" href="/notes" data-discover="true">Notes</a><a class="nav-link" href="/essays" data-discover="true">Essays</a><a class="nav-link" href="/logs" data-discover="true">Logs</a><a class="nav-link" href="/about" data-discover="true">About</a></nav><div class="nav-actions"><button type="button" class="search-trigger" aria-label="검색" title="검색 (⌘K 또는 /)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg><span>검색</span><kbd>⌘K</kbd></button><button type="button" class="icon-button" aria-label="테마: 라이트. 클릭하여 변경" title="테마: 라이트 · T 키로도 전환"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg></button><button type="button" class="icon-button desktop-only" aria-label="키보드 단축키" aria-expanded="false" aria-haspopup="dialog" title="키보드 단축키 (? 키)"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-keyboard" aria-hidden="true"><path d="M10 8h.01"></path><path d="M12 12h.01"></path><path d="M14 8h.01"></path><path d="M16 12h.01"></path><path d="M18 8h.01"></path><path d="M6 8h.01"></path><path d="M7 16h10"></path><path d="M8 12h.01"></path><rect width="20" height="16" x="2" y="4" rx="2"></rect></svg></button><button type="button" class="icon-button menu-trigger" aria-label="메뉴 열기" aria-expanded="false" aria-haspopup="dialog" title="메뉴"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button></div></header><main id="main-content" tabindex="-1"><article class="page case-detail"><header class="page-header case-detail-header"><p class="eyebrow">Building</p><h1>일일 콘텐츠 자동화 PoC 설계 — personas + quality-gate 체인 적용</h1><p class="page-lead">매일 Claude/Codex 대화에서 사이트 콘텐츠를 자동 추출하는 시스템 PoC를 4 페르소나로 평가. PLAN이 BLOCKING 2개 FAIL → v1 시연 + v2 운영 분리로 페르소나 충돌 해결.</p><dl class="case-meta"><div><dt>Role</dt><dd>시스템 설계·페르소나 토론·보안 검토 통합</dd></div><div><dt>Period</dt><dd>2026.05</dd></div><div><dt>Tags</dt><dd>#automation #workflow #security #design-process</dd></div></dl></header><div class="prose"><h2>문제</h2>
+<p>매일 8시간 Claude·Codex와 대화하면서 가치 있는 인사이트·작업 기록이 휘발된다. 손으로 정리하면 시간 부담, 안 정리하면 자산화 누락.</p>
+<p>해법으로 일일 콘텐츠 자동 추출 시스템을 생각했다. 그런데 &quot;자동 발행&quot;은 회사 NDA·credentials 유출 위험이 영구적이다.</p>
+<h2>의사결정</h2>
+<h3>옵션 공간 (4축)</h3>
+<ul>
+<li>TRIGGER: manual / hook / cron / hybrid</li>
+<li>AUTOMATION_LEVEL: L0(제안만) ~ L3(자동 발행)</li>
+<li>DATA: raw / cache / MCP / hook-extract</li>
+<li>SECURITY: redaction / 사용자 검토 / allowlist / private-promote</li>
+</ul>
+<h3>4 페르소나 토론</h3>
+<ul>
+<li><strong>SWE</strong>: D/L1/B/D. Hidden complexity = Codex transcript 정규화</li>
+<li><strong>법무</strong>: D/L1/D/A. &quot;L3 + 자동 redaction은 one-way door, 절대 금지&quot;</li>
+<li><strong>콘텐츠 전략가</strong>: C/L1/B/B. &quot;자동화는 글 더 많이 쓰게 하는 도구가 아니라 쓸 만한 순간 놓치지 않게 하는 알람&quot;</li>
+<li><strong>운영 사용자(본인)</strong>: C/L2/B/B. <strong>지속률 35%</strong>, <strong>&quot;가장 두려운 건 회사 정보 유출 1건&quot;</strong></li>
+</ul>
+<h3>quality-gate 평가</h3>
+<ul>
+<li>6축 rubric → 평균 <strong>2.5/5 FAIL</strong> (BLOCKING G1·G2 FAIL)</li>
+<li>법무: &quot;현 PLAN으로 publish 진행 절대 금지&quot;</li>
+</ul>
+<h3>v1/v2 분리 결정</h3>
+<p>페르소나 충돌(법무 강함 vs 사용자 의도 빠른 PoC)을 해결하는 키:</p>
+<ul>
+<li><strong>v1</strong>: 1회 시연 dry-run — 즉시 가능</li>
+<li><strong>v2</strong>: 4주 dry-run + 2주 publish — 보수적, 사용자 결정 후</li>
+</ul>
+<p>v1만 quality-gate <strong>4.33/5 PASS</strong>.</p>
+<h2>산출물</h2>
+<ul>
+<li>v1 시연: <code>.cache/daily/2026-05-19.mdx</code> (publish 차단)</li>
+<li>콘텐츠 후보 2개 추출 (Log + Note) — 둘 다 정식 promote</li>
+<li><code>SESSION.md</code> (v2 인계 컨텍스트)</li>
+<li><code>scripts/daily-log/</code> 베이스 디렉토리 + README</li>
+<li>데이터 소스 위치 확정: Claude <code>~/.claude/projects/</code>, Codex <code>~/.codex/sessions/</code></li>
+</ul>
+<h2>임팩트</h2>
+<ul>
+<li><strong>거버넌스 부담 가시화</strong>: 자동화 본 코딩 1주 vs 보안 검증 dry-run 4주 → 1:4 비율</li>
+<li><strong>페르소나 충돌 해결 패턴</strong>: scope를 v1(시연)/v2(운영)로 분리 → 단일 PoC 정의로는 통과 불가</li>
+<li><strong>본인 페르소나의 BLOCKING 발견</strong>: 외부 페르소나는 기능적 위험, 본인은 지속 가능성</li>
+</ul>
+<h2>다음 보강</h2>
+<p>v2 진입 시:</p>
+<ul>
+<li>Phase 1: Source Adapter (Claude + Codex 정규화)</li>
+<li>Phase 3: 보안 게이트 7개 구현</li>
+<li>Phase 6: 4주 dry-run 운영 + false negative율 측정</li>
+</ul>
+<p>관련: <a href="/notes/automation-vs-governance">/notes/automation-vs-governance</a>, <a href="/essays/automation-doesnt-reduce-work">/essays/automation-doesnt-reduce-work</a></p></div><footer class="page-footer"><a class="see-all-link" href="/cases" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg> 케이스 목록</a></footer></article></main><footer class="site-footer"><div class="footer-brand"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg>정경하</span><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open-text" aria-hidden="true"><path d="M12 7v14"></path><path d="M16 12h2"></path><path d="M16 8h2"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path><path d="M6 12h2"></path><path d="M6 8h2"></path></svg>Cases, notes, logs, and proof of work</span></div><nav class="footer-nav" aria-label="Secondary"><a href="/uses" data-discover="true">Uses</a><a href="/now" data-discover="true">Now</a><a href="/reading" data-discover="true">Reading</a><a href="/cv" data-discover="true">CV</a></nav><span class="footer-meta"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-clock" aria-hidden="true"><path d="M16 14v2.2l1.6 1"></path><path d="M16 2v4"></path><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"></path><path d="M3 10h5"></path><path d="M8 2v4"></path><circle cx="16" cy="16" r="6"></circle></svg>Updated <!-- -->2026-06-09 11:00</span></footer></div>
+  </body>
+</html>

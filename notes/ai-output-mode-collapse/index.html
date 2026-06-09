@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+    <meta name="author" content="정경하" />
+    <meta property="og:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="description" content="AI에게 &quot;더 만들어줘&quot;를 반복하면 출력이 점점 비슷해진다. 모델이 고확률 영역으로 수렴하는 mode collapse다. 다양성은 저절로 안 나오고 명시적으로 강제해야 한다." />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="AI 반복 위임의 mode collapse — 출력이 한 점으로 수렴한다 | 정경하" />
+    <meta property="og:description" content="AI에게 &quot;더 만들어줘&quot;를 반복하면 출력이 점점 비슷해진다. 모델이 고확률 영역으로 수렴하는 mode collapse다. 다양성은 저절로 안 나오고 명시적으로 강제해야 한다." />
+    <meta property="og:url" content="https://justinjeong5.github.io/notes/ai-output-mode-collapse/" />
+    <meta name="twitter:title" content="AI 반복 위임의 mode collapse — 출력이 한 점으로 수렴한다 | 정경하" />
+    <meta name="twitter:description" content="AI에게 &quot;더 만들어줘&quot;를 반복하면 출력이 점점 비슷해진다. 모델이 고확률 영역으로 수렴하는 mode collapse다. 다양성은 저절로 안 나오고 명시적으로 강제해야 한다." />
+    <link rel="canonical" href="https://justinjeong5.github.io/notes/ai-output-mode-collapse/" />
+    <title>AI 반복 위임의 mode collapse — 출력이 한 점으로 수렴한다 | 정경하</title>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "AI 반복 위임의 mode collapse — 출력이 한 점으로 수렴한다 | 정경하",
+  "description": "AI에게 \"더 만들어줘\"를 반복하면 출력이 점점 비슷해진다. 모델이 고확률 영역으로 수렴하는 mode collapse다. 다양성은 저절로 안 나오고 명시적으로 강제해야 한다.",
+  "url": "https://justinjeong5.github.io/notes/ai-output-mode-collapse/",
+  "mainEntityOfPage": "https://justinjeong5.github.io/notes/ai-output-mode-collapse/",
+  "author": {
+    "@type": "Person",
+    "name": "정경하",
+    "url": "https://justinjeong5.github.io/",
+    "jobTitle": "Product-minded Frontend Engineer",
+    "sameAs": [
+      "https://github.com/justinjeong5"
+    ]
+  }
+}
+</script>
+    <script>
+      // 테마 사전 설정 — prerender된 HTML에 data-theme를 즉시 적용해 CSS flash를 막는다.
+      // (다른 스크립트보다 먼저 실행되어야 한다.)
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages — restore deep-link path written by 404.html
+      // https://github.com/rafgraph/spa-github-pages
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
+    </script>
+    <script type="module" crossorigin src="/assets/index-CxYEBVj7.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-QTnfLwEv.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-cases-BgF-y5bM.js">
+    <link rel="modulepreload" crossorigin href="/assets/router-D75Vl-iJ.js">
+    <link rel="modulepreload" crossorigin href="/assets/search-CiN4C8Nu.js">
+    <link rel="modulepreload" crossorigin href="/assets/icons-C3lfSmZ3.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-BMBR_99R.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-essays-CipNEaqH.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-logs-Dm6M40WY.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-notes-CR1Uinql.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-sbCSPT96.css">
+    <link rel="stylesheet" crossorigin href="/assets/pretendard-NPFyShNs.css">
+  </head>
+  <body>
+    <div id="root"><a href="#main-content" class="skip-link">본문 바로가기</a><header class="site-nav" aria-label="Primary"><a class="brand" aria-label="정경하 홈" href="/" data-discover="true">JKH</a><nav class="primary-nav"><a class="nav-link" href="/cases" data-discover="true">Cases</a><a aria-current="page" class="nav-link is-active" href="/notes" data-discover="true">Notes</a><a class="nav-link" href="/essays" data-discover="true">Essays</a><a class="nav-link" href="/logs" data-discover="true">Logs</a><a class="nav-link" href="/about" data-discover="true">About</a></nav><div class="nav-actions"><button type="button" class="search-trigger" aria-label="검색" title="검색 (⌘K 또는 /)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg><span>검색</span><kbd>⌘K</kbd></button><button type="button" class="icon-button" aria-label="테마: 라이트. 클릭하여 변경" title="테마: 라이트 · T 키로도 전환"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg></button><button type="button" class="icon-button desktop-only" aria-label="키보드 단축키" aria-expanded="false" aria-haspopup="dialog" title="키보드 단축키 (? 키)"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-keyboard" aria-hidden="true"><path d="M10 8h.01"></path><path d="M12 12h.01"></path><path d="M14 8h.01"></path><path d="M16 12h.01"></path><path d="M18 8h.01"></path><path d="M6 8h.01"></path><path d="M7 16h10"></path><path d="M8 12h.01"></path><rect width="20" height="16" x="2" y="4" rx="2"></rect></svg></button><button type="button" class="icon-button menu-trigger" aria-label="메뉴 열기" aria-expanded="false" aria-haspopup="dialog" title="메뉴"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button></div></header><main id="main-content" tabindex="-1"><article class="page note-detail"><header class="page-header note-detail-header"><p class="eyebrow growth-eyebrow"><span aria-hidden="true">🌱</span>Seedling</p><h1>AI 반복 위임의 mode collapse — 출력이 한 점으로 수렴한다</h1><p class="page-lead">AI에게 &quot;더 만들어줘&quot;를 반복하면 출력이 점점 비슷해진다. 모델이 고확률 영역으로 수렴하는 mode collapse다. 다양성은 저절로 안 나오고 명시적으로 강제해야 한다.</p><ul class="topic-list" aria-label="topics"><li>#<!-- -->ai</li><li>#<!-- -->workflow</li><li>#<!-- -->collaboration</li><li>#<!-- -->content</li></ul></header><div class="prose"><h2>증상 — 5개씩 시켰는데 다 비슷하다</h2>
+<p>AI에게 같은 종류 작업을 반복 위임하면 한 가지 패턴이 나타난다.</p>
+<ul>
+<li>&quot;글 5개 써줘&quot; → 5개가 형식·관점·구조가 다 비슷</li>
+<li>&quot;다음 5개 더&quot; → 직전 5개와 또 비슷</li>
+<li>&quot;테스트 케이스 더 만들어줘&quot; → 같은 형태 케이스만 반복</li>
+<li>&quot;이 컴포넌트 변형 만들어줘&quot; → 미묘하게 같은 레이아웃</li>
+</ul>
+<p>처음엔 품질이 괜찮아 보이는데, 묶어 놓고 보면 <strong>다양성이 없다</strong>. 같은 목소리, 같은 뼈대, 같은 추상화 수준. 이게 mode collapse다.</p>
+<h2>왜 수렴하는가</h2>
+<p>LLM은 다음 토큰을 확률 분포에서 고른다. 별다른 제약이 없으면 <strong>고확률 영역</strong>(가장 &quot;전형적&quot;인 표현)을 반복 샘플링한다. 같은 프롬프트를 반복하면 매번 그 분포의 중심 근처에서 뽑으니 출력이 한 점으로 모인다.</p>
+<p>사람은 &quot;지난번과 다르게 써야지&quot;라는 메타 인지가 자동으로 작동한다. AI는 그 제약을 프롬프트에 명시하지 않으면 매 호출을 <strong>독립적으로</strong> 처리해서 직전 출력을 회피하지 않는다.</p>
+<p>(용어 주의: &quot;mode collapse&quot;는 본래 GAN에서 생성기가 소수 출력만 내는 현상을 가리킨다. LLM의 반복 생성 수렴은 엄밀히는 mode-seeking 샘플링·낮은 다양성에 가깝지만, &quot;출력이 한 점으로 모인다&quot;는 직관이 같아 빌려 쓴다.)</p>
+<p>핵심: <strong>다양성은 모델의 기본값이 아니다.</strong> 명시적 제약이 없으면 평균으로 수렴한다.</p>
+<h2>다양성을 강제하는 4가지</h2>
+<h3>1. 라운드마다 시그니처를 명시</h3>
+<p>매 생성 묶음에 &quot;이번엔 직전과 다른 축&quot;을 명시한다.</p>
+<pre><code>직전 5개: 메타 운영 관점, 자기 경험 소스
+이번 5개: 외부 데이터 소스(API·통계), 구체 코드 중심
+→ 관점·소스·추상화 수준을 직전과 다르게
+</code></pre>
+<p>&quot;5개 더&quot;가 아니라 &quot;직전과 다른 축으로 5개&quot;가 프롬프트.</p>
+<h3>2. 직전 N개를 회피 대상으로 전달</h3>
+<p>생성 전에 &quot;이미 만든 것&quot;의 목록을 주고 &quot;이것들과 토픽·구조가 겹치지 않게&quot;를 명시. 모델이 회피 제약을 받으면 분포의 다른 영역에서 샘플링한다.</p>
+<h3>3. 차원 매트릭스로 강제 분산</h3>
+<p>생성 묶음 안에서도 각 항목이 다른 셀을 채우게 한다.</p>
+<table><thead><tr><th>항목</th><th>형식</th><th>관점</th><th>추상화</th></tr></thead><tbody><tr><td>1</td><td>코드 노트</td><td>구체</td><td>낮음</td></tr><tr><td>2</td><td>회고</td><td>경험</td><td>중간</td></tr><tr><td>3</td><td>에세이</td><td>원칙</td><td>높음</td></tr></tbody></table>
+<p>매트릭스를 먼저 정의하면 5개가 자동으로 분산된다.</p>
+<h3>4. 생성 후 분포 측정</h3>
+<p>만든 묶음을 분포로 측정한다. &quot;5개 중 4개가 같은 형식&quot;이면 mode collapse 신호. <a href="/notes/coverage-gap-analysis">coverage gap 분석</a>과 같은 도구.</p>
+<h2>일반화 — 콘텐츠만의 문제가 아니다</h2>
+<p>mode collapse는 모든 반복 AI 위임에 나타난다.</p>
+<ul>
+<li><strong>코드 생성</strong>: 같은 패턴·같은 추상화. &quot;다른 접근으로 한 번 더&quot;를 명시 안 하면 첫 답의 변주만.</li>
+<li><strong>테스트 생성</strong>: happy path만 반복. &quot;엣지·에러·경계 케이스&quot;를 차원으로 명시해야 분산.</li>
+<li><strong>디자인 변형</strong>: 미묘하게 같은 레이아웃. &quot;완전히 다른 레이아웃 원리로&quot;를 강제.</li>
+<li><strong>네이밍·카피</strong>: 같은 톤. 후보를 뽑을 때 &quot;톤이 다른 3개&quot;를 명시.</li>
+</ul>
+<h2>함정</h2>
+<ul>
+<li><strong>&quot;창의적으로 해줘&quot;로 다양성 기대</strong>: 추상적 지시는 약하다. 구체적 회피 대상·차원을 명시해야 분산.</li>
+<li><strong>temperature만 높이기</strong>: 무작위성은 늘지만 품질이 떨어지고 진짜 다른 관점은 안 나온다. 제약이 무작위성보다 효과적.</li>
+<li><strong>한 번에 다 시키기</strong>: &quot;20개 써줘&quot;는 더 심한 수렴. 5개씩 + 직전 회피가 낫다.</li>
+<li><strong>수렴을 품질 문제로 오진</strong>: 각 항목은 잘 썼는데 묶음이 단조로운 것. 개별 품질이 아니라 분포의 문제.</li>
+<li><strong>사람도 같은 함정</strong>: 사람도 관성으로 비슷하게 만든다. mode collapse는 AI 고유가 아니라 명시적 다양성 제약의 부재 문제.</li>
+</ul>
+<h2>핵심</h2>
+<blockquote>
+<p>AI의 기본값은 다양성이 아니라 평균으로의 수렴이다. 반복 위임에서 <strong>다양성은 명시적으로 강제해야</strong> 나온다 — 시그니처 지정, 회피 대상 전달, 차원 매트릭스, 분포 측정.</p>
+</blockquote>
+<h2>관련</h2>
+<p><a href="/notes/coverage-gap-analysis">/notes/coverage-gap-analysis</a> — 생성물의 분포를 측정해 수렴 감지
+<a href="/notes/operationalizing-vague-requests">/notes/operationalizing-vague-requests</a> — &quot;다양하게&quot;를 측정 기준으로
+<a href="/notes/codex-competition">/notes/codex-competition</a> — 다른 모델로 분포 자체를 다양화
+<a href="/notes/dispatch-routing-pattern">/notes/dispatch-routing-pattern</a> — 3 에이전트 경쟁도 수렴 회피의 한 형태
+<a href="/essays/ai-coding-tools-six-months">/essays/ai-coding-tools-six-months</a> — AI 도구 6개월 사용 회고</p></div><section class="related-block"><h2>관련 노트</h2><ul class="note-grid"><li><a class="note-card" href="/notes/codex-competition" data-discover="true"><h3><span aria-hidden="true">🌳</span> <!-- -->Codex 경쟁 — 모든 작업을 두 번 굴려보기</h3><p>코딩·추론·리뷰 등 모든 작업에서 Codex와 Claude를 병렬 실행하고 결과를 교차 검증. 토큰 비용은 늘지만 사각지대가 줄어든다.</p></a></li><li><a class="note-card" href="/notes/dispatch-routing-pattern" data-discover="true"><h3><span aria-hidden="true">🌳</span> <!-- -->dispatch — 의도 기반 라우팅 패턴</h3><p>모든 사용자 메시지를 3 에이전트 경쟁으로 최적 스킬에 라우팅. 키워드 매칭이 아닌 의미론적 의도 분석.</p></a></li><li><a class="note-card" href="/notes/incident-ai-pair-debugging" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->AI 페어와 야간 incident 디버깅 — 새벽에 혼자가 아닌 워크플로우</h3><p>새벽 장애 대응의 진짜 비용은 디버깅 시간이 아니라 외로움과 결정 부담이다. AI 페어는 문법적 코드보다 의사결정 cross-check에서 가치가 크다.</p></a></li><li><a class="note-card" href="/notes/operationalizing-vague-requests" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->모호한 지시를 측정 기준으로 — &quot;잘 해줘&quot;를 실행 가능하게</h3><p>&quot;전체적으로 개선해줘&quot;, &quot;다양하게&quot;, &quot;깔끔하게&quot;는 실행자마다 다르게 해석된다. 작업 전에 모호한 품질 단어를 측정 가능한 기준으로 번역하면 재작업과 오해가 줄어든다.</p></a></li><li><a class="note-card" href="/notes/plan-mode-one-shot" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->Plan Mode → Auto 1-shot — 재작업 30% 절감 패턴</h3><p>큰 작업 즉시 시작 → 중간에 방향 바뀜 → 재작업. Shift+Tab으로 Plan Mode 진입 → 계획 확정 → Auto 전환 1-shot 구현. 재작업 30~50% 절감.</p></a></li></ul></section><footer class="page-footer"><a class="see-all-link" href="/notes" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg> 노트 목록</a></footer></article></main><footer class="site-footer"><div class="footer-brand"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg>정경하</span><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open-text" aria-hidden="true"><path d="M12 7v14"></path><path d="M16 12h2"></path><path d="M16 8h2"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path><path d="M6 12h2"></path><path d="M6 8h2"></path></svg>Cases, notes, logs, and proof of work</span></div><nav class="footer-nav" aria-label="Secondary"><a href="/uses" data-discover="true">Uses</a><a href="/now" data-discover="true">Now</a><a href="/reading" data-discover="true">Reading</a><a href="/cv" data-discover="true">CV</a></nav><span class="footer-meta"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-clock" aria-hidden="true"><path d="M16 14v2.2l1.6 1"></path><path d="M16 2v4"></path><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"></path><path d="M3 10h5"></path><path d="M8 2v4"></path><circle cx="16" cy="16" r="6"></circle></svg>Updated <!-- -->2026-06-09 11:00</span></footer></div>
+  </body>
+</html>

@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+    <meta name="author" content="정경하" />
+    <meta property="og:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="description" content="GitHub Pages(사이트) + Releases(CDN) + Notion(DB) + Actions(cron). 신용카드 0원으로 운영되는 personal stack. side project 시작 비용을 0으로 만든다." />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="개인 인프라 스택 — 회사 인프라 없이도 production-grade | 정경하" />
+    <meta property="og:description" content="GitHub Pages(사이트) + Releases(CDN) + Notion(DB) + Actions(cron). 신용카드 0원으로 운영되는 personal stack. side project 시작 비용을 0으로 만든다." />
+    <meta property="og:url" content="https://justinjeong5.github.io/notes/personal-infra-stack/" />
+    <meta name="twitter:title" content="개인 인프라 스택 — 회사 인프라 없이도 production-grade | 정경하" />
+    <meta name="twitter:description" content="GitHub Pages(사이트) + Releases(CDN) + Notion(DB) + Actions(cron). 신용카드 0원으로 운영되는 personal stack. side project 시작 비용을 0으로 만든다." />
+    <link rel="canonical" href="https://justinjeong5.github.io/notes/personal-infra-stack/" />
+    <title>개인 인프라 스택 — 회사 인프라 없이도 production-grade | 정경하</title>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "개인 인프라 스택 — 회사 인프라 없이도 production-grade | 정경하",
+  "description": "GitHub Pages(사이트) + Releases(CDN) + Notion(DB) + Actions(cron). 신용카드 0원으로 운영되는 personal stack. side project 시작 비용을 0으로 만든다.",
+  "url": "https://justinjeong5.github.io/notes/personal-infra-stack/",
+  "mainEntityOfPage": "https://justinjeong5.github.io/notes/personal-infra-stack/",
+  "author": {
+    "@type": "Person",
+    "name": "정경하",
+    "url": "https://justinjeong5.github.io/",
+    "jobTitle": "Product-minded Frontend Engineer",
+    "sameAs": [
+      "https://github.com/justinjeong5"
+    ]
+  }
+}
+</script>
+    <script>
+      // 테마 사전 설정 — prerender된 HTML에 data-theme를 즉시 적용해 CSS flash를 막는다.
+      // (다른 스크립트보다 먼저 실행되어야 한다.)
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages — restore deep-link path written by 404.html
+      // https://github.com/rafgraph/spa-github-pages
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
+    </script>
+    <script type="module" crossorigin src="/assets/index-CxYEBVj7.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-QTnfLwEv.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-cases-BgF-y5bM.js">
+    <link rel="modulepreload" crossorigin href="/assets/router-D75Vl-iJ.js">
+    <link rel="modulepreload" crossorigin href="/assets/search-CiN4C8Nu.js">
+    <link rel="modulepreload" crossorigin href="/assets/icons-C3lfSmZ3.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-BMBR_99R.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-essays-CipNEaqH.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-logs-Dm6M40WY.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-notes-CR1Uinql.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-sbCSPT96.css">
+    <link rel="stylesheet" crossorigin href="/assets/pretendard-NPFyShNs.css">
+  </head>
+  <body>
+    <div id="root"><a href="#main-content" class="skip-link">본문 바로가기</a><header class="site-nav" aria-label="Primary"><a class="brand" aria-label="정경하 홈" href="/" data-discover="true">JKH</a><nav class="primary-nav"><a class="nav-link" href="/cases" data-discover="true">Cases</a><a aria-current="page" class="nav-link is-active" href="/notes" data-discover="true">Notes</a><a class="nav-link" href="/essays" data-discover="true">Essays</a><a class="nav-link" href="/logs" data-discover="true">Logs</a><a class="nav-link" href="/about" data-discover="true">About</a></nav><div class="nav-actions"><button type="button" class="search-trigger" aria-label="검색" title="검색 (⌘K 또는 /)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg><span>검색</span><kbd>⌘K</kbd></button><button type="button" class="icon-button" aria-label="테마: 라이트. 클릭하여 변경" title="테마: 라이트 · T 키로도 전환"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg></button><button type="button" class="icon-button desktop-only" aria-label="키보드 단축키" aria-expanded="false" aria-haspopup="dialog" title="키보드 단축키 (? 키)"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-keyboard" aria-hidden="true"><path d="M10 8h.01"></path><path d="M12 12h.01"></path><path d="M14 8h.01"></path><path d="M16 12h.01"></path><path d="M18 8h.01"></path><path d="M6 8h.01"></path><path d="M7 16h10"></path><path d="M8 12h.01"></path><rect width="20" height="16" x="2" y="4" rx="2"></rect></svg></button><button type="button" class="icon-button menu-trigger" aria-label="메뉴 열기" aria-expanded="false" aria-haspopup="dialog" title="메뉴"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button></div></header><main id="main-content" tabindex="-1"><article class="page note-detail"><header class="page-header note-detail-header"><p class="eyebrow growth-eyebrow"><span aria-hidden="true">🌿</span>Budding</p><h1>개인 인프라 스택 — 회사 인프라 없이도 production-grade</h1><p class="page-lead">GitHub Pages(사이트) + Releases(CDN) + Notion(DB) + Actions(cron). 신용카드 0원으로 운영되는 personal stack. side project 시작 비용을 0으로 만든다.</p><ul class="topic-list" aria-label="topics"><li>#<!-- -->infrastructure</li><li>#<!-- -->side-project</li><li>#<!-- -->github</li><li>#<!-- -->notion</li></ul></header><div class="prose"><h2>회사 인프라 없이 개인이 무엇을 운영하나</h2>
+<p>회사에선 AWS·GCP·Datadog·Slack이 다 있다. 그런데 사이드 프로젝트에 회사 계정 안 쓰면 처음부터 다 만들어야 한다. 신용카드 결제·계정 발급·요금 모니터링 — 시작 비용이 압박이다.</p>
+<p>그래서 처음부터 무료 stack을 조합한다. <strong>신용카드 0원</strong>으로 personal grade infra를 갖춘다.</p>
+<h2>4-Layer Personal Stack</h2>
+<h3>1. Hosting — GitHub Pages</h3>
+<p>정적 site (블로그·portfolio·리포트). 빌드 후 master 또는 gh-pages 브랜치에 push.</p>
+<ul>
+<li>무료, custom domain 지원</li>
+<li>SSL 자동 (Let&#x27;s Encrypt)</li>
+<li>monthly bandwidth 100GB</li>
+<li>build minutes 무제한</li>
+</ul>
+<p>부족: SSR·동적 라우팅·서버 사이드. 그건 static + client routing(SPA fallback)으로 우회.</p>
+<h3>2. CDN — GitHub Releases</h3>
+<p>video·고해상도 image·PDF 등 binary asset. release tag로 versioning.</p>
+<ul>
+<li>파일당 2GB</li>
+<li>트래픽 무제한</li>
+<li>영구 URL</li>
+</ul>
+<h3>3. Backend — Notion API</h3>
+<p>작은 데이터셋 (수천 행). 노션 DB가 lightweight backend.</p>
+<ul>
+<li>무료 무제한 row (UI는 ~1만 행 부드러움)</li>
+<li>시각화·모바일 앱 자동</li>
+<li>API 3 req/sec</li>
+</ul>
+<h3>4. Scheduler — GitHub Actions cron</h3>
+<p>주기 작업(데이터 수집·report 생성·deploy).</p>
+<ul>
+<li>public repo는 무제한 minutes</li>
+<li>private도 월 2,000분 무료</li>
+<li>secret 관리, matrix 빌드</li>
+</ul>
+<h2>실제 조합 예시</h2>
+<p>홈레이더 시스템:</p>
+<ul>
+<li><strong>GH Actions cron</strong>: 주1회 발동</li>
+<li><strong>외부 API 7개</strong> fetch (국토부·네이버·카카오 등)</li>
+<li><strong>Notion DB 7개</strong>에 결과 저장</li>
+<li><strong>본 결과 차트는 GitHub Pages site에서 노출</strong> (계획)</li>
+<li><strong>demo video는 cdn-assets Releases</strong>에 호스팅</li>
+</ul>
+<p>신용카드 결제: <strong>0원</strong>.</p>
+<h2>회사 stack 대비</h2>
+<table><thead><tr><th>영역</th><th>회사 stack</th><th>Personal stack</th></tr></thead><tbody><tr><td>Hosting</td><td>Vercel·Netlify Pro</td><td>GH Pages</td></tr><tr><td>CDN</td><td>Cloudflare R2·S3</td><td>GH Releases</td></tr><tr><td>DB</td><td>Postgres·DynamoDB</td><td>Notion API</td></tr><tr><td>Scheduler</td><td>EventBridge·Cron</td><td>GH Actions</td></tr><tr><td>Monitoring</td><td>Datadog·Sentry</td><td>Console·email</td></tr><tr><td>Auth</td><td>Auth0·Cognito</td><td>(없음)</td></tr></tbody></table>
+<p>부족한 게 있다. monitoring·auth·실시간 처리. 다만 side project 규모에선 미충족 영역이 critical이 아닌 경우가 많음.</p>
+<h2>함정</h2>
+<ul>
+<li><strong>vendor lock-in to GitHub</strong>: 모든 게 GitHub에 묶임. GitHub policy 변경 시 영향. 다만 git 원본은 옮기기 쉬움.</li>
+<li><strong>공개·private 경계 혼동</strong>: Notion DB는 노션 계정 안에만, GH는 공개 시 누구나 접근. 데이터 민감도 분류 필수.</li>
+<li><strong>API rate limit이 critical path</strong>: 모든 layer에 rate limit 있음. 동기 처리는 자주 막힘. async + batch.</li>
+<li><strong>scale up 안 됨</strong>: 만 명 user 대응 X. side project 초기에만 OK.</li>
+<li><strong>monitoring 부재</strong>: 깨져도 모름. cron 실패 → email alert 최소.</li>
+</ul>
+<h2>언제 production stack으로 이전하나</h2>
+<ul>
+<li>DAU 100+ 사용자 (rate limit·UI 부담)</li>
+<li>데이터 민감도 ↑ (auth·암호화 필수)</li>
+<li>다른 사람과 collaboration (Notion 권한 부족)</li>
+<li>시간 비용보다 SaaS 결제가 저렴해질 때</li>
+</ul>
+<p>그 전까지는 personal stack으로 충분.</p>
+<h2>핵심</h2>
+<blockquote>
+<p>개인 사이드 프로젝트는 <strong>신용카드 0원으로 시작 가능</strong>하다. GitHub + Notion의 무료 한계를 정확히 알고 쓰면 production-grade 흉내까지는 된다.</p>
+</blockquote>
+<h2>관련</h2>
+<p><a href="/notes/github-releases-as-cdn">/notes/github-releases-as-cdn</a> — CDN layer
+<a href="/notes/notion-lightweight-backend">/notes/notion-lightweight-backend</a> — DB layer
+<a href="/notes/public-api-integration-patterns">/notes/public-api-integration-patterns</a> — 외부 API 통합 패턴
+<a href="/notes/report-asset-split-repo">/notes/report-asset-split-repo</a> — repo 분리 패턴</p></div><section class="related-block"><h2>관련 노트</h2><ul class="note-grid"><li><a class="note-card" href="/notes/archive-or-keep-old-repo" data-discover="true"><h3><span aria-hidden="true">🌿</span> <!-- -->옛 레포 archive할까 keep할까 — 정리 기준</h3><p>6년 누적된 30+ 학습 레포. 모두 두면 신호 노이즈, 다 지우면 흔적 0. 4가지 분류 기준으로 archive/keep/private을 결정한다.</p></a></li><li><a class="note-card" href="/notes/npx-name-business-card" data-discover="true"><h3><span aria-hidden="true">🌿</span> <!-- -->npx &lt;name&gt; — SWE 첫 인상의 새 형태</h3><p>명함을 npm 패키지로. `npx justinjeong` 한 줄이 GitHub 링크보다 강한 인상을 준다. 터미널이 만남의 자리인 SWE 사이에서.</p></a></li><li><a class="note-card" href="/notes/public-api-integration-patterns" data-discover="true"><h3><span aria-hidden="true">🌿</span> <!-- -->외부 공개 API 통합 — rate limit·재시도·zod boundary</h3><p>다수 외부 API를 한 시스템에 통합할 때의 일반 패턴. bottleneck으로 rate limit, axios-retry로 재시도, zod로 응답 schema 검증. 5+ API라면 boundary가 안전망.</p></a></li><li><a class="note-card" href="/notes/github-releases-as-cdn" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->GitHub Releases를 personal CDN으로 — 무료·무제한·영구</h3><p>HTML 리포트에 비디오·큰 이미지가 들어갈 때 어디에 호스팅하나. GitHub Releases는 파일당 2GB·무제한 트래픽·무료. 도메인 신뢰까지 따라온다.</p></a></li><li><a class="note-card" href="/notes/learning-repo-sandbox-value" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->학습 레포는 회사에서 못 쓰는 기술의 실험장</h3><p>회사 코드는 가드레일이 많다. 학습 레포는 자유. Module Federation·실험적 hook·새 framework를 자유롭게 만져보고, 한 번 쓰면 회사 코드로 옮겨간다.</p></a></li></ul></section><footer class="page-footer"><a class="see-all-link" href="/notes" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg> 노트 목록</a></footer></article></main><footer class="site-footer"><div class="footer-brand"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg>정경하</span><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open-text" aria-hidden="true"><path d="M12 7v14"></path><path d="M16 12h2"></path><path d="M16 8h2"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path><path d="M6 12h2"></path><path d="M6 8h2"></path></svg>Cases, notes, logs, and proof of work</span></div><nav class="footer-nav" aria-label="Secondary"><a href="/uses" data-discover="true">Uses</a><a href="/now" data-discover="true">Now</a><a href="/reading" data-discover="true">Reading</a><a href="/cv" data-discover="true">CV</a></nav><span class="footer-meta"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-clock" aria-hidden="true"><path d="M16 14v2.2l1.6 1"></path><path d="M16 2v4"></path><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"></path><path d="M3 10h5"></path><path d="M8 2v4"></path><circle cx="16" cy="16" r="6"></circle></svg>Updated <!-- -->2026-06-09 11:00</span></footer></div>
+  </body>
+</html>

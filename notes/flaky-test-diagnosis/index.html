@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+    <meta name="author" content="정경하" />
+    <meta property="og:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="description" content="Flaky test는 보통 시간·상태·환경·외부 의존 4가지 원인. 어디서 깨졌는지 모르면 retry로 가린다. 원인별 진단 + 격리 패턴." />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Flaky test 진단 — 4가지 원인과 격리 패턴 | 정경하" />
+    <meta property="og:description" content="Flaky test는 보통 시간·상태·환경·외부 의존 4가지 원인. 어디서 깨졌는지 모르면 retry로 가린다. 원인별 진단 + 격리 패턴." />
+    <meta property="og:url" content="https://justinjeong5.github.io/notes/flaky-test-diagnosis/" />
+    <meta name="twitter:title" content="Flaky test 진단 — 4가지 원인과 격리 패턴 | 정경하" />
+    <meta name="twitter:description" content="Flaky test는 보통 시간·상태·환경·외부 의존 4가지 원인. 어디서 깨졌는지 모르면 retry로 가린다. 원인별 진단 + 격리 패턴." />
+    <link rel="canonical" href="https://justinjeong5.github.io/notes/flaky-test-diagnosis/" />
+    <title>Flaky test 진단 — 4가지 원인과 격리 패턴 | 정경하</title>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Flaky test 진단 — 4가지 원인과 격리 패턴 | 정경하",
+  "description": "Flaky test는 보통 시간·상태·환경·외부 의존 4가지 원인. 어디서 깨졌는지 모르면 retry로 가린다. 원인별 진단 + 격리 패턴.",
+  "url": "https://justinjeong5.github.io/notes/flaky-test-diagnosis/",
+  "mainEntityOfPage": "https://justinjeong5.github.io/notes/flaky-test-diagnosis/",
+  "author": {
+    "@type": "Person",
+    "name": "정경하",
+    "url": "https://justinjeong5.github.io/",
+    "jobTitle": "Product-minded Frontend Engineer",
+    "sameAs": [
+      "https://github.com/justinjeong5"
+    ]
+  }
+}
+</script>
+    <script>
+      // 테마 사전 설정 — prerender된 HTML에 data-theme를 즉시 적용해 CSS flash를 막는다.
+      // (다른 스크립트보다 먼저 실행되어야 한다.)
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages — restore deep-link path written by 404.html
+      // https://github.com/rafgraph/spa-github-pages
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
+    </script>
+    <script type="module" crossorigin src="/assets/index-CxYEBVj7.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-QTnfLwEv.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-cases-BgF-y5bM.js">
+    <link rel="modulepreload" crossorigin href="/assets/router-D75Vl-iJ.js">
+    <link rel="modulepreload" crossorigin href="/assets/search-CiN4C8Nu.js">
+    <link rel="modulepreload" crossorigin href="/assets/icons-C3lfSmZ3.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-BMBR_99R.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-essays-CipNEaqH.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-logs-Dm6M40WY.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-notes-CR1Uinql.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-sbCSPT96.css">
+    <link rel="stylesheet" crossorigin href="/assets/pretendard-NPFyShNs.css">
+  </head>
+  <body>
+    <div id="root"><a href="#main-content" class="skip-link">본문 바로가기</a><header class="site-nav" aria-label="Primary"><a class="brand" aria-label="정경하 홈" href="/" data-discover="true">JKH</a><nav class="primary-nav"><a class="nav-link" href="/cases" data-discover="true">Cases</a><a aria-current="page" class="nav-link is-active" href="/notes" data-discover="true">Notes</a><a class="nav-link" href="/essays" data-discover="true">Essays</a><a class="nav-link" href="/logs" data-discover="true">Logs</a><a class="nav-link" href="/about" data-discover="true">About</a></nav><div class="nav-actions"><button type="button" class="search-trigger" aria-label="검색" title="검색 (⌘K 또는 /)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg><span>검색</span><kbd>⌘K</kbd></button><button type="button" class="icon-button" aria-label="테마: 라이트. 클릭하여 변경" title="테마: 라이트 · T 키로도 전환"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg></button><button type="button" class="icon-button desktop-only" aria-label="키보드 단축키" aria-expanded="false" aria-haspopup="dialog" title="키보드 단축키 (? 키)"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-keyboard" aria-hidden="true"><path d="M10 8h.01"></path><path d="M12 12h.01"></path><path d="M14 8h.01"></path><path d="M16 12h.01"></path><path d="M18 8h.01"></path><path d="M6 8h.01"></path><path d="M7 16h10"></path><path d="M8 12h.01"></path><rect width="20" height="16" x="2" y="4" rx="2"></rect></svg></button><button type="button" class="icon-button menu-trigger" aria-label="메뉴 열기" aria-expanded="false" aria-haspopup="dialog" title="메뉴"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button></div></header><main id="main-content" tabindex="-1"><article class="page note-detail"><header class="page-header note-detail-header"><p class="eyebrow growth-eyebrow"><span aria-hidden="true">🌱</span>Seedling</p><h1>Flaky test 진단 — 4가지 원인과 격리 패턴</h1><p class="page-lead">Flaky test는 보통 시간·상태·환경·외부 의존 4가지 원인. 어디서 깨졌는지 모르면 retry로 가린다. 원인별 진단 + 격리 패턴.</p><ul class="topic-list" aria-label="topics"><li>#<!-- -->testing</li><li>#<!-- -->ci</li><li>#<!-- -->diagnosis</li><li>#<!-- -->quality</li></ul></header><div class="prose"><h2>Flaky test가 나쁜 이유</h2>
+<p>같은 코드가 어떨 땐 통과, 어떨 땐 실패. 처음엔 &quot;retry로 해결&quot; 하지만 누적되면:</p>
+<ul>
+<li>CI 신뢰도 0 — 실패해도 &quot;또 flaky?&quot; 무시</li>
+<li>진짜 버그가 flaky 사이에 숨음</li>
+<li>developer 시간 손실 (재실행 대기)</li>
+</ul>
+<p>retry는 증상 가림. 원인 진단이 핵심.</p>
+<h2>원인 1 — 시간 의존 (Time)</h2>
+<p>가장 흔한 원인.</p>
+<pre><code class="language-js">// 깨지기 쉬움
+test(&#x27;expires after 1 hour&#x27;, async () =&gt; {
+  const token = createToken();
+  await sleep(3600 * 1000); // 1시간 대기? 불가
+  expect(token.isExpired()).toBe(true);
+});
+
+// 또 다른 패턴
+test(&#x27;processes within 100ms&#x27;, async () =&gt; {
+  const start = Date.now();
+  await process();
+  expect(Date.now() - start).toBeLessThan(100); // 머신 속도 영향
+});
+</code></pre>
+<p><strong>진단 신호</strong>:</p>
+<ul>
+<li>로컬에선 통과, CI에선 실패 (CI 머신이 느림)</li>
+<li>같은 머신에서 부하 시 실패</li>
+<li><code>setTimeout</code>·<code>sleep</code>·<code>Date.now</code>·<code>performance.now</code> 사용</li>
+</ul>
+<p><strong>해결</strong>:</p>
+<ul>
+<li>시간을 mock: <code>jest.useFakeTimers()</code>, <code>sinon.useFakeTimers()</code></li>
+<li>시간 의존 로직을 함수로 분리: <code>function isExpired(now, expiresAt)</code> → now를 주입</li>
+<li>절대 시간(<code>&lt; 100ms</code>) 대신 결정론적 검증</li>
+</ul>
+<h2>원인 2 — 상태 누수 (State Leak)</h2>
+<p>테스트 간 상태가 새는 경우.</p>
+<pre><code class="language-js">// 깨지기 쉬움
+let counter = 0;
+
+test(&#x27;A&#x27;, () =&gt; {
+  counter++;
+  expect(counter).toBe(1); // 단독 실행만 통과
+});
+
+test(&#x27;B&#x27;, () =&gt; {
+  counter++;
+  expect(counter).toBe(1); // A가 먼저 실행되면 2 = FAIL
+});
+</code></pre>
+<p>또는 DB·파일시스템·전역 객체 누수.</p>
+<p><strong>진단 신호</strong>:</p>
+<ul>
+<li>테스트 순서 바꾸면 결과 다름 (<code>--shuffle</code> 옵션)</li>
+<li>병렬 실행 시 실패 (직렬에선 통과)</li>
+<li>단독 실행 통과, 다른 테스트와 같이 실행 시 실패</li>
+</ul>
+<p><strong>해결</strong>:</p>
+<ul>
+<li><code>beforeEach</code>로 상태 초기화</li>
+<li>전역 mock은 <code>afterEach</code>로 cleanup</li>
+<li>DB 테스트는 트랜잭션 + rollback 또는 schema reset</li>
+<li>테스트 간 순서 의존 금지</li>
+</ul>
+<h2>원인 3 — 환경 의존 (Environment)</h2>
+<p>특정 환경에서만 동작.</p>
+<pre><code class="language-js">test(&#x27;reads config&#x27;, () =&gt; {
+  const config = loadConfig(); // process.env 사용
+  expect(config.apiKey).toBeDefined(); // CI에 env var 누락 시 FAIL
+});
+
+test(&#x27;formats date&#x27;, () =&gt; {
+  expect(formatDate(new Date())).toBe(&#x27;2026-05-29&#x27;); // 머신 timezone 영향
+});
+</code></pre>
+<p><strong>진단 신호</strong>:</p>
+<ul>
+<li>timezone·locale·OS 따라 결과 다름</li>
+<li>env var 누락 시 실패</li>
+<li>네트워크 환경 (proxy·VPN·firewall) 영향</li>
+</ul>
+<p><strong>해결</strong>:</p>
+<ul>
+<li>env var은 테스트 fixture에 명시 (디폴트 + override)</li>
+<li>timezone·locale을 명시: <code>process.env.TZ = &#x27;UTC&#x27;</code></li>
+<li>파일시스템 경로는 <code>path.join</code> (cross-OS)</li>
+</ul>
+<h2>원인 4 — 외부 의존 (External)</h2>
+<p>DB·API·외부 서비스 호출.</p>
+<pre><code class="language-js">test(&#x27;fetches user&#x27;, async () =&gt; {
+  const user = await fetch(&#x27;/api/user/1&#x27;); // 외부 API
+  expect(user.name).toBe(&#x27;Alice&#x27;);
+});
+</code></pre>
+<p><strong>진단 신호</strong>:</p>
+<ul>
+<li>네트워크 끊김 시 실패</li>
+<li>외부 서비스 응답 시간 변동 시 timeout</li>
+<li>외부 서비스 데이터 변경 시 결과 다름</li>
+<li>rate limit 걸림</li>
+</ul>
+<p><strong>해결</strong>:</p>
+<ul>
+<li>단위 테스트는 외부 의존 mock (MSW·nock)</li>
+<li>통합 테스트는 격리된 환경 (docker-compose)</li>
+<li>E2E는 staging API 또는 mocked production</li>
+</ul>
+<h2>격리 패턴</h2>
+<p>flaky를 발견하면 즉시 해결 못 할 수도. 임시 격리:</p>
+<pre><code class="language-js">// 격리 1: skip + 이슈 등록
+test.skip(&#x27;flaky-test-name&#x27;, () =&gt; { ... }); // → 이슈 트래커에 등록 필수
+
+// 격리 2: retry (마지막 수단)
+test(&#x27;flaky&#x27;, async () =&gt; { ... }, { retry: 3 });
+
+// 격리 3: 별도 파일로 분리
+// __tests__/flaky/auth.test.js → CI에서 별도 stage
+</code></pre>
+<p><strong>중요</strong>: 격리는 임시. 1주일 이내에 원인 분석 + 수정 또는 삭제.</p>
+<h2>진단 워크플로우</h2>
+<pre><code>flaky 발견
+  ↓
+1. 100회 반복 실행 (실패율 측정)
+  ↓
+2. 단독 실행 vs 다른 테스트와 같이 실행 비교 (상태 누수 진단)
+  ↓
+3. 순서 셔플 (--shuffle) (순서 의존 진단)
+  ↓
+4. CI vs 로컬 비교 (환경·시간 의존 진단)
+  ↓
+5. 외부 의존 mock 후 재실행 (외부 의존 진단)
+  ↓
+원인 분류 → 위 4가지 해결책
+</code></pre>
+<h2>함정</h2>
+<ul>
+<li><strong>retry로 가리기</strong>: 가장 흔한 anti-pattern. 진짜 버그가 retry 사이에 숨음.</li>
+<li><strong>flaky를 &quot;예전부터 있던 것&quot;으로 무시</strong>: 누적되면 CI 전체 신뢰도 0.</li>
+<li><strong>격리 후 안 돌아옴</strong>: skip한 테스트가 영원히 skip. 격리는 1주일 한도.</li>
+<li><strong>단위 테스트가 외부 의존</strong>: 단위 테스트는 외부 의존 0. 외부 의존 있으면 통합 테스트.</li>
+<li><strong>테스트가 random 데이터 생성</strong>: <code>faker</code>·<code>random()</code>이 가끔 edge case 만나면 실패. seed 고정 또는 deterministic fixture.</li>
+</ul>
+<h2>핵심</h2>
+<blockquote>
+<p>Flaky test는 4가지 원인(시간·상태·환경·외부) 중 하나. <strong>retry로 가리기 전에 원인 진단</strong>이 핵심. 원인을 알면 해결책이 정해져 있다.</p>
+</blockquote>
+<h2>관련</h2>
+<p><a href="/notes/test-or-types-first">/notes/test-or-types-first</a> — 테스트 우선순위
+<a href="/notes/deterministic-loop">/notes/deterministic-loop</a> — 결정론적 검증</p></div><section class="related-block"><h2>관련 노트</h2><ul class="note-grid"><li><a class="note-card" href="/notes/typescript-false-safety" data-discover="true"><h3><span aria-hidden="true">🌳</span> <!-- -->TypeScript의 거짓 안전감 — 타입이 통과해도 버그는 남는다</h3><p>TypeScript 통과 = 안전이라는 직관. 그러나 런타임 데이터·외부 API·any 의 escape hatch는 컴파일러가 못 본다. 타입은 안전의 일부일 뿐.</p></a></li><li><a class="note-card" href="/notes/coverage-gap-analysis" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->커버리지 갭 분석 — 강한 곳 말고 빈 곳을 측정으로 찾기</h3><p>사람은 잘하는 영역에 더 추가하고 빈 영역은 못 본다. 작업물의 분포를 측정하면 어디가 비었는지 객관적으로 드러난다. 테스트·콘텐츠·문서·스킬 포트폴리오 공통.</p></a></li><li><a class="note-card" href="/notes/operationalizing-vague-requests" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->모호한 지시를 측정 기준으로 — &quot;잘 해줘&quot;를 실행 가능하게</h3><p>&quot;전체적으로 개선해줘&quot;, &quot;다양하게&quot;, &quot;깔끔하게&quot;는 실행자마다 다르게 해석된다. 작업 전에 모호한 품질 단어를 측정 가능한 기준으로 번역하면 재작업과 오해가 줄어든다.</p></a></li><li><a class="note-card" href="/notes/recurring-trap-to-checklist" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->같은 함정에 두 번 빠지면 체크리스트가 된다</h3><p>한 번의 실수는 수정으로 끝나지만, 같은 실수가 두 번 반복되면 그건 개인의 부주의가 아니라 시스템의 공백이다. 함정의 재발 횟수에 따라 대응을 격상하는 사다리.</p></a></li><li><a class="note-card" href="/notes/ci-cache-incremental-builds" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->CI 캐시·incremental build — 빌드 30분을 5분으로</h3><p>monorepo CI 시간은 모든 PR의 비용. 캐시 레이어·incremental build·병렬화로 절감. 작업 시간이 아니라 cumulative cost로 보면 절감 가치가 압도적.</p></a></li></ul></section><footer class="page-footer"><a class="see-all-link" href="/notes" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg> 노트 목록</a></footer></article></main><footer class="site-footer"><div class="footer-brand"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg>정경하</span><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open-text" aria-hidden="true"><path d="M12 7v14"></path><path d="M16 12h2"></path><path d="M16 8h2"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path><path d="M6 12h2"></path><path d="M6 8h2"></path></svg>Cases, notes, logs, and proof of work</span></div><nav class="footer-nav" aria-label="Secondary"><a href="/uses" data-discover="true">Uses</a><a href="/now" data-discover="true">Now</a><a href="/reading" data-discover="true">Reading</a><a href="/cv" data-discover="true">CV</a></nav><span class="footer-meta"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-clock" aria-hidden="true"><path d="M16 14v2.2l1.6 1"></path><path d="M16 2v4"></path><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"></path><path d="M3 10h5"></path><path d="M8 2v4"></path><circle cx="16" cy="16" r="6"></circle></svg>Updated <!-- -->2026-06-09 11:00</span></footer></div>
+  </body>
+</html>

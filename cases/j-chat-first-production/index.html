@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+    <meta name="author" content="정경하" />
+    <meta property="og:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="description" content="학부에서 회사로 넘어가던 2024년, j-chat이라는 실시간 채팅 서비스를 직접 배포했다. 첫 production이 가르친 5가지. 학부 코드와 실서비스 코드의 거리는 한 줄로 요약되지 않는다." />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="J-Chat — 첫 프로덕션 배포의 회고 (2024) | 정경하" />
+    <meta property="og:description" content="학부에서 회사로 넘어가던 2024년, j-chat이라는 실시간 채팅 서비스를 직접 배포했다. 첫 production이 가르친 5가지. 학부 코드와 실서비스 코드의 거리는 한 줄로 요약되지 않는다." />
+    <meta property="og:url" content="https://justinjeong5.github.io/cases/j-chat-first-production/" />
+    <meta name="twitter:title" content="J-Chat — 첫 프로덕션 배포의 회고 (2024) | 정경하" />
+    <meta name="twitter:description" content="학부에서 회사로 넘어가던 2024년, j-chat이라는 실시간 채팅 서비스를 직접 배포했다. 첫 production이 가르친 5가지. 학부 코드와 실서비스 코드의 거리는 한 줄로 요약되지 않는다." />
+    <link rel="canonical" href="https://justinjeong5.github.io/cases/j-chat-first-production/" />
+    <title>J-Chat — 첫 프로덕션 배포의 회고 (2024) | 정경하</title>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "J-Chat — 첫 프로덕션 배포의 회고 (2024) | 정경하",
+  "description": "학부에서 회사로 넘어가던 2024년, j-chat이라는 실시간 채팅 서비스를 직접 배포했다. 첫 production이 가르친 5가지. 학부 코드와 실서비스 코드의 거리는 한 줄로 요약되지 않는다.",
+  "url": "https://justinjeong5.github.io/cases/j-chat-first-production/",
+  "mainEntityOfPage": "https://justinjeong5.github.io/cases/j-chat-first-production/",
+  "author": {
+    "@type": "Person",
+    "name": "정경하",
+    "url": "https://justinjeong5.github.io/",
+    "jobTitle": "Product-minded Frontend Engineer",
+    "sameAs": [
+      "https://github.com/justinjeong5"
+    ]
+  },
+  "datePublished": "2026-05-28",
+  "dateModified": "2026-05-28"
+}
+</script>
+    <script>
+      // 테마 사전 설정 — prerender된 HTML에 data-theme를 즉시 적용해 CSS flash를 막는다.
+      // (다른 스크립트보다 먼저 실행되어야 한다.)
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages — restore deep-link path written by 404.html
+      // https://github.com/rafgraph/spa-github-pages
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
+    </script>
+    <script type="module" crossorigin src="/assets/index-CxYEBVj7.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-QTnfLwEv.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-cases-BgF-y5bM.js">
+    <link rel="modulepreload" crossorigin href="/assets/router-D75Vl-iJ.js">
+    <link rel="modulepreload" crossorigin href="/assets/search-CiN4C8Nu.js">
+    <link rel="modulepreload" crossorigin href="/assets/icons-C3lfSmZ3.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-BMBR_99R.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-essays-CipNEaqH.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-logs-Dm6M40WY.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-notes-CR1Uinql.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-sbCSPT96.css">
+    <link rel="stylesheet" crossorigin href="/assets/pretendard-NPFyShNs.css">
+  </head>
+  <body>
+    <div id="root"><a href="#main-content" class="skip-link">본문 바로가기</a><header class="site-nav" aria-label="Primary"><a class="brand" aria-label="정경하 홈" href="/" data-discover="true">JKH</a><nav class="primary-nav"><a aria-current="page" class="nav-link is-active" href="/cases" data-discover="true">Cases</a><a class="nav-link" href="/notes" data-discover="true">Notes</a><a class="nav-link" href="/essays" data-discover="true">Essays</a><a class="nav-link" href="/logs" data-discover="true">Logs</a><a class="nav-link" href="/about" data-discover="true">About</a></nav><div class="nav-actions"><button type="button" class="search-trigger" aria-label="검색" title="검색 (⌘K 또는 /)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg><span>검색</span><kbd>⌘K</kbd></button><button type="button" class="icon-button" aria-label="테마: 라이트. 클릭하여 변경" title="테마: 라이트 · T 키로도 전환"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg></button><button type="button" class="icon-button desktop-only" aria-label="키보드 단축키" aria-expanded="false" aria-haspopup="dialog" title="키보드 단축키 (? 키)"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-keyboard" aria-hidden="true"><path d="M10 8h.01"></path><path d="M12 12h.01"></path><path d="M14 8h.01"></path><path d="M16 12h.01"></path><path d="M18 8h.01"></path><path d="M6 8h.01"></path><path d="M7 16h10"></path><path d="M8 12h.01"></path><rect width="20" height="16" x="2" y="4" rx="2"></rect></svg></button><button type="button" class="icon-button menu-trigger" aria-label="메뉴 열기" aria-expanded="false" aria-haspopup="dialog" title="메뉴"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button></div></header><main id="main-content" tabindex="-1"><article class="page case-detail"><header class="page-header case-detail-header"><p class="eyebrow">Archived</p><h1>J-Chat — 첫 프로덕션 배포의 회고 (2024)</h1><p class="page-lead">학부에서 회사로 넘어가던 2024년, j-chat이라는 실시간 채팅 서비스를 직접 배포했다. 첫 production이 가르친 5가지. 학부 코드와 실서비스 코드의 거리는 한 줄로 요약되지 않는다.</p><dl class="case-meta"><div><dt>Role</dt><dd>전체 (기획·설계·구현·운영)</dd></div><div><dt>Period</dt><dd>2024</dd></div><div><dt>Tags</dt><dd>#career #production #learning #retrospective #websocket</dd></div></dl></header><div class="prose"><h2>문제</h2>
+<p>2024년 첫 회사로 옮기던 시점에 사이드 프로젝트로 j-chat을 만들었다. 단순한 채팅 서비스. MERN 스택(MongoDB·Express·React·Node) + WebSocket. 학부 시절 React/Express는 만져봤지만 <strong>실제로 사람에게 배포해본 적이 없었다</strong>.</p>
+<p>목표는 두 가지였다.</p>
+<ol>
+<li>친구 5-10명이 실제로 쓸 수 있는 채팅 서비스</li>
+<li>본인이 프로덕션 운영을 체험해보기</li>
+</ol>
+<p>학부에서 만든 코드는 localhost에서 돌면 끝이었다. 프로덕션이라는 환경이 어떤 건지 감이 없었다. j-chat은 그걸 체험하는 자리였다.</p>
+<h2>역할</h2>
+<p>전부 혼자. 기획·설계·구현·배포·운영·디버깅·CS(친구가 &quot;안 돼&quot;라고 메시지 보내는 거 받기).</p>
+<p>학부 시절 코드와 다른 점:</p>
+<ul>
+<li>학부: 과제 제출 후 끝</li>
+<li>j-chat: 매일 사람이 쓰고 있음</li>
+</ul>
+<h2>접근</h2>
+<h3>버린 선택지</h3>
+<ul>
+<li><strong>AWS 직접 셋업</strong>: 첫 production에 EC2·VPC·Security Group까지 다 만들면 한 달 걸린다. 학습 가치는 있지만 친구가 못 쓰게 됨.</li>
+<li><strong>Firebase</strong>: 너무 마법 같음. 실제로 어떻게 동작하는지 체험할 자리가 안 됨.</li>
+</ul>
+<h3>채택 — Heroku + MongoDB Atlas</h3>
+<ul>
+<li>Heroku에 Node + Express 배포 (무료 dyno)</li>
+<li>MongoDB Atlas free tier</li>
+<li>WebSocket은 Socket.io</li>
+<li>React는 Vercel에 frontend 분리 배포</li>
+</ul>
+<p><strong>선택 이유</strong>: 인프라가 추상화돼 있어서 한 주에 배포 가능. 단 추상화 안에서 무슨 일이 일어나는지는 체험 가능 (env var, build pipeline, log, DB connection).</p>
+<h3>Phase</h3>
+<ul>
+<li>Week 1: 로컬에서 채팅 동작</li>
+<li>Week 2: Heroku 배포 + MongoDB Atlas 연결</li>
+<li>Week 3: Socket.io reconnection 처리</li>
+<li>Week 4: 친구 10명에게 공유, 운영 시작</li>
+</ul>
+<h2>결과</h2>
+<p><strong>운영 데이터</strong> (3개월간):</p>
+<ul>
+<li>사용자: 친구 10명 + 본인</li>
+<li>메시지: 약 3,000개</li>
+<li>다운타임: 6번 (대부분 Heroku free dyno sleep)</li>
+<li>버그 리포트: 12건</li>
+</ul>
+<p><strong>기술 산출물</strong>:</p>
+<ul>
+<li>WebSocket 기반 실시간 채팅</li>
+<li>메시지 영속화 (MongoDB)</li>
+<li>reconnection 처리</li>
+<li>채팅방 join/leave</li>
+<li>간단한 닉네임 시스템 (로그인 X)</li>
+</ul>
+<h2>회고</h2>
+<h3>배운 것 1 — 코드를 쓰는 시간 vs 디버깅 시간</h3>
+<p>학부 코드는 작성 80% / 디버깅 20%였다. j-chat은 작성 30% / 디버깅 70%였다.</p>
+<p>같은 코드를 작성하는데 디버깅에 압도적으로 시간이 더 든다. 이유는:</p>
+<ul>
+<li>환경이 다른 곳에서 돌아서 (localhost vs Heroku)</li>
+<li>외부 의존(MongoDB Atlas)이 가끔 끊김</li>
+<li>사용자가 예측 못 한 입력을 함</li>
+<li>여러 사용자가 동시에 사용하면 race condition</li>
+</ul>
+<p>학부에서는 본인 입력만 다뤘다. 프로덕션은 <strong>본인 예측 밖의 입력 + 본인 환경 밖의 인프라</strong>가 변수다.</p>
+<h3>배운 것 2 — log의 가치</h3>
+<p>처음 운영 시작했을 때 log를 거의 안 찍었다. &quot;에러가 나면 보이겠지&quot; 같은 안일함.</p>
+<p>3주 후 친구가 &quot;메시지가 안 보낸 사람한테도 가는 것 같다&quot;는 버그를 리포트. 재현이 안 됨. 로그가 없어서 원인 파악 불가.</p>
+<p>그때 log를 모든 socket event마다 찍기 시작했다. 그러자 다음 비슷한 버그는 1시간 안에 원인 파악. log는 <strong>사후 진단의 유일한 자산</strong>이다.</p>
+<p>지금 회사 코드에서 winston·structured logging을 자유롭게 쓰는 직관은 그때부터 시작됐다.</p>
+<h3>배운 것 3 — env var의 무거움</h3>
+<p>학부 코드는 <code>const DB = &#x27;mongodb://localhost:27017&#x27;</code>였다. j-chat은 <code>process.env.MONGODB_URI</code>였다. 한 줄 차이지만 운영 의미가 다르다.</p>
+<ul>
+<li><code>.env</code> 파일이 .gitignore에 있어야 함</li>
+<li>Heroku dashboard에 별도로 env 설정</li>
+<li>로컬 / staging / production이 다른 값</li>
+<li>env var 누락 시 어떻게 fallback하는가</li>
+</ul>
+<p>env var 한 번 잘못 설정해서 DB가 안 연결돼 본 후로, <strong>boundary에서 env 검증</strong>이 첫 번째 코드가 됐다. zod로 env schema 검증하는 패턴은 j-chat의 잘못 설정 사고에서 시작됐다.</p>
+<h3>배운 것 4 — 사용자는 본인이 예측 못 한 짓을 한다</h3>
+<p>본인이 만든 시나리오: &quot;메시지 보내기 → 받기.&quot;</p>
+<p>친구들이 실제로 한 것:</p>
+<ul>
+<li>같은 채팅방 같은 닉네임으로 두 명 입장 (race)</li>
+<li>빈 메시지 보내기</li>
+<li>매우 긴 메시지 보내기 (10,000자+)</li>
+<li>채팅 도중 브라우저 새로고침</li>
+<li>두 탭에서 동시에 열기</li>
+<li>모바일과 데스크톱에서 동시에</li>
+</ul>
+<p>전부 본인이 예측 못 한 입력이었다. j-chat은 이걸 다 처리하기 위해 시간의 절반을 썼다. 그래서 <strong>edge case는 추측이 아니라 사용자가 가르친다</strong>는 직관이 생겼다.</p>
+<h3>배운 것 5 — Heroku free dyno sleep의 진짜 의미</h3>
+<p>Heroku free tier dyno는 30분 idle하면 sleep한다. 다시 접속하면 콜드 스타트(약 10-15초). 첫 사용자가 항상 &quot;안 돼&quot;라고 한다.</p>
+<p>이게 단순 무료 정책이 아니라 <strong>production의 cold start 일반 문제</strong>다. AWS Lambda·Cloud Run·Vercel serverless 다 같은 문제를 가진다.</p>
+<p>j-chat에서는 무료라 그대로 뒀다. 회사 코드에서는 cold start 회피(min instance·warm-up cron)가 첫 production 작업이 됐다. j-chat이 그 문제를 미리 만나게 해줬다.</p>
+<h2>지금이라면 다르게 할 점</h2>
+<ul>
+<li><strong>monitoring 처음부터</strong>: free tier여도 UptimeRobot 같은 거 붙이기. &quot;안 돼&quot; 보고를 친구가 아니라 시스템이 알려주게.</li>
+<li><strong>graceful shutdown</strong>: SIGTERM 처리 안 하면 in-flight 메시지가 사라진다. 사이드 프로젝트라도 graceful shutdown.</li>
+<li><strong>typescript 처음부터</strong>: JS로 시작한 j-chat은 6개월 후 리팩토링 비용이 컸다. 처음부터 TS면 그 비용 회피.</li>
+<li><strong>테스트 0에서 일부라도</strong>: socket reconnection 같은 핵심 로직만이라도 단위 테스트.</li>
+<li><strong>error tracking</strong>: Sentry 무료 plan이라도. log + error tracker는 다르다.</li>
+</ul>
+<h2>전이된 인사이트</h2>
+<p>j-chat 한 사이드 프로젝트가 <strong>회사 코드의 무의식적 baseline</strong>을 만들었다. log 어디에 찍을지, env var 어떻게 검증할지, edge case 어떻게 다룰지, cold start 어떻게 회피할지. 모든 기본기가 j-chat에서 한 번 실패해본 후 회사로 옮겨졌다.</p>
+<p>학부에서 회사로 가는 사이의 사이드 프로젝트가 <strong>production의 baseline을 미리 체험하는 자리</strong>다. 회사에 가서 처음 production을 만나면 그 학습 곡선을 회사 코드에서 부담해야 한다. 사이드 프로젝트에서 미리 부담하면 회사에서는 다음 단계를 다룰 수 있다.</p>
+<h2>핵심</h2>
+<blockquote>
+<p>학부 코드와 프로덕션 코드의 거리는 한 줄로 요약되지 않는다. <strong>log·env·edge case·cold start·monitoring</strong> — 학부에서 안 만져본 5가지를 미리 사이드 프로젝트에서 부딪혀본 게, 첫 회사에서 다음 단계로 갈 수 있게 한 자리였다.</p>
+</blockquote>
+<p>j-chat 자체는 지금 archive다. 친구들은 더 이상 안 쓴다. 그런데 j-chat이 가르친 5가지는 지금 회사 코드에 매일 적용된다. <strong>레포는 archive하되 인사이트는 살아있다</strong>는 게 정확히 이 케이스다.</p>
+<p>레포: 본인 GitHub 프로필 (archived)</p>
+<p>관련: <a href="/notes/archive-or-keep-old-repo">/notes/archive-or-keep-old-repo</a>, <a href="/notes/learning-repo-sandbox-value">/notes/learning-repo-sandbox-value</a>, <a href="/notes/graceful-shutdown">/notes/graceful-shutdown</a>, <a href="/notes/small-deploy-reread">/notes/small-deploy-reread</a></p></div><footer class="page-footer"><a class="see-all-link" href="/cases" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg> 케이스 목록</a></footer></article></main><footer class="site-footer"><div class="footer-brand"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg>정경하</span><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open-text" aria-hidden="true"><path d="M12 7v14"></path><path d="M16 12h2"></path><path d="M16 8h2"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path><path d="M6 12h2"></path><path d="M6 8h2"></path></svg>Cases, notes, logs, and proof of work</span></div><nav class="footer-nav" aria-label="Secondary"><a href="/uses" data-discover="true">Uses</a><a href="/now" data-discover="true">Now</a><a href="/reading" data-discover="true">Reading</a><a href="/cv" data-discover="true">CV</a></nav><span class="footer-meta"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-clock" aria-hidden="true"><path d="M16 14v2.2l1.6 1"></path><path d="M16 2v4"></path><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"></path><path d="M3 10h5"></path><path d="M8 2v4"></path><circle cx="16" cy="16" r="6"></circle></svg>Updated <!-- -->2026-06-09 11:00</span></footer></div>
+  </body>
+</html>

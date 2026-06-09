@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+    <meta name="author" content="정경하" />
+    <meta property="og:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="description" content="장애 후 가장 가치 있는 질문은 &quot;이건 왜 알람이 안 떴지?&quot;다. 누락된 메트릭이 진짜 priority 1 모니터링 이슈. 회고가 다음 알람 룰셋이 된다." />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="incident가 모니터링 갭을 노출한다 — 장애 회고가 다음 알람 룰셋이 되는 사이클 | 정경하" />
+    <meta property="og:description" content="장애 후 가장 가치 있는 질문은 &quot;이건 왜 알람이 안 떴지?&quot;다. 누락된 메트릭이 진짜 priority 1 모니터링 이슈. 회고가 다음 알람 룰셋이 된다." />
+    <meta property="og:url" content="https://justinjeong5.github.io/notes/incident-monitoring-gap/" />
+    <meta name="twitter:title" content="incident가 모니터링 갭을 노출한다 — 장애 회고가 다음 알람 룰셋이 되는 사이클 | 정경하" />
+    <meta name="twitter:description" content="장애 후 가장 가치 있는 질문은 &quot;이건 왜 알람이 안 떴지?&quot;다. 누락된 메트릭이 진짜 priority 1 모니터링 이슈. 회고가 다음 알람 룰셋이 된다." />
+    <link rel="canonical" href="https://justinjeong5.github.io/notes/incident-monitoring-gap/" />
+    <title>incident가 모니터링 갭을 노출한다 — 장애 회고가 다음 알람 룰셋이 되는 사이클 | 정경하</title>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "incident가 모니터링 갭을 노출한다 — 장애 회고가 다음 알람 룰셋이 되는 사이클 | 정경하",
+  "description": "장애 후 가장 가치 있는 질문은 \"이건 왜 알람이 안 떴지?\"다. 누락된 메트릭이 진짜 priority 1 모니터링 이슈. 회고가 다음 알람 룰셋이 된다.",
+  "url": "https://justinjeong5.github.io/notes/incident-monitoring-gap/",
+  "mainEntityOfPage": "https://justinjeong5.github.io/notes/incident-monitoring-gap/",
+  "author": {
+    "@type": "Person",
+    "name": "정경하",
+    "url": "https://justinjeong5.github.io/",
+    "jobTitle": "Product-minded Frontend Engineer",
+    "sameAs": [
+      "https://github.com/justinjeong5"
+    ]
+  }
+}
+</script>
+    <script>
+      // 테마 사전 설정 — prerender된 HTML에 data-theme를 즉시 적용해 CSS flash를 막는다.
+      // (다른 스크립트보다 먼저 실행되어야 한다.)
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages — restore deep-link path written by 404.html
+      // https://github.com/rafgraph/spa-github-pages
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
+    </script>
+    <script type="module" crossorigin src="/assets/index-CxYEBVj7.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-QTnfLwEv.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-cases-BgF-y5bM.js">
+    <link rel="modulepreload" crossorigin href="/assets/router-D75Vl-iJ.js">
+    <link rel="modulepreload" crossorigin href="/assets/search-CiN4C8Nu.js">
+    <link rel="modulepreload" crossorigin href="/assets/icons-C3lfSmZ3.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-BMBR_99R.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-essays-CipNEaqH.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-logs-Dm6M40WY.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-notes-CR1Uinql.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-sbCSPT96.css">
+    <link rel="stylesheet" crossorigin href="/assets/pretendard-NPFyShNs.css">
+  </head>
+  <body>
+    <div id="root"><a href="#main-content" class="skip-link">본문 바로가기</a><header class="site-nav" aria-label="Primary"><a class="brand" aria-label="정경하 홈" href="/" data-discover="true">JKH</a><nav class="primary-nav"><a class="nav-link" href="/cases" data-discover="true">Cases</a><a aria-current="page" class="nav-link is-active" href="/notes" data-discover="true">Notes</a><a class="nav-link" href="/essays" data-discover="true">Essays</a><a class="nav-link" href="/logs" data-discover="true">Logs</a><a class="nav-link" href="/about" data-discover="true">About</a></nav><div class="nav-actions"><button type="button" class="search-trigger" aria-label="검색" title="검색 (⌘K 또는 /)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg><span>검색</span><kbd>⌘K</kbd></button><button type="button" class="icon-button" aria-label="테마: 라이트. 클릭하여 변경" title="테마: 라이트 · T 키로도 전환"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg></button><button type="button" class="icon-button desktop-only" aria-label="키보드 단축키" aria-expanded="false" aria-haspopup="dialog" title="키보드 단축키 (? 키)"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-keyboard" aria-hidden="true"><path d="M10 8h.01"></path><path d="M12 12h.01"></path><path d="M14 8h.01"></path><path d="M16 12h.01"></path><path d="M18 8h.01"></path><path d="M6 8h.01"></path><path d="M7 16h10"></path><path d="M8 12h.01"></path><rect width="20" height="16" x="2" y="4" rx="2"></rect></svg></button><button type="button" class="icon-button menu-trigger" aria-label="메뉴 열기" aria-expanded="false" aria-haspopup="dialog" title="메뉴"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button></div></header><main id="main-content" tabindex="-1"><article class="page note-detail"><header class="page-header note-detail-header"><p class="eyebrow growth-eyebrow"><span aria-hidden="true">🌱</span>Seedling</p><h1>incident가 모니터링 갭을 노출한다 — 장애 회고가 다음 알람 룰셋이 되는 사이클</h1><p class="page-lead">장애 후 가장 가치 있는 질문은 &quot;이건 왜 알람이 안 떴지?&quot;다. 누락된 메트릭이 진짜 priority 1 모니터링 이슈. 회고가 다음 알람 룰셋이 된다.</p><ul class="topic-list" aria-label="topics"><li>#<!-- -->monitoring</li><li>#<!-- -->incident</li><li>#<!-- -->observability</li><li>#<!-- -->datadog</li><li>#<!-- -->postmortem</li></ul></header><div class="prose"><h2>장애 후 첫 회고 질문</h2>
+<p>장애가 끝나면 보통 &quot;원인이 뭐였나&quot;부터 본다. 그것도 중요하지만 가장 가치 있는 질문은 따로 있다.</p>
+<blockquote>
+<p><strong>&quot;이건 왜 알람이 안 떴지?&quot;</strong></p>
+</blockquote>
+<p>알람이 떴는데 못 본 거면 알람 우선순위·전달 채널 문제.
+알람 자체가 없었다면 <strong>모니터링 갭</strong>이다. 그게 진짜 priority 1.</p>
+<h2>모니터링 갭의 두 종류</h2>
+<h3>1. 측정 안 됨 (metric missing)</h3>
+<ul>
+<li>사용자 영향이 있는데 그 영향을 잡는 메트릭이 없음</li>
+<li>예: &quot;결제 화면 흰 페이지&quot; → 5xx도 아니고 latency도 아닌 클라이언트 렌더링 실패</li>
+</ul>
+<p>→ Datadog RUM·Sentry 같은 클라이언트 측 메트릭 추가</p>
+<h3>2. 측정 되지만 알람 안 됨 (alert missing)</h3>
+<ul>
+<li>메트릭은 대시보드에 있는데 알람 룰이 없음</li>
+<li>사람이 매일 대시보드를 안 본다는 사실 망각</li>
+</ul>
+<p>→ 대시보드 메트릭 중 SLO 침해 가능한 건 모두 알람 룰 등록</p>
+<h2>incident → 알람 룰 사이클</h2>
+<p>장애 회고의 마지막 항목은 항상 같다.</p>
+<pre><code>1. 무엇이 깨졌나
+2. 사용자 영향 범위
+3. 임시 패치 / 근본 수정
+4. 같은 일이 또 일어나면 알람으로 잡히는가?
+   ↑↑↑ 이게 가장 중요한 항목
+</code></pre>
+<p>답이 &quot;예&quot;가 아니면 알람 룰을 회고와 동시에 추가한다. 미루면 안 한다.</p>
+<h2>모니터링 최적화 순환</h2>
+<p>장애를 두 번 같은 형태로 안 겪으려면:</p>
+<pre><code>incident 발생
+  ↓
+회고에서 모니터링 갭 식별
+  ↓
+알람 룰 추가 (메트릭 부재면 instrument 먼저)
+  ↓
+다음 같은 incident → 알람 즉시 → 영향 ↓
+  ↓
+이번엔 다른 incident에서 또 갭 발견
+  ↓
+또 추가 → 점진 ↑
+</code></pre>
+<p><strong>모니터링은 한 번에 완성되지 않는다.</strong> incident가 갭을 자연 노출하는 사이클이 모니터링을 자라게 한다.</p>
+<h2>알람 룰셋 보강 vs 노이즈 위험</h2>
+<p>알람을 추가할 때 <a href="/notes/good-alert-four-criteria">좋은 알람의 4가지 기준</a> 적용:</p>
+<ul>
+<li>사람이 행동할 일이 있나</li>
+<li>SLO 기반 임계</li>
+<li>runbook 링크</li>
+<li>회고 가능한 정량</li>
+</ul>
+<p>이 4가지 통과 못 하면 알람 추가하지 말고 대시보드에만.</p>
+<h2>함정</h2>
+<ul>
+<li><strong>&quot;한 번 일어났으니 추가&quot;</strong>: 빈도 낮은 케이스는 알람 X, runbook만</li>
+<li><strong>회고를 며칠 미룸</strong>: 기억 휘발. 가능한 incident 24h 안에 회고 시작</li>
+<li><strong>갭만 메우고 false positive 무시</strong>: 새 알람이 노이즈 늘리면 trade-off</li>
+<li><strong>&quot;이미 있어야 했는데&quot;라는 자책</strong>: 모니터링은 자라는 것이지 완성되는 게 아님</li>
+</ul>
+<h2>광고 플랫폼의 모니터링 갭 예시</h2>
+<p>모니터링 갭은 도메인마다 다르게 나타난다. 광고 플랫폼이라면:</p>
+<ul>
+<li><strong>정산 불일치</strong>: 집계 파이프라인 일부가 조용히 이벤트를 drop → 매출 누락. 5xx도 latency도 아니라 <strong>숫자가 줄어든 것</strong>이 유일한 신호. 비즈니스 메트릭(시간당 매출) 알람이 없으면 며칠 후 정산에서야 발견.</li>
+<li><strong>frequency cap 누수</strong>: 분산 카운터 동기화 실패로 over-delivery. 시스템은 정상인데 사용자 경험·매체 신뢰가 깨짐.</li>
+</ul>
+<p>기술 메트릭(CPU·5xx)만 보면 이런 비즈니스 레이어 갭이 안 보인다. <strong>비즈니스 메트릭도 모니터링 대상</strong>이라는 게 광고처럼 숫자가 돈인 도메인의 교훈.</p>
+<h2>핵심</h2>
+<blockquote>
+<p>좋은 모니터링은 만드는 게 아니라 incident와 함께 자란다.</p>
+</blockquote>
+<h2>관련</h2>
+<p><a href="/notes/good-alert-four-criteria">/notes/good-alert-four-criteria</a> — 추가할 알람의 4가지 기준
+<a href="/notes/incident-temp-vs-root">/notes/incident-temp-vs-root</a> — 회고에서 갭 식별
+<a href="/notes/incident-ai-pair-debugging">/notes/incident-ai-pair-debugging</a> — 새벽 대응에서 갭 발견
+<a href="/notes/ad-metric-traps">/notes/ad-metric-traps</a> — 비즈니스 메트릭 모니터링의 함정
+<a href="/notes/n-plus-one-query-trap">/notes/n-plus-one-query-trap</a> — production에서만 드러나는 성능 갭
+<a href="/essays/systems-thinking-from-incidents">/essays/systems-thinking-from-incidents</a> — 장애에서 시스템 사고로 일반화한 에세이</p></div><section class="related-block"><h2>관련 노트</h2><ul class="note-grid"><li><a class="note-card" href="/notes/good-alert-four-criteria" data-discover="true"><h3><span aria-hidden="true">🌳</span> <!-- -->좋은 알람의 4가지 기준 — 노이즈와 신호의 분리</h3><p>알람이 많은 시스템은 알람이 없는 시스템과 같다. 좋은 알람은 사람이 지금 행동해야 할 때만 울린다. 4가지 기준으로 노이즈를 걷어내는 법.</p></a></li><li><a class="note-card" href="/notes/dev-warning-noise-cost" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->dev warning 무시의 누적 비용 — 노이즈가 신호를 가린다</h3><p>dev 서버 로그에 반복되는 warning이 무시되기 시작하면 진짜 문제를 가린다. 좋은 알람의 신호/노이즈 분리가 dev 로그에도 똑같이 적용된다.</p></a></li><li><a class="note-card" href="/notes/incident-ai-pair-debugging" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->AI 페어와 야간 incident 디버깅 — 새벽에 혼자가 아닌 워크플로우</h3><p>새벽 장애 대응의 진짜 비용은 디버깅 시간이 아니라 외로움과 결정 부담이다. AI 페어는 문법적 코드보다 의사결정 cross-check에서 가치가 크다.</p></a></li><li><a class="note-card" href="/notes/incident-temp-vs-root" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->야간 장애의 두 단계 — 임시 패치 vs 근본 수정</h3><p>새벽에 장애 알람을 받으면 &quot;지금 멈춰야 한다 vs 제대로 고쳐야 한다&quot;가 충돌한다. 두 단계로 분리하면 의사결정이 빨라진다.</p></a></li><li><a class="note-card" href="/notes/runbook-write-during-incident" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->runbook은 장애 직후 24h 안에 쓴다</h3><p>장애 끝나면 &quot;나중에 정리&quot; → 안 한다. 24h 안에 기억이 휘발되기 전 쓰는 게 다음 새벽 본인을 살린다.</p></a></li></ul></section><footer class="page-footer"><a class="see-all-link" href="/notes" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg> 노트 목록</a></footer></article></main><footer class="site-footer"><div class="footer-brand"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg>정경하</span><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open-text" aria-hidden="true"><path d="M12 7v14"></path><path d="M16 12h2"></path><path d="M16 8h2"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path><path d="M6 12h2"></path><path d="M6 8h2"></path></svg>Cases, notes, logs, and proof of work</span></div><nav class="footer-nav" aria-label="Secondary"><a href="/uses" data-discover="true">Uses</a><a href="/now" data-discover="true">Now</a><a href="/reading" data-discover="true">Reading</a><a href="/cv" data-discover="true">CV</a></nav><span class="footer-meta"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-clock" aria-hidden="true"><path d="M16 14v2.2l1.6 1"></path><path d="M16 2v4"></path><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"></path><path d="M3 10h5"></path><path d="M8 2v4"></path><circle cx="16" cy="16" r="6"></circle></svg>Updated <!-- -->2026-06-09 11:00</span></footer></div>
+  </body>
+</html>

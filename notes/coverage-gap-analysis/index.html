@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+    <meta name="author" content="정경하" />
+    <meta property="og:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="description" content="사람은 잘하는 영역에 더 추가하고 빈 영역은 못 본다. 작업물의 분포를 측정하면 어디가 비었는지 객관적으로 드러난다. 테스트·콘텐츠·문서·스킬 포트폴리오 공통." />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="커버리지 갭 분석 — 강한 곳 말고 빈 곳을 측정으로 찾기 | 정경하" />
+    <meta property="og:description" content="사람은 잘하는 영역에 더 추가하고 빈 영역은 못 본다. 작업물의 분포를 측정하면 어디가 비었는지 객관적으로 드러난다. 테스트·콘텐츠·문서·스킬 포트폴리오 공통." />
+    <meta property="og:url" content="https://justinjeong5.github.io/notes/coverage-gap-analysis/" />
+    <meta name="twitter:title" content="커버리지 갭 분석 — 강한 곳 말고 빈 곳을 측정으로 찾기 | 정경하" />
+    <meta name="twitter:description" content="사람은 잘하는 영역에 더 추가하고 빈 영역은 못 본다. 작업물의 분포를 측정하면 어디가 비었는지 객관적으로 드러난다. 테스트·콘텐츠·문서·스킬 포트폴리오 공통." />
+    <link rel="canonical" href="https://justinjeong5.github.io/notes/coverage-gap-analysis/" />
+    <title>커버리지 갭 분석 — 강한 곳 말고 빈 곳을 측정으로 찾기 | 정경하</title>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "커버리지 갭 분석 — 강한 곳 말고 빈 곳을 측정으로 찾기 | 정경하",
+  "description": "사람은 잘하는 영역에 더 추가하고 빈 영역은 못 본다. 작업물의 분포를 측정하면 어디가 비었는지 객관적으로 드러난다. 테스트·콘텐츠·문서·스킬 포트폴리오 공통.",
+  "url": "https://justinjeong5.github.io/notes/coverage-gap-analysis/",
+  "mainEntityOfPage": "https://justinjeong5.github.io/notes/coverage-gap-analysis/",
+  "author": {
+    "@type": "Person",
+    "name": "정경하",
+    "url": "https://justinjeong5.github.io/",
+    "jobTitle": "Product-minded Frontend Engineer",
+    "sameAs": [
+      "https://github.com/justinjeong5"
+    ]
+  }
+}
+</script>
+    <script>
+      // 테마 사전 설정 — prerender된 HTML에 data-theme를 즉시 적용해 CSS flash를 막는다.
+      // (다른 스크립트보다 먼저 실행되어야 한다.)
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages — restore deep-link path written by 404.html
+      // https://github.com/rafgraph/spa-github-pages
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
+    </script>
+    <script type="module" crossorigin src="/assets/index-CxYEBVj7.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-QTnfLwEv.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-cases-BgF-y5bM.js">
+    <link rel="modulepreload" crossorigin href="/assets/router-D75Vl-iJ.js">
+    <link rel="modulepreload" crossorigin href="/assets/search-CiN4C8Nu.js">
+    <link rel="modulepreload" crossorigin href="/assets/icons-C3lfSmZ3.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-BMBR_99R.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-essays-CipNEaqH.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-logs-Dm6M40WY.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-notes-CR1Uinql.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-sbCSPT96.css">
+    <link rel="stylesheet" crossorigin href="/assets/pretendard-NPFyShNs.css">
+  </head>
+  <body>
+    <div id="root"><a href="#main-content" class="skip-link">본문 바로가기</a><header class="site-nav" aria-label="Primary"><a class="brand" aria-label="정경하 홈" href="/" data-discover="true">JKH</a><nav class="primary-nav"><a class="nav-link" href="/cases" data-discover="true">Cases</a><a aria-current="page" class="nav-link is-active" href="/notes" data-discover="true">Notes</a><a class="nav-link" href="/essays" data-discover="true">Essays</a><a class="nav-link" href="/logs" data-discover="true">Logs</a><a class="nav-link" href="/about" data-discover="true">About</a></nav><div class="nav-actions"><button type="button" class="search-trigger" aria-label="검색" title="검색 (⌘K 또는 /)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg><span>검색</span><kbd>⌘K</kbd></button><button type="button" class="icon-button" aria-label="테마: 라이트. 클릭하여 변경" title="테마: 라이트 · T 키로도 전환"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg></button><button type="button" class="icon-button desktop-only" aria-label="키보드 단축키" aria-expanded="false" aria-haspopup="dialog" title="키보드 단축키 (? 키)"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-keyboard" aria-hidden="true"><path d="M10 8h.01"></path><path d="M12 12h.01"></path><path d="M14 8h.01"></path><path d="M16 12h.01"></path><path d="M18 8h.01"></path><path d="M6 8h.01"></path><path d="M7 16h10"></path><path d="M8 12h.01"></path><rect width="20" height="16" x="2" y="4" rx="2"></rect></svg></button><button type="button" class="icon-button menu-trigger" aria-label="메뉴 열기" aria-expanded="false" aria-haspopup="dialog" title="메뉴"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button></div></header><main id="main-content" tabindex="-1"><article class="page note-detail"><header class="page-header note-detail-header"><p class="eyebrow growth-eyebrow"><span aria-hidden="true">🌱</span>Seedling</p><h1>커버리지 갭 분석 — 강한 곳 말고 빈 곳을 측정으로 찾기</h1><p class="page-lead">사람은 잘하는 영역에 더 추가하고 빈 영역은 못 본다. 작업물의 분포를 측정하면 어디가 비었는지 객관적으로 드러난다. 테스트·콘텐츠·문서·스킬 포트폴리오 공통.</p><ul class="topic-list" aria-label="topics"><li>#<!-- -->process</li><li>#<!-- -->analysis</li><li>#<!-- -->quality</li><li>#<!-- -->testing</li></ul></header><div class="prose"><h2>문제 — 강한 곳에 더 쌓는 편향</h2>
+<p>작업물을 늘릴 때 사람은 <strong>잘하는 영역</strong>에 더 추가한다. 프론트엔드를 잘하면 프론트엔드 글을 더 쓰고, 익숙한 모듈에 테스트를 더 짠다. 쉽고 즐거우니까.</p>
+<p>문제는 가치는 보통 <strong>빈 영역</strong>에 있다. 이미 두꺼운 곳을 더 두껍게 하는 건 한계 효용이 낮고, 비어 있는 곳은 위험이 숨어 있다.</p>
+<p>그런데 빈 영역은 <strong>안 보인다</strong>. 본인 머릿속 분포는 최근 작업에 편향돼서 &quot;골고루 하고 있다&quot;는 착각이 든다. 측정해야 보인다.</p>
+<h2>해법 — 분포를 측정한다</h2>
+<p>작업물을 차원별로 집계해서 분포를 본다. 강한 셀과 빈 셀이 숫자로 드러난다.</p>
+<pre><code class="language-bash"># 예: 노트를 토픽별로 집계
+grep -h &quot;^topics:&quot; src/content/notes/*.mdx \
+  | tr -d &#x27;[]&#x27; | sed &#x27;s/topics: //&#x27; | tr &#x27;,&#x27; &#x27;\n&#x27; \
+  | sed &#x27;s/^ *//&#x27; | sort | uniq -c | sort -rn
+</code></pre>
+<pre><code>10 frontend     ← 두꺼움
+ 9 workflow
+ 5 performance
+ 4 backend       ← frontend의 절반
+ 1 security      ← 거의 빔 ← 여기
+ 0 testing       ← 완전히 빔 ← 여기
+</code></pre>
+<p>&quot;security 1, testing 0&quot;이 한눈에 보인다. 머릿속으로는 &quot;골고루&quot;였는데 측정하면 편향이 드러난다.</p>
+<h2>어느 차원으로 자르나</h2>
+<p>같은 작업물도 자르는 차원에 따라 다른 갭이 보인다.</p>
+<ul>
+<li><strong>주제(topic)</strong>: 어느 도메인이 비었나</li>
+<li><strong>형식(format)</strong>: 어느 형태가 부족한가 (노트만 많고 케이스 없음)</li>
+<li><strong>관점(perspective)</strong>: 구체 vs 추상, 기술 vs 운영</li>
+<li><strong>난이도/깊이</strong>: 입문만 많고 심화 없음</li>
+<li><strong>시간(recency)</strong>: 오래된 것만, 최근 것 없음</li>
+</ul>
+<p>여러 차원으로 잘라봐야 한 차원에선 안 보이던 갭이 드러난다.</p>
+<h2>일반화 — 어디에나 적용</h2>
+<p>분포 측정 → 갭 발견은 도메인 무관하게 작동한다.</p>
+<ul>
+<li><strong>테스트 커버리지</strong>: 모듈별 테스트 수. 핵심 모듈이 비었나 (라인 커버리지 %만 보면 &quot;어느 종류&quot;가 안 보임 — 모듈·경로별로 자른다)</li>
+<li><strong>문서</strong>: 기능별 문서 유무. 자주 묻는 기능이 문서 0인가</li>
+<li><strong>에러 처리</strong>: 코드 경로별 에러 핸들링. happy path만 있고 실패 경로 비었나</li>
+<li><strong>스킬 포트폴리오</strong>: 본인 역량을 도메인별로. 한쪽만 두껍나</li>
+<li><strong>고객/매출</strong>: 세그먼트별 분포. 한 고객 의존도 과한가</li>
+</ul>
+<h2>측정 → 우선순위</h2>
+<p>갭을 찾았다고 다 채우는 게 아니다. 갭 × 중요도로 우선순위.</p>
+<table><thead><tr><th>갭</th><th>중요도</th><th>우선순위</th></tr></thead><tbody><tr><td>testing 0</td><td>높음 (회귀 위험)</td><td>1</td></tr><tr><td>security 1</td><td>높음</td><td>2</td></tr><tr><td>design 4</td><td>낮음 (충분)</td><td>—</td></tr></tbody></table>
+<p>비어 있어도 중요하지 않으면 안 채워도 된다. <strong>빈 영역 + 높은 중요도</strong>가 진짜 타깃.</p>
+<h2>함정</h2>
+<ul>
+<li><strong>머릿속 분포를 신뢰</strong>: &quot;골고루 하고 있다&quot;는 최근 편향. 반드시 측정.</li>
+<li><strong>총량만 보기</strong>: &quot;100개나 있네&quot;는 분포를 안 보여준다. 차원별로 자른다.</li>
+<li><strong>한 차원만 보기</strong>: 주제로는 골고루인데 형식으로는 편향일 수 있다. 여러 차원.</li>
+<li><strong>갭=무조건 채우기</strong>: 중요하지 않은 빈 곳까지 채우면 자원 낭비. 갭 × 중요도.</li>
+<li><strong>커버리지 %에 속기</strong>: &quot;80% 커버&quot;가 핵심 경로를 포함하는지는 % 만으론 모름. 경로·모듈별로 분해.</li>
+<li><strong>측정을 게임</strong>: &quot;갭 0 만들기&quot;가 목표가 되면 억지로 채운 저품질이 분포만 채운다. 측정은 방향이지 점수가 아님.</li>
+</ul>
+<h2>핵심</h2>
+<blockquote>
+<p>사람은 강한 곳에 더 쌓고 빈 곳을 못 본다. <strong>작업물의 분포를 차원별로 측정</strong>하면 머릿속 편향이 숫자로 드러난다. 그다음 갭 × 중요도로 우선순위를 정해 빈 곳을 채운다.</p>
+</blockquote>
+<h2>관련</h2>
+<p><a href="/notes/ai-output-mode-collapse">/notes/ai-output-mode-collapse</a> — 생성물 분포 측정으로 수렴 감지
+<a href="/notes/recurring-trap-to-checklist">/notes/recurring-trap-to-checklist</a> — 빈 곳에 숨은 위험을 검사로
+<a href="/notes/flaky-test-diagnosis">/notes/flaky-test-diagnosis</a> — 테스트 커버리지의 질적 갭
+<a href="/notes/recruiter-10-seconds">/notes/recruiter-10-seconds</a> — 포트폴리오의 분포가 첫인상을 결정</p></div><section class="related-block"><h2>관련 노트</h2><ul class="note-grid"><li><a class="note-card" href="/notes/typescript-false-safety" data-discover="true"><h3><span aria-hidden="true">🌳</span> <!-- -->TypeScript의 거짓 안전감 — 타입이 통과해도 버그는 남는다</h3><p>TypeScript 통과 = 안전이라는 직관. 그러나 런타임 데이터·외부 API·any 의 escape hatch는 컴파일러가 못 본다. 타입은 안전의 일부일 뿐.</p></a></li><li><a class="note-card" href="/notes/flaky-test-diagnosis" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->Flaky test 진단 — 4가지 원인과 격리 패턴</h3><p>Flaky test는 보통 시간·상태·환경·외부 의존 4가지 원인. 어디서 깨졌는지 모르면 retry로 가린다. 원인별 진단 + 격리 패턴.</p></a></li><li><a class="note-card" href="/notes/operationalizing-vague-requests" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->모호한 지시를 측정 기준으로 — &quot;잘 해줘&quot;를 실행 가능하게</h3><p>&quot;전체적으로 개선해줘&quot;, &quot;다양하게&quot;, &quot;깔끔하게&quot;는 실행자마다 다르게 해석된다. 작업 전에 모호한 품질 단어를 측정 가능한 기준으로 번역하면 재작업과 오해가 줄어든다.</p></a></li><li><a class="note-card" href="/notes/recurring-trap-to-checklist" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->같은 함정에 두 번 빠지면 체크리스트가 된다</h3><p>한 번의 실수는 수정으로 끝나지만, 같은 실수가 두 번 반복되면 그건 개인의 부주의가 아니라 시스템의 공백이다. 함정의 재발 횟수에 따라 대응을 격상하는 사다리.</p></a></li><li><a class="note-card" href="/notes/test-or-types-first" data-discover="true"><h3><span aria-hidden="true">🌿</span> <!-- -->테스트 vs 타입 — 둘 다 안 한다면 어디부터</h3><p>두 가지 모두 가치 있지만, 시간 제약 시 우선순위가 갈린다. 외부 경계와 비즈니스 룰은 테스트, 내부 함수 시그니처는 타입. 둘은 보완 관계.</p></a></li></ul></section><footer class="page-footer"><a class="see-all-link" href="/notes" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg> 노트 목록</a></footer></article></main><footer class="site-footer"><div class="footer-brand"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg>정경하</span><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open-text" aria-hidden="true"><path d="M12 7v14"></path><path d="M16 12h2"></path><path d="M16 8h2"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path><path d="M6 12h2"></path><path d="M6 8h2"></path></svg>Cases, notes, logs, and proof of work</span></div><nav class="footer-nav" aria-label="Secondary"><a href="/uses" data-discover="true">Uses</a><a href="/now" data-discover="true">Now</a><a href="/reading" data-discover="true">Reading</a><a href="/cv" data-discover="true">CV</a></nav><span class="footer-meta"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-clock" aria-hidden="true"><path d="M16 14v2.2l1.6 1"></path><path d="M16 2v4"></path><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"></path><path d="M3 10h5"></path><path d="M8 2v4"></path><circle cx="16" cy="16" r="6"></circle></svg>Updated <!-- -->2026-06-09 11:00</span></footer></div>
+  </body>
+</html>

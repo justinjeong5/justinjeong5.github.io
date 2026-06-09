@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+    <meta name="author" content="정경하" />
+    <meta property="og:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="description" content="노트 50편을 모은 게 한 번에 일어난 게 아니다. 신규 양산 → 누적 후 cross-link → 함정 섹션 보강 → 다음 라운드의 4단계 사이클이 반복됐다." />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Note 라운드 패턴 — 신규 → cross-link → 함정 → 다음 라운드 | 정경하" />
+    <meta property="og:description" content="노트 50편을 모은 게 한 번에 일어난 게 아니다. 신규 양산 → 누적 후 cross-link → 함정 섹션 보강 → 다음 라운드의 4단계 사이클이 반복됐다." />
+    <meta property="og:url" content="https://justinjeong5.github.io/notes/notes-round-pattern/" />
+    <meta name="twitter:title" content="Note 라운드 패턴 — 신규 → cross-link → 함정 → 다음 라운드 | 정경하" />
+    <meta name="twitter:description" content="노트 50편을 모은 게 한 번에 일어난 게 아니다. 신규 양산 → 누적 후 cross-link → 함정 섹션 보강 → 다음 라운드의 4단계 사이클이 반복됐다." />
+    <link rel="canonical" href="https://justinjeong5.github.io/notes/notes-round-pattern/" />
+    <title>Note 라운드 패턴 — 신규 → cross-link → 함정 → 다음 라운드 | 정경하</title>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Note 라운드 패턴 — 신규 → cross-link → 함정 → 다음 라운드 | 정경하",
+  "description": "노트 50편을 모은 게 한 번에 일어난 게 아니다. 신규 양산 → 누적 후 cross-link → 함정 섹션 보강 → 다음 라운드의 4단계 사이클이 반복됐다.",
+  "url": "https://justinjeong5.github.io/notes/notes-round-pattern/",
+  "mainEntityOfPage": "https://justinjeong5.github.io/notes/notes-round-pattern/",
+  "author": {
+    "@type": "Person",
+    "name": "정경하",
+    "url": "https://justinjeong5.github.io/",
+    "jobTitle": "Product-minded Frontend Engineer",
+    "sameAs": [
+      "https://github.com/justinjeong5"
+    ]
+  }
+}
+</script>
+    <script>
+      // 테마 사전 설정 — prerender된 HTML에 data-theme를 즉시 적용해 CSS flash를 막는다.
+      // (다른 스크립트보다 먼저 실행되어야 한다.)
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages — restore deep-link path written by 404.html
+      // https://github.com/rafgraph/spa-github-pages
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
+    </script>
+    <script type="module" crossorigin src="/assets/index-CxYEBVj7.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-QTnfLwEv.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-cases-BgF-y5bM.js">
+    <link rel="modulepreload" crossorigin href="/assets/router-D75Vl-iJ.js">
+    <link rel="modulepreload" crossorigin href="/assets/search-CiN4C8Nu.js">
+    <link rel="modulepreload" crossorigin href="/assets/icons-C3lfSmZ3.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-BMBR_99R.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-essays-CipNEaqH.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-logs-Dm6M40WY.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-notes-CR1Uinql.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-sbCSPT96.css">
+    <link rel="stylesheet" crossorigin href="/assets/pretendard-NPFyShNs.css">
+  </head>
+  <body>
+    <div id="root"><a href="#main-content" class="skip-link">본문 바로가기</a><header class="site-nav" aria-label="Primary"><a class="brand" aria-label="정경하 홈" href="/" data-discover="true">JKH</a><nav class="primary-nav"><a class="nav-link" href="/cases" data-discover="true">Cases</a><a aria-current="page" class="nav-link is-active" href="/notes" data-discover="true">Notes</a><a class="nav-link" href="/essays" data-discover="true">Essays</a><a class="nav-link" href="/logs" data-discover="true">Logs</a><a class="nav-link" href="/about" data-discover="true">About</a></nav><div class="nav-actions"><button type="button" class="search-trigger" aria-label="검색" title="검색 (⌘K 또는 /)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg><span>검색</span><kbd>⌘K</kbd></button><button type="button" class="icon-button" aria-label="테마: 라이트. 클릭하여 변경" title="테마: 라이트 · T 키로도 전환"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg></button><button type="button" class="icon-button desktop-only" aria-label="키보드 단축키" aria-expanded="false" aria-haspopup="dialog" title="키보드 단축키 (? 키)"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-keyboard" aria-hidden="true"><path d="M10 8h.01"></path><path d="M12 12h.01"></path><path d="M14 8h.01"></path><path d="M16 12h.01"></path><path d="M18 8h.01"></path><path d="M6 8h.01"></path><path d="M7 16h10"></path><path d="M8 12h.01"></path><rect width="20" height="16" x="2" y="4" rx="2"></rect></svg></button><button type="button" class="icon-button menu-trigger" aria-label="메뉴 열기" aria-expanded="false" aria-haspopup="dialog" title="메뉴"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button></div></header><main id="main-content" tabindex="-1"><article class="page note-detail"><header class="page-header note-detail-header"><p class="eyebrow growth-eyebrow"><span aria-hidden="true">🌱</span>Seedling</p><h1>Note 라운드 패턴 — 신규 → cross-link → 함정 → 다음 라운드</h1><p class="page-lead">노트 50편을 모은 게 한 번에 일어난 게 아니다. 신규 양산 → 누적 후 cross-link → 함정 섹션 보강 → 다음 라운드의 4단계 사이클이 반복됐다.</p><ul class="topic-list" aria-label="topics"><li>#<!-- -->writing</li><li>#<!-- -->digital-garden</li><li>#<!-- -->content-system</li><li>#<!-- -->sustained-delivery</li></ul></header><div class="prose"><h2>라운드라는 단위</h2>
+<p>디지털 가든을 운영하다 보니 자연스럽게 <strong>라운드</strong>라는 단위가 생겼다.</p>
+<p>라운드 1 = 신규 노트 N편 양산 (토픽 발산)
+라운드 2 = 누적 후 cross-link + 함정 보강 + 신규 일부 (수렴 + 발산 일부)
+라운드 3 = ... (예정)</p>
+<p>5/20 커밋 메시지가 정확히 이걸 보여준다.</p>
+<blockquote>
+<p>feat(content): Notes 라운드 2 — 16편 cross-link + 4편 함정 + 3편 신규</p>
+</blockquote>
+<p>16편 cross-link, 4편 함정, 3편 신규. 라운드 2의 구성비가 이렇다.</p>
+<h2>왜 라운드인가</h2>
+<p>매번 신규만 양산하면 가든이 <strong>노이즈</strong>가 된다. 글이 50편이어도 서로 연결 안 되면 50개의 외딴 섬이다.</p>
+<p>매번 cross-link만 하면 <strong>누적이 멈춘다</strong>. 새 토픽이 안 들어와서 가든이 정체된다.</p>
+<p>라운드는 <strong>양산 ↔ 수렴</strong>의 사이클을 명시적으로 만든다. 신규 N편 → 누적 후 한 번에 cross-link → 다시 신규 N편.</p>
+<h2>단계 1 — 신규 양산 (발산)</h2>
+<p>세션 회고에서 노트 후보를 뽑는다. 한 세션에서 5-10편이 자연스럽게 나온다.</p>
+<ul>
+<li>짧은 인사이트 (1-2 문단)</li>
+<li>함정 섹션 비워두기 (라운드 N+1에서 채움)</li>
+<li>cross-link 안 함 (라운드 N+1에서 일괄)</li>
+</ul>
+<p>이 단계에서 cross-link까지 하려고 하면 양산이 멈춘다. <strong>양산과 연결을 한 단계에서 하지 않는다</strong>.</p>
+<h2>단계 2 — 누적 후 cross-link (수렴)</h2>
+<p>신규 30-50편이 쌓이면 한 번에 cross-link 한다.</p>
+<ul>
+<li>각 노트의 &quot;관련&quot; 섹션에 3-5개 링크 추가</li>
+<li>양방향 (A → B 링크하면 B → A도)</li>
+<li>같은 토픽 노트끼리 클러스터 형성</li>
+</ul>
+<p>이 단계는 <strong>신규 작성보다 시간이 더 들 수 있다</strong>. 50편의 노트를 다 읽고 의미 연결을 판단해야 해서.</p>
+<h2>단계 3 — 함정 섹션 보강</h2>
+<p>라운드 1에서 비워둔 함정 섹션을 채운다.</p>
+<p>함정은 <strong>신규 작성 시점에는 잘 안 떠오른다</strong>. 그 토픽으로 한 번 더 부딪힌 후에야 함정이 보인다. 그래서 라운드 2-3에서 채우는 게 자연스럽다.</p>
+<p>함정 보강이 cross-link보다 가치가 큰 경우가 많다. 함정은 다른 사람이 같은 함정 안 빠지게 하는 신호다.</p>
+<h2>단계 4 — 다음 라운드 시드</h2>
+<p>라운드 2 끝에서 라운드 3의 시드를 본다. 어떤 노트가 함정 섹션이 비었는지, 어떤 클러스터가 약한지.</p>
+<p>이게 다음 세션의 작업 입력이 된다. 라운드 3가 시작될 때 무엇을 할지가 라운드 2 끝에서 정해진다.</p>
+<h2>함정</h2>
+<ul>
+<li><strong>신규 양산에 cross-link 끼우기</strong>: 양산 속도가 절반 이하로 떨어진다. 단계 분리.</li>
+<li><strong>cross-link 라운드를 영원히 미루기</strong>: 신규 30편이 50편이 되고 100편이 돼도 cross-link 안 하면 가든이 노이즈가 된다. 라운드 단위로 강제.</li>
+<li><strong>함정 섹션을 매번 비워둠</strong>: 함정 보강 라운드가 안 오면 함정 칸이 영원히 빈다. 라운드 N+1에서 반드시 채우는 약속.</li>
+<li><strong>라운드 N이 너무 큼</strong>: 신규 50편이 누적되면 cross-link 라운드가 1주일짜리 작업이 된다. 20-30편이 적정.</li>
+<li><strong>라운드 끝났는데 다음 시드 안 봄</strong>: 라운드 2 끝나고 라운드 3가 안 오는 이유. 끝에서 시드를 봐야 자연스럽게 이어진다.</li>
+</ul>
+<h2>핵심</h2>
+<blockquote>
+<p>디지털 가든은 매 글을 잘 쓰는 게 아니라 <strong>라운드를 잘 운영하는 것</strong>이다. 신규 → cross-link → 함정 → 다음 라운드의 사이클이 가든을 살아있게 한다.</p>
+</blockquote>
+<h2>관련</h2>
+<p><a href="/notes/digital-garden-vs-blog">/notes/digital-garden-vs-blog</a> — 가든과 블로그의 차이
+<a href="/notes/last-tended-signal">/notes/last-tended-signal</a> — 다듬은 흔적
+<a href="/notes/mdx-content-as-files">/notes/mdx-content-as-files</a> — 콘텐츠를 파일로
+<a href="/cases/content-seed-system">/cases/content-seed-system</a> — 라운드로 콘텐츠를 채운 케이스</p></div><section class="related-block"><h2>관련 노트</h2><ul class="note-grid"><li><a class="note-card" href="/notes/incrementally-correct" data-discover="true"><h3><span aria-hidden="true">🌳</span> <!-- -->Incrementally correct — 한 번에 완성하지 않는 사이트</h3><p>Brian Lovin이 제안한 개념. 글이 &quot;출간&quot;되는 게 아니라 시간을 두고 점진적으로 정확해지는 운영 방식.</p></a></li><li><a class="note-card" href="/notes/digital-garden-vs-blog" data-discover="true"><h3><span aria-hidden="true">🌿</span> <!-- -->디지털 가든은 왜 블로그보다 운영 부담이 적은가</h3><p>시간순 블로그는 &quot;이번 달은 안 썼네&quot;가 누적되지만, 디지털 가든은 노트의 성숙도만 다듬어도 사이트가 살아있게 됩니다.</p></a></li><li><a class="note-card" href="/notes/pr-body-before-code" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->PR 본문은 코드보다 먼저 읽힌다</h3><p>리뷰어는 코드를 보기 전에 PR 본문을 본다. 본문이 비어있거나 &quot;WIP&quot;이면 리뷰어는 코드를 추측해서 읽는다. 본문 5분 투자로 리뷰 30분 절약.</p></a></li><li><a class="note-card" href="/notes/rebuild-vs-incremental" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->리빌드 vs 점진 개선 — 사이트는 리빌드, 콘텐츠는 점진</h3><p>같은 손으로 같은 사이트를 리빌드는 1일에, 콘텐츠는 3일에 걸쳐 점진으로 추가했다. 두 모드를 의도적으로 분리한 이유와 언제 어느 쪽을 고르는지.</p></a></li><li><a class="note-card" href="/notes/last-tended-signal" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->lastTendedAt으로 사이트가 살아있음을 보여주기</h3><p>게시일(publishedAt) 대신 최종 다듬은 날(lastTendedAt)을 표시하면, 방문자에게 &quot;이 사이트는 계속 자라고 있다&quot;는 신호가 직접 전달된다.</p></a></li></ul></section><footer class="page-footer"><a class="see-all-link" href="/notes" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg> 노트 목록</a></footer></article></main><footer class="site-footer"><div class="footer-brand"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg>정경하</span><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open-text" aria-hidden="true"><path d="M12 7v14"></path><path d="M16 12h2"></path><path d="M16 8h2"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path><path d="M6 12h2"></path><path d="M6 8h2"></path></svg>Cases, notes, logs, and proof of work</span></div><nav class="footer-nav" aria-label="Secondary"><a href="/uses" data-discover="true">Uses</a><a href="/now" data-discover="true">Now</a><a href="/reading" data-discover="true">Reading</a><a href="/cv" data-discover="true">CV</a></nav><span class="footer-meta"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-clock" aria-hidden="true"><path d="M16 14v2.2l1.6 1"></path><path d="M16 2v4"></path><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"></path><path d="M3 10h5"></path><path d="M8 2v4"></path><circle cx="16" cy="16" r="6"></circle></svg>Updated <!-- -->2026-06-09 11:00</span></footer></div>
+  </body>
+</html>

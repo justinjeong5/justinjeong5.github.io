@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+    <meta name="author" content="정경하" />
+    <meta property="og:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="description" content="44×44는 권장이 아니라 사실상 기준. notch 노출되지 않게 viewport-fit=cover + env(safe-area-inset). 작은 디테일이 모바일 신뢰감을 만든다." />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="iOS HIG 터치 타겟 44×44 + safe-area 디테일 | 정경하" />
+    <meta property="og:description" content="44×44는 권장이 아니라 사실상 기준. notch 노출되지 않게 viewport-fit=cover + env(safe-area-inset). 작은 디테일이 모바일 신뢰감을 만든다." />
+    <meta property="og:url" content="https://justinjeong5.github.io/notes/ios-hig-touch-targets/" />
+    <meta name="twitter:title" content="iOS HIG 터치 타겟 44×44 + safe-area 디테일 | 정경하" />
+    <meta name="twitter:description" content="44×44는 권장이 아니라 사실상 기준. notch 노출되지 않게 viewport-fit=cover + env(safe-area-inset). 작은 디테일이 모바일 신뢰감을 만든다." />
+    <link rel="canonical" href="https://justinjeong5.github.io/notes/ios-hig-touch-targets/" />
+    <title>iOS HIG 터치 타겟 44×44 + safe-area 디테일 | 정경하</title>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "iOS HIG 터치 타겟 44×44 + safe-area 디테일 | 정경하",
+  "description": "44×44는 권장이 아니라 사실상 기준. notch 노출되지 않게 viewport-fit=cover + env(safe-area-inset). 작은 디테일이 모바일 신뢰감을 만든다.",
+  "url": "https://justinjeong5.github.io/notes/ios-hig-touch-targets/",
+  "mainEntityOfPage": "https://justinjeong5.github.io/notes/ios-hig-touch-targets/",
+  "author": {
+    "@type": "Person",
+    "name": "정경하",
+    "url": "https://justinjeong5.github.io/",
+    "jobTitle": "Product-minded Frontend Engineer",
+    "sameAs": [
+      "https://github.com/justinjeong5"
+    ]
+  }
+}
+</script>
+    <script>
+      // 테마 사전 설정 — prerender된 HTML에 data-theme를 즉시 적용해 CSS flash를 막는다.
+      // (다른 스크립트보다 먼저 실행되어야 한다.)
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages — restore deep-link path written by 404.html
+      // https://github.com/rafgraph/spa-github-pages
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
+    </script>
+    <script type="module" crossorigin src="/assets/index-CxYEBVj7.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-QTnfLwEv.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-cases-BgF-y5bM.js">
+    <link rel="modulepreload" crossorigin href="/assets/router-D75Vl-iJ.js">
+    <link rel="modulepreload" crossorigin href="/assets/search-CiN4C8Nu.js">
+    <link rel="modulepreload" crossorigin href="/assets/icons-C3lfSmZ3.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-BMBR_99R.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-essays-CipNEaqH.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-logs-Dm6M40WY.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-notes-CR1Uinql.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-sbCSPT96.css">
+    <link rel="stylesheet" crossorigin href="/assets/pretendard-NPFyShNs.css">
+  </head>
+  <body>
+    <div id="root"><a href="#main-content" class="skip-link">본문 바로가기</a><header class="site-nav" aria-label="Primary"><a class="brand" aria-label="정경하 홈" href="/" data-discover="true">JKH</a><nav class="primary-nav"><a class="nav-link" href="/cases" data-discover="true">Cases</a><a aria-current="page" class="nav-link is-active" href="/notes" data-discover="true">Notes</a><a class="nav-link" href="/essays" data-discover="true">Essays</a><a class="nav-link" href="/logs" data-discover="true">Logs</a><a class="nav-link" href="/about" data-discover="true">About</a></nav><div class="nav-actions"><button type="button" class="search-trigger" aria-label="검색" title="검색 (⌘K 또는 /)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg><span>검색</span><kbd>⌘K</kbd></button><button type="button" class="icon-button" aria-label="테마: 라이트. 클릭하여 변경" title="테마: 라이트 · T 키로도 전환"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg></button><button type="button" class="icon-button desktop-only" aria-label="키보드 단축키" aria-expanded="false" aria-haspopup="dialog" title="키보드 단축키 (? 키)"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-keyboard" aria-hidden="true"><path d="M10 8h.01"></path><path d="M12 12h.01"></path><path d="M14 8h.01"></path><path d="M16 12h.01"></path><path d="M18 8h.01"></path><path d="M6 8h.01"></path><path d="M7 16h10"></path><path d="M8 12h.01"></path><rect width="20" height="16" x="2" y="4" rx="2"></rect></svg></button><button type="button" class="icon-button menu-trigger" aria-label="메뉴 열기" aria-expanded="false" aria-haspopup="dialog" title="메뉴"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button></div></header><main id="main-content" tabindex="-1"><article class="page note-detail"><header class="page-header note-detail-header"><p class="eyebrow growth-eyebrow"><span aria-hidden="true">🌱</span>Seedling</p><h1>iOS HIG 터치 타겟 44×44 + safe-area 디테일</h1><p class="page-lead">44×44는 권장이 아니라 사실상 기준. notch 노출되지 않게 viewport-fit=cover + env(safe-area-inset). 작은 디테일이 모바일 신뢰감을 만든다.</p><ul class="topic-list" aria-label="topics"><li>#<!-- -->mobile</li><li>#<!-- -->accessibility</li><li>#<!-- -->ios</li><li>#<!-- -->frontend</li></ul></header><div class="prose"><h2>44×44는 왜 필요한가</h2>
+<p>Apple Human Interface Guidelines가 &quot;최소 44pt&quot;를 권장하지만, 실제로는 더 강한 의미가 있다. 사람의 손가락 패드는 평균 10mm. 44pt는 약 11mm. 그보다 작으면 미스 터치가 누적된다.</p>
+<p>이 사이트에서 <code>.icon-button</code>을 38×38에서 44×44로 바꾸자 헤더의 검색·테마·메뉴 트리거 누르기가 눈에 띄게 안정됐다.</p>
+<h2>어디까지 적용해야 하는가</h2>
+<ul>
+<li>❗ 모든 인터랙티브 요소 (button, link, input, select)</li>
+<li>❗ 카드 자체가 큰 클릭 영역이면 카드는 OK. 단 카드 안의 작은 link는 별도 처리.</li>
+<li>시각 사이즈는 작아도 padding으로 hit area 확보 가능 (<code>padding: 10px 0</code> + <code>min-height: 44px</code>)</li>
+</ul>
+<h2>safe-area-inset</h2>
+<p>iPhone 11+는 노치, iPhone 14 Pro+는 Dynamic Island. 하단은 홈 인디케이터. 콘텐츠가 그 영역에 닿으면 잘리거나 가려진다.</p>
+<pre><code class="language-html">&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0, viewport-fit=cover&quot; /&gt;
+</code></pre>
+<pre><code class="language-css">.site-nav {
+  padding-top: max(14px, env(safe-area-inset-top));
+}
+.site-footer {
+  padding-bottom: max(24px, env(safe-area-inset-bottom));
+}
+</code></pre>
+<p><code>max()</code>로 일반 padding과 inset 중 큰 값. 노치 없는 폰에선 일반 padding, 있는 폰에선 inset.</p>
+<h2>100dvh</h2>
+<p>iOS Safari는 주소창이 동적으로 사라졌다 나타난다. <code>100vh</code>는 주소창 펼친 상태 기준이라 사라지면 콘텐츠 점프.</p>
+<p><code>100dvh</code>(dynamic viewport height)는 현재 viewport 기준이라 점프 없음. iOS 15.4+ / Chrome 108+ 지원.</p>
+<h2>작은 디테일 묶음</h2>
+<ul>
+<li><code>-webkit-tap-highlight-color: transparent</code> — 링크 탭 시 회색 깜빡임 제거</li>
+<li><code>-webkit-text-size-adjust: 100%</code> — 가로 회전 시 폰트 자동 확대 방지</li>
+<li><code>input { font-size: 16px }</code> — iOS Safari 자동 줌 트리거 회피</li>
+<li><code>overscroll-behavior: contain</code> — 모달 스크롤 끝에서 백드롭이 함께 스크롤되는 것 차단</li>
+</ul>
+<h2>함정</h2>
+<ul>
+<li><strong>44×44를 한 군데 빼먹기</strong>: 사용자는 &quot;왜 이 버튼만 누르기 어렵지?&quot;라고 느끼지만 원인을 정확히 못 짚는다. 한 곳 누락이 전체 인상을 깎는다.</li>
+<li><strong>시각 사이즈만 줄이고 hit area 안 늘림</strong>: 작은 아이콘은 padding으로 hit area를 따로 확보해야. 시각 12px / hit 44px 분리.</li>
+<li><strong>safe-area-inset을 max 없이 사용</strong>: 노치 없는 폰에서 inset이 0이면 padding 0 → 너무 가까운 가장자리. 항상 <code>max(default, env(...))</code>.</li>
+<li><strong>dvh 미지원 브라우저 무시</strong>: 100dvh fallback 없으면 옛 iOS에서 점프. <code>min-height: 100vh; min-height: 100dvh;</code> 둘 다.</li>
+</ul>
+<h2>관련</h2>
+<p><a href="/notes/color-mix-tokens">/notes/color-mix-tokens</a> — 시각 단단함을 만드는 토큰
+<a href="/notes/korean-letter-spacing">/notes/korean-letter-spacing</a> — 모바일 한국어 타이포 디테일
+<a href="/cases/mobile-optimization">/cases/mobile-optimization</a> — 이 기준을 적용한 모바일 최적화 케이스
+<a href="/notes/keyboard-nav-six-traps">/notes/keyboard-nav-six-traps</a> — 키보드 접근성 6가지 함정</p></div><section class="related-block"><h2>관련 노트</h2><ul class="note-grid"><li><a class="note-card" href="/notes/github-pages-spa-fallback" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->GitHub Pages에서 SPA 라우팅을 동작시키는 404 트릭</h3><p>GitHub Pages는 SSR이 없어 클라이언트 라우팅 새로고침 시 404가 뜬다. public/404.html에 SPA fallback redirect를 두면 해결.</p></a></li><li><a class="note-card" href="/notes/mdx-content-as-files" data-discover="true"><h3><span aria-hidden="true">🌳</span> <!-- -->콘텐츠 = 파일 — MDX + Vite의 자동 확장 패턴</h3><p>콘텐츠 한 개 = MDX 파일 한 개. import.meta.glob으로 자동 인덱싱하면 코드 수정 없이 사이트가 확장된다.</p></a></li><li><a class="note-card" href="/notes/keyboard-nav-six-traps" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->Keyboard navigation 6가지 함정 — 마우스 없이 사이트를 쓸 수 있나</h3><p>Tab으로 사이트를 끝까지 쓸 수 있는가. 6가지 흔한 함정이 키보드 사용자를 막는다. 각 함정의 진단법과 수정 패턴.</p></a></li><li><a class="note-card" href="/notes/korean-letter-spacing" data-discover="true"><h3><span aria-hidden="true">🌿</span> <!-- -->한국어 letter-spacing — Pretendard에서 -0.025em이 상한</h3><p>영문 헤딩의 -0.04em letter-spacing은 한국어에 적용하면 받침 있는 자모가 뭉친다. -0.02em ~ -0.025em이 한글 균형점.</p></a></li><li><a class="note-card" href="/notes/intersection-observer-infinite-scroll-trap" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->IntersectionObserver 무한 스크롤 — 가장 흔한 4가지 함정</h3><p>무한 스크롤을 IntersectionObserver로 만들 때 매번 같은 4가지 함정이 반복된다. observer 재생성·rootMargin 누락·threshold 0의 의미·observe 해제 시점.</p></a></li></ul></section><footer class="page-footer"><a class="see-all-link" href="/notes" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg> 노트 목록</a></footer></article></main><footer class="site-footer"><div class="footer-brand"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg>정경하</span><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open-text" aria-hidden="true"><path d="M12 7v14"></path><path d="M16 12h2"></path><path d="M16 8h2"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path><path d="M6 12h2"></path><path d="M6 8h2"></path></svg>Cases, notes, logs, and proof of work</span></div><nav class="footer-nav" aria-label="Secondary"><a href="/uses" data-discover="true">Uses</a><a href="/now" data-discover="true">Now</a><a href="/reading" data-discover="true">Reading</a><a href="/cv" data-discover="true">CV</a></nav><span class="footer-meta"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-clock" aria-hidden="true"><path d="M16 14v2.2l1.6 1"></path><path d="M16 2v4"></path><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"></path><path d="M3 10h5"></path><path d="M8 2v4"></path><circle cx="16" cy="16" r="6"></circle></svg>Updated <!-- -->2026-06-09 11:00</span></footer></div>
+  </body>
+</html>

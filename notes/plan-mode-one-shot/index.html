@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+    <meta name="author" content="정경하" />
+    <meta property="og:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="description" content="큰 작업 즉시 시작 → 중간에 방향 바뀜 → 재작업. Shift+Tab으로 Plan Mode 진입 → 계획 확정 → Auto 전환 1-shot 구현. 재작업 30~50% 절감." />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Plan Mode → Auto 1-shot — 재작업 30% 절감 패턴 | 정경하" />
+    <meta property="og:description" content="큰 작업 즉시 시작 → 중간에 방향 바뀜 → 재작업. Shift+Tab으로 Plan Mode 진입 → 계획 확정 → Auto 전환 1-shot 구현. 재작업 30~50% 절감." />
+    <meta property="og:url" content="https://justinjeong5.github.io/notes/plan-mode-one-shot/" />
+    <meta name="twitter:title" content="Plan Mode → Auto 1-shot — 재작업 30% 절감 패턴 | 정경하" />
+    <meta name="twitter:description" content="큰 작업 즉시 시작 → 중간에 방향 바뀜 → 재작업. Shift+Tab으로 Plan Mode 진입 → 계획 확정 → Auto 전환 1-shot 구현. 재작업 30~50% 절감." />
+    <link rel="canonical" href="https://justinjeong5.github.io/notes/plan-mode-one-shot/" />
+    <title>Plan Mode → Auto 1-shot — 재작업 30% 절감 패턴 | 정경하</title>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Plan Mode → Auto 1-shot — 재작업 30% 절감 패턴 | 정경하",
+  "description": "큰 작업 즉시 시작 → 중간에 방향 바뀜 → 재작업. Shift+Tab으로 Plan Mode 진입 → 계획 확정 → Auto 전환 1-shot 구현. 재작업 30~50% 절감.",
+  "url": "https://justinjeong5.github.io/notes/plan-mode-one-shot/",
+  "mainEntityOfPage": "https://justinjeong5.github.io/notes/plan-mode-one-shot/",
+  "author": {
+    "@type": "Person",
+    "name": "정경하",
+    "url": "https://justinjeong5.github.io/",
+    "jobTitle": "Product-minded Frontend Engineer",
+    "sameAs": [
+      "https://github.com/justinjeong5"
+    ]
+  }
+}
+</script>
+    <script>
+      // 테마 사전 설정 — prerender된 HTML에 data-theme를 즉시 적용해 CSS flash를 막는다.
+      // (다른 스크립트보다 먼저 실행되어야 한다.)
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages — restore deep-link path written by 404.html
+      // https://github.com/rafgraph/spa-github-pages
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
+    </script>
+    <script type="module" crossorigin src="/assets/index-CxYEBVj7.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-QTnfLwEv.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-cases-BgF-y5bM.js">
+    <link rel="modulepreload" crossorigin href="/assets/router-D75Vl-iJ.js">
+    <link rel="modulepreload" crossorigin href="/assets/search-CiN4C8Nu.js">
+    <link rel="modulepreload" crossorigin href="/assets/icons-C3lfSmZ3.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-BMBR_99R.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-essays-CipNEaqH.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-logs-Dm6M40WY.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-notes-CR1Uinql.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-sbCSPT96.css">
+    <link rel="stylesheet" crossorigin href="/assets/pretendard-NPFyShNs.css">
+  </head>
+  <body>
+    <div id="root"><a href="#main-content" class="skip-link">본문 바로가기</a><header class="site-nav" aria-label="Primary"><a class="brand" aria-label="정경하 홈" href="/" data-discover="true">JKH</a><nav class="primary-nav"><a class="nav-link" href="/cases" data-discover="true">Cases</a><a aria-current="page" class="nav-link is-active" href="/notes" data-discover="true">Notes</a><a class="nav-link" href="/essays" data-discover="true">Essays</a><a class="nav-link" href="/logs" data-discover="true">Logs</a><a class="nav-link" href="/about" data-discover="true">About</a></nav><div class="nav-actions"><button type="button" class="search-trigger" aria-label="검색" title="검색 (⌘K 또는 /)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg><span>검색</span><kbd>⌘K</kbd></button><button type="button" class="icon-button" aria-label="테마: 라이트. 클릭하여 변경" title="테마: 라이트 · T 키로도 전환"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg></button><button type="button" class="icon-button desktop-only" aria-label="키보드 단축키" aria-expanded="false" aria-haspopup="dialog" title="키보드 단축키 (? 키)"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-keyboard" aria-hidden="true"><path d="M10 8h.01"></path><path d="M12 12h.01"></path><path d="M14 8h.01"></path><path d="M16 12h.01"></path><path d="M18 8h.01"></path><path d="M6 8h.01"></path><path d="M7 16h10"></path><path d="M8 12h.01"></path><rect width="20" height="16" x="2" y="4" rx="2"></rect></svg></button><button type="button" class="icon-button menu-trigger" aria-label="메뉴 열기" aria-expanded="false" aria-haspopup="dialog" title="메뉴"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button></div></header><main id="main-content" tabindex="-1"><article class="page note-detail"><header class="page-header note-detail-header"><p class="eyebrow growth-eyebrow"><span aria-hidden="true">🌱</span>Seedling</p><h1>Plan Mode → Auto 1-shot — 재작업 30% 절감 패턴</h1><p class="page-lead">큰 작업 즉시 시작 → 중간에 방향 바뀜 → 재작업. Shift+Tab으로 Plan Mode 진입 → 계획 확정 → Auto 전환 1-shot 구현. 재작업 30~50% 절감.</p><ul class="topic-list" aria-label="topics"><li>#<!-- -->claude-code</li><li>#<!-- -->workflow</li><li>#<!-- -->productivity</li></ul></header><div class="prose"><h2>문제 — 즉시 시작이 재작업을 부른다</h2>
+<p>복잡한 작업을 받자마자 코드부터 만지면 흔한 패턴이 일어난다.</p>
+<ul>
+<li>50% 만들고 보니 접근법이 잘못됨</li>
+<li>80% 만들고 보니 사용자가 원한 건 다른 거였음</li>
+<li>100% 만들고 보니 컨벤션이 어긋남</li>
+</ul>
+<p>재작업 비용 = 처음 작업 시간의 50~150%. 토큰도 같은 비율로 든다.</p>
+<h2>해법 — Plan Mode 먼저</h2>
+<p>Claude Code의 <strong>Plan Mode</strong>: <code>Shift+Tab</code>으로 진입. 이 모드에서는 코드 수정·파일 생성·외부 효과 없는 도구만 사용 가능. <strong>계획만 짠다.</strong></p>
+<p>계획 항목:</p>
+<ul>
+<li>변경할 파일 목록</li>
+<li>각 파일의 변경 내용 요약</li>
+<li>기존 컨벤션 확인 결과</li>
+<li>예상 트레이드오프</li>
+<li>검증 방법</li>
+</ul>
+<p>계획이 나오면 <strong>사용자가 검토</strong>. 방향 다르면 여기서 수정. 코드는 아직 0줄.</p>
+<h2>Auto 전환 → 1-shot</h2>
+<p>계획 확정 후 Auto 모드 전환 (Plan Mode 종료). 확정된 계획대로 <strong>1-shot 구현</strong>한다.</p>
+<p>장점:</p>
+<ul>
+<li>중간 방향 변경 0 → 재작업 0</li>
+<li>계획이 명확하니 구현 속도 ↑</li>
+<li>토큰 효율 ↑ (불필요한 탐색 없음)</li>
+</ul>
+<p>체감: 5분 이상 작업에서 <strong>재작업 30~50% 절감</strong>.</p>
+<h2>언제 쓰나</h2>
+<ul>
+<li>변경 파일 3개 이상</li>
+<li>기존 코드 컨벤션 파악 필요</li>
+<li>트레이드오프가 있는 결정</li>
+<li>사용자가 의도를 잘 못 표현했을 가능성</li>
+</ul>
+<p>작은 작업(1파일, 명백한 한 줄 수정)은 오히려 느림. 계획 짜는 비용 &gt; 즉시 구현 비용.</p>
+<h2>계획의 구체성</h2>
+<p>가장 흔한 실패는 계획이 <strong>너무 추상적</strong>일 때.</p>
+<p>❌ &quot;X 모듈 추가하고 테스트 추가, Y 페이지에 연결&quot;
+✅ 파일 경로·함수 이름·시그니처 수준:</p>
+<pre><code>src/lib/payment.ts
+  - export async function chargeCustomer(id: string, amount: number): Promise&lt;Receipt&gt;
+src/pages/checkout.tsx
+  - useEffect 안에 chargeCustomer 호출 추가
+tests/payment.test.ts
+  - 정상/실패/네트워크 에러 3 케이스
+</code></pre>
+<p>이 수준이면 Auto 1-shot이 헤매지 않는다.</p>
+<h2>함정</h2>
+<ul>
+<li><strong>계획이 너무 추상적</strong>: 구현 시 또 헤맴. 파일·함수·시그니처 수준까지.</li>
+<li><strong>계획 확정 안 하고 Auto</strong>: &quot;대충 이거 같은데&quot; 상태로 Auto 가면 재작업 발생. 사용자 명시 승인 후 Auto.</li>
+<li><strong>모든 작업에 Plan Mode</strong>: 작은 작업도 매번 Plan → 오히려 느림. 5분 임계.</li>
+<li><strong>계획 검토 없이 통과</strong>: 사용자가 &quot;OK&quot;만 하고 검토 안 함. Plan Mode 가치 0. 계획을 정독해야 함.</li>
+</ul>
+<h2>spike와의 순서</h2>
+<p>미지의 영역이면 Plan Mode 전에 spike가 먼저다. 모르는 걸 계획할 수 없다.</p>
+<pre><code>미지의 영역?
+  ├─ 예 → spike (버릴 코드로 학습) → Plan Mode (학습 위에 계획) → Auto 1-shot
+  └─ 아니오 → Plan Mode → Auto 1-shot
+</code></pre>
+<p>spike 없이 모르는 영역을 Plan Mode로 계획하면, 계획 자체가 틀린 가정 위에 선다. spike가 사실을 주고, Plan Mode가 그 사실로 계획을 짜고, Auto가 1-shot 구현한다.</p>
+<h2>핵심</h2>
+<blockquote>
+<p>코드를 빨리 쓰는 것보다 <strong>다시 쓰지 않는 것</strong>이 더 빠르다.</p>
+</blockquote>
+<h2>관련</h2>
+<p><a href="/notes/incrementally-correct">/notes/incrementally-correct</a> — 계획 후에도 점진적으로 정확해지기
+<a href="/notes/dispatch-routing-pattern">/notes/dispatch-routing-pattern</a> — 의도 라우팅이 계획의 입구
+<a href="/notes/codex-competition">/notes/codex-competition</a> — 계획 자체를 두 모델로 cross-check
+<a href="/notes/spike-throwaway-code">/notes/spike-throwaway-code</a> — 미지의 영역은 계획 전 spike로 학습
+<a href="/notes/pr-body-before-code">/notes/pr-body-before-code</a> — 코드 전에 글로 정렬하는 같은 사고</p></div><section class="related-block"><h2>관련 노트</h2><ul class="note-grid"><li><a class="note-card" href="/notes/codex-competition" data-discover="true"><h3><span aria-hidden="true">🌳</span> <!-- -->Codex 경쟁 — 모든 작업을 두 번 굴려보기</h3><p>코딩·추론·리뷰 등 모든 작업에서 Codex와 Claude를 병렬 실행하고 결과를 교차 검증. 토큰 비용은 늘지만 사각지대가 줄어든다.</p></a></li><li><a class="note-card" href="/notes/ai-output-mode-collapse" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->AI 반복 위임의 mode collapse — 출력이 한 점으로 수렴한다</h3><p>AI에게 &quot;더 만들어줘&quot;를 반복하면 출력이 점점 비슷해진다. 모델이 고확률 영역으로 수렴하는 mode collapse다. 다양성은 저절로 안 나오고 명시적으로 강제해야 한다.</p></a></li><li><a class="note-card" href="/notes/dispatch-routing-pattern" data-discover="true"><h3><span aria-hidden="true">🌳</span> <!-- -->dispatch — 의도 기반 라우팅 패턴</h3><p>모든 사용자 메시지를 3 에이전트 경쟁으로 최적 스킬에 라우팅. 키워드 매칭이 아닌 의미론적 의도 분석.</p></a></li><li><a class="note-card" href="/notes/incident-ai-pair-debugging" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->AI 페어와 야간 incident 디버깅 — 새벽에 혼자가 아닌 워크플로우</h3><p>새벽 장애 대응의 진짜 비용은 디버깅 시간이 아니라 외로움과 결정 부담이다. AI 페어는 문법적 코드보다 의사결정 cross-check에서 가치가 크다.</p></a></li><li><a class="note-card" href="/notes/operationalizing-vague-requests" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->모호한 지시를 측정 기준으로 — &quot;잘 해줘&quot;를 실행 가능하게</h3><p>&quot;전체적으로 개선해줘&quot;, &quot;다양하게&quot;, &quot;깔끔하게&quot;는 실행자마다 다르게 해석된다. 작업 전에 모호한 품질 단어를 측정 가능한 기준으로 번역하면 재작업과 오해가 줄어든다.</p></a></li></ul></section><footer class="page-footer"><a class="see-all-link" href="/notes" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg> 노트 목록</a></footer></article></main><footer class="site-footer"><div class="footer-brand"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg>정경하</span><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open-text" aria-hidden="true"><path d="M12 7v14"></path><path d="M16 12h2"></path><path d="M16 8h2"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path><path d="M6 12h2"></path><path d="M6 8h2"></path></svg>Cases, notes, logs, and proof of work</span></div><nav class="footer-nav" aria-label="Secondary"><a href="/uses" data-discover="true">Uses</a><a href="/now" data-discover="true">Now</a><a href="/reading" data-discover="true">Reading</a><a href="/cv" data-discover="true">CV</a></nav><span class="footer-meta"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-clock" aria-hidden="true"><path d="M16 14v2.2l1.6 1"></path><path d="M16 2v4"></path><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"></path><path d="M3 10h5"></path><path d="M8 2v4"></path><circle cx="16" cy="16" r="6"></circle></svg>Updated <!-- -->2026-06-09 11:00</span></footer></div>
+  </body>
+</html>

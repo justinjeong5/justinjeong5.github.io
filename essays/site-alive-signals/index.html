@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+    <meta name="author" content="정경하" />
+    <meta property="og:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="description" content="게시일 대신 lastTendedAt, 완성된 글 대신 자라는 노트. 한 번에 끝내지 않는 사이트 운영을 시스템으로 만드는 법." />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="사이트가 살아있다는 신호 — 디지털 가든을 매일 다듬는 시스템 | 정경하" />
+    <meta property="og:description" content="게시일 대신 lastTendedAt, 완성된 글 대신 자라는 노트. 한 번에 끝내지 않는 사이트 운영을 시스템으로 만드는 법." />
+    <meta property="og:url" content="https://justinjeong5.github.io/essays/site-alive-signals/" />
+    <meta name="twitter:title" content="사이트가 살아있다는 신호 — 디지털 가든을 매일 다듬는 시스템 | 정경하" />
+    <meta name="twitter:description" content="게시일 대신 lastTendedAt, 완성된 글 대신 자라는 노트. 한 번에 끝내지 않는 사이트 운영을 시스템으로 만드는 법." />
+    <link rel="canonical" href="https://justinjeong5.github.io/essays/site-alive-signals/" />
+    <title>사이트가 살아있다는 신호 — 디지털 가든을 매일 다듬는 시스템 | 정경하</title>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "사이트가 살아있다는 신호 — 디지털 가든을 매일 다듬는 시스템 | 정경하",
+  "description": "게시일 대신 lastTendedAt, 완성된 글 대신 자라는 노트. 한 번에 끝내지 않는 사이트 운영을 시스템으로 만드는 법.",
+  "url": "https://justinjeong5.github.io/essays/site-alive-signals/",
+  "mainEntityOfPage": "https://justinjeong5.github.io/essays/site-alive-signals/",
+  "author": {
+    "@type": "Person",
+    "name": "정경하",
+    "url": "https://justinjeong5.github.io/",
+    "jobTitle": "Product-minded Frontend Engineer",
+    "sameAs": [
+      "https://github.com/justinjeong5"
+    ]
+  },
+  "datePublished": "2026-05-19",
+  "dateModified": "2026-05-19"
+}
+</script>
+    <script>
+      // 테마 사전 설정 — prerender된 HTML에 data-theme를 즉시 적용해 CSS flash를 막는다.
+      // (다른 스크립트보다 먼저 실행되어야 한다.)
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages — restore deep-link path written by 404.html
+      // https://github.com/rafgraph/spa-github-pages
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
+    </script>
+    <script type="module" crossorigin src="/assets/index-CxYEBVj7.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-QTnfLwEv.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-cases-BgF-y5bM.js">
+    <link rel="modulepreload" crossorigin href="/assets/router-D75Vl-iJ.js">
+    <link rel="modulepreload" crossorigin href="/assets/search-CiN4C8Nu.js">
+    <link rel="modulepreload" crossorigin href="/assets/icons-C3lfSmZ3.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-BMBR_99R.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-essays-CipNEaqH.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-logs-Dm6M40WY.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-notes-CR1Uinql.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-sbCSPT96.css">
+    <link rel="stylesheet" crossorigin href="/assets/pretendard-NPFyShNs.css">
+  </head>
+  <body>
+    <div id="root"><a href="#main-content" class="skip-link">본문 바로가기</a><header class="site-nav" aria-label="Primary"><a class="brand" aria-label="정경하 홈" href="/" data-discover="true">JKH</a><nav class="primary-nav"><a class="nav-link" href="/cases" data-discover="true">Cases</a><a class="nav-link" href="/notes" data-discover="true">Notes</a><a aria-current="page" class="nav-link is-active" href="/essays" data-discover="true">Essays</a><a class="nav-link" href="/logs" data-discover="true">Logs</a><a class="nav-link" href="/about" data-discover="true">About</a></nav><div class="nav-actions"><button type="button" class="search-trigger" aria-label="검색" title="검색 (⌘K 또는 /)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg><span>검색</span><kbd>⌘K</kbd></button><button type="button" class="icon-button" aria-label="테마: 라이트. 클릭하여 변경" title="테마: 라이트 · T 키로도 전환"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg></button><button type="button" class="icon-button desktop-only" aria-label="키보드 단축키" aria-expanded="false" aria-haspopup="dialog" title="키보드 단축키 (? 키)"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-keyboard" aria-hidden="true"><path d="M10 8h.01"></path><path d="M12 12h.01"></path><path d="M14 8h.01"></path><path d="M16 12h.01"></path><path d="M18 8h.01"></path><path d="M6 8h.01"></path><path d="M7 16h10"></path><path d="M8 12h.01"></path><rect width="20" height="16" x="2" y="4" rx="2"></rect></svg></button><button type="button" class="icon-button menu-trigger" aria-label="메뉴 열기" aria-expanded="false" aria-haspopup="dialog" title="메뉴"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button></div></header><main id="main-content" tabindex="-1"><article class="page essay-detail"><header class="page-header"><p class="eyebrow">Essay<!-- --> · 4분</p><h1>사이트가 살아있다는 신호 — 디지털 가든을 매일 다듬는 시스템</h1><p class="page-lead">게시일 대신 lastTendedAt, 완성된 글 대신 자라는 노트. 한 번에 끝내지 않는 사이트 운영을 시스템으로 만드는 법.</p></header><div class="prose"><h2>죽은 블로그와 살아있는 가든</h2>
+<p>블로그는 보통 죽어갑니다. 처음에는 매주 글이 올라오다가, 한 달에 한 번이 되고, 결국 마지막 글이 &quot;2년 전&quot;으로 박힙니다. 방문자가 보는 신호는 명확합니다. <strong>&quot;이 사이트는 멈춰있다.&quot;</strong></p>
+<p>디지털 가든은 다릅니다. 같은 양의 글이 있어도 살아있어 보입니다. 차이는 한 가지 메타데이터에서 옵니다.</p>
+<h2>publishedAt vs lastTendedAt</h2>
+<p>일반 블로그의 frontmatter는 이렇습니다.</p>
+<pre><code class="language-yaml">publishedAt: 2023-01-15
+</code></pre>
+<p>이게 박히면 2년 후에 &quot;2023년 1월에 멈춘 글&quot;이 됩니다. 시간이 지날수록 신뢰가 떨어집니다.</p>
+<p>디지털 가든의 frontmatter는 이렇습니다.</p>
+<pre><code class="language-yaml">plantedAt: 2023-01-15      # 처음 심은 날
+lastTendedAt: 2026-05-19   # 최근 다듬은 날
+</code></pre>
+<p>방문자가 보는 신호:</p>
+<ul>
+<li>&quot;2023년에 심었고, 어제 마지막으로 다듬음&quot;</li>
+<li>→ &quot;이 글은 한 달 전에도 손이 갔다&quot;</li>
+<li>→ &quot;이 사이트는 살아있다&quot;</li>
+</ul>
+<p>같은 글인데 인상이 완전히 다릅니다. 게시일 한 시점에 박혀 있던 글이, 시간 안에서 계속 자라는 글로 바뀝니다.</p>
+<h2>성숙도 시스템 — 🌱 🌿 🌳</h2>
+<p>게시일을 빼면 또 다른 가치가 생깁니다. &quot;완성된 글&quot;이라는 환상에서 해방됩니다.</p>
+<p>Maggie Appleton이 자기 사이트에 도입한 성숙도 시스템:</p>
+<ul>
+<li>🌱 <strong>Seedling</strong>: 갓 심은 노트. 한 단락의 메모일 수도.</li>
+<li>🌿 <strong>Budding</strong>: 다듬어진 노트. 근거와 함정까지 채움.</li>
+<li>🌳 <strong>Evergreen</strong>: 여러 번 재방문 후 정착한 노트. 다른 노트의 백링크를 자주 받음.</li>
+</ul>
+<p>새 노트는 🌱로 시작합니다. 처음부터 완성하려고 하지 않습니다. 시간이 지나며 🌿로, 더 시간이 지나며 🌳로 자랍니다. 다듬지 않은 노트도 부담 없이 공개합니다.</p>
+<p>이게 글쓰기의 진입 장벽을 결정적으로 낮춥니다. &quot;완성된 글을 매주 한 편&quot; 부담 → &quot;지금 떠오른 생각을 새싹으로 심기&quot; 가벼움. 사이트가 자랍니다.</p>
+<h2>Brian Lovin의 &quot;incrementally correct&quot;</h2>
+<p>Brian Lovin은 자기 사이트를 <a href="/notes/incrementally-correct">&quot;incrementally correct&quot;</a>라고 부릅니다. 한 번에 옳지 않아도 됩니다. 시간을 두고 점진적으로 정확해집니다.</p>
+<blockquote>
+<p>&quot;blog 게시 → 닫힘&quot;이 아니라 &quot;심기 → 자람 → 정착&quot;의 흐름이다.</p>
+</blockquote>
+<p>한 글에 &quot;Draft&quot; 또는 &quot;In progress&quot;라고 적어두는 것을 부끄러워하지 않습니다. 그게 살아있다는 신호니까요.</p>
+<h2>작게 다듬기 패턴</h2>
+<p>오늘 이 사이트에 9가지 영역으로 묶인 15개 commit을 push했습니다. 한 번에 다 한 게 아닙니다.</p>
+<ul>
+<li>사이트 리빌드 (Phase 1)</li>
+<li>인터랙티브 (Phase 3)</li>
+<li>디자인 리뉴얼</li>
+<li>누런 톤 박멸 (quality-gate 3 사이클)</li>
+<li>모바일 GNB + quality-gate</li>
+<li>콘텐츠 시드 11편</li>
+<li>자동화 PoC 설계</li>
+<li>SESSION 문서 + 노트·로그 promote</li>
+<li>frontmatter 보정</li>
+</ul>
+<p>각 commit마다 빌드, push, 라이브 반응 확인. 다음 단계 결정. 만약 한 번에 다 했다면, 중간에 &quot;엄청 못생겼어&quot; 같은 피드백을 받았을 때 어디로 돌아가야 할지 알 수 없었을 겁니다.</p>
+<p>오늘 결과: 노트가 9개에서 20개로, 에세이가 2편에서 6편으로 자랐습니다. 모든 추가 노트의 lastTendedAt이 오늘로 표시됩니다. 방문자가 보는 신호는 &quot;이 사이트는 지금도 손이 가는 곳&quot;입니다. 다듬기의 합이 글의 수보다 사이트의 살아있음을 더 잘 보여줍니다.</p>
+<p>작게 다듬는 게 사이트를 살리는 시스템입니다. 한 commit = 한 가지 변경 = 한 가지 검증.</p>
+<h2>운영 부담 vs 가치</h2>
+<p>매일 다듬는 게 정말 sustainable한가? 솔직히, 항상은 아닙니다. 회사 스프린트 시즌엔 며칠 빠집니다.</p>
+<p>그래서 한 가지 규칙을 둡니다.</p>
+<blockquote>
+<p><strong>빠진 날이 default여야 한다.</strong></p>
+</blockquote>
+<p>알림도 streak도 없습니다. 안 한 날은 그냥 안 한 날입니다. 죄책감 루프가 시작되면 시스템이 죽습니다. &quot;오늘은 그냥 패스&quot; → 며칠 누적 → &quot;이번 주는 망했네&quot; → 영구 중단. 이 fail case는 너무 흔합니다.</p>
+<p>대신 트리거 조건이 자연스럽게 맞는 날에만 새싹을 심습니다. 의미 있는 작업이 끝났을 때, 디버깅 후 패턴을 찾았을 때, 디자인 결정을 내렸을 때. 매일이 아닙니다.</p>
+<p>평균적으로 주 2-3개의 새싹이면 가든은 자라고 있습니다. 사이트가 살아있는 신호로 충분합니다.</p>
+<h2>결론</h2>
+<p>사이트의 &quot;살아있음&quot;은 게시 빈도가 아니라 <strong>다듬기 빈도</strong>입니다.</p>
+<p>매주 새 글을 안 올려도, 기존 노트 하나를 더 정확하게 다듬으면 사이트가 살아납니다. lastTendedAt이 어제로 표시되면, 방문자가 보는 신호는 &quot;어제도 누군가 이 사이트에 손이 갔다&quot;입니다.</p>
+<p>그래서 이 사이트는 publishedAt을 안 표시합니다. <a href="/notes/last-tended-signal">lastTendedAt만 봅니다</a>. 글이 한 시점에 박히지 않고, 시간 안에서 계속 자라도록.</p>
+<p>블로그는 죽어가는 게 자연스럽지만, 가든은 자라는 게 자연스럽습니다. 둘 중 어느 쪽이 본인 사이트의 메타포가 되어야 할지, 그게 사이트 운영 시스템의 첫 결정입니다.</p>
+<p><em>(2026-06 갱신)</em> 이 다듬기의 일부는 이후 주간 봇이 초안을 내도록 자동화했습니다. &quot;사람이 트리거 날에만 새싹을 심는다&quot;에서 &quot;봇이 매주 초안을 내고 사람이 게이트에서 고른다&quot;로 바뀌었지만, 핵심 원칙은 그대로입니다 — lastTendedAt이 살아있음의 신호이고, 무엇을 키울지는 여전히 사람이 정합니다.</p>
+<p>관련: <a href="/logs#2026-06-08-writing-bot-reversal">/logs#2026-06-08-writing-bot-reversal</a>, <a href="/essays/garden-fallow-meaning">/essays/garden-fallow-meaning</a></p></div><footer class="page-footer"><a class="see-all-link" href="/essays" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg> 에세이 목록</a></footer></article></main><footer class="site-footer"><div class="footer-brand"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg>정경하</span><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open-text" aria-hidden="true"><path d="M12 7v14"></path><path d="M16 12h2"></path><path d="M16 8h2"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path><path d="M6 12h2"></path><path d="M6 8h2"></path></svg>Cases, notes, logs, and proof of work</span></div><nav class="footer-nav" aria-label="Secondary"><a href="/uses" data-discover="true">Uses</a><a href="/now" data-discover="true">Now</a><a href="/reading" data-discover="true">Reading</a><a href="/cv" data-discover="true">CV</a></nav><span class="footer-meta"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-clock" aria-hidden="true"><path d="M16 14v2.2l1.6 1"></path><path d="M16 2v4"></path><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"></path><path d="M3 10h5"></path><path d="M8 2v4"></path><circle cx="16" cy="16" r="6"></circle></svg>Updated <!-- -->2026-06-09 11:00</span></footer></div>
+  </body>
+</html>

@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+    <meta name="author" content="정경하" />
+    <meta property="og:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="description" content="새벽에 장애 알람을 받으면 &quot;지금 멈춰야 한다 vs 제대로 고쳐야 한다&quot;가 충돌한다. 두 단계로 분리하면 의사결정이 빨라진다." />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="야간 장애의 두 단계 — 임시 패치 vs 근본 수정 | 정경하" />
+    <meta property="og:description" content="새벽에 장애 알람을 받으면 &quot;지금 멈춰야 한다 vs 제대로 고쳐야 한다&quot;가 충돌한다. 두 단계로 분리하면 의사결정이 빨라진다." />
+    <meta property="og:url" content="https://justinjeong5.github.io/notes/incident-temp-vs-root/" />
+    <meta name="twitter:title" content="야간 장애의 두 단계 — 임시 패치 vs 근본 수정 | 정경하" />
+    <meta name="twitter:description" content="새벽에 장애 알람을 받으면 &quot;지금 멈춰야 한다 vs 제대로 고쳐야 한다&quot;가 충돌한다. 두 단계로 분리하면 의사결정이 빨라진다." />
+    <link rel="canonical" href="https://justinjeong5.github.io/notes/incident-temp-vs-root/" />
+    <title>야간 장애의 두 단계 — 임시 패치 vs 근본 수정 | 정경하</title>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "야간 장애의 두 단계 — 임시 패치 vs 근본 수정 | 정경하",
+  "description": "새벽에 장애 알람을 받으면 \"지금 멈춰야 한다 vs 제대로 고쳐야 한다\"가 충돌한다. 두 단계로 분리하면 의사결정이 빨라진다.",
+  "url": "https://justinjeong5.github.io/notes/incident-temp-vs-root/",
+  "mainEntityOfPage": "https://justinjeong5.github.io/notes/incident-temp-vs-root/",
+  "author": {
+    "@type": "Person",
+    "name": "정경하",
+    "url": "https://justinjeong5.github.io/",
+    "jobTitle": "Product-minded Frontend Engineer",
+    "sameAs": [
+      "https://github.com/justinjeong5"
+    ]
+  }
+}
+</script>
+    <script>
+      // 테마 사전 설정 — prerender된 HTML에 data-theme를 즉시 적용해 CSS flash를 막는다.
+      // (다른 스크립트보다 먼저 실행되어야 한다.)
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages — restore deep-link path written by 404.html
+      // https://github.com/rafgraph/spa-github-pages
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
+    </script>
+    <script type="module" crossorigin src="/assets/index-CxYEBVj7.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-QTnfLwEv.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-cases-BgF-y5bM.js">
+    <link rel="modulepreload" crossorigin href="/assets/router-D75Vl-iJ.js">
+    <link rel="modulepreload" crossorigin href="/assets/search-CiN4C8Nu.js">
+    <link rel="modulepreload" crossorigin href="/assets/icons-C3lfSmZ3.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-BMBR_99R.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-essays-CipNEaqH.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-logs-Dm6M40WY.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-notes-CR1Uinql.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-sbCSPT96.css">
+    <link rel="stylesheet" crossorigin href="/assets/pretendard-NPFyShNs.css">
+  </head>
+  <body>
+    <div id="root"><a href="#main-content" class="skip-link">본문 바로가기</a><header class="site-nav" aria-label="Primary"><a class="brand" aria-label="정경하 홈" href="/" data-discover="true">JKH</a><nav class="primary-nav"><a class="nav-link" href="/cases" data-discover="true">Cases</a><a aria-current="page" class="nav-link is-active" href="/notes" data-discover="true">Notes</a><a class="nav-link" href="/essays" data-discover="true">Essays</a><a class="nav-link" href="/logs" data-discover="true">Logs</a><a class="nav-link" href="/about" data-discover="true">About</a></nav><div class="nav-actions"><button type="button" class="search-trigger" aria-label="검색" title="검색 (⌘K 또는 /)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg><span>검색</span><kbd>⌘K</kbd></button><button type="button" class="icon-button" aria-label="테마: 라이트. 클릭하여 변경" title="테마: 라이트 · T 키로도 전환"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg></button><button type="button" class="icon-button desktop-only" aria-label="키보드 단축키" aria-expanded="false" aria-haspopup="dialog" title="키보드 단축키 (? 키)"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-keyboard" aria-hidden="true"><path d="M10 8h.01"></path><path d="M12 12h.01"></path><path d="M14 8h.01"></path><path d="M16 12h.01"></path><path d="M18 8h.01"></path><path d="M6 8h.01"></path><path d="M7 16h10"></path><path d="M8 12h.01"></path><rect width="20" height="16" x="2" y="4" rx="2"></rect></svg></button><button type="button" class="icon-button menu-trigger" aria-label="메뉴 열기" aria-expanded="false" aria-haspopup="dialog" title="메뉴"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button></div></header><main id="main-content" tabindex="-1"><article class="page note-detail"><header class="page-header note-detail-header"><p class="eyebrow growth-eyebrow"><span aria-hidden="true">🌱</span>Seedling</p><h1>야간 장애의 두 단계 — 임시 패치 vs 근본 수정</h1><p class="page-lead">새벽에 장애 알람을 받으면 &quot;지금 멈춰야 한다 vs 제대로 고쳐야 한다&quot;가 충돌한다. 두 단계로 분리하면 의사결정이 빨라진다.</p><ul class="topic-list" aria-label="topics"><li>#<!-- -->incident</li><li>#<!-- -->debugging</li><li>#<!-- -->swe</li><li>#<!-- -->decision-making</li></ul></header><div class="prose"><h2>두 가지 시간 척도</h2>
+<p>장애 대응에는 두 가지 시간이 있다.</p>
+<ul>
+<li><strong>Stop the bleeding</strong> (분~30분): 사용자 영향을 멈춘다. 정확하지 않아도 됨.</li>
+<li><strong>Fix the cause</strong> (시간~며칠): 다시 안 일어나게. 정확함이 가장 중요.</li>
+</ul>
+<p>새벽에 알람을 받으면 두 시간이 머릿속에서 섞인다. &quot;지금 어떻게 멈추지&quot; + &quot;근본 원인이 뭐지&quot;를 동시에 풀려고 한다. 그러면 둘 다 늦어진다.</p>
+<h2>분리 규칙</h2>
+<ol>
+<li><strong>첫 5분</strong>: 영향 범위 파악. &quot;지금 뭐가 깨지고 있는가.&quot; 사용자 / 트래픽 / 데이터.</li>
+<li><strong>다음 10분</strong>: 임시 패치 결정. rollback / feature flag off / 리트라이 / 우회. 가장 작은 변경.</li>
+<li><strong>임시 패치 적용 + 검증</strong>: 사용자 영향 멈춤 확인.</li>
+<li><strong>여기서 새벽 작업 종료 가능</strong>. 근본 원인은 다음 날.</li>
+</ol>
+<p>3번까지가 30분이면 잘 한 거다. 4번에서 멈출 수 있어야 한다.</p>
+<h2>임시 패치의 자격</h2>
+<ul>
+<li>같은 장애가 다시 안 일어남 (또는 reliably 안 일어남)</li>
+<li>새로운 장애를 만들지 않음</li>
+<li>24시간 안에 root fix로 대체 가능</li>
+</ul>
+<p>이 3가지를 만족하면 <strong>새벽에는 임시 패치로 멈춤</strong>. 새벽 본인의 판단 정확도는 평소 70% 정도다 (졸리고 압박감). 그 상태에서 근본 수정 시도하면 새 장애를 만들 위험이 크다.</p>
+<h2>다음 날 회고</h2>
+<p>다음 날 본인을 위해 새벽에 남길 것:</p>
+<ul>
+<li><strong>임시 패치 PR 본문</strong>: &quot;이건 임시. 근본은 X. 24h 안에 처리.&quot;</li>
+<li><strong>알람 timestamp + 적용 시간</strong>: 데이터로 남기기</li>
+<li><strong>무엇을 안 해봤는지</strong>: 새벽엔 시도 못 한 가설 목록</li>
+</ul>
+<blockquote>
+<p>새벽의 본인이 다음 날 본인에게 남기는 인계 노트가 핵심.</p>
+</blockquote>
+<h2>함정</h2>
+<ul>
+<li><strong>임시 패치를 안 만들고 root cause부터 보려 함</strong>: 사용자 영향 길어짐</li>
+<li><strong>임시 패치 후 그대로 두고 끝</strong>: 24h 안에 root fix 안 하면 임시가 영구가 됨</li>
+<li><strong>&quot;새벽이라 정확해야 한다&quot;는 압박</strong>: 정확함보다 멈춤이 먼저</li>
+</ul>
+<h2>임시 패치가 one-way로 굳는 순간</h2>
+<p>임시 패치는 본래 two-way door(되돌릴 수 있는 결정)다. 24시간 안에 root fix로 대체할 거니까. 그런데 24시간이 일주일이 되고 한 달이 되면 임시 패치가 <strong>사실상 one-way로 굳는다</strong>. 다른 코드가 그 임시 동작에 의존하기 시작하면 되돌리는 비용이 비선형으로 커진다.</p>
+<p>그래서 임시 패치에는 <strong>만료 신호</strong>를 박는다.</p>
+<ul>
+<li>코드에 <code>// TEMP: 2026-06-05까지, 미처리 시 알람</code> 주석</li>
+<li>임시 패치 PR에 follow-up 이슈 링크 + 기한</li>
+<li>기한 넘으면 알람 (린트 룰 또는 cron)</li>
+</ul>
+<p>만료 신호가 없으면 &quot;임시&quot;가 &quot;영구&quot;가 되는 게 기본값이다.</p>
+<h2>핵심</h2>
+<blockquote>
+<p>새벽엔 멈춘다. 정확한 수정은 깨어있을 때.</p>
+</blockquote>
+<h2>관련</h2>
+<p><a href="/notes/incident-ai-pair-debugging">/notes/incident-ai-pair-debugging</a> — 새벽 결정 cross-check
+<a href="/notes/runbook-write-during-incident">/notes/runbook-write-during-incident</a> — 임시 패치 timeline을 runbook으로
+<a href="/notes/incident-monitoring-gap">/notes/incident-monitoring-gap</a> — 회고가 다음 알람 룰
+<a href="/notes/good-alert-four-criteria">/notes/good-alert-four-criteria</a> — 알람이 새벽을 부르는 기준
+<a href="/notes/one-way-two-way-door">/notes/one-way-two-way-door</a> — 임시 패치가 one-way로 굳는 의사결정 분류</p></div><section class="related-block"><h2>관련 노트</h2><ul class="note-grid"><li><a class="note-card" href="/notes/good-alert-four-criteria" data-discover="true"><h3><span aria-hidden="true">🌳</span> <!-- -->좋은 알람의 4가지 기준 — 노이즈와 신호의 분리</h3><p>알람이 많은 시스템은 알람이 없는 시스템과 같다. 좋은 알람은 사람이 지금 행동해야 할 때만 울린다. 4가지 기준으로 노이즈를 걷어내는 법.</p></a></li><li><a class="note-card" href="/notes/one-way-two-way-door" data-discover="true"><h3><span aria-hidden="true">🌳</span> <!-- -->One-way vs Two-way Door — Bezos의 의사결정 분류</h3><p>되돌릴 수 있는 결정(two-way)은 빠르게, 되돌릴 수 없는 결정(one-way)은 신중하게. 대부분의 결정은 two-way인데 사람들은 one-way처럼 다룬다.</p></a></li><li><a class="note-card" href="/notes/typescript-false-safety" data-discover="true"><h3><span aria-hidden="true">🌳</span> <!-- -->TypeScript의 거짓 안전감 — 타입이 통과해도 버그는 남는다</h3><p>TypeScript 통과 = 안전이라는 직관. 그러나 런타임 데이터·외부 API·any 의 escape hatch는 컴파일러가 못 본다. 타입은 안전의 일부일 뿐.</p></a></li><li><a class="note-card" href="/notes/dead-dependency-hidden-cost" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->안 쓰는 의존성의 숨은 비용 — install·lockfile·transitive CVE·supply chain</h3><p>package.json에 있는데 import 0건인 패키지는 단순 dead code가 아니다. install 시간·lockfile 부피·transitive CVE·supply chain 표면적이 모두 누적된다. 정리는 정기 작업.</p></a></li><li><a class="note-card" href="/notes/incident-ai-pair-debugging" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->AI 페어와 야간 incident 디버깅 — 새벽에 혼자가 아닌 워크플로우</h3><p>새벽 장애 대응의 진짜 비용은 디버깅 시간이 아니라 외로움과 결정 부담이다. AI 페어는 문법적 코드보다 의사결정 cross-check에서 가치가 크다.</p></a></li></ul></section><footer class="page-footer"><a class="see-all-link" href="/notes" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg> 노트 목록</a></footer></article></main><footer class="site-footer"><div class="footer-brand"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg>정경하</span><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open-text" aria-hidden="true"><path d="M12 7v14"></path><path d="M16 12h2"></path><path d="M16 8h2"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path><path d="M6 12h2"></path><path d="M6 8h2"></path></svg>Cases, notes, logs, and proof of work</span></div><nav class="footer-nav" aria-label="Secondary"><a href="/uses" data-discover="true">Uses</a><a href="/now" data-discover="true">Now</a><a href="/reading" data-discover="true">Reading</a><a href="/cv" data-discover="true">CV</a></nav><span class="footer-meta"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-clock" aria-hidden="true"><path d="M16 14v2.2l1.6 1"></path><path d="M16 2v4"></path><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"></path><path d="M3 10h5"></path><path d="M8 2v4"></path><circle cx="16" cy="16" r="6"></circle></svg>Updated <!-- -->2026-06-09 11:00</span></footer></div>
+  </body>
+</html>

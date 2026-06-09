@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+    <meta name="author" content="정경하" />
+    <meta property="og:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="description" content="리뷰어는 코드를 보기 전에 PR 본문을 본다. 본문이 비어있거나 &quot;WIP&quot;이면 리뷰어는 코드를 추측해서 읽는다. 본문 5분 투자로 리뷰 30분 절약." />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="PR 본문은 코드보다 먼저 읽힌다 | 정경하" />
+    <meta property="og:description" content="리뷰어는 코드를 보기 전에 PR 본문을 본다. 본문이 비어있거나 &quot;WIP&quot;이면 리뷰어는 코드를 추측해서 읽는다. 본문 5분 투자로 리뷰 30분 절약." />
+    <meta property="og:url" content="https://justinjeong5.github.io/notes/pr-body-before-code/" />
+    <meta name="twitter:title" content="PR 본문은 코드보다 먼저 읽힌다 | 정경하" />
+    <meta name="twitter:description" content="리뷰어는 코드를 보기 전에 PR 본문을 본다. 본문이 비어있거나 &quot;WIP&quot;이면 리뷰어는 코드를 추측해서 읽는다. 본문 5분 투자로 리뷰 30분 절약." />
+    <link rel="canonical" href="https://justinjeong5.github.io/notes/pr-body-before-code/" />
+    <title>PR 본문은 코드보다 먼저 읽힌다 | 정경하</title>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "PR 본문은 코드보다 먼저 읽힌다 | 정경하",
+  "description": "리뷰어는 코드를 보기 전에 PR 본문을 본다. 본문이 비어있거나 \"WIP\"이면 리뷰어는 코드를 추측해서 읽는다. 본문 5분 투자로 리뷰 30분 절약.",
+  "url": "https://justinjeong5.github.io/notes/pr-body-before-code/",
+  "mainEntityOfPage": "https://justinjeong5.github.io/notes/pr-body-before-code/",
+  "author": {
+    "@type": "Person",
+    "name": "정경하",
+    "url": "https://justinjeong5.github.io/",
+    "jobTitle": "Product-minded Frontend Engineer",
+    "sameAs": [
+      "https://github.com/justinjeong5"
+    ]
+  }
+}
+</script>
+    <script>
+      // 테마 사전 설정 — prerender된 HTML에 data-theme를 즉시 적용해 CSS flash를 막는다.
+      // (다른 스크립트보다 먼저 실행되어야 한다.)
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages — restore deep-link path written by 404.html
+      // https://github.com/rafgraph/spa-github-pages
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
+    </script>
+    <script type="module" crossorigin src="/assets/index-CxYEBVj7.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-QTnfLwEv.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-cases-BgF-y5bM.js">
+    <link rel="modulepreload" crossorigin href="/assets/router-D75Vl-iJ.js">
+    <link rel="modulepreload" crossorigin href="/assets/search-CiN4C8Nu.js">
+    <link rel="modulepreload" crossorigin href="/assets/icons-C3lfSmZ3.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-BMBR_99R.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-essays-CipNEaqH.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-logs-Dm6M40WY.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-notes-CR1Uinql.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-sbCSPT96.css">
+    <link rel="stylesheet" crossorigin href="/assets/pretendard-NPFyShNs.css">
+  </head>
+  <body>
+    <div id="root"><a href="#main-content" class="skip-link">본문 바로가기</a><header class="site-nav" aria-label="Primary"><a class="brand" aria-label="정경하 홈" href="/" data-discover="true">JKH</a><nav class="primary-nav"><a class="nav-link" href="/cases" data-discover="true">Cases</a><a aria-current="page" class="nav-link is-active" href="/notes" data-discover="true">Notes</a><a class="nav-link" href="/essays" data-discover="true">Essays</a><a class="nav-link" href="/logs" data-discover="true">Logs</a><a class="nav-link" href="/about" data-discover="true">About</a></nav><div class="nav-actions"><button type="button" class="search-trigger" aria-label="검색" title="검색 (⌘K 또는 /)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg><span>검색</span><kbd>⌘K</kbd></button><button type="button" class="icon-button" aria-label="테마: 라이트. 클릭하여 변경" title="테마: 라이트 · T 키로도 전환"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg></button><button type="button" class="icon-button desktop-only" aria-label="키보드 단축키" aria-expanded="false" aria-haspopup="dialog" title="키보드 단축키 (? 키)"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-keyboard" aria-hidden="true"><path d="M10 8h.01"></path><path d="M12 12h.01"></path><path d="M14 8h.01"></path><path d="M16 12h.01"></path><path d="M18 8h.01"></path><path d="M6 8h.01"></path><path d="M7 16h10"></path><path d="M8 12h.01"></path><rect width="20" height="16" x="2" y="4" rx="2"></rect></svg></button><button type="button" class="icon-button menu-trigger" aria-label="메뉴 열기" aria-expanded="false" aria-haspopup="dialog" title="메뉴"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button></div></header><main id="main-content" tabindex="-1"><article class="page note-detail"><header class="page-header note-detail-header"><p class="eyebrow growth-eyebrow"><span aria-hidden="true">🌱</span>Seedling</p><h1>PR 본문은 코드보다 먼저 읽힌다</h1><p class="page-lead">리뷰어는 코드를 보기 전에 PR 본문을 본다. 본문이 비어있거나 &quot;WIP&quot;이면 리뷰어는 코드를 추측해서 읽는다. 본문 5분 투자로 리뷰 30분 절약.</p><ul class="topic-list" aria-label="topics"><li>#<!-- -->code-review</li><li>#<!-- -->writing</li><li>#<!-- -->pr</li></ul></header><div class="prose"><h2>흔한 PR 본문</h2>
+<pre><code>fix typo
+</code></pre>
+<p>또는</p>
+<pre><code>WIP
+</code></pre>
+<p>또는 빈 본문.</p>
+<p>이게 PR 100개 중 70개의 현실이다. 그러면 리뷰어가 코드를 보면서 &quot;이게 무슨 의도지?&quot;를 추측해야 한다. 추측이 틀리면 잘못된 리뷰가 간다.</p>
+<h2>잘 쓴 PR 본문 구조</h2>
+<pre><code class="language-markdown">## Why
+무엇을 해결하려고 한 PR인가. 1-2 문장.
+
+## What changed
+주요 변경 3-5개 bullet. 코드 라인 인용 없이 의도만.
+
+## Trade-off
+선택한 방법과 버린 방법. 왜 이 방법인가.
+
+## Test plan
+어떻게 검증했는가. 자동 테스트 + 수동 시나리오.
+
+## Risk
+머지 후 무엇이 깨질 수 있는가. 롤백 방법.
+</code></pre>
+<p>이렇게 적는 데 5분 정도 걸린다. 리뷰어는 본문 보고 어디부터 코드 읽을지 결정할 수 있다. 본문이 없는 PR보다 30분 빠른 머지.</p>
+<h2>누가 가장 큰 이득인가</h2>
+<p><strong>6개월 후의 자기 자신</strong>. PR 본문이 commit message보다 더 풍부하다. <code>git blame</code> → PR 링크 → 본문 → &quot;아, 이 결정의 근거가 이거였구나.&quot;</p>
+<p>코드만 보면 절대 안 보이는 컨텍스트가 PR 본문에 살아남는다.</p>
+<h2>함정</h2>
+<ul>
+<li>PR 본문에 코드 인용 너무 많으면 본문이 코드 중복. 의도만 적기.</li>
+<li>&quot;Why&quot; 없이 &quot;What&quot;만 적으면 가치 ↓. 다 알지 What. 결정의 이유를 묻는 게 Why.</li>
+<li>&quot;TODO: 본문 나중에&quot; → 영원히 안 적음. PR 만들 때 같이.</li>
+</ul>
+<h2>핵심</h2>
+<blockquote>
+<p>PR 본문은 코드를 읽는 사람에게 <strong>무엇을 읽어야 하는지</strong>를 미리 알려주는 안내문이다.</p>
+</blockquote>
+<h2>관련</h2>
+<p><a href="/notes/code-review-real-value">/notes/code-review-real-value</a> — 본문에 결정 근거가 있어야 리뷰가 결정 중심으로 흐른다
+<a href="/notes/plan-mode-one-shot">/notes/plan-mode-one-shot</a> — 코드 전에 계획을 먼저 글로 정렬하는 동일한 사고 패턴
+<a href="/notes/code-review-comment-tone">/notes/code-review-comment-tone</a> — 본문이 잘 쓰여 있으면 리뷰 톤도 질문형으로 자연스러움
+<a href="/notes/async-pr-review-slo">/notes/async-pr-review-slo</a> — 본문이 비어있으면 SLO를 지킬 수 없음 (리뷰어가 추측 시간)</p></div><section class="related-block"><h2>관련 노트</h2><ul class="note-grid"><li><a class="note-card" href="/notes/incrementally-correct" data-discover="true"><h3><span aria-hidden="true">🌳</span> <!-- -->Incrementally correct — 한 번에 완성하지 않는 사이트</h3><p>Brian Lovin이 제안한 개념. 글이 &quot;출간&quot;되는 게 아니라 시간을 두고 점진적으로 정확해지는 운영 방식.</p></a></li><li><a class="note-card" href="/notes/async-pr-review-slo" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->비동기 PR 리뷰 SLO — 팀의 throughput을 결정하는 숫자</h3><p>PR 리뷰가 며칠씩 걸리는 팀은 throughput이 절반이다. 리뷰 SLO를 명시하면 팀의 lead time이 비선형으로 짧아진다. SLO 설계와 함정.</p></a></li><li><a class="note-card" href="/notes/code-review-comment-tone" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->코드 리뷰 코멘트의 톤 — 비판이 아니라 질문으로</h3><p>같은 지적도 &quot;이건 틀렸어요&quot;와 &quot;이 부분 의도가 궁금해요&quot;의 결과가 다르다. 톤은 단순 매너가 아니라 리뷰의 정확도와 팀의 학습 속도를 결정한다.</p></a></li><li><a class="note-card" href="/notes/code-review-real-value" data-discover="true"><h3><span aria-hidden="true">🌿</span> <!-- -->코드 리뷰의 진짜 가치 — 코드보다 결정</h3><p>코드 리뷰에서 가장 가치 있는 코멘트는 변수명·스타일 지적이 아니라 &quot;이 결정의 이유는?&quot;이다. 코드는 자명하면 충분, 결정은 자명하지 않으면 영영 잃는다.</p></a></li><li><a class="note-card" href="/notes/digital-garden-vs-blog" data-discover="true"><h3><span aria-hidden="true">🌿</span> <!-- -->디지털 가든은 왜 블로그보다 운영 부담이 적은가</h3><p>시간순 블로그는 &quot;이번 달은 안 썼네&quot;가 누적되지만, 디지털 가든은 노트의 성숙도만 다듬어도 사이트가 살아있게 됩니다.</p></a></li></ul></section><footer class="page-footer"><a class="see-all-link" href="/notes" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg> 노트 목록</a></footer></article></main><footer class="site-footer"><div class="footer-brand"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg>정경하</span><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open-text" aria-hidden="true"><path d="M12 7v14"></path><path d="M16 12h2"></path><path d="M16 8h2"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path><path d="M6 12h2"></path><path d="M6 8h2"></path></svg>Cases, notes, logs, and proof of work</span></div><nav class="footer-nav" aria-label="Secondary"><a href="/uses" data-discover="true">Uses</a><a href="/now" data-discover="true">Now</a><a href="/reading" data-discover="true">Reading</a><a href="/cv" data-discover="true">CV</a></nav><span class="footer-meta"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-clock" aria-hidden="true"><path d="M16 14v2.2l1.6 1"></path><path d="M16 2v4"></path><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"></path><path d="M3 10h5"></path><path d="M8 2v4"></path><circle cx="16" cy="16" r="6"></circle></svg>Updated <!-- -->2026-06-09 11:00</span></footer></div>
+  </body>
+</html>

@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+    <meta name="author" content="정경하" />
+    <meta property="og:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="description" content="광고 플랫폼은 한쪽이 행복하면 다른 쪽이 불행해지는 자리가 많다. 매번 한쪽 편을 들 수 없을 때 어떤 기준으로 결정하는가. 양면 시장에서 일한 시간이 가르친 5가지." />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="양면 시장에서 결정하기 — 광고주와 매체 사이의 패턴 | 정경하" />
+    <meta property="og:description" content="광고 플랫폼은 한쪽이 행복하면 다른 쪽이 불행해지는 자리가 많다. 매번 한쪽 편을 들 수 없을 때 어떤 기준으로 결정하는가. 양면 시장에서 일한 시간이 가르친 5가지." />
+    <meta property="og:url" content="https://justinjeong5.github.io/essays/two-sided-market-decisions/" />
+    <meta name="twitter:title" content="양면 시장에서 결정하기 — 광고주와 매체 사이의 패턴 | 정경하" />
+    <meta name="twitter:description" content="광고 플랫폼은 한쪽이 행복하면 다른 쪽이 불행해지는 자리가 많다. 매번 한쪽 편을 들 수 없을 때 어떤 기준으로 결정하는가. 양면 시장에서 일한 시간이 가르친 5가지." />
+    <link rel="canonical" href="https://justinjeong5.github.io/essays/two-sided-market-decisions/" />
+    <title>양면 시장에서 결정하기 — 광고주와 매체 사이의 패턴 | 정경하</title>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "양면 시장에서 결정하기 — 광고주와 매체 사이의 패턴 | 정경하",
+  "description": "광고 플랫폼은 한쪽이 행복하면 다른 쪽이 불행해지는 자리가 많다. 매번 한쪽 편을 들 수 없을 때 어떤 기준으로 결정하는가. 양면 시장에서 일한 시간이 가르친 5가지.",
+  "url": "https://justinjeong5.github.io/essays/two-sided-market-decisions/",
+  "mainEntityOfPage": "https://justinjeong5.github.io/essays/two-sided-market-decisions/",
+  "author": {
+    "@type": "Person",
+    "name": "정경하",
+    "url": "https://justinjeong5.github.io/",
+    "jobTitle": "Product-minded Frontend Engineer",
+    "sameAs": [
+      "https://github.com/justinjeong5"
+    ]
+  },
+  "datePublished": "2026-05-29",
+  "dateModified": "2026-05-29"
+}
+</script>
+    <script>
+      // 테마 사전 설정 — prerender된 HTML에 data-theme를 즉시 적용해 CSS flash를 막는다.
+      // (다른 스크립트보다 먼저 실행되어야 한다.)
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages — restore deep-link path written by 404.html
+      // https://github.com/rafgraph/spa-github-pages
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
+    </script>
+    <script type="module" crossorigin src="/assets/index-CxYEBVj7.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-QTnfLwEv.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-cases-BgF-y5bM.js">
+    <link rel="modulepreload" crossorigin href="/assets/router-D75Vl-iJ.js">
+    <link rel="modulepreload" crossorigin href="/assets/search-CiN4C8Nu.js">
+    <link rel="modulepreload" crossorigin href="/assets/icons-C3lfSmZ3.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-BMBR_99R.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-essays-CipNEaqH.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-logs-Dm6M40WY.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-notes-CR1Uinql.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-sbCSPT96.css">
+    <link rel="stylesheet" crossorigin href="/assets/pretendard-NPFyShNs.css">
+  </head>
+  <body>
+    <div id="root"><a href="#main-content" class="skip-link">본문 바로가기</a><header class="site-nav" aria-label="Primary"><a class="brand" aria-label="정경하 홈" href="/" data-discover="true">JKH</a><nav class="primary-nav"><a class="nav-link" href="/cases" data-discover="true">Cases</a><a class="nav-link" href="/notes" data-discover="true">Notes</a><a aria-current="page" class="nav-link is-active" href="/essays" data-discover="true">Essays</a><a class="nav-link" href="/logs" data-discover="true">Logs</a><a class="nav-link" href="/about" data-discover="true">About</a></nav><div class="nav-actions"><button type="button" class="search-trigger" aria-label="검색" title="검색 (⌘K 또는 /)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg><span>검색</span><kbd>⌘K</kbd></button><button type="button" class="icon-button" aria-label="테마: 라이트. 클릭하여 변경" title="테마: 라이트 · T 키로도 전환"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg></button><button type="button" class="icon-button desktop-only" aria-label="키보드 단축키" aria-expanded="false" aria-haspopup="dialog" title="키보드 단축키 (? 키)"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-keyboard" aria-hidden="true"><path d="M10 8h.01"></path><path d="M12 12h.01"></path><path d="M14 8h.01"></path><path d="M16 12h.01"></path><path d="M18 8h.01"></path><path d="M6 8h.01"></path><path d="M7 16h10"></path><path d="M8 12h.01"></path><rect width="20" height="16" x="2" y="4" rx="2"></rect></svg></button><button type="button" class="icon-button menu-trigger" aria-label="메뉴 열기" aria-expanded="false" aria-haspopup="dialog" title="메뉴"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button></div></header><main id="main-content" tabindex="-1"><article class="page essay-detail"><header class="page-header"><p class="eyebrow">Essay<!-- --> · 7분</p><h1>양면 시장에서 결정하기 — 광고주와 매체 사이의 패턴</h1><p class="page-lead">광고 플랫폼은 한쪽이 행복하면 다른 쪽이 불행해지는 자리가 많다. 매번 한쪽 편을 들 수 없을 때 어떤 기준으로 결정하는가. 양면 시장에서 일한 시간이 가르친 5가지.</p></header><div class="prose"><h2>양면 시장의 구조</h2>
+<p>광고 플랫폼은 양면 시장(two-sided market)이다. 한쪽엔 광고주, 다른 쪽엔 매체(앱·사이트). 플랫폼은 두 쪽을 중개한다.</p>
+<p>문제는 한쪽이 좋아하는 결정이 다른 쪽을 불행하게 만드는 경우가 많다는 것.</p>
+<ul>
+<li>광고주가 원하는 더 정밀한 targeting → 매체 사용자 프라이버시 침해</li>
+<li>매체가 원하는 더 높은 단가 → 광고주 ROI 하락</li>
+<li>광고주가 원하는 더 큰 광고 노출 → 매체 사용자 경험 악화</li>
+<li>매체가 원하는 광고 형식 제어 → 광고주 캠페인 표준화 어려움</li>
+</ul>
+<p>매번 한쪽 편을 들면 시장이 한쪽으로 기운다. 그래서 결정 기준이 단순하지 않다.</p>
+<h2>일반 시장 vs 양면 시장</h2>
+<p>일반 시장:</p>
+<ul>
+<li>사용자 만족 → 좋은 결정</li>
+<li>한 axis로 최적화</li>
+</ul>
+<p>양면 시장:</p>
+<ul>
+<li>한쪽 만족 → 다른 쪽 불만 가능</li>
+<li>두 axis 동시 최적화</li>
+<li>한쪽이 떠나면 시장 자체가 무너짐 (network effect)</li>
+</ul>
+<p>이 차이가 의사결정의 모양을 바꾼다. 5가지 패턴을 정리해본다.</p>
+<h2>1. &quot;이 결정으로 누가 떠나는가&quot;</h2>
+<p>가장 먼저 묻는 질문. 결정의 영향이 어느 쪽에 더 큰지.</p>
+<ul>
+<li>광고주가 떠나면 → 광고 inventory가 안 팔림 → 매체 수익 ↓</li>
+<li>매체가 떠나면 → 광고 노출 자리 부족 → 광고주 ROI ↓</li>
+</ul>
+<p><strong>누구든 떠나면 양쪽 다 손해</strong>다. 따라서 결정의 1차 기준은 &quot;어느 쪽도 떠나지 않게&quot;다. 한쪽을 100점 만족시키는 결정보다 양쪽 70점 결정이 시장에 더 안전한 경우가 많다.</p>
+<h2>2. 장기 vs 단기</h2>
+<p>단기에 좋은 결정이 장기에 시장을 무너뜨릴 수 있다.</p>
+<p><strong>예시 — 광고 단가 정책</strong>:</p>
+<ul>
+<li>단기: 광고주에게 단가 인하 → 광고 수요 ↑ → 매체 수익도 ↑</li>
+<li>장기: 단가가 너무 낮아지면 매체가 광고 자리를 줄임 → inventory ↓ → 광고주가 자리 못 찾음</li>
+</ul>
+<p><strong>예시 — targeting 정밀화</strong>:</p>
+<ul>
+<li>단기: 더 정밀한 targeting → 광고주 ROI ↑</li>
+<li>장기: 사용자 프라이버시 문제 → 매체가 SDK 사용 제한 → 시장 자체 축소</li>
+</ul>
+<p>장기 영향이 양면 시장에서 더 큰 비중이다. 단기 만족을 위한 결정은 장기 비용을 미리 본다.</p>
+<h2>3. 기본값(default)의 비대칭성</h2>
+<p>양면 시장에서 한쪽이 자주 더 약하다. 보통 매체가 약함 — 광고주는 비용을 쓰니 강한 협상력, 매체는 inventory를 제공하니 의존적.</p>
+<p><strong>기본값을 약한 쪽 보호로 설계</strong>:</p>
+<ul>
+<li>광고 노출 시간 상한 (<a href="/notes/frequency-capping-distributed">frequency capping</a>, 매체 보호)</li>
+<li>사용자 데이터 사용 제한 (사용자/매체 보호)</li>
+<li>광고 형식 가이드라인 (매체 UX 보호)</li>
+</ul>
+<p>기본값이 약한 쪽을 보호하면, 강한 쪽은 명시적 opt-in으로 더 적극적인 옵션을 선택. 양쪽이 의식적으로 결정.</p>
+<p>기본값이 강한 쪽 편이면, 약한 쪽이 알아서 보호받아야 하는데 그러기 어렵다.</p>
+<h2>4. 투명성이 의사결정 비용을 줄인다</h2>
+<p>양면 시장의 결정은 &quot;왜 이렇게 했는가&quot;가 설명 안 되면 양쪽 모두 의심한다.</p>
+<ul>
+<li>광고주: &quot;왜 우리 캠페인이 노출 안 되지? 매체가 거부했나?&quot;</li>
+<li>매체: &quot;왜 단가가 낮아? 광고주가 다 떠났나?&quot;</li>
+</ul>
+<p><strong>투명한 룰</strong>: 모든 결정 규칙을 양쪽에 공개. 광고 거부 사유, 단가 책정 알고리즘, ranking 기준 등.</p>
+<p>투명성이 있으면 &quot;이 결과는 룰에 따른 것&quot;이라 양쪽이 받아들임. 투명성 없으면 매 결과가 협상 대상. 애초에 <a href="/essays/data-trust-two-sided">양쪽이 플랫폼의 숫자를 의심하는 게 구조적 특성</a>이라 더 그렇다.</p>
+<p>투명성 비용 ↑, 신뢰 비용 ↓. 양면 시장에선 신뢰가 핵심 자산.</p>
+<h2>5. 시그널을 약한 쪽에서 먼저 본다</h2>
+<p>위에서 &quot;약한 쪽이 떠나면 시장이 무너진다&quot;고 했다. 이는 모니터링 우선순위에도 영향.</p>
+<p><strong>강한 쪽 (광고주)</strong> 신호:</p>
+<ul>
+<li>캠페인 출고량</li>
+<li>ROI</li>
+<li>단가 협상력</li>
+</ul>
+<p><strong>약한 쪽 (매체)</strong> 신호:</p>
+<ul>
+<li>SDK 통합 유지율</li>
+<li>매체 사용자 NPS</li>
+<li>광고 자리 축소 빈도</li>
+</ul>
+<p>강한 쪽 지표는 시장이 무너지기 직전까지 좋아 보일 수 있다. 약한 쪽이 한 명씩 떠나는 신호를 먼저 봐야 한다.</p>
+<p>알람과 대시보드는 약한 쪽 지표를 앞에 둔다. 강한 쪽 지표는 뒤에. 강한 쪽은 신호 보내는 능력이 강해서 알람 없어도 들어오고, 약한 쪽은 조용히 떠난다.</p>
+<h2>본인 경험에서 배운 것</h2>
+<p>광고 플랫폼에서 일하면서 가장 자주 본 실수는 &quot;한쪽 KPI&quot;에 매몰되는 것이다.</p>
+<ul>
+<li>&quot;이번 분기는 광고 매출이 KPI&quot; → 광고주 편을 들면 매체가 떠나는 신호 무시</li>
+<li>&quot;이번 분기는 매체 통합이 KPI&quot; → 매체 편을 들면 광고주 ROI 무시</li>
+</ul>
+<p>KPI는 한 축이지만 시장은 두 축. KPI가 한쪽만 보면 다른 쪽이 무너지고 다음 분기 KPI도 무너진다.</p>
+<p>가장 효과적인 KPI 설계는 <strong>양쪽 지표를 항상 같이 본다</strong>. 매출 + retention 같은 쌍. 한쪽 지표가 좋아져도 다른 쪽이 나빠지면 결과가 부정적.</p>
+<h2>함정</h2>
+<ul>
+<li><strong>한쪽 stakeholder에 과도하게 노출</strong>: 광고주와 자주 회의하면 광고주 관점에 편향. 매체 회의도 같은 빈도로.</li>
+<li><strong>A/B 테스트를 한쪽 지표로만</strong>: 매출 ↑ 보이면 통과, 사용자 NPS ↓ 안 보임. 양쪽 지표 동시 측정.</li>
+<li><strong>양면 시장 패턴을 모든 일반 시장에 적용</strong>: 일반 시장은 양면이 아니어서 양쪽 균형 고민 불필요. 양면 시장만의 패턴.</li>
+<li><strong>네트워크 효과의 무서움 무시</strong>: 한쪽이 임계 이하로 떨어지면 다른 쪽도 빠진다. 임계 미리 측정.</li>
+<li><strong>&quot;균형&quot;을 무책임으로 합리화</strong>: 양쪽 다 약간 불만족인 결정을 &quot;균형&quot;이라 부르지만 사실은 결정 회피. 진짜 균형은 양쪽이 거래의 가치를 동의하는 것.</li>
+</ul>
+<h2>결론</h2>
+<p>양면 시장의 결정은 <strong>한쪽 만족이 다른 쪽 손실</strong>인 자리가 많다. 일반 시장의 &quot;사용자 만족 최대화&quot;가 단순히 안 된다.</p>
+<p>5가지 패턴이 이 자리의 의사결정에 도움 됐다.</p>
+<ol>
+<li>누가 떠나는가</li>
+<li>장기 vs 단기</li>
+<li>기본값을 약한 쪽 보호로</li>
+<li>투명성이 신뢰 비용 ↓</li>
+<li>약한 쪽 신호를 먼저</li>
+</ol>
+<p>이 5가지는 광고에 한정되지 않는다. 양면 시장 구조라면 — 마켓플레이스·결제·소셜·앱스토어 — 같은 패턴이 동작.</p>
+<p>본인 회사가 어느 자리에 있는지가 다르지만, 양면 시장의 본질은 같다. 한쪽만 보면 다른 쪽이 무너지고, 시장 전체가 같이 떠난다.</p></div><footer class="page-footer"><a class="see-all-link" href="/essays" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg> 에세이 목록</a></footer></article></main><footer class="site-footer"><div class="footer-brand"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg>정경하</span><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open-text" aria-hidden="true"><path d="M12 7v14"></path><path d="M16 12h2"></path><path d="M16 8h2"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path><path d="M6 12h2"></path><path d="M6 8h2"></path></svg>Cases, notes, logs, and proof of work</span></div><nav class="footer-nav" aria-label="Secondary"><a href="/uses" data-discover="true">Uses</a><a href="/now" data-discover="true">Now</a><a href="/reading" data-discover="true">Reading</a><a href="/cv" data-discover="true">CV</a></nav><span class="footer-meta"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-clock" aria-hidden="true"><path d="M16 14v2.2l1.6 1"></path><path d="M16 2v4"></path><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"></path><path d="M3 10h5"></path><path d="M8 2v4"></path><circle cx="16" cy="16" r="6"></circle></svg>Updated <!-- -->2026-06-09 11:00</span></footer></div>
+  </body>
+</html>
