@@ -58,6 +58,10 @@ side project가 production 패턴을 가르친다. 회사 코드에선 자유롭
 
 또 하나: **Phase 단위 점진 빌드**가 매몰을 막는다. Phase 1 MVP에서 모든 걸 다 만들려고 했다면 한 달 후에도 안 끝났을 것. Phase 0 → 1 → 2 → 2.5 hotfix → 3-A → 3-B 순서로 매번 작은 PR을 머지하면서 자라난 형태가 sustained delivery의 답이다.
 
+## 운영 후일담
+
+배포로 끝나는 매끈한 성공담은 아니었다. 주1회 자동 수집을 돌리는 동안 세 건의 실제 결함을 헬스체크로 잡아냈다. (1) dry-run이 현재연도 DB를 오염시켜 거래연도 구분 없이 데이터가 섞이던 silent failure를 발견해 연도별 DB 라우팅으로 격리했고, (2) 외부 소스의 silent drop을 정상 종료로 오인하던 경로에 결손 경보를 달았고, (3) enrichment 파이프라인을 순수 함수로 추출하고 characterization 테스트로 안전망을 둘렀다. 자동화는 "만들면 끝"이 아니라, 조용히 틀리는 경로를 계속 잡아내는 운영이 본체였다.
+
 레포: [github.com/justinjeong5/j-home-radar](https://github.com/justinjeong5/j-home-radar)
 
-관련: [/notes/notion-lightweight-backend](/notes/notion-lightweight-backend), [/notes/public-api-integration-patterns](/notes/public-api-integration-patterns), [/notes/incrementally-correct](/notes/incrementally-correct)
+관련: [/notes/notion-lightweight-backend](/notes/notion-lightweight-backend), [/notes/public-api-integration-patterns](/notes/public-api-integration-patterns), [/notes/incrementally-correct](/notes/incrementally-correct), [/logs#2026-06-07-healthcheck-six-bots](/logs#2026-06-07-healthcheck-six-bots), [/logs#2026-06-03-silent-failure-dry-run](/logs#2026-06-03-silent-failure-dry-run), [/logs#2026-06-04-pure-function-characterization](/logs#2026-06-04-pure-function-characterization)
