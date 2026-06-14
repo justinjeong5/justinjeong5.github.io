@@ -142,7 +142,7 @@ function HomePage() {
         <div className="section-header">
           <p className="eyebrow">Digital garden</p>
           <h2>자라고 있는 노트</h2>
-          <p>완성된 글이 아니라 토픽별로 자라는 노트들입니다. 🌱 → 🌿 → 🌳.</p>
+          <p>완성된 글이 아니라 토픽별로 자라는 노트들입니다.</p>
         </div>
         <ul className="note-preview-grid">
           {recentNotes.map((note) => (

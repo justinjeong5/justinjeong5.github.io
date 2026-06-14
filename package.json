@@ -24,6 +24,9 @@
     "start": "vite --host 0.0.0.0",
     "build": "node scripts/generate-sitemap.mjs && vite build && vite build --ssr src/entry-server.jsx --outDir dist-ssr && node scripts/prerender.mjs",
     "preview": "vite preview --host 0.0.0.0",
+    "check:source": "node scripts/check-source.mjs",
+    "lint": "npm run check:source -- --mode lint",
+    "typecheck": "npm run check:source -- --mode typecheck",
     "deploy": "npm run build && gh-pages -d dist",
     "test": "node --test \"scripts/**/*.test.mjs\" \"src/**/*.test.mjs\"",
     "tend": "node scripts/garden-tender/garden-tender.mjs"
