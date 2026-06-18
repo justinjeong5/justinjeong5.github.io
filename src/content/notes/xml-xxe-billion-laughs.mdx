@@ -1,0 +1,112 @@
+---
+title: 신뢰할 수 없는 XML 파싱 — XXE·billion laughs를 DOCTYPE 거부로 막기
+growth: Seedling
+topics: [security, xml, parsing, python]
+summary: RSS 같은 외부 XML을 파싱할 때 DTD·외부 엔티티가 열려 있으면 XXE(파일 읽기·SSRF)와 billion laughs(엔티티 확장 DoS)에 노출된다. 가장 단순하고 확실한 방어는 DOCTYPE을 만나면 파싱을 거부하는 것.
+plantedAt: 2026-06-18
+lastTendedAt: 2026-06-18
+---
+
+## 문제 — 외부 XML은 코드다
+
+RSS 피드를 수집하는 봇을 돌리면 남이 만든 XML을 매번 파싱하게 된다. XML은 데이터처럼 보이지만, DTD(Document Type Definition)와 엔티티가 켜져 있으면 사실상 **파서에게 시키는 명령**이 된다. 입력 출처를 통제 못 하는 순간 두 가지 고전 공격이 그대로 들어온다.
+
+- **XXE (XML External Entity)**: 외부 엔티티로 로컬 파일을 읽거나, 내부망 URL을 호출(SSRF)하게 만든다.
+- **billion laughs**: 엔티티를 중첩 정의해 작은 입력으로 메모리를 폭발시키는 DoS.
+
+둘 다 진입점은 같다. 파서가 **DTD를 처리하도록 허용**한다는 점이다.
+
+## XXE — 엔티티가 파일을 읽는다
+
+외부 엔티티는 파싱 시점에 URL/경로를 따라가서 그 내용을 문서에 끼워 넣는다.
+
+```xml
+<?xml version="1.0"?>
+<!DOCTYPE root [
+  <!ENTITY xxe SYSTEM "file:///etc/passwd">
+]>
+<root>&xxe;</root>
+```
+
+파서가 `&xxe;`를 치환하는 순간 `/etc/passwd` 내용이 결과 트리에 들어온다. `SYSTEM`을 `http://169.254.169.254/...` 같은 내부 주소로 바꾸면 SSRF가 된다. 데이터를 외부로 빼내는 out-of-band 변형(파라미터 엔티티 + 외부 DTD)도 있다.
+
+## billion laughs — 작은 입력이 메모리를 먹는다
+
+외부 접근이 막혀 있어도, 내부 엔티티 중첩만으로 DoS가 가능하다.
+
+```xml
+<?xml version="1.0"?>
+<!DOCTYPE lolz [
+  <!ENTITY lol "lol">
+  <!ENTITY lol2 "&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;">
+  <!ENTITY lol3 "&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;">
+  <!-- ... lol9까지 -->
+]>
+<lolz>&lol9;</lolz>
+```
+
+각 단계가 10배씩 부푼다. 9단계면 `lol` 하나가 10억 개로 펼쳐진다. 수 KB짜리 입력 하나로 수 GB 메모리를 요구하게 만들어 프로세스를 죽인다. 네트워크가 전혀 필요 없다.
+
+## 핵심 방어 — DOCTYPE을 거부한다
+
+세부 옵션을 하나하나 끄는 것보다, **DTD 자체를 거부**하는 게 가장 단순하고 빈틈이 적다. 정상적인 RSS/Atom 피드는 `<!DOCTYPE>`이 필요 없다. 그러니 DOCTYPE이 보이면 파싱을 멈추는 게 합리적 기본값이다.
+
+> 두 공격 모두 진입점이 DTD다. DTD를 거부하면 XXE와 billion laughs를 한 번에 끊는다.
+
+Python이면 표준 `xml.etree.ElementTree` 대신 `defusedxml`을 쓴다. 단, 기본값을 정확히 알아야 한다. `defusedxml.ElementTree.fromstring`은 기본적으로 **엔티티 선언**과 **외부 참조**를 거부하지만(`forbid_entities=True`·`forbid_external=True`), **순수 DOCTYPE 자체**는 기본으로 막지 않는다(`forbid_dtd=False`). 즉 DOCTYPE까지 막는 헤드라인 방어를 켜려면 `forbid_dtd=True`를 명시해야 한다.
+
+```python
+from defusedxml.ElementTree import fromstring
+from defusedxml.common import DTDForbidden, EntitiesForbidden
+
+def parse_feed(raw: bytes):
+    try:
+        # forbid_dtd=True를 명시해야 <!DOCTYPE>만 있어도 거부된다
+        return fromstring(raw, forbid_dtd=True)
+    except (DTDForbidden, EntitiesForbidden) as e:
+        # DOCTYPE/엔티티가 있는 입력 → 파싱 거부, 수집 스킵
+        raise ValueError("거부된 XML: DTD/엔티티 포함") from e
+```
+
+`forbid_dtd=True`를 빼면 `DTDForbidden`은 절대 발생하지 않고(엔티티 선언이 함께 있으면 `EntitiesForbidden`으로만 잡힌다), `<!DOCTYPE root>`처럼 엔티티 없는 DOCTYPE은 그대로 통과한다. billion laughs 예제가 기본값에서도 막히는 이유는 'DTD 거부' 때문이 아니라 `<!ENTITY>` 선언이 `forbid_entities=True`에 걸리기 때문이다. 이 두 메커니즘을 헷갈리면 "DOCTYPE을 거부하고 있다"고 착각한 채 실제로는 DTD를 허용하는 상태가 된다.
+
+defusedxml을 못 쓰는 환경이면, 쓰는 파서에서 직접 비활성화한다. `lxml`은 외부 엔티티 치환과 네트워크 접근을 끄고, 거대 트리를 거부한다.
+
+```python
+from lxml import etree
+
+parser = etree.XMLParser(
+    resolve_entities=False,  # 엔티티 치환 끔
+    no_network=True,         # 외부 fetch 끔
+    load_dtd=False,
+    dtd_validation=False,
+    huge_tree=False,         # 거대 트리 거부
+)
+# load_dtd=False + resolve_entities=False로 외부 엔티티 치환·DTD 로딩이 모두 막혀 XXE가 차단되고,
+# huge_tree=False가 엔티티 확장 한계를 유지해 billion laughs를 막는다.
+# 단 순정 lxml.etree에는 forbid_dtd 인자가 없어 DOCTYPE 자체를 거부하지는 못한다.
+# 헤드라인 방어(DOCTYPE 거부)까지 원하면 defusedxml.lxml(forbid_dtd=True 지원) 경로를 쓴다.
+root = etree.fromstring(raw, parser=parser)
+```
+
+언어 무관하게 우선순위는 같다. **DTD/DOCTYPE 거부 → 외부 엔티티 치환 끄기 → 네트워크 접근 끄기 → 엔티티 확장 한계 두기.** 핵심은 첫 항목 하나다. 나머지는 첫 항목이 막히지 않는 환경(순정 lxml처럼 DOCTYPE 거부 옵션이 없는 경우)을 대비한 심층 방어다.
+
+## 함정
+
+- **"stdlib는 안전하다"는 가정**: 현대 Python `ElementTree`는 외부 일반 엔티티를 치환하지 않는다(Python 3.7.1+). 하지만 quadratic blowup 같은 일부 확장 DoS는 stdlib만으로 완전히 막지 못하고, 파서·버전·플랫폼에 따라 동작이 달라질 수 있다. "기본값이 알아서 막아줄 것"에 기대지 말고 untrusted 입력엔 defusedxml로 DTD를 명시적으로 거부한다.
+- **외부 엔티티만 막고 끝내기**: 네트워크를 끊어도 billion laughs는 내부 엔티티만으로 성립한다. DoS 방어는 별개로 챙겨야 한다.
+- **redirect·메모리·크기 한계 누락**: 피드는 URL로 가져온다. 파싱 전에 응답 크기 상한·타임아웃·redirect 제한이 없으면 파서를 굳히기도 전에 fetch 단계에서 당한다.
+- **검증을 한 곳에만**: 수집기는 보통 여러 진입점(스케줄러·수동 재시도·재처리)이 있다. 파싱 함수 한 군데서 거부하도록 모아두지 않으면 우회 경로가 남는다.
+- **거부를 조용히 삼키기**: DOCTYPE을 거부했으면 그 사실이 로그/알림에 남아야 한다. 조용히 스킵하면 정상 피드가 깨진 건지 공격인지 구분이 안 된다.
+- **에러 메시지에 경로 노출**: "file:///etc/... 읽기 실패" 같은 메시지를 그대로 응답·로그에 흘리면 공격자에게 힌트를 준다. 거부 사유는 일반화한다.
+
+## 핵심
+
+> 외부 XML은 데이터가 아니라 코드일 수 있다. XXE와 billion laughs의 공통 진입점은 DTD이므로, DOCTYPE을 만나면 파싱을 거부하는 것이 가장 단순하고 확실한 기본 방어다. 단 defusedxml은 기본값에서 엔티티 선언·외부 참조만 거부하므로, DOCTYPE까지 막으려면 `forbid_dtd=True`를 명시한다. 못 쓰는 환경이면 파서의 DTD·외부 엔티티·네트워크를 직접 끈다.
+
+## 관련
+
+[/logs#2026-06-03-personal-security-hygiene](/logs#2026-06-03-personal-security-hygiene) — 개인 보안 위생을 정기 작업으로 돌린 같은 맥락
+[/notes/public-api-integration-patterns](/notes/public-api-integration-patterns) — 외부 입력을 다루는 통합 패턴
+[/notes/dead-dependency-hidden-cost](/notes/dead-dependency-hidden-cost) — 공격 표면적을 줄이는 다른 결정
+[/notes/samesite-cookie-3rd-party-context](/notes/samesite-cookie-3rd-party-context) — 신뢰 경계에서의 또 다른 보안 디테일

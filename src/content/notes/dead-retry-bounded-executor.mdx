@@ -1,0 +1,128 @@
+---
+title: 죽은 재시도 인프라 — 만들어두고 연결 안 한 retry는 0번 재시도한다
+growth: Seedling
+topics: [reliability, backend, retry, automation]
+summary: 재시도를 만들어두고 연결을 안 하면 0번 재시도하고, 무제한으로 풀면 폭주하고, 영구 에러까지 재시도하면 헛고생을 반복한다. 세 증상의 공통 원인은 빠진 한 조각이다.
+plantedAt: 2026-06-18
+lastTendedAt: 2026-06-18
+---
+
+## 문제 — 재시도 코드가 있는데 한 번도 재시도하지 않는다
+
+재시도 헬퍼를 만든다. `retry_with_backoff(fn, max_attempts=3)` 같은 거. 테스트도 통과한다. 그리고 끝낸다.
+
+문제는 실제 호출 경로가 그 헬퍼를 거치지 않는다는 것이다.
+
+```python
+def with_retry(fn, max_attempts=3):
+    for attempt in range(max_attempts):
+        try:
+            return fn()
+        except Exception:
+            if attempt == max_attempts - 1:
+                raise
+            time.sleep(backoff(attempt))
+
+# 그런데 실제 호출은:
+result = notion.create_page(payload)   # with_retry를 안 거친다
+```
+
+`with_retry`는 어디서도 호출되지 않는다. import 0건, 콜그래프상 unreachable. 코드는 있지만 **0번 재시도한다**. 이건 단순 dead code가 아니라 *있다고 믿게 만드는* dead infra다. "재시도 붙였으니 일시 장애는 알아서 넘어가겠지"라는 가정이 조용히 깨진다.
+
+근거: 개인 자동화 j-home-radar(부동산 레이더, 공개 레포)에서 retry 헬퍼는 있었지만 Notion 쓰기 경로에 wiring이 안 돼 있었다. 일시 5xx가 곧장 잡 실패로 이어졌고, 그제야 "재시도가 한 번도 안 돌았다"는 걸 발견했다. (실제 코드는 TypeScript의 `withRetry`/`classifyError`다. 아래 예시는 언어에 종속되지 않게 Python pseudo-code로 옮겼다.)
+
+## 1단계: 연결 — wiring을 콜그래프로 검증한다
+
+"재시도 있음"의 진짜 신호는 헬퍼의 존재가 아니라 **호출 경로가 헬퍼를 통과하는가**다. 검증은 결정론적으로 한다.
+
+- `with_retry`의 참조 수를 센다. 정의 1 + 호출 N. 호출 N이 0이면 dead.
+- 실제 외부 호출(HTTP·DB·SDK)이 전부 헬퍼를 거치는지 grep으로 교차 확인한다.
+- 테스트에서 transient 에러를 주입하고 호출 횟수가 2 이상인지 단언한다.
+
+```python
+def test_wiring_actually_retries():
+    calls = []
+    def flaky():
+        calls.append(1)
+        if len(calls) < 2:
+            raise TransientError()
+        return "ok"
+    assert create_page_with_retry(flaky) == "ok"
+    assert len(calls) == 2   # 0번이 아니라 실제로 재시도했다
+```
+
+존재 테스트(`with_retry`를 직접 호출하는 유닛 테스트)는 통과하면서도 wiring은 비어 있을 수 있다. 그래서 **실제 호출 경로**를 타는 테스트가 필요하다.
+
+## 2단계: 상한 — 무제한 재시도는 폭주한다. bounded로 감싼다
+
+wiring만 연결하면 반대 위험이 생긴다. 영구 장애에 무한 재시도를 걸면 폭주한다. 상한을 둔다.
+
+- **최대 시도(max attempts)**: 보통 3~5. 그 이상은 가치가 급감한다.
+- **지수 백오프 + jitter**: `base * 2**attempt`를 천장으로 두고 `[0, 천장]`에서 무작위로 뽑는다(AWS의 full jitter). jitter가 없으면 모든 클라이언트가 같은 간격으로 동시에 재시도하는 thundering herd가 난다. full jitter는 0 근처 값도 뽑을 수 있어 호출자들을 더 넓게 분산시킨다.
+- **상한 캡(max backoff)**: 천장이 무한히 커지지 않게 캡(예: 30s)을 둔다. jitter는 `[0, min(cap, base*2**attempt)]`에서 뽑으므로 실효 최대 지연도 cap을 넘지 않는다.
+- **동시성 제한**: 재시도 큐가 동시에 N개를 넘지 않게. 안 그러면 다운스트림을 재시도가 밀어버린다.
+- **전체 deadline**: 시도 총합에 시간 상한. 호출자가 무한정 매달리지 않게.
+
+```python
+def bounded_retry(fn, max_attempts=4, base=0.5, cap=30, deadline=60):
+    start = time.monotonic()
+    for attempt in range(max_attempts):
+        try:
+            return fn()
+        except PermanentError:
+            raise                                    # 즉시 포기 (3단계)
+        except TransientError:
+            if attempt == max_attempts - 1:
+                raise
+            ceiling = min(cap, base * 2 ** attempt)  # 캡으로 클램프한 백오프 천장
+            delay = random.uniform(0, ceiling)       # full jitter: [0, ceiling]에서 무작위
+            if time.monotonic() - start + delay > deadline:
+                raise
+            time.sleep(delay)
+```
+
+실제 j-home-radar는 jitter 대신 고정 백오프 테이블(`[1s, 2s, 4s, … 64s]`)을 쓰고 `MAX_RETRY_DELAY_MS=60s`로 최종 클램프해 cron 타임박스를 보호한다. 핵심은 같다 — **백오프에 천장을 두고, 그 천장을 넘지 않게 최종값을 클램프한다**.
+
+## 3단계: 분류 — 모든 에러를 재시도하면 안 된다. transient vs permanent
+
+재시도의 핵심은 "재시도할 가치가 있는 에러만 재시도한다"는 것이다. 분류가 틀리면 재시도가 해가 된다.
+
+- **transient(재시도 가치)**: 네트워크 타임아웃, 연결 끊김, 429 Too Many Requests, 502/503/504, DB 데드락. 다시 하면 성공할 수 있다.
+- **permanent(즉시 포기)**: 400 Bad Request, 401/403 인증·권한, 404, 422 검증 실패, 스키마 불일치. 똑같이 다시 보내도 똑같이 실패한다. 재시도는 시간 낭비 + 다운스트림 부하만 키운다.
+- **맥락 의존(상황 따라)**: 409 Conflict가 대표적이다. 쓰기 충돌(write conflict)은 짧게 대기 후 재시도하면 풀리는 경우가 많아 transient에 가깝지만, 영구적 상태 불일치로 인한 409는 재시도해도 똑같이 막힌다. status code 하나로 단정하지 말고 충돌 종류로 가른다. j-home-radar는 Notion의 409를 "짧은 대기 후 재시도"(`notion-retry`, 100ms 백오프)로 다룬다.
+
+j-home-radar에서 고친 두 번째 버그가 이 분류였다. Notion API의 검증 에러(영구)를 transient로 묶어 재시도하고 있었다. 잘못된 payload를 4번 더 보내봐야 4번 더 거절당할 뿐이다. 분류를 갈라 permanent는 즉시 실패시키고, transient만 bounded 재시도로 넘겼다.
+
+```python
+def classify(err):
+    if err.status in (429, 500, 502, 503, 504):
+        return Transient
+    if err.status == 409:
+        return Transient if is_write_conflict(err) else Permanent  # 맥락 의존
+    if err.status in (400, 401, 403, 404, 422):
+        return Permanent
+    return Permanent   # 모르면 보수적으로 포기 — 폭주보다 낫다
+```
+
+기본값이 중요하다. 분류 안 되는 에러는 **transient가 아니라 permanent**로 둔다. 알 수 없는 에러를 재시도하면 무한 폭주 쪽으로 기운다.
+
+## 함정
+
+- **헬퍼 존재 = 재시도 동작이라는 착각**: 정의됐다고 호출되는 게 아니다. 콜그래프상 참조 0이면 0번 실행된다.
+- **존재 테스트만 있고 wiring 테스트가 없음**: 헬퍼 유닛 테스트는 통과하는데 실제 경로는 헬퍼를 안 탄다. 호출 경로를 타는 테스트로 검증.
+- **무제한 재시도**: 상한 없는 재시도는 영구 장애 시 폭주. max attempts·deadline·동시성 캡 필수.
+- **jitter 없는 백오프**: 모든 클라이언트가 같은 간격으로 동시 재시도 → thundering herd. `[0, 천장]`에서 뽑는 full jitter로 분산.
+- **permanent를 재시도**: 400/401/422는 다시 보내도 똑같이 실패. 다운스트림 부하만 키운다.
+- **알 수 없는 에러를 transient로 기본 처리**: 모르는 에러는 permanent로 보수 처리. 기본값이 폭주를 막는다.
+- **재시도가 멱등성을 가정**: 재시도는 같은 요청을 또 보낸다. 멱등하지 않으면 중복 부작용. 쓰기 경로는 멱등성 키와 짝지어야 안전.
+
+## 핵심
+
+> 재시도는 만든다고 도는 게 아니다. **연결(wiring)·상한(bounded)·분류(transient vs permanent)** 셋이 모두 있어야 비로소 의미 있는 재시도다. 셋 중 하나라도 빠지면 0번 재시도하거나, 폭주하거나, 헛고생을 반복한다.
+
+## 관련
+
+[/notes/dead-dependency-hidden-cost](/notes/dead-dependency-hidden-cost) — import 0건처럼, 호출 0건도 비용을 만드는 dead infra
+[/notes/idempotency-keys-billing](/notes/idempotency-keys-billing) — 재시도가 안전하려면 쓰기 경로가 멱등해야 한다
+[/notes/exactly-once-delivery-myth](/notes/exactly-once-delivery-myth) — at-least-once 재시도 + 멱등성 = effectively-once
+[/logs#2026-06-09-fault-isolation-atomic-writes](/logs#2026-06-09-fault-isolation-atomic-writes) — 같은 자동화에서 실패의 폭발 반경을 한 건으로 묶은 작업
