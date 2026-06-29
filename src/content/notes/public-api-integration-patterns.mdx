@@ -66,7 +66,7 @@ const PriceSchema = z.object({
 const data = PriceSchema.parse(response.data); // 깨지면 여기서 명확한 에러
 ```
 
-이 한 줄을 boundary에 박아 두니 schema가 바뀌면 다음 cron에서 곧장 alert가 떴다. 조용히 틀린 값이 흘러 들어가던 자리가 시끄럽게 멈추는 자리로 바뀐 것이다. 덤으로 `any`의 전염이 끊겼고, string→number 같은 transform도 한곳에 모였다. `as` 캐스팅으로 넘겼다면 영영 못 잡았을 일이다. ([왜 컴파일러가 외부 데이터를 못 잡는지는 따로 적어 뒀다](/notes/typescript-false-safety).)
+이 한 줄을 boundary에 박아 두니 schema가 바뀌면 다음 cron에서 곧장 alert가 떴다. 조용히 틀린 값이 흘러 들어가던 자리가 시끄럽게 멈추는 자리로 바뀐 것이다. 덤으로 `any`의 전염이 끊겼고, string→number 같은 transform도 한곳에 모였다. `as` 캐스팅으로 넘겼다면 영영 못 잡았을 일이다.
 
 ## 페이지네이션은 호출자가 몰라도 되게
 
@@ -113,6 +113,4 @@ logger.error('api.error', { api: 'naver_maps', status: err.status, body: err.res
 
 ## 관련
 
-[/notes/typescript-false-safety](/notes/typescript-false-safety) — 외부 데이터를 컴파일러가 못 잡는 이유
 [/notes/notion-lightweight-backend](/notes/notion-lightweight-backend) — 같은 rate limit 한계의 다른 케이스
-[/notes/incident-monitoring-gap](/notes/incident-monitoring-gap) — 외부 API 깨짐도 모니터링 갭이 됨
