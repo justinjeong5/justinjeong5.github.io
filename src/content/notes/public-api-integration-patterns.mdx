@@ -1,26 +1,24 @@
 ---
-title: 외부 공개 API 통합 — rate limit·재시도·zod boundary
+title: 혼자 7개 공개 API를 한 시스템에 욱여넣으며 배운 것
 growth: Budding
 topics: [api, integration, backend, side-project]
-summary: 다수 외부 API를 한 시스템에 통합할 때의 일반 패턴. bottleneck으로 rate limit, axios-retry로 재시도, zod로 응답 schema 검증. 5+ API라면 boundary가 안전망.
+summary: 홈레이더를 만들며 국토부·네이버·카카오 등 공개 API 7개를 혼자 통합했다. case문 더미가 되기 직전, rate limit·재시도·boundary를 라이브러리 수준으로 끌어올린 기록.
 plantedAt: 2026-05-18
 lastTendedAt: 2026-05-29
 ---
 
-## 문제 — 5+ 외부 API 통합
+홈레이더를 혼자 만들면서, 어느 날 cron이 통째로 멈춰 있는 걸 발견했다. 네이버 Cloud Maps 하나가 rate limit에 걸려 hang 됐고, 그 hang이 국토부·카카오·한국은행까지 전부 끌고 들어가 같은 배치를 막고 있었다. API는 7개인데 내가 짠 코드는 그걸 하나처럼 다루고 있었던 것이다.
 
-홈레이더 같은 시스템은 공개 API 7개를 통합한다. 국토부 RTMS, 네이버 Cloud Maps, 카카오 모빌리티, 학교알리미, 한국은행 ECOS 등.
-
-각 API의 정책이 다르다.
+붙여야 할 공개 API가 국토부 RTMS, 네이버 Cloud Maps, 카카오 모빌리티, 학교알리미, 한국은행 ECOS까지 7개. 그런데 같은 게 하나도 없었다.
 
 - rate limit이 다름 (초당 3·10·100·무제한)
 - 응답 schema가 다름 (JSON·XML·둘 다)
 - 에러 표현이 다름 (status code·body field·둘 다)
 - 인증이 다름 (header·query·subkey)
 
-단일 패턴으로 다 다루지 않으면 코드가 case문 더미가 된다.
+처음엔 API마다 분기로 받아냈다. case문이 늘수록 새 API를 붙일 때마다 기존 코드를 다시 읽어야 했고, 위 같은 장애가 났을 때 어디가 원인인지 추적이 안 됐다. 그래서 분기를 늘리는 대신, 다양성을 한 층 아래로 내려 라이브러리 수준에서 흡수하기로 방향을 틀었다. 아래는 그렇게 다시 짠 골격이다.
 
-## 패턴 1 — bottleneck으로 rate limit
+## API별로 끊어 둔 rate limit
 
 ```ts
 import Bottleneck from 'bottleneck';
@@ -33,11 +31,11 @@ const naverLimiter = new Bottleneck({
 await naverLimiter.schedule(() => axios.get(url));
 ```
 
-API별 limiter 분리. 한 API가 burst 받아도 다른 API는 영향 0.
+핵심은 limiter를 API마다 따로 둔 것이다. 처음 장애의 원인이 정확히 여기였다 — 하나로 묶인 limiter는 한 API의 burst가 전체 배치를 멈춘다. 분리한 뒤로는 네이버가 막혀도 나머지 6개는 영향 0.
 
-## 패턴 2 — 자동 재시도
+## timeout이 빠져 있던 자리
 
-429·5xx·timeout은 일시적일 가능성 ↑. axios-retry 또는 직접 구현.
+cron이 멈췄던 또 다른 이유는 timeout이 없어서였다. 외부 API가 응답을 안 주고 매달려 있으면 배치 전체가 같이 멈춘다. 그래서 모든 호출에 timeout을 명시하고, 그 위에 재시도를 얹었다. 429·5xx·timeout은 일시적일 가능성이 높으니 한 번에 포기할 이유가 없다.
 
 ```ts
 import axiosRetry from 'axios-retry';
@@ -50,11 +48,11 @@ axiosRetry(axios, {
 });
 ```
 
-429는 exponential backoff. 4xx는 일반적으로 재시도 안 함 (영구 에러).
+429는 exponential backoff로 물러섰다 다시. 4xx는 재시도하지 않게 막았다 — 영구 에러를 계속 두드리면 무한 루프에 ban까지 따라온다.
 
-## 패턴 3 — zod로 응답 boundary 검증
+## 외부 응답을 한 번도 그냥 믿지 않기
 
-외부 응답을 그대로 믿으면 schema 바뀔 때 런타임에 깨짐. zod로 boundary에서 검증.
+다음으로 깨진 곳은 응답이었다. 국토부 schema가 말도 없이 바뀐 날, 코드는 멀쩡히 돌면서 엉뚱한 값을 DB에 넣고 있었다. 그래서 모든 외부 응답을 들어오는 자리에서 zod로 한 번씩 검증하게 했다.
 
 ```ts
 import { z } from 'zod';
@@ -68,15 +66,11 @@ const PriceSchema = z.object({
 const data = PriceSchema.parse(response.data); // 깨지면 여기서 명확한 에러
 ```
 
-장점:
+이 한 줄을 boundary에 박아 두니 schema가 바뀌면 다음 cron에서 곧장 alert가 떴다. 조용히 틀린 값이 흘러 들어가던 자리가 시끄럽게 멈추는 자리로 바뀐 것이다. 덤으로 `any`의 전염이 끊겼고, string→number 같은 transform도 한곳에 모였다. `as` 캐스팅으로 넘겼다면 영영 못 잡았을 일이다. ([왜 컴파일러가 외부 데이터를 못 잡는지는 따로 적어 뒀다](/notes/typescript-false-safety).)
 
-- 외부 schema 변경 시 즉시 감지 (다음 cron에 alert)
-- `any` 전염 차단
-- 응답 transform(string→number 등) 한 자리
+## 페이지네이션은 호출자가 몰라도 되게
 
-## 패턴 4 — 페이지네이션 일반화
-
-API마다 페이지네이션이 다르다 (cursor·offset·page-token). 한 함수로 추상화하면 호출자가 모름.
+API마다 페이지네이션이 cursor·offset·page-token으로 제각각이라, 호출하는 쪽에서 매번 그걸 신경 쓰게 두기 싫었다. async generator 하나로 덮었다.
 
 ```ts
 async function* paginate(api: string, params: object) {
@@ -94,31 +88,28 @@ for await (const item of paginate('rtms', { region: 'A' })) {
 }
 ```
 
-호출자는 페이지 신경 안 씀. for-await가 자연스럽게 종료.
+호출자는 페이지를 신경 쓰지 않고, for-await가 알아서 끝까지 돌다 멈춘다.
 
-## 패턴 5 — 구조화 로그
+## 그리고 다시 새벽에 깨지 않으려고
 
-winston·pino로 JSON 로그. 에러 발생 시 어느 API·어느 단계인지 즉시 파악되어야.
+처음 cron이 멈췄을 때 가장 괴로웠던 건 원인을 찾는 데 걸린 시간이었다. 어느 API의 어느 단계에서 났는지가 로그에 안 보였다. 그래서 pino로 모든 요청·에러를 구조화 JSON으로 남겼다.
 
 ```ts
 logger.info('api.request', { api: 'naver_maps', endpoint: 'geocode', params });
 logger.error('api.error', { api: 'naver_maps', status: err.status, body: err.response?.data });
 ```
 
-production에서 디버깅 시간이 비선형으로 줄어든다.
+이걸 깔고 나서야 디버깅이 로그를 grep 한 번 하는 일이 됐다.
 
-## 함정
+## 위 골격으로도 안 잡혀서 따로 밟은 것들
 
-- **rate limit을 단일 limiter로 통합**: 한 API의 burst가 다른 API를 막음. API별 분리.
-- **재시도 무한**: 영구 에러(4xx)도 재시도하면 무한 루프 + ban 위험. retryCondition 명확.
-- **zod 안 쓰고 `as` 캐스팅**: 거짓 안전감. 외부 schema 변경 시 못 감지.
-- **API key를 코드에 hardcode**: env var + GitHub Secrets. log에 redact.
-- **에러 응답 본문 무시**: API마다 에러를 body field에 담음 (status=200인데 body에 error 코드). 응답 검증 시 함께.
-- **timeout 설정 누락**: 외부 API hang이 cron 전체를 멈춤. axios timeout 명시.
+그래도 몇 개는 직접 데인 뒤에야 알았다. status가 200인데 body 안에 error 코드를 숨겨 두는 API가 있어서, 응답 검증 때 본문까지 같이 봐야 했다. API key는 처음에 코드에 박았다가 env var + GitHub Secrets로 빼고 로그에선 redact 처리했다. 이런 건 패턴으로 일반화되지 않고, 한 번 깨져 봐야 손에 남는 종류였다.
 
-## 핵심
+## 남은 것
 
-> 5+ 외부 API 통합은 정책 다양성 자체가 비용이다. **rate limit·재시도·boundary 검증을 라이브러리 수준으로 일반화**해야 case문 더미를 피한다.
+7개를 다 붙이고 나서 든 생각은, 통합의 비용이 API 개수가 아니라 정책의 다양성이라는 거였다. 그 다양성을 분기로 받으면 코드가 case문 더미가 되고, 한 층 아래 라이브러리 수준으로 내려 흡수하면 새 API를 붙이는 일이 골격에 끼워 넣는 작업이 된다.
+
+> 혼자 7개를 붙여 보고 남은 한 줄: 외부 API 통합은 개수 싸움이 아니라, 다양성을 어느 층에서 흡수하느냐의 싸움이다.
 
 ## 관련
 

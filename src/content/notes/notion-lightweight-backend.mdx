@@ -1,22 +1,17 @@
 ---
-title: 노션을 lightweight backend로 — DB 7개로 만든 무료 백엔드
+title: 서버 0대로 백엔드를 굴렸다 — 노션 DB 7개로 만든 무료 인프라
 growth: Seedling
 topics: [notion, backend, side-project, automation]
-summary: 직접 DB·서버를 띄우지 않고 노션 API + DB로 backend를 대체. 무료·시각화·모바일 앱이 따라오지만 PK·쿼리·rate limit 한계를 안다.
+summary: 홈레이더 백엔드를 노션 DB 7개로 직접 설계했다. 서버비 0원으로 굴리며 PK도 JOIN도 없는 한계를 hotfix로 직접 넘은 기록.
 plantedAt: 2026-05-15
 lastTendedAt: 2026-05-21
 ---
 
-## 언제 쓰나
+홈레이더를 혼자 만들 때, 데이터를 어디에 둘지가 첫 벽이었다. RDS를 띄우자니 개인 프로젝트에 매달 나가는 서버비가 아까웠고, UI까지 직접 짜자니 본질에서 멀어졌다. 그래서 노션을 backend로 써보기로 했다. 노션 API + DB 7개로 — 서버 0대, 비용 0원, 그리고 시각화·모바일 앱은 노션이 공짜로 따라왔다.
 
-개인 프로젝트, side project, prototype에서 백엔드 비용을 줄이고 싶을 때.
+물론 노션은 관계형 DB가 아니다. 그래서 굴리는 내내 한계에 부딪혔고, 그때마다 우회로를 직접 만들었다. 이 글은 그 설계와, 부딪힌 자리를 메운 기록이다.
 
-- 작은 데이터셋 (수천 행 이하)
-- 읽기보다 쓰기 적음 (배치 cron이 적합)
-- UI를 직접 안 만들어도 됨 (노션이 자동)
-- 모바일 접근 필요 (노션 앱 자동)
-
-production scale, real-time, 복잡한 쿼리는 부적합.
+먼저 이 선택이 맞는 자리부터. 수천 행 이하의 작은 데이터셋, 읽기보다 쓰기가 적은(배치 cron이 어울리는) 작업, UI를 직접 안 만들어도 되고 모바일 접근이 필요한 개인 프로젝트라면 잘 맞는다. 반대로 production scale·real-time·복잡한 쿼리에는 손대지 않는 게 낫다.
 
 ## 7-DB 설계 예시
 
@@ -54,11 +49,9 @@ rate limit이 있다. 평균 3 req/sec, burst 가능. bottleneck으로 throttle.
 
 ### PK·FK 없음
 
-노션 DB는 relational DB가 아니다. PK 강제 없음. 직접 unique constraint 검증해야.
+노션 DB는 PK를 강제하지 않는다. 이걸 머리로는 알았지만, 몸으로 만난 건 Phase 2.5에서였다. 같은 단지가 DB에 두 번씩 들어가 있었다. cron이 돌 때마다 같은 행을 새로 insert하는 race였다 — RDB였다면 unique constraint가 막아줬을 일이다.
 
-홈레이더 Phase 2.5 hotfix는 이 한계 때문이었음. 같은 단지가 두 번 insert되는 race.
-
-처방: insert 전 `databases.query({ filter: { property: 'name', equals: ... } })`로 존재 확인. 또는 unique key를 page id로 캐싱.
+DB 엔진이 안 해주니 내가 했다. insert 전에 `databases.query({ filter: { property: 'name', equals: ... } })`로 존재를 먼저 확인하고, 자주 조회하는 unique key는 page id로 캐싱해 쿼리 자체를 줄였다. hotfix 한 번으로 중복은 멈췄다. 노션을 backend로 쓴다는 건, RDB가 공짜로 주던 보장을 하나씩 내 코드로 되사는 일이라는 걸 이때 배웠다.
 
 ### 쿼리 약함
 
@@ -72,18 +65,13 @@ API 3 req/sec → 1000개 행 처리에 5-6분. cron 자동화면 OK, 동기 처
 
 property 이름 바뀌면 모든 코드 동시 수정. **노션 schema를 source of truth로 두지 말고 코드 schema를 source로**. setup script가 노션 DB를 만들도록.
 
-## 함정
+## 직접 밟아본 지뢰들
 
-- **PK 없다고 dedupe 안 함**: 같은 행이 매주 새로 들어옴. unique 검증 필수.
-- **rate limit 무시**: 429 받으면 retry 안 함 → 데이터 누락. bottleneck + retry.
-- **노션 API key를 코드에 hardcode**: env var + GitHub Secrets.
-- **노션 UI에서 schema 변경**: 코드가 모르는 사이 깨짐. schema 변경은 코드 → API로만.
-- **DB 1개에 10만 행 쌓기**: 노션 UI가 느려짐. year/region partition.
-- **삭제된 page도 남음**: 노션 page 삭제는 trash로 이동. archived 상태 검증 필요.
+위의 한계들은 한 번씩 나를 물고 나서야 처방이 생긴 것들이다. 중복은 dedupe를 강제하지 않으면 매주 같은 행이 새로 쌓였고, 429를 retry 없이 흘려보냈다가 데이터가 조용히 비기도 했다 — 그래서 bottleneck에 retry를 물렸다. 노션 UI에서 무심코 property 이름을 바꿨다가 코드가 모르는 사이 깨진 적도 있어, 그 뒤로 schema 변경은 코드 → API 경로로만 한다. DB 하나에 행을 무작정 쌓으면 노션 UI 자체가 느려져 year/region으로 쪼갰고, 노션의 page 삭제는 trash로 옮길 뿐이라 archived 상태까지 검증하게 됐다. API key는 처음부터 env var + GitHub Secrets로 빼뒀다 — 이건 다행히 밟기 전에 피했다.
 
 ## 핵심
 
-> 노션은 backend 대체재가 아니라 **백엔드 비용을 0원으로 만드는 도구**다. 한계를 알고 쓰면 side project 인프라가 압도적으로 가벼워진다.
+> 노션은 backend 대체재가 아니다. RDB가 공짜로 주던 보장을 한 줄씩 내 코드로 되사는 대신, **서버비를 0원으로 만드는 거래**다. 그 거래의 청구서를 직접 다 치러봤기에, 다음 개인 프로젝트도 같은 자리에서 망설이지 않는다.
 
 ## 관련
 
