@@ -12,7 +12,7 @@ status: Published
 
 그런데 지난 2주간 이들을 하나씩 손보며 고친 버그를 한자리에 늘어놓자, 소수의 **결함 클래스**로 수렴했습니다. 한 건의 실패가 전체를 끌어내리는 구조. 조용히 빠진 채 성공으로 집계되는 결손. 그리고 미리보기여야 할 경로가 운영 상태를 건드리는 부작용.
 
-흩어진 작업을 교차로 훑어보면 이게 우연이 아닙니다. 같은 결함 클래스가 [헬스체크를 6개 봇에 돌린 2주](/logs#2026-06-07-healthcheck-six-bots)와 [한 건의 실패가 전체를 무너뜨리지 않게](/logs#2026-06-09-fault-isolation-atomic-writes) 양쪽에서 독립적으로 튀어나왔습니다. 같은 처방을 서로 베낀 게 아니라, **각자의 자리에서 같은 모양으로 무너진 뒤 같은 결론에 도달**한 것입니다.
+흩어진 작업을 교차로 훑어보면 이게 우연이 아닙니다. 같은 결함 클래스가 [헬스체크를 6개 봇에 돌린 2주](/logs#2026-06-07-healthcheck-six-bots)와 한 건의 실패가 전체를 무너뜨리지 않게 한 작업 양쪽에서 독립적으로 튀어나왔습니다. 같은 처방을 서로 베낀 게 아니라, **각자의 자리에서 같은 모양으로 무너진 뒤 같은 결론에 도달**한 것입니다.
 
 ## 시간축 재발이 아니라 공간축 재발
 
@@ -28,7 +28,7 @@ status: Published
 
 이 fix들은 새로운 지식이 아닙니다. 원자적 쓰기, dry-run의 read-only 보장, per-item 격리, 결손 카운터. 회사 일에서는 진작 당연하게 박던 것들입니다. 그런데 취미 봇에는 "이 정도는 사치"라며 안 박았습니다. "나만 쓰는 건데", "어차피 잘 돌잖아" — 그 믿음이 바로 가드의 부재였습니다.
 
-[헬스체크를 6개 봇에 돌린 2주](/logs#2026-06-07-healthcheck-six-bots)에서 가장 흔한 결함이 에러가 아니라 조용히 빠지는 경로였던 것도 같은 이유입니다. 던지는 예외가 없으니 모니터링이 못 잡고, "개인 프로젝트라 안 박은 가드"가 정확히 그 빈자리였습니다. [한 건의 실패가 전체를 무너뜨리지 않게](/logs#2026-06-09-fault-isolation-atomic-writes)에서 본 원자적 쓰기와 per-item 격리도 한 레포의 이야기로 끝나지 않았습니다. 다른 봇을 열 때마다 같은 빈자리가 나왔습니다.
+[헬스체크를 6개 봇에 돌린 2주](/logs#2026-06-07-healthcheck-six-bots)에서 가장 흔한 결함이 에러가 아니라 조용히 빠지는 경로였던 것도 같은 이유입니다. 던지는 예외가 없으니 모니터링이 못 잡고, "개인 프로젝트라 안 박은 가드"가 정확히 그 빈자리였습니다. 한 건의 실패가 전체를 무너뜨리지 않게 한 작업에서 본 원자적 쓰기와 per-item 격리도 한 레포의 이야기로 끝나지 않았습니다. 다른 봇을 열 때마다 같은 빈자리가 나왔습니다.
 
 **"개인 사이드 프로젝트 = 하드닝 면제"라는 통념이, 바로 여러 곳에서 같은 자리를 비워둔 원인**이었습니다. 결함이 무관한 도메인에 분산돼 있을 뿐, 그것을 막는 습관이 동일하게 빠져 있었으니 같은 모양으로 무너지는 게 당연했습니다.
 
@@ -45,9 +45,9 @@ status: Published
 여러 개의 개인 자동화를 굴리는 사람이라면, 이식 순서는 이렇게 잡습니다.
 
 1. **원자적 쓰기** — temp 파일에 다 쓰고 rename으로 교체. 중간에 죽어도 상태 파일이 반쪽으로 남지 않습니다. 손상의 폭발 반경을 0으로 만드는 가장 싼 가드입니다.
-2. **dry-run의 read-only 보장** — 미리보기 경로가 운영 상태를 건드리지 않게. [silent-failure-dry-run](/logs#2026-06-03-silent-failure-dry-run)에서 봤듯, 미리보기의 부작용은 진짜 실행의 버그보다 잡기 어렵습니다.
+2. **dry-run의 read-only 보장** — 미리보기 경로가 운영 상태를 건드리지 않게. 미리보기의 부작용은 진짜 실행의 버그보다 잡기 어렵습니다.
 3. **per-item 격리 + 결손 카운터** — 루프 한 바퀴를 try로 감싸 한 건의 실패를 한 건으로 가두되, 빠진 개수를 세어 기대보다 적으면 경보. 격리가 실패를 숨기지 않게 하는 짝입니다.
 
 [CI 게이트 래칫](/logs#2026-06-09-ci-gate-ratchet)이 한 레포의 검사를 시간축으로 한 칸씩 조이는 패턴이었다면, 여기서는 **같은 한 칸을 N개 봇에 동시에 적용**합니다. AI가 이식 비용을 낮춘 덕에 래칫을 한 줄이 아니라 병렬로 돌릴 수 있게 됐습니다. 여러 개인 봇을 굴린다면, 지금 한 봇에서 고친 가드를 오늘 나머지에 그대로 복사해보세요 — 회사 일에서 이미 알던 fix를, 취미 봇 전부에 같은 성숙도로 입히는 가장 싼 방법입니다.
 
-관련: [/essays/automation-doesnt-reduce-work](/essays/automation-doesnt-reduce-work), [/notes/recurring-trap-to-checklist](/notes/recurring-trap-to-checklist), [/notes/codex-competition](/notes/codex-competition), [/essays/systems-thinking-from-incidents](/essays/systems-thinking-from-incidents), [/logs#2026-06-07-healthcheck-six-bots](/logs#2026-06-07-healthcheck-six-bots), [/logs#2026-06-09-fault-isolation-atomic-writes](/logs#2026-06-09-fault-isolation-atomic-writes)
+관련: [/essays/automation-doesnt-reduce-work](/essays/automation-doesnt-reduce-work), [/notes/recurring-trap-to-checklist](/notes/recurring-trap-to-checklist), [/notes/codex-competition](/notes/codex-competition), [/logs#2026-06-07-healthcheck-six-bots](/logs#2026-06-07-healthcheck-six-bots)

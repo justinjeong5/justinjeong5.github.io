@@ -44,8 +44,8 @@ status: Published
 
 공간축으로 묶인 두 사례의 원인은 사실 서로 다릅니다. 청약 수집기는 `perPage`를 100으로 명시한 단발 호출이었고, 대시보드는 PostgREST의 전역 `max-rows`라는 보이지 않는 서버 설정이었습니다. 한쪽은 내가 쓴 숫자, 다른 쪽은 인프라가 정한 숫자입니다. 그런데 증상은 똑같았습니다 — **상한을 넘긴 데이터가 에러 없이 사라진다.**
 
-이게 결함 클래스로 묶이는 이유입니다. "단발 조회 + 암묵적 상한"이라는 구조는 그 상한이 내 코드에 있든 서버 설정에 있든 같은 침묵을 만듭니다. 그러니 처방도 출처를 가리지 않습니다. 외부에서 목록을 받아오는 모든 자리에 같은 질문을 던지면 됩니다 — "이 응답에 상한이 있나? 있다면 넘쳤을 때 그걸 알 방법이 있나?" 답이 "끝까지 페이지를 넘긴다"와 "상한에 닿으면 시끄럽게 운다" 둘 다 아니라면, 그 자리는 [언젠가 조용히 일부만 세기 시작](/notes/good-alert-four-criteria)할 자리입니다.
+이게 결함 클래스로 묶이는 이유입니다. "단발 조회 + 암묵적 상한"이라는 구조는 그 상한이 내 코드에 있든 서버 설정에 있든 같은 침묵을 만듭니다. 그러니 처방도 출처를 가리지 않습니다. 외부에서 목록을 받아오는 모든 자리에 같은 질문을 던지면 됩니다 — "이 응답에 상한이 있나? 있다면 넘쳤을 때 그걸 알 방법이 있나?" 답이 "끝까지 페이지를 넘긴다"와 "상한에 닿으면 시끄럽게 운다" 둘 다 아니라면, 그 자리는 언젠가 조용히 일부만 세기 시작할 자리입니다.
 
 목록을 한 번에 가져오는 코드는, 그 목록이 짧을 때만 옳습니다. 길어질 수 있는 목록을 단발로 조회하는 순간, truncation은 버그가 아니라 예약된 미래입니다.
 
-관련: [/essays/same-defect-class-across-repos](/essays/same-defect-class-across-repos), [/notes/recurring-trap-to-checklist](/notes/recurring-trap-to-checklist), [/notes/dead-retry-bounded-executor](/notes/dead-retry-bounded-executor), [/logs#2026-06-18-dead-safeguards](/logs#2026-06-18-dead-safeguards), [/notes/good-alert-four-criteria](/notes/good-alert-four-criteria), [/logs#2026-06-07-healthcheck-six-bots](/logs#2026-06-07-healthcheck-six-bots)
+관련: [/essays/same-defect-class-across-repos](/essays/same-defect-class-across-repos), [/notes/recurring-trap-to-checklist](/notes/recurring-trap-to-checklist), [/notes/dead-retry-bounded-executor](/notes/dead-retry-bounded-executor), [/logs#2026-06-18-dead-safeguards](/logs#2026-06-18-dead-safeguards), [/logs#2026-06-07-healthcheck-six-bots](/logs#2026-06-07-healthcheck-six-bots)
