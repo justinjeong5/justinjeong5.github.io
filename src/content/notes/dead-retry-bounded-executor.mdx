@@ -119,8 +119,3 @@ def classify(err):
 ## 핵심
 
 > 재시도는 만든다고 도는 게 아니다. **연결(wiring)·상한(bounded)·분류(transient vs permanent)** 셋이 모두 있어야 비로소 의미 있는 재시도다. 셋 중 하나라도 빠지면 0번 재시도하거나, 폭주하거나, 헛고생을 반복한다.
-
-## 관련
-
-[/notes/idempotency-keys-billing](/notes/idempotency-keys-billing) — 재시도가 안전하려면 쓰기 경로가 멱등해야 한다
-[/notes/exactly-once-delivery-myth](/notes/exactly-once-delivery-myth) — at-least-once 재시도 + 멱등성 = effectively-once
