@@ -1,4 +1,5 @@
-import { CheckCircle2, ShieldCheck } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { ArrowUpRight, CheckCircle2, ShieldCheck } from 'lucide-react';
 
 import { aboutData, siteData } from '../lib/content';
 
@@ -43,11 +44,19 @@ function AboutPage() {
         </ul>
       </section>
 
-      <section className="quality-block">
-        <h2>이 사이트의 통과 조건</h2>
-        <ul className="quality-list">
-          {aboutData.qualityRubric.map((item) => (
-            <li key={item}>{item}</li>
+      <section className="principles-block">
+        <h2>대표 작업</h2>
+        <ul className="principle-list">
+          {aboutData.highlights.map((h) => (
+            <li key={h.to}>
+              <ArrowUpRight size={18} aria-hidden="true" />
+              <div>
+                <h3>
+                  <Link to={h.to}>{h.title}</Link>
+                </h3>
+                <p>{h.impact}</p>
+              </div>
+            </li>
           ))}
         </ul>
       </section>
