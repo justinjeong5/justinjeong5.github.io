@@ -2,7 +2,7 @@
   "name": "정경하",
   "role": "Product-minded Frontend Engineer",
   "headline": "제품 문제를 빠르게 구조화하고, 프론트엔드를 중심으로 백엔드·자동화까지 연결해 실제 운영 흐름을 개선합니다.",
-  "summary": "이 사이트는 이력서의 예쁜 버전이 아니라, 공개 가능한 업무 사례·노트·로그를 계속 쌓아 신뢰를 만드는 proof-of-work 허브입니다.",
+  "summary": "AI 워크플로우로 실행을 레버리지하는 엔지니어입니다. 모호한 제품 문제를 구조화하고, 다수의 에이전트·자동화로 작게 빠르게 배포해 운영 흐름을 움직입니다.",
   "location": "Seoul, Korea",
   "email": "justin.jeong5@gmail.com",
   "github": "https://github.com/justinjeong5",
@@ -10,23 +10,28 @@
   "currentFocus": [
     "반복 운영 업무를 줄이는 자동화 시스템 설계",
     "사용자 행동 데이터를 읽는 제품 개선 루프",
-    "작게 배포하고 검증하는 프론트엔드 워크플로우"
+    "다수 AI 에이전트로 품질을 검증하는 워크플로우"
+  ],
+  "featuredCaseSlugs": [
+    "home-radar-system",
+    "team-onboarding-doc-system",
+    "dispatch-routing-system"
   ],
   "heroProof": [
     {
-      "label": "What I optimize",
-      "value": "판단 속도",
-      "detail": "모호한 요청을 문제·사용자·성공 조건으로 쪼개 실행 가능한 단위로 만듭니다."
+      "label": "What I shipped",
+      "value": "수작업 → 0분",
+      "detail": "공개 API 7곳을 묶은 부동산 레이더로 주 1–2시간 수동 수집을 완전 자동화했습니다."
     },
     {
-      "label": "How I ship",
-      "value": "작은 배포",
-      "detail": "큰 개편도 먼저 검증 가능한 구조로 나누고, 빌드와 브라우저 확인까지 묶습니다."
+      "label": "How I leverage AI",
+      "value": "워크플로우를 시스템화",
+      "detail": "dispatch·품질 게이트·페르소나 토론을 직접 만들어 다수 에이전트가 교차 검증하도록 강제합니다."
     },
     {
-      "label": "What I record",
-      "value": "근거와 회고",
-      "detail": "성과 수치가 없으면 수치를 만들 계획까지 남겨 다음 개선의 입력으로 삼습니다."
+      "label": "Team impact",
+      "value": "온보딩 절반으로",
+      "detail": "온보딩 문서 시스템으로 첫 PR을 5–7일에서 2–3일로, 첫 배포 책임을 3개월에서 1.5개월로 당겼습니다."
     }
   ],
   "visitorPaths": [

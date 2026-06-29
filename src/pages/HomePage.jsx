@@ -33,16 +33,23 @@ const growthIcon = {
 
 function HomePage() {
   const allCases = getAllCases();
-  const liveCases = allCases.filter((c) => c.status === 'Live');
-  const featuredCases = liveCases.length > 0 ? liveCases.slice(0, 3) : allCases.slice(0, 3);
-  const recentNotes = getAllNotes().slice(0, 5);
+  const featuredSlugs = siteData.featuredCaseSlugs || [];
+  const picked = featuredSlugs
+    .map((slug) => allCases.find((c) => c.slug === slug))
+    .filter(Boolean);
+  const featuredCases =
+    picked.length >= 3 ? picked : allCases.filter((c) => c.status === 'Live').slice(0, 3);
+  const tendedNotes = getAllNotes().filter(
+    (n) => n.growth === 'Evergreen' || n.growth === 'Budding',
+  );
+  const recentNotes = (tendedNotes.length >= 4 ? tendedNotes : getAllNotes()).slice(0, 4);
   const recentLogs = getAllLogs().slice(0, 3);
 
   return (
     <>
       <section className="hero" id="top">
         <div className="hero-copy">
-          <p className="eyebrow">Proof-of-work personal site</p>
+          <p className="eyebrow">AI 워크플로우 × 프로덕트 임팩트</p>
           <h1>{siteData.name}</h1>
           <p className="role">{siteData.role}</p>
           <p className="headline">{siteData.headline}</p>
@@ -141,8 +148,8 @@ function HomePage() {
       <section className="featured-section featured-section-alt">
         <div className="section-header">
           <p className="eyebrow">Digital garden</p>
-          <h2>자라고 있는 노트</h2>
-          <p>완성된 글이 아니라 토픽별로 자라는 노트들입니다.</p>
+          <h2>다듬은 노트</h2>
+          <p>학습 메모가 아니라, 반복해 꺼내 쓸 만큼 정리된 노트들입니다.</p>
         </div>
         <ul className="note-preview-grid">
           {recentNotes.map((note) => (
