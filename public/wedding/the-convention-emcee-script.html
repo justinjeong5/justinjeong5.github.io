@@ -199,10 +199,6 @@
         gap: 0.5rem;
       }
 
-      .sheet-chrome {
-        display: none;
-      }
-
       .control-group {
         display: flex;
         align-items: center;
@@ -970,57 +966,6 @@
           white-space: nowrap;
         }
 
-        .sheet-chrome {
-          display: grid;
-          grid-template-columns: minmax(0, 1fr);
-          justify-items: center;
-          gap: 0.38rem;
-          text-align: center;
-        }
-
-        .sheet-handle {
-          display: block;
-          width: 2.5rem;
-          height: 0.25rem;
-          border-radius: 999px;
-          background: color-mix(in srgb, var(--line) 78%, var(--muted));
-        }
-
-        .sheet-title {
-          display: grid;
-          gap: 0.04rem;
-          justify-items: center;
-          min-width: 0;
-        }
-
-        .sheet-kicker {
-          color: var(--accent);
-          font-size: 0.74rem;
-          font-weight: 820;
-          line-height: 1;
-        }
-
-        .sheet-title strong {
-          max-width: 100%;
-          overflow: hidden;
-          color: var(--ink);
-          font-size: 1.02rem;
-          line-height: 1.15;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-        }
-
-        .sheet-title small {
-          max-width: 100%;
-          overflow: hidden;
-          color: var(--muted);
-          font-size: 0.76rem;
-          font-weight: 680;
-          line-height: 1.2;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-        }
-
         .sheet-tabs {
           display: grid;
           grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1337,14 +1282,6 @@
           <button class="toolbar-toggle" type="button" aria-expanded="true" aria-controls="toolbar-controls">닫기</button>
         </div>
         <div class="controls" id="toolbar-controls" aria-label="진행, 정보 및 설정 도구" tabindex="-1">
-          <div class="sheet-chrome">
-            <span class="sheet-handle"></span>
-            <div class="sheet-title">
-              <span class="sheet-kicker" id="sheet-kicker">진행 도구</span>
-              <strong id="sheet-current">1. 개식예고</strong>
-              <small id="sheet-summary">입장과 휴대전화 안내</small>
-            </div>
-          </div>
           <div class="sheet-tabs" role="tablist" aria-label="도구 선택">
             <button class="sheet-tab active" id="sheet-tab-flow" type="button" role="tab" aria-selected="true" aria-controls="sheet-panel-flow" data-action="panel" data-panel="flow">진행</button>
             <button class="sheet-tab" id="sheet-tab-check" type="button" role="tab" aria-selected="false" aria-controls="sheet-panel-check" data-action="panel" data-panel="check">정보</button>
@@ -1717,8 +1654,6 @@
       const mobileIndexCurrent = document.querySelector("#index-current");
       const mobileIndexList = document.querySelector("#mobile-index-list");
       const headerCurrent = document.querySelector("#header-current");
-      const sheetCurrent = document.querySelector("#sheet-current");
-      const sheetSummary = document.querySelector("#sheet-summary");
       const compactQuery = window.matchMedia("(max-width: 860px)");
       let pendingJumpId = "";
       let jumpTimer = 0;
@@ -1860,8 +1795,6 @@
         const summary = current.querySelector(".section-summary")?.textContent || "";
         const title = sectionNumber && sectionNumber !== "+" ? `${sectionNumber}. ${sectionTitle}` : sectionTitle;
         headerCurrent.innerHTML = `<strong>${title}</strong>${summary ? `<span>${summary}</span>` : ""}`;
-        sheetCurrent.textContent = title;
-        sheetSummary.textContent = summary;
         topbar.dataset.dialogLabel = `${title} 진행 도구`;
         mobileIndexCurrent.textContent = title;
         syncSequenceStrip(id);
