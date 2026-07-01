@@ -100,6 +100,11 @@
         font-weight: 700;
       }
 
+      button:disabled {
+        cursor: default;
+        opacity: 0.42;
+      }
+
       a {
         color: inherit;
         text-decoration: none;
@@ -115,6 +120,8 @@
       }
 
       .topbar-inner {
+        position: relative;
+        z-index: 70;
         display: flex;
         gap: 0.75rem;
         align-items: center;
@@ -170,13 +177,13 @@
       }
 
       .toolbar-toggle::after {
-        content: "⌃";
+        content: "⌄";
         font-size: 0.8em;
         margin-left: 0.25rem;
       }
 
-      .topbar.collapsed .toolbar-toggle::after {
-        content: "⌄";
+      .topbar:not(.collapsed) .toolbar-toggle::after {
+        content: "⌃";
       }
 
       .controls {
@@ -320,6 +327,10 @@
         width: 0%;
         height: 100%;
         background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      }
+
+      .mobile-flow-bar {
+        display: none;
       }
 
       .shell {
@@ -644,76 +655,111 @@
       }
 
       @media (max-width: 860px) {
+        body.toolbar-open {
+          overflow: hidden;
+        }
+
+        .topbar {
+          min-height: 3.5rem;
+          backdrop-filter: none;
+        }
+
+        .topbar:not(.collapsed)::before {
+          content: "";
+          position: fixed;
+          inset: 0;
+          z-index: 25;
+          background: rgba(45, 35, 28, 0.14);
+        }
+
         .topbar-inner {
-          align-items: flex-start;
-          flex-direction: column;
-          gap: 0.55rem;
-          padding: 0.68rem 1rem;
-        }
-
-        .topbar:not(.collapsed) {
-          box-shadow: 0 14px 34px rgba(77, 55, 42, 0.12);
-        }
-
-        .topbar.collapsed .topbar-inner {
-          display: flex;
-          align-items: center;
           display: grid;
           grid-template-columns: minmax(0, 1fr) auto;
           align-items: center;
-          gap: 0.45rem;
-          padding: 0.18rem 0.78rem 0.22rem;
+          gap: 0.6rem;
+          min-height: 3.5rem;
+          padding: 0.32rem 0.9rem;
         }
 
-        .topbar.collapsed .brand {
-          display: none;
+        .topbar:not(.collapsed) {
+          box-shadow: none;
         }
 
-        .brand span {
+        .brand {
           display: none;
         }
 
         .topbar-actions {
-          width: 100%;
-          justify-content: flex-end;
+          display: contents;
         }
 
-        .topbar.collapsed .topbar-actions {
-          width: auto;
-          justify-content: center;
-        }
-
-        .topbar.collapsed .header-current {
-          display: inline-flex;
+        .header-current {
+          display: grid;
           max-width: none;
-          min-height: 2.2rem;
-          align-items: center;
+          min-width: 0;
+          min-height: 2.75rem;
+          align-content: center;
           border: 0;
+          border-radius: 0;
           background: transparent;
-          padding: 0;
           color: var(--ink);
-          font-size: 0.84rem;
+          line-height: 1.1;
+          padding: 0;
+        }
+
+        .header-current strong {
+          overflow: hidden;
+          font-size: 0.94rem;
+          font-weight: 820;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .header-current span {
+          overflow: hidden;
+          color: var(--muted);
+          font-size: 0.74rem;
+          font-weight: 680;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
 
         .toolbar-toggle {
           min-height: 2.75rem;
+          border-color: color-mix(in srgb, var(--line) 76%, transparent);
+          border-radius: 12px;
+          background: color-mix(in srgb, var(--panel) 82%, transparent);
           padding: 0.34rem 0.66rem;
           font-size: 0.86rem;
-        }
-
-        .topbar:not(.collapsed) .topbar-inner {
-          max-height: 55vh;
-          overflow-y: auto;
-          overscroll-behavior: contain;
+          font-weight: 700;
         }
 
         .controls {
-          width: 100%;
+          position: fixed;
+          right: auto;
+          bottom: 0;
+          left: 50%;
+          z-index: 50;
           display: grid;
-          grid-template-columns: repeat(2, auto);
+          width: min(calc(100vw - 1.5rem), 34rem);
+          max-height: min(70dvh, 38rem);
+          grid-template-columns: repeat(2, minmax(0, auto));
           align-items: start;
           justify-content: start;
-          gap: 0.38rem;
+          gap: 0.5rem;
+          overflow-y: auto;
+          overscroll-behavior: contain;
+          border: 1px solid var(--line);
+          border-width: 1px 1px 0;
+          border-radius: 18px 18px 0 0;
+          background: var(--panel);
+          box-shadow: 0 -20px 54px rgba(52, 39, 30, 0.24);
+          padding: 0.8rem 1rem calc(1rem + env(safe-area-inset-bottom));
+          transform: translateX(-50%);
+        }
+
+        .topbar.collapsed .controls {
+          display: none;
         }
 
         .controls button {
@@ -721,13 +767,18 @@
         }
 
         .control-group {
+          border-color: color-mix(in srgb, var(--line) 64%, transparent);
           border-radius: 14px;
+          background: color-mix(in srgb, var(--panel) 78%, transparent);
           padding: 0.35rem;
         }
 
         .flow-controls {
           display: grid;
           grid-column: 1 / -1;
+          width: 100%;
+          border-color: color-mix(in srgb, var(--accent) 16%, var(--line));
+          background: color-mix(in srgb, var(--accent-quiet) 3%, transparent);
           grid-template-columns: auto 1fr auto auto;
           gap: 0.35rem;
         }
@@ -745,8 +796,11 @@
 
         .quick-check-tools summary {
           min-height: 2.75rem;
+          border-color: color-mix(in srgb, var(--line) 72%, transparent);
+          background: color-mix(in srgb, var(--panel) 82%, transparent);
           padding: 0.34rem 0.62rem;
-          font-size: 0.84rem;
+          font-size: 0.8rem;
+          font-weight: 700;
         }
 
         .quick-check-tools summary::after {
@@ -774,11 +828,12 @@
           display: inline-flex;
           min-height: 2.75rem;
           align-items: center;
-          border: 1px solid var(--line);
+          border: 1px solid color-mix(in srgb, var(--line) 72%, transparent);
           border-radius: 999px;
-          background: var(--panel);
+          background: color-mix(in srgb, var(--panel) 82%, transparent);
           padding: 0.34rem 0.62rem;
-          font-size: 0.84rem;
+          font-size: 0.8rem;
+          font-weight: 700;
           cursor: pointer;
           list-style: none;
         }
@@ -820,6 +875,54 @@
           min-width: 0;
         }
 
+        .mobile-flow-bar {
+          position: fixed;
+          right: auto;
+          bottom: calc(0.75rem + env(safe-area-inset-bottom));
+          left: 50%;
+          z-index: 22;
+          display: grid;
+          width: min(calc(100vw - 1.5rem), 34rem);
+          grid-template-columns: minmax(4.25rem, auto) minmax(0, 1fr) minmax(4.25rem, auto);
+          gap: 0.45rem;
+          border: 1px solid var(--line);
+          border-radius: 16px;
+          background: color-mix(in srgb, var(--panel) 94%, transparent);
+          box-shadow: 0 9px 24px rgba(62, 47, 37, 0.13);
+          padding: 0.4rem;
+          backdrop-filter: blur(18px);
+          transform: translateX(-50%);
+        }
+
+        .topbar:not(.collapsed) + .mobile-flow-bar {
+          display: none;
+        }
+
+        .mobile-flow-bar button {
+          min-height: 2.75rem;
+          border-radius: 12px;
+          font-weight: 720;
+        }
+
+        .mobile-flow-bar button:not(.mobile-flow-current) {
+          border-color: transparent;
+          background: transparent;
+          color: var(--ink);
+        }
+
+        .mobile-flow-current {
+          min-width: 0;
+          border-color: color-mix(in srgb, var(--accent) 34%, var(--line));
+          color: var(--accent);
+        }
+
+        .mobile-flow-current span {
+          display: block;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
         .font-controls {
           display: contents;
         }
@@ -833,6 +936,8 @@
         .shell {
           display: flex;
           flex-direction: column;
+          width: 100%;
+          max-width: 44rem;
           padding-top: 0.8rem;
         }
 
@@ -867,6 +972,10 @@
 
         .reader {
           gap: 0.62rem;
+        }
+
+        body {
+          padding-bottom: calc(5.7rem + env(safe-area-inset-bottom));
         }
       }
 
@@ -921,7 +1030,7 @@
           <span class="header-current" id="header-current" aria-live="polite">1. 개식예고</span>
           <button class="toolbar-toggle" type="button" aria-expanded="true" aria-controls="toolbar-controls">닫기</button>
         </div>
-        <div class="controls" id="toolbar-controls" aria-label="진행, 확인 및 읽기 도구">
+        <div class="controls" id="toolbar-controls" aria-label="진행, 확인 및 읽기 도구" tabindex="-1">
           <div class="control-group flow-controls" aria-label="진행 이동">
             <label class="control-label" for="mobile-jump">순서</label>
             <select class="section-jump" id="mobile-jump" aria-label="순서 이동">
@@ -963,6 +1072,12 @@
       </div>
       <div class="progress" aria-hidden="true"><span id="progress"></span></div>
     </header>
+
+    <nav class="mobile-flow-bar" aria-label="진행 빠른 이동">
+      <button type="button" data-action="prev">이전</button>
+      <button class="mobile-flow-current" type="button" data-action="tools" aria-label="현재 순서 1. 개식예고, 순서와 읽기 도구 열기"><span id="mobile-flow-current">1. 개식예고</span></button>
+      <button type="button" data-action="next">다음</button>
+    </nav>
 
     <div class="shell">
       <aside class="sidebar" aria-label="대본 탐색">
@@ -1264,9 +1379,14 @@
       const toolbarControls = document.querySelector("#toolbar-controls");
       const toolbarToggle = document.querySelector(".toolbar-toggle");
       const headerCurrent = document.querySelector("#header-current");
+      const mobileFlowCurrent = document.querySelector("#mobile-flow-current");
+      const mobileFlowBar = document.querySelector(".mobile-flow-bar");
+      const mobileFlowButton = document.querySelector(".mobile-flow-current");
+      const compactQuery = window.matchMedia("(max-width: 860px)");
       let pendingJumpId = "";
       let jumpTimer = 0;
       let toolbarManuallyToggled = false;
+      let toolbarRestoreTarget = null;
 
       const cleanCueText = (html) =>
         html
@@ -1342,6 +1462,8 @@
         return topbarHeight;
       };
 
+      const isCompact = () => compactQuery.matches;
+
       const sectionIds = () => [...document.querySelectorAll(".section")].map((section) => section.id);
 
       const syncCurrentSection = (id) => {
@@ -1355,24 +1477,62 @@
         mobileJump.value = id;
         const sectionTitle = current.dataset.title || current.querySelector("h2")?.textContent || "현재 순서";
         const sectionNumber = current.querySelector(".section-number")?.textContent || "";
-        headerCurrent.textContent = sectionNumber ? `${sectionNumber}. ${sectionTitle}` : sectionTitle;
+        const summary = current.querySelector(".section-summary")?.textContent || "";
+        const title = sectionNumber && sectionNumber !== "+" ? `${sectionNumber}. ${sectionTitle}` : sectionTitle;
+        headerCurrent.innerHTML = `<strong>${title}</strong>${summary ? `<span>${summary}</span>` : ""}`;
+        mobileFlowCurrent.textContent = title;
+        mobileFlowButton.setAttribute("aria-label", `현재 순서 ${title}, 순서와 읽기 도구 열기`);
+
+        const ids = sectionIds();
+        const currentIndex = Math.max(0, ids.indexOf(id));
+        document.querySelectorAll('[data-action="prev"]').forEach((button) => {
+          const disabled = currentIndex <= 0;
+          button.disabled = disabled;
+          button.setAttribute("aria-disabled", String(disabled));
+        });
+        document.querySelectorAll('[data-action="next"]').forEach((button) => {
+          const disabled = currentIndex >= ids.length - 1;
+          button.disabled = disabled;
+          button.setAttribute("aria-disabled", String(disabled));
+        });
       };
 
-      const setToolbarCollapsed = (collapsed) => {
+      const setToolbarCollapsed = (collapsed, options = {}) => {
+        const compact = isCompact();
+        if (!collapsed && compact && options.restoreFocusTo) {
+          toolbarRestoreTarget = options.restoreFocusTo;
+        }
         topbar.classList.toggle("collapsed", collapsed);
         toolbarControls.toggleAttribute("hidden", collapsed);
+        toolbarControls.setAttribute("aria-hidden", String(collapsed));
+        document.body.classList.toggle("toolbar-open", compact && !collapsed);
+        if (compact && !collapsed) {
+          topbar.setAttribute("role", "dialog");
+          topbar.setAttribute("aria-modal", "true");
+          topbar.setAttribute("aria-label", "진행 도구");
+        } else {
+          topbar.removeAttribute("role");
+          topbar.removeAttribute("aria-modal");
+          topbar.removeAttribute("aria-label");
+        }
         toolbarToggle.setAttribute("aria-expanded", String(!collapsed));
-        toolbarToggle.textContent = collapsed ? "열기" : "닫기";
+        toolbarToggle.textContent = collapsed ? "도구" : "닫기";
         if (collapsed) {
           document.querySelector(".quick-check-tools")?.removeAttribute("open");
           readingTools.removeAttribute("open");
+          if (options.restoreFocus !== false && toolbarRestoreTarget?.isConnected && compact) {
+            toolbarRestoreTarget.focus();
+          }
+          toolbarRestoreTarget = null;
+        } else if (compact && options.moveFocus !== false) {
+          window.requestAnimationFrame(() => mobileJump.focus());
         }
         updateTopbarMetrics();
       };
 
       const syncToolbarDisclosure = () => {
         if (!toolbarManuallyToggled) {
-          setToolbarCollapsed(window.matchMedia("(max-width: 860px)").matches);
+          setToolbarCollapsed(isCompact(), { restoreFocus: false, moveFocus: false });
           return;
         }
         updateTopbarMetrics();
@@ -1383,7 +1543,7 @@
         if (!target) return;
         pendingJumpId = id;
         const topbarHeight = updateTopbarMetrics();
-        const compact = window.matchMedia("(max-width: 860px)").matches;
+        const compact = isCompact();
         const targetTop = compact ? target.offsetTop : target.getBoundingClientRect().top + window.scrollY;
         const scrollTop = Math.max(0, targetTop - topbarHeight - 16);
         if (compact) {
@@ -1410,7 +1570,7 @@
       };
 
       const syncReadingToolsDisclosure = () => {
-        if (window.matchMedia("(max-width: 860px)").matches) {
+        if (isCompact()) {
           readingTools.removeAttribute("open");
         } else {
           readingTools.setAttribute("open", "");
@@ -1471,17 +1631,17 @@
       });
 
       toolbarToggle.addEventListener("click", () => {
-        const currentId = document.querySelector(".section.current")?.id;
         toolbarManuallyToggled = true;
-        setToolbarCollapsed(!topbar.classList.contains("collapsed"));
-        if (currentId) {
-          scrollToSection(currentId);
-        } else {
-          setActive();
-        }
+        const shouldCollapse = !topbar.classList.contains("collapsed");
+        setToolbarCollapsed(shouldCollapse, {
+          restoreFocusTo: toolbarToggle,
+          restoreFocus: shouldCollapse,
+          moveFocus: !shouldCollapse,
+        });
+        setActive();
       });
 
-      document.querySelector(".controls").addEventListener("click", (event) => {
+      const handleAction = (event) => {
         const button = event.target.closest("button");
         const action = button?.dataset.action;
         if (!action) return;
@@ -1500,6 +1660,10 @@
           document.documentElement.dataset.theme = active ? "dark" : "";
           button.setAttribute("aria-pressed", String(active));
         }
+        if (action === "tools") {
+          toolbarManuallyToggled = true;
+          setToolbarCollapsed(false, { restoreFocusTo: button });
+        }
         if (action === "prev") moveSection(-1);
         if (action === "next") moveSection(1);
         if (action === "print") window.print();
@@ -1507,6 +1671,36 @@
           const current = Number.parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--font-scale")) || 1;
           const next = action === "larger" ? Math.min(1.35, current + 0.08) : Math.max(0.86, current - 0.08);
           document.documentElement.style.setProperty("--font-scale", next.toFixed(2));
+        }
+      };
+
+      document.querySelector(".controls").addEventListener("click", handleAction);
+      mobileFlowBar.addEventListener("click", handleAction);
+
+      topbar.addEventListener("click", (event) => {
+        if (isCompact() && !topbar.classList.contains("collapsed") && event.target === topbar) {
+          setToolbarCollapsed(true);
+        }
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && isCompact() && !topbar.classList.contains("collapsed")) {
+          setToolbarCollapsed(true);
+        }
+        if (event.key === "Tab" && isCompact() && !topbar.classList.contains("collapsed")) {
+          const focusable = [...topbar.querySelectorAll('button:not(:disabled), select, summary, [tabindex]:not([tabindex="-1"])')].filter(
+            (node) => !node.closest("[hidden]") && getComputedStyle(node).display !== "none"
+          );
+          const first = focusable[0];
+          const last = focusable.at(-1);
+          if (!first || !last) return;
+          if (event.shiftKey && document.activeElement === first) {
+            event.preventDefault();
+            last.focus();
+          } else if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault();
+            first.focus();
+          }
         }
       });
 
@@ -1517,6 +1711,9 @@
           const value = mobileJump.value;
           if (!value) return;
           scrollToSection(value);
+          if (isCompact()) {
+            setToolbarCollapsed(true);
+          }
         }, 120);
       };
       mobileJump.addEventListener("input", handleSectionJump);
