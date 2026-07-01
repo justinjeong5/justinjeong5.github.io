@@ -67,6 +67,11 @@
       "title": "dispatch 라우팅 — AI 워크플로우",
       "impact": "3 에이전트 경쟁 + 점수 공식으로 의도 기반 스킬 라우팅을 자동화.",
       "to": "/cases/dispatch-routing-system"
+    },
+    {
+      "title": "양면 시장 의사결정 — 광고 플랫폼",
+      "impact": "광고주와 매체의 인센티브가 충돌하는 지점에서, 기본값과 모니터링을 약한 쪽으로 설계한 판단.",
+      "to": "/essays/two-sided-market-decisions"
     }
   ]
 }

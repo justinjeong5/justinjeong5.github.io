@@ -17,6 +17,11 @@
     "team-onboarding-doc-system",
     "dispatch-routing-system"
   ],
+  "featuredEssaySlugs": [
+    "why-not-traditional-resume",
+    "two-sided-market-decisions",
+    "ai-workflow-chains"
+  ],
   "heroProof": [
     {
       "label": "What I shipped",
@@ -50,7 +55,7 @@
     {
       "audience": "Future me",
       "question": "오늘의 판단을 어떻게 내일의 자산으로 만들까?",
-      "answer": "빌더 로그와 디지털 가든에 공개 가능한 사례를 축적합니다.",
+      "answer": "빌더 로그에 오늘의 판단을 시간순으로 쌓아 공개 가능한 자산으로 남깁니다.",
       "to": "/logs"
     }
   ]
