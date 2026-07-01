@@ -193,6 +193,10 @@
         gap: 0.5rem;
       }
 
+      .sheet-chrome {
+        display: none;
+      }
+
       .control-group {
         display: flex;
         align-items: center;
@@ -743,18 +747,20 @@
           display: grid;
           width: min(calc(100vw - 1.5rem), 34rem);
           max-height: min(70dvh, 38rem);
-          grid-template-columns: repeat(2, minmax(0, auto));
-          align-items: start;
-          justify-content: start;
-          gap: 0.5rem;
+          grid-template-columns: minmax(0, 1fr);
+          align-items: stretch;
+          justify-content: stretch;
+          gap: 0.62rem;
           overflow-y: auto;
           overscroll-behavior: contain;
-          border: 1px solid var(--line);
+          border: 1px solid color-mix(in srgb, var(--line) 76%, transparent);
           border-width: 1px 1px 0;
-          border-radius: 18px 18px 0 0;
-          background: var(--panel);
-          box-shadow: 0 -20px 54px rgba(52, 39, 30, 0.24);
-          padding: 0.8rem 1rem calc(1rem + env(safe-area-inset-bottom));
+          border-radius: 24px 24px 0 0;
+          background:
+            linear-gradient(180deg, color-mix(in srgb, var(--panel) 96%, var(--accent-quiet) 4%), var(--panel) 34%),
+            var(--panel);
+          box-shadow: 0 -18px 44px rgba(52, 39, 30, 0.2);
+          padding: 0.52rem 1rem calc(1rem + env(safe-area-inset-bottom));
           transform: translateX(-50%);
         }
 
@@ -762,45 +768,168 @@
           display: none;
         }
 
-        .controls button {
-          flex: 0 0 auto;
+        .sheet-chrome {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr);
+          justify-items: center;
+          gap: 0.38rem;
+          text-align: center;
+        }
+
+        .sheet-handle {
+          display: block;
+          width: 2.5rem;
+          height: 0.25rem;
+          border-radius: 999px;
+          background: color-mix(in srgb, var(--line) 78%, var(--muted));
+        }
+
+        .sheet-title {
+          display: grid;
+          gap: 0.04rem;
+          justify-items: center;
+          min-width: 0;
+        }
+
+        .sheet-kicker {
+          color: var(--accent);
+          font-size: 0.74rem;
+          font-weight: 820;
+          line-height: 1;
+        }
+
+        .sheet-title strong {
+          max-width: 100%;
+          overflow: hidden;
+          color: var(--ink);
+          font-size: 1.02rem;
+          line-height: 1.15;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .sheet-title small {
+          max-width: 100%;
+          overflow: hidden;
+          color: var(--muted);
+          font-size: 0.76rem;
+          font-weight: 680;
+          line-height: 1.2;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .sheet-tabs {
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 0.25rem;
+          border: 1px solid color-mix(in srgb, var(--line) 64%, transparent);
+          border-radius: 16px;
+          background: color-mix(in srgb, var(--bg) 54%, var(--panel));
+          padding: 0.25rem;
+        }
+
+        .sheet-tab {
+          min-height: 2.35rem;
+          border: 0;
+          border-radius: 12px;
+          background: transparent;
+          color: var(--muted);
+          font-size: 0.86rem;
+          font-weight: 780;
+          padding: 0.28rem 0.3rem;
+        }
+
+        .sheet-tab.active {
+          background: var(--panel);
+          box-shadow: 0 6px 14px rgba(62, 47, 37, 0.08);
+          color: var(--accent);
+        }
+
+        .sheet-panel[hidden] {
+          display: none !important;
         }
 
         .control-group {
-          border-color: color-mix(in srgb, var(--line) 64%, transparent);
-          border-radius: 14px;
-          background: color-mix(in srgb, var(--panel) 78%, transparent);
-          padding: 0.35rem;
+          border-color: color-mix(in srgb, var(--line) 70%, transparent);
+          border-radius: 18px;
+          background: color-mix(in srgb, var(--panel) 88%, transparent);
+          box-shadow: 0 8px 20px rgba(62, 47, 37, 0.06);
+          padding: 0.58rem;
         }
 
         .flow-controls {
           display: grid;
           grid-column: 1 / -1;
           width: 100%;
-          border-color: color-mix(in srgb, var(--accent) 16%, var(--line));
-          background: color-mix(in srgb, var(--accent-quiet) 3%, transparent);
-          grid-template-columns: auto 1fr auto auto;
-          gap: 0.35rem;
+          border-color: color-mix(in srgb, var(--accent) 22%, var(--line));
+          background: color-mix(in srgb, var(--accent-quiet) 6%, var(--panel));
+          grid-template-columns: minmax(0, 1fr) auto auto;
+          gap: 0.44rem;
+        }
+
+        .control-label {
+          grid-column: 1 / -1;
+          padding: 0 0.12rem;
+          color: var(--accent);
+          font-size: 0.76rem;
+          font-weight: 820;
+          line-height: 1.1;
+        }
+
+        .flow-controls button {
+          min-width: 3.35rem;
+          border-color: transparent;
+          background: color-mix(in srgb, var(--panel) 72%, transparent);
+        }
+
+        .sequence-strip {
+          display: grid;
+          grid-column: 1 / -1;
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+          gap: 0.34rem;
+        }
+
+        .sequence-strip button {
+          min-width: 0;
+          min-height: 2.25rem;
+          overflow: hidden;
+          border-color: color-mix(in srgb, var(--line) 58%, transparent);
+          border-radius: 11px;
+          background: color-mix(in srgb, var(--panel) 84%, transparent);
+          color: var(--muted);
+          font-size: 0.76rem;
+          font-weight: 760;
+          padding: 0.22rem 0.34rem;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .sequence-strip button[aria-current="step"] {
+          border-color: color-mix(in srgb, var(--accent) 42%, var(--line));
+          background: color-mix(in srgb, var(--accent) 10%, var(--panel));
+          color: var(--accent);
         }
 
         .flow-controls button,
         .section-jump {
-          min-height: 2.75rem;
+          min-height: 2.82rem;
         }
 
         .quick-check-tools summary,
         .reading-tools summary {
-          justify-content: center;
-          width: auto;
+          justify-content: space-between;
+          width: 100%;
         }
 
         .quick-check-tools summary {
-          min-height: 2.75rem;
-          border-color: color-mix(in srgb, var(--line) 72%, transparent);
-          background: color-mix(in srgb, var(--panel) 82%, transparent);
-          padding: 0.34rem 0.62rem;
-          font-size: 0.8rem;
-          font-weight: 700;
+          min-height: 2.35rem;
+          border: 0;
+          background: transparent;
+          padding: 0.1rem 0.12rem 0.3rem;
+          color: var(--ink);
+          font-size: 0.86rem;
+          font-weight: 820;
         }
 
         .quick-check-tools summary::after {
@@ -820,20 +949,68 @@
           grid-column: 1 / -1;
         }
 
+        .quick-check-tools {
+          display: block;
+          border: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
+          border-radius: 18px;
+          background: color-mix(in srgb, var(--panel) 90%, transparent);
+          box-shadow: 0 8px 20px rgba(62, 47, 37, 0.05);
+          padding: 0.58rem;
+        }
+
+        .quick-check-panel {
+          position: static;
+          width: auto;
+          gap: 0.32rem;
+          border: 0;
+          border-radius: 0;
+          background: transparent;
+          box-shadow: none;
+          padding: 0;
+        }
+
+        .quick-check-panel span {
+          display: grid;
+          grid-template-columns: 4.8rem minmax(0, 1fr);
+          gap: 0.52rem;
+          align-items: baseline;
+          border-top: 1px solid color-mix(in srgb, var(--line) 52%, transparent);
+          padding-top: 0.32rem;
+          font-size: 0.8rem;
+          line-height: 1.28;
+        }
+
+        .quick-check-panel span:first-child {
+          border-top: 0;
+          padding-top: 0;
+        }
+
+        .quick-check-panel strong {
+          color: var(--accent);
+          font-size: 0.72rem;
+          font-weight: 820;
+        }
+
         .reading-tools {
           display: block;
+          border: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
+          border-radius: 18px;
+          background: color-mix(in srgb, var(--panel) 90%, transparent);
+          box-shadow: 0 8px 20px rgba(62, 47, 37, 0.05);
+          padding: 0.58rem;
         }
 
         .reading-tools summary {
           display: inline-flex;
-          min-height: 2.75rem;
+          min-height: 2.35rem;
           align-items: center;
-          border: 1px solid color-mix(in srgb, var(--line) 72%, transparent);
-          border-radius: 999px;
-          background: color-mix(in srgb, var(--panel) 82%, transparent);
-          padding: 0.34rem 0.62rem;
-          font-size: 0.8rem;
-          font-weight: 700;
+          border: 0;
+          border-radius: 0;
+          background: transparent;
+          padding: 0.1rem 0.12rem 0.3rem;
+          color: var(--ink);
+          font-size: 0.86rem;
+          font-weight: 820;
           cursor: pointer;
           list-style: none;
         }
@@ -856,23 +1033,33 @@
 
         .reading-controls {
           display: grid;
-          grid-template-columns: repeat(4, minmax(0, 1fr));
-          margin-top: 0.35rem;
+          grid-template-columns: repeat(5, minmax(0, 1fr));
+          gap: 0.38rem;
+          margin-top: 0.1rem;
         }
 
         .reading-controls .control-label {
-          grid-column: 1 / -1;
-          padding: 0.1rem 0.25rem;
+          display: none;
         }
 
         .reading-controls button {
           width: 100%;
           min-width: 0;
+          min-height: 2.45rem;
+          border-color: color-mix(in srgb, var(--line) 55%, transparent);
+          border-radius: 12px;
+          background: color-mix(in srgb, var(--bg) 60%, var(--panel));
+          padding: 0.28rem 0.24rem;
+          font-size: 0.82rem;
+          font-weight: 760;
         }
 
         .section-jump {
           width: 100%;
           min-width: 0;
+          border-radius: 14px;
+          background: var(--panel);
+          font-weight: 820;
         }
 
         .mobile-flow-bar {
@@ -928,9 +1115,7 @@
         }
 
         .font-controls span {
-          grid-column: 1 / -1;
-          padding: 0.25rem 0.25rem 0;
-          border-top: 1px solid var(--line);
+          display: none;
         }
 
         .shell {
@@ -1031,15 +1216,29 @@
           <button class="toolbar-toggle" type="button" aria-expanded="true" aria-controls="toolbar-controls">닫기</button>
         </div>
         <div class="controls" id="toolbar-controls" aria-label="진행, 확인 및 읽기 도구" tabindex="-1">
-          <div class="control-group flow-controls" aria-label="진행 이동">
-            <label class="control-label" for="mobile-jump">순서</label>
+          <div class="sheet-chrome">
+            <span class="sheet-handle"></span>
+            <div class="sheet-title">
+              <span class="sheet-kicker" id="sheet-kicker">진행 도구</span>
+              <strong id="sheet-current">1. 개식예고</strong>
+              <small id="sheet-summary">입장과 휴대전화 안내</small>
+            </div>
+          </div>
+          <div class="sheet-tabs" role="tablist" aria-label="도구 선택">
+            <button class="sheet-tab active" id="sheet-tab-flow" type="button" role="tab" aria-selected="true" aria-controls="sheet-panel-flow" data-action="panel" data-panel="flow">진행</button>
+            <button class="sheet-tab" id="sheet-tab-check" type="button" role="tab" aria-selected="false" aria-controls="sheet-panel-check" data-action="panel" data-panel="check">확인</button>
+            <button class="sheet-tab" id="sheet-tab-read" type="button" role="tab" aria-selected="false" aria-controls="sheet-panel-read" data-action="panel" data-panel="read">읽기</button>
+          </div>
+          <div class="control-group flow-controls sheet-panel active" id="sheet-panel-flow" role="tabpanel" aria-labelledby="sheet-tab-flow" data-panel="flow">
+            <label class="control-label" for="mobile-jump">전체 순서 이동</label>
             <select class="section-jump" id="mobile-jump" aria-label="순서 이동">
               <option value="">순서 이동</option>
             </select>
             <button type="button" data-action="prev">이전</button>
             <button type="button" data-action="next">다음</button>
+            <div class="sequence-strip" id="sequence-strip" aria-label="가까운 순서 이동"></div>
           </div>
-          <details class="quick-check-tools">
+          <details class="quick-check-tools sheet-panel" id="sheet-panel-check" role="tabpanel" aria-labelledby="sheet-tab-check" data-panel="check" hidden>
             <summary>확인</summary>
             <div class="quick-check-panel" aria-label="빠른 확인">
               <span><strong>신랑</strong> 정경하 군</span>
@@ -1051,12 +1250,12 @@
               <span><strong>주차</strong> 1층 신한은행 앞 · 2시간 등록</span>
             </div>
           </details>
-          <details class="reading-tools" open>
+          <details class="reading-tools sheet-panel" id="sheet-panel-read" role="tabpanel" aria-labelledby="sheet-tab-read" data-panel="read" hidden open>
             <summary>읽기 도구</summary>
             <div class="control-group reading-controls" aria-label="읽기 설정">
               <span class="control-label">읽기</span>
               <button type="button" data-action="focus" aria-pressed="false">집중</button>
-              <button type="button" data-action="cues" aria-pressed="false">큐 숨김</button>
+              <button type="button" data-action="cues" aria-pressed="false" aria-label="큐 숨김">큐</button>
               <div class="font-controls" aria-label="글자 크기">
                 <span>글자</span>
                 <button type="button" data-action="smaller">A-</button>
@@ -1374,14 +1573,18 @@
       const scriptRoot = document.querySelector("#script");
       const tocRoot = document.querySelector("#toc");
       const mobileJump = document.querySelector("#mobile-jump");
+      const sequenceStrip = document.querySelector("#sequence-strip");
       const readingTools = document.querySelector(".reading-tools");
       const topbar = document.querySelector(".topbar");
       const toolbarControls = document.querySelector("#toolbar-controls");
       const toolbarToggle = document.querySelector(".toolbar-toggle");
       const headerCurrent = document.querySelector("#header-current");
+      const sheetCurrent = document.querySelector("#sheet-current");
+      const sheetSummary = document.querySelector("#sheet-summary");
       const mobileFlowCurrent = document.querySelector("#mobile-flow-current");
       const mobileFlowBar = document.querySelector(".mobile-flow-bar");
       const mobileFlowButton = document.querySelector(".mobile-flow-current");
+      const quickCheckTools = document.querySelector(".quick-check-tools");
       const compactQuery = window.matchMedia("(max-width: 860px)");
       let pendingJumpId = "";
       let jumpTimer = 0;
@@ -1466,6 +1669,42 @@
 
       const sectionIds = () => [...document.querySelectorAll(".section")].map((section) => section.id);
 
+      const sequenceLabel = (id) => {
+        const section = document.querySelector(`#${id}`);
+        if (!section) return "";
+        const number = section.querySelector(".section-number")?.textContent || "";
+        const title = sections.find((item) => `section-${item.no}` === id)?.shortTitle || section.dataset.title || section.querySelector("h2")?.textContent || "";
+        return number && number !== "+" ? `${number}. ${title}` : title;
+      };
+
+      const syncSequenceStrip = (id) => {
+        const ids = sectionIds();
+        const currentIndex = Math.max(0, ids.indexOf(id));
+        const start = Math.min(Math.max(0, currentIndex - 1), Math.max(0, ids.length - 4));
+        const nearby = ids.slice(start, start + 4);
+        sequenceStrip.innerHTML = nearby
+          .map(
+            (sectionId) =>
+              `<button type="button" data-jump="${sectionId}" ${sectionId === id ? 'aria-current="step"' : ""}>${sequenceLabel(sectionId)}</button>`
+          )
+          .join("");
+      };
+
+      const setSheetPanel = (panel) => {
+        document.querySelectorAll(".sheet-tab").forEach((tab) => {
+          const active = tab.dataset.panel === panel;
+          tab.classList.toggle("active", active);
+          tab.setAttribute("aria-selected", String(active));
+        });
+        document.querySelectorAll(".sheet-panel").forEach((sheetPanel) => {
+          const active = sheetPanel.dataset.panel === panel;
+          sheetPanel.classList.toggle("active", active);
+          sheetPanel.toggleAttribute("hidden", !active);
+        });
+        if (panel === "check") quickCheckTools.setAttribute("open", "");
+        if (panel === "read") readingTools.setAttribute("open", "");
+      };
+
       const syncCurrentSection = (id) => {
         const allSections = [...document.querySelectorAll(".section")];
         const current = document.querySelector(`#${id}`);
@@ -1480,8 +1719,12 @@
         const summary = current.querySelector(".section-summary")?.textContent || "";
         const title = sectionNumber && sectionNumber !== "+" ? `${sectionNumber}. ${sectionTitle}` : sectionTitle;
         headerCurrent.innerHTML = `<strong>${title}</strong>${summary ? `<span>${summary}</span>` : ""}`;
+        sheetCurrent.textContent = title;
+        sheetSummary.textContent = summary;
+        topbar.dataset.dialogLabel = `${title} 진행 도구`;
         mobileFlowCurrent.textContent = title;
         mobileFlowButton.setAttribute("aria-label", `현재 순서 ${title}, 순서와 읽기 도구 열기`);
+        syncSequenceStrip(id);
 
         const ids = sectionIds();
         const currentIndex = Math.max(0, ids.indexOf(id));
@@ -1509,7 +1752,7 @@
         if (compact && !collapsed) {
           topbar.setAttribute("role", "dialog");
           topbar.setAttribute("aria-modal", "true");
-          topbar.setAttribute("aria-label", "진행 도구");
+          topbar.setAttribute("aria-label", topbar.dataset.dialogLabel || "현재 순서와 진행 도구");
         } else {
           topbar.removeAttribute("role");
           topbar.removeAttribute("aria-modal");
@@ -1518,14 +1761,15 @@
         toolbarToggle.setAttribute("aria-expanded", String(!collapsed));
         toolbarToggle.textContent = collapsed ? "도구" : "닫기";
         if (collapsed) {
-          document.querySelector(".quick-check-tools")?.removeAttribute("open");
+          quickCheckTools.removeAttribute("open");
           readingTools.removeAttribute("open");
           if (options.restoreFocus !== false && toolbarRestoreTarget?.isConnected && compact) {
             toolbarRestoreTarget.focus();
           }
           toolbarRestoreTarget = null;
         } else if (compact && options.moveFocus !== false) {
-          window.requestAnimationFrame(() => mobileJump.focus());
+          setSheetPanel("flow");
+          window.requestAnimationFrame(() => toolbarControls.focus());
         }
         updateTopbarMetrics();
       };
@@ -1643,9 +1887,19 @@
 
       const handleAction = (event) => {
         const button = event.target.closest("button");
+        if (button?.dataset.jump) {
+          scrollToSection(button.dataset.jump);
+          if (isCompact()) {
+            setToolbarCollapsed(true);
+          }
+          return;
+        }
         const action = button?.dataset.action;
         if (!action) return;
 
+        if (action === "panel") {
+          setSheetPanel(button.dataset.panel);
+        }
         if (action === "focus") {
           const active = document.body.classList.toggle("focus-mode");
           button.setAttribute("aria-pressed", String(active));
@@ -1653,7 +1907,7 @@
         if (action === "cues") {
           const active = document.body.classList.toggle("hide-cues");
           button.setAttribute("aria-pressed", String(active));
-          button.textContent = active ? "큐 보임" : "큐 숨김";
+          button.setAttribute("aria-label", active ? "큐 보임" : "큐 숨김");
         }
         if (action === "theme") {
           const active = document.documentElement.dataset.theme !== "dark";
