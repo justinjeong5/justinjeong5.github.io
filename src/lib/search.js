@@ -6,52 +6,18 @@ import {
   getAllLogs,
   getAllNotes,
 } from './content';
-import { ROUTES } from './routes';
-import { logUrl } from './log-url';
+import { buildDocsFrom, groupByType } from './search-docs.js';
 
 let cachedIndex = null;
 let cachedDocs = null;
 
 function buildDocs() {
-  const cases = getAllCases().map((entry) => ({
-    type: 'case',
-    typeLabel: 'Case',
-    slug: entry.slug,
-    title: entry.title,
-    summary: entry.summary || '',
-    topics: entry.tags || [],
-    url: ROUTES.caseDetail(entry.slug),
-  }));
-  const notes = getAllNotes().map((entry) => ({
-    type: 'note',
-    typeLabel: 'Note',
-    slug: entry.slug,
-    title: entry.title,
-    summary: entry.summary || '',
-    topics: entry.topics || [],
-    growth: entry.growth || 'Seedling',
-    url: ROUTES.noteDetail(entry.slug),
-  }));
-  const essays = getAllEssays().map((entry) => ({
-    type: 'essay',
-    typeLabel: 'Essay',
-    slug: entry.slug,
-    title: entry.title,
-    summary: entry.summary || '',
-    topics: [],
-    url: ROUTES.essayDetail(entry.slug),
-  }));
-  const logs = getAllLogs().map((entry) => ({
-    type: 'log',
-    typeLabel: 'Log',
-    slug: entry.slug,
-    title: entry.title,
-    summary: entry.summary || '',
-    topics: [],
-    date: entry.date,
-    url: logUrl(entry.slug, ROUTES.logs),
-  }));
-  return [...cases, ...notes, ...essays, ...logs];
+  return buildDocsFrom({
+    cases: getAllCases(),
+    notes: getAllNotes(),
+    essays: getAllEssays(),
+    logs: getAllLogs(),
+  });
 }
 
 function ensureIndex() {
@@ -78,10 +44,5 @@ export function searchAll(query, limit = 24) {
   return index.search(query, { limit }).map((result) => result.item);
 }
 
-export function groupByType(results) {
-  const groups = { case: [], note: [], essay: [], log: [] };
-  for (const item of results) {
-    if (groups[item.type]) groups[item.type].push(item);
-  }
-  return groups;
-}
+// 순수 매핑/그룹핑은 search-docs.js가 소유한다. 기존 소비자(CommandPalette) 호환을 위해 re-export.
+export { groupByType };
