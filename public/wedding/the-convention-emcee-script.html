@@ -329,6 +329,10 @@
         background: linear-gradient(90deg, var(--accent), var(--accent-2));
       }
 
+      .mobile-flow-bar {
+        display: none;
+      }
+
       .shell {
         display: grid;
         grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
@@ -1164,6 +1168,55 @@
           font-weight: 820;
         }
 
+        .mobile-flow-bar {
+          position: fixed;
+          right: auto;
+          bottom: calc(0.75rem + env(safe-area-inset-bottom));
+          left: 50%;
+          z-index: 22;
+          display: grid;
+          width: min(calc(100vw - 1.5rem), 34rem);
+          grid-template-columns: minmax(4.25rem, auto) minmax(0, 1fr) minmax(4.25rem, auto);
+          gap: 0.45rem;
+          border: 1px solid var(--line);
+          border-radius: 16px;
+          background: color-mix(in srgb, var(--panel) 94%, transparent);
+          box-shadow: 0 9px 24px rgba(62, 47, 37, 0.13);
+          padding: 0.4rem;
+          backdrop-filter: blur(18px);
+          transform: translateX(-50%);
+        }
+
+        .topbar:not(.collapsed) + .mobile-flow-bar,
+        .topbar.index-open + .mobile-flow-bar {
+          display: none;
+        }
+
+        .mobile-flow-bar button {
+          min-height: 2.75rem;
+          border-radius: 12px;
+          font-weight: 720;
+        }
+
+        .mobile-flow-bar button:not(.mobile-flow-current) {
+          border-color: transparent;
+          background: transparent;
+          color: var(--ink);
+        }
+
+        .mobile-flow-current {
+          min-width: 0;
+          border-color: color-mix(in srgb, var(--accent) 34%, var(--line));
+          color: var(--accent);
+        }
+
+        .mobile-flow-current span {
+          display: block;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
         .font-controls {
           display: contents;
         }
@@ -1340,6 +1393,12 @@
       </nav>
       <div class="progress" aria-hidden="true"><span id="progress"></span></div>
     </header>
+
+    <nav class="mobile-flow-bar" aria-label="진행 빠른 이동">
+      <button type="button" data-action="prev">이전</button>
+      <button class="mobile-flow-current" type="button" data-action="tools" aria-label="현재 순서 1. 개식예고, 진행 도구 열기"><span id="mobile-flow-current">1. 개식예고</span></button>
+      <button type="button" data-action="next">다음</button>
+    </nav>
 
     <div class="shell">
       <aside class="sidebar" aria-label="대본 탐색">
@@ -1654,6 +1713,9 @@
       const mobileIndexCurrent = document.querySelector("#index-current");
       const mobileIndexList = document.querySelector("#mobile-index-list");
       const headerCurrent = document.querySelector("#header-current");
+      const mobileFlowCurrent = document.querySelector("#mobile-flow-current");
+      const mobileFlowBar = document.querySelector(".mobile-flow-bar");
+      const mobileFlowButton = document.querySelector(".mobile-flow-current");
       const compactQuery = window.matchMedia("(max-width: 860px)");
       let pendingJumpId = "";
       let jumpTimer = 0;
@@ -1797,6 +1859,8 @@
         headerCurrent.innerHTML = `<strong>${title}</strong>${summary ? `<span>${summary}</span>` : ""}`;
         topbar.dataset.dialogLabel = `${title} 진행 도구`;
         mobileIndexCurrent.textContent = title;
+        mobileFlowCurrent.textContent = title;
+        mobileFlowButton.setAttribute("aria-label", `현재 순서 ${title}, 진행 도구 열기`);
         syncSequenceStrip(id);
         document.querySelectorAll("[data-index-jump]").forEach((button) => {
           if (button.dataset.indexJump === id) {
@@ -2030,6 +2094,7 @@
 
       document.querySelector(".controls").addEventListener("click", handleAction);
       mobileIndexMenu.addEventListener("click", handleAction);
+      mobileFlowBar.addEventListener("click", handleAction);
 
       indexToggle.addEventListener("click", () => {
         const shouldOpen = mobileIndexMenu.hasAttribute("hidden");
