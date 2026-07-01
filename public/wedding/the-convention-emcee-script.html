@@ -141,6 +141,34 @@
         line-height: 1.25;
       }
 
+      .topbar-actions {
+        display: flex;
+        flex: 0 0 auto;
+        align-items: center;
+        gap: 0.45rem;
+      }
+
+      .header-current {
+        display: none;
+        max-width: 12rem;
+        overflow: hidden;
+        border: 1px solid color-mix(in srgb, var(--accent) 28%, var(--line));
+        border-radius: 999px;
+        background: color-mix(in srgb, var(--accent-quiet) 7%, var(--panel));
+        color: var(--accent);
+        font-size: 0.82rem;
+        font-weight: 760;
+        line-height: 1;
+        padding: 0.48rem 0.68rem;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .toolbar-toggle {
+        border-color: color-mix(in srgb, var(--accent) 36%, var(--line));
+        font-weight: 760;
+      }
+
       .controls {
         display: flex;
         flex-wrap: wrap;
@@ -256,6 +284,20 @@
 
       .reading-tools summary {
         display: none;
+      }
+
+      .topbar.collapsed .topbar-inner {
+        padding-top: 0.45rem;
+        padding-bottom: 0.45rem;
+      }
+
+      .topbar.collapsed .brand span,
+      .topbar.collapsed .controls {
+        display: none;
+      }
+
+      .topbar.collapsed .header-current {
+        display: inline-flex;
       }
 
       .progress {
@@ -599,7 +641,40 @@
           padding: 0.68rem 1rem;
         }
 
+        .topbar.collapsed .topbar-inner {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) auto;
+          align-items: center;
+          gap: 0.55rem;
+          padding: 0.5rem 1rem;
+        }
+
+        .topbar.collapsed .brand {
+          min-width: 0;
+        }
+
+        .topbar.collapsed .brand strong {
+          overflow: hidden;
+          font-size: 0.9rem;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
         .brand span {
+          display: none;
+        }
+
+        .topbar-actions {
+          width: 100%;
+          justify-content: space-between;
+        }
+
+        .topbar.collapsed .topbar-actions {
+          width: auto;
+          justify-content: flex-end;
+        }
+
+        .topbar.collapsed .header-current {
           display: none;
         }
 
@@ -787,7 +862,11 @@
           <strong>더컨벤션 결혼식 사회자 대본</strong>
           <span>정경하 군 · 전우림 양 · 2026년 7월 11일</span>
         </div>
-        <div class="controls" aria-label="진행, 확인 및 읽기 도구">
+        <div class="topbar-actions">
+          <span class="header-current" id="header-current" aria-live="polite">1. 개식예고</span>
+          <button class="toolbar-toggle" type="button" aria-expanded="true" aria-controls="toolbar-controls">상단 접기</button>
+        </div>
+        <div class="controls" id="toolbar-controls" aria-label="진행, 확인 및 읽기 도구">
           <div class="control-group flow-controls" aria-label="진행 이동">
             <label class="control-label" for="mobile-jump">순서</label>
             <select class="section-jump" id="mobile-jump" aria-label="순서 이동">
@@ -1126,8 +1205,13 @@
       const tocRoot = document.querySelector("#toc");
       const mobileJump = document.querySelector("#mobile-jump");
       const readingTools = document.querySelector(".reading-tools");
+      const topbar = document.querySelector(".topbar");
+      const toolbarControls = document.querySelector("#toolbar-controls");
+      const toolbarToggle = document.querySelector(".toolbar-toggle");
+      const headerCurrent = document.querySelector("#header-current");
       let pendingJumpId = "";
       let jumpTimer = 0;
+      let toolbarManuallyToggled = false;
 
       const cleanCueText = (html) =>
         html
@@ -1214,6 +1298,29 @@
           link.classList.toggle("active", link.getAttribute("href") === `#${id}`);
         });
         mobileJump.value = id;
+        const sectionTitle = current.dataset.title || current.querySelector("h2")?.textContent || "현재 순서";
+        const sectionNumber = current.querySelector(".section-number")?.textContent || "";
+        headerCurrent.textContent = sectionNumber ? `${sectionNumber}. ${sectionTitle}` : sectionTitle;
+      };
+
+      const setToolbarCollapsed = (collapsed) => {
+        topbar.classList.toggle("collapsed", collapsed);
+        toolbarControls.toggleAttribute("hidden", collapsed);
+        toolbarToggle.setAttribute("aria-expanded", String(!collapsed));
+        toolbarToggle.textContent = collapsed ? "상단 열기" : "상단 접기";
+        if (collapsed) {
+          document.querySelector(".quick-check-tools")?.removeAttribute("open");
+          readingTools.removeAttribute("open");
+        }
+        updateTopbarMetrics();
+      };
+
+      const syncToolbarDisclosure = () => {
+        if (!toolbarManuallyToggled) {
+          setToolbarCollapsed(window.matchMedia("(max-width: 860px)").matches);
+          return;
+        }
+        updateTopbarMetrics();
       };
 
       const scrollToSection = (id) => {
@@ -1271,6 +1378,7 @@
         document.querySelectorAll(".toc a").forEach((link) => {
           link.classList.toggle("active", link.getAttribute("href") === `#${current.id}`);
         });
+        syncCurrentSection(current.id);
 
         const max = document.documentElement.scrollHeight - window.innerHeight;
         const progress = max > 0 ? (window.scrollY / max) * 100 : 0;
@@ -1297,12 +1405,25 @@
 
       render();
       syncReadingToolsDisclosure();
+      syncToolbarDisclosure();
       setActive();
 
       document.addEventListener("scroll", setActive, { passive: true });
       window.addEventListener("resize", () => {
         syncReadingToolsDisclosure();
+        syncToolbarDisclosure();
         setActive();
+      });
+
+      toolbarToggle.addEventListener("click", () => {
+        const currentId = document.querySelector(".section.current")?.id;
+        toolbarManuallyToggled = true;
+        setToolbarCollapsed(!topbar.classList.contains("collapsed"));
+        if (currentId) {
+          scrollToSection(currentId);
+        } else {
+          setActive();
+        }
       });
 
       document.querySelector(".controls").addEventListener("click", (event) => {
