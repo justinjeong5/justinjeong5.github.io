@@ -22,9 +22,11 @@
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "start": "vite --host 0.0.0.0",
-    "build": "node scripts/generate-sitemap.mjs && vite build && vite build --ssr src/entry-server.jsx --outDir dist-ssr && node scripts/prerender.mjs",
+    "build": "node scripts/check-content-links.mjs && node scripts/generate-sitemap.mjs && vite build && vite build --ssr src/entry-server.jsx --outDir dist-ssr && node scripts/prerender.mjs && node scripts/verify-dist.mjs",
     "preview": "vite preview --host 0.0.0.0",
     "check:source": "node scripts/check-source.mjs",
+    "check:links": "node scripts/check-content-links.mjs",
+    "verify:dist": "node scripts/verify-dist.mjs",
     "lint": "npm run check:source -- --mode lint",
     "typecheck": "npm run check:source -- --mode typecheck",
     "deploy": "npm run build && gh-pages -d dist",
