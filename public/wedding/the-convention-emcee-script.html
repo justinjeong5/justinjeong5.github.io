@@ -80,6 +80,7 @@
         background: var(--panel);
         color: var(--ink);
         border-radius: 999px;
+        min-height: 2.5rem;
         padding: 0.48rem 0.78rem;
         cursor: pointer;
         font-size: 0.92rem;
@@ -144,10 +145,116 @@
         display: flex;
         flex-wrap: wrap;
         justify-content: flex-end;
-        gap: 0.45rem;
+        gap: 0.5rem;
       }
 
-      .mobile-jump {
+      .control-group {
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: color-mix(in srgb, var(--panel) 92%, transparent);
+        padding: 0.22rem;
+      }
+
+      .control-label {
+        padding: 0 0.35rem 0 0.55rem;
+        color: var(--muted);
+        font-size: 0.78rem;
+        font-weight: 760;
+        white-space: nowrap;
+      }
+
+      .flow-controls {
+        border-color: color-mix(in srgb, var(--accent) 28%, var(--line));
+        background: color-mix(in srgb, var(--accent-quiet) 5%, var(--panel));
+      }
+
+      .reading-controls button,
+      .output-controls button,
+      .flow-controls button {
+        border-color: transparent;
+        min-height: 2.2rem;
+      }
+
+      .flow-controls button {
+        min-width: 3rem;
+      }
+
+      .font-controls {
+        display: flex;
+        align-items: center;
+        gap: 0.15rem;
+        padding-left: 0.25rem;
+        border-left: 1px solid var(--line);
+      }
+
+      .font-controls span {
+        color: var(--muted);
+        font-size: 0.78rem;
+        font-weight: 720;
+        padding: 0 0.15rem;
+      }
+
+      .reading-tools {
+        display: flex;
+      }
+
+      .quick-check-tools {
+        position: relative;
+        display: flex;
+      }
+
+      .quick-check-tools summary {
+        display: inline-flex;
+        min-height: 2.5rem;
+        align-items: center;
+        border: 1px solid color-mix(in srgb, var(--accent) 34%, var(--line));
+        border-radius: 999px;
+        background: color-mix(in srgb, var(--accent-quiet) 9%, var(--panel));
+        padding: 0.48rem 0.78rem;
+        font-size: 0.92rem;
+        font-weight: 760;
+        cursor: pointer;
+        list-style: none;
+      }
+
+      .quick-check-tools summary::-webkit-details-marker {
+        display: none;
+      }
+
+      .quick-check-panel {
+        position: absolute;
+        top: calc(100% + 0.5rem);
+        right: 0;
+        z-index: 20;
+        display: grid;
+        width: min(23rem, calc(100vw - 2rem));
+        gap: 0.42rem;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: var(--panel);
+        box-shadow: 0 18px 48px rgba(77, 55, 42, 0.16);
+        padding: 0.72rem;
+      }
+
+      .quick-check-panel span {
+        display: flex;
+        justify-content: space-between;
+        gap: 0.8rem;
+        color: var(--ink);
+        font-size: 0.86rem;
+        line-height: 1.35;
+      }
+
+      .quick-check-panel strong {
+        flex: 0 0 auto;
+        color: var(--accent);
+        font-size: 0.78rem;
+      }
+
+      .reading-tools summary {
         display: none;
       }
 
@@ -221,13 +328,15 @@
         padding: 0.65rem 0.85rem;
       }
 
-      .mobile-jump {
+      .section-jump {
         border: 1px solid color-mix(in srgb, var(--accent) 34%, var(--line));
         border-radius: 999px;
         background: var(--panel);
         color: var(--ink);
-        padding: 0.48rem 2rem 0.48rem 0.78rem;
+        min-height: 2.2rem;
+        padding: 0.42rem 2rem 0.42rem 0.78rem;
         font-size: 0.92rem;
+        font-weight: 680;
       }
 
       .toc {
@@ -496,25 +605,99 @@
 
         .controls {
           width: 100%;
-          flex-wrap: nowrap;
-          justify-content: flex-start;
-          gap: 0.38rem;
-          overflow-x: auto;
-          padding-bottom: 0.1rem;
-          scrollbar-width: none;
-        }
-
-        .controls::-webkit-scrollbar {
-          display: none;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 0.45rem;
         }
 
         .controls button {
           flex: 0 0 auto;
         }
 
-        .mobile-jump {
+        .control-group {
+          border-radius: 14px;
+          padding: 0.35rem;
+        }
+
+        .flow-controls {
+          display: grid;
+          grid-column: 1 / -1;
+          grid-template-columns: auto 1fr auto auto;
+          gap: 0.35rem;
+        }
+
+        .quick-check-tools summary,
+        .reading-tools summary {
+          justify-content: center;
+          width: 100%;
+        }
+
+        .quick-check-tools[open],
+        .reading-tools[open] {
+          grid-column: 1 / -1;
+        }
+
+        .reading-tools {
           display: block;
-          flex: 0 0 10.75rem;
+        }
+
+        .reading-tools summary {
+          display: inline-flex;
+          min-height: 2.5rem;
+          align-items: center;
+          border: 1px solid var(--line);
+          border-radius: 999px;
+          background: var(--panel);
+          padding: 0.48rem 0.78rem;
+          font-size: 0.92rem;
+          cursor: pointer;
+          list-style: none;
+        }
+
+        .reading-tools summary::-webkit-details-marker {
+          display: none;
+        }
+
+        .reading-tools summary::after {
+          content: " 열기";
+          color: var(--muted);
+          font-size: 0.78rem;
+          font-weight: 700;
+        }
+
+        .reading-tools[open] summary::after {
+          content: " 닫기";
+        }
+
+        .reading-controls {
+          display: grid;
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+          margin-top: 0.35rem;
+        }
+
+        .reading-controls .control-label {
+          grid-column: 1 / -1;
+          padding: 0.1rem 0.25rem;
+        }
+
+        .reading-controls button {
+          width: 100%;
+          min-width: 0;
+        }
+
+        .section-jump {
+          width: 100%;
+          min-width: 0;
+        }
+
+        .font-controls {
+          display: contents;
+        }
+
+        .font-controls span {
+          grid-column: 1 / -1;
+          padding: 0.25rem 0.25rem 0;
+          border-top: 1px solid var(--line);
         }
 
         .shell {
@@ -558,6 +741,10 @@
       }
 
       @media (max-width: 1024px) {
+        .output-controls {
+          display: none;
+        }
+
         button[data-action="print"] {
           display: none;
         }
@@ -600,16 +787,44 @@
           <strong>더컨벤션 결혼식 사회자 대본</strong>
           <span>정경하 군 · 전우림 양 · 2026년 7월 11일</span>
         </div>
-        <div class="controls" aria-label="읽기 도구">
-          <button type="button" data-action="focus" aria-pressed="false">집중</button>
-          <button type="button" data-action="cues" aria-pressed="false">큐 숨김</button>
-          <button type="button" data-action="smaller">A-</button>
-          <button type="button" data-action="larger">A+</button>
-          <button type="button" data-action="theme" aria-pressed="false">야간</button>
-          <select class="mobile-jump" id="mobile-jump" aria-label="순서 이동">
-            <option value="">순서 이동</option>
-          </select>
-          <button type="button" data-action="print">인쇄</button>
+        <div class="controls" aria-label="진행, 확인 및 읽기 도구">
+          <div class="control-group flow-controls" aria-label="진행 이동">
+            <label class="control-label" for="mobile-jump">순서</label>
+            <select class="section-jump" id="mobile-jump" aria-label="순서 이동">
+              <option value="">순서 이동</option>
+            </select>
+            <button type="button" data-action="prev">이전</button>
+            <button type="button" data-action="next">다음</button>
+          </div>
+          <details class="quick-check-tools">
+            <summary>확인</summary>
+            <div class="quick-check-panel" aria-label="빠른 확인">
+              <span><strong>신랑</strong> 정경하 군</span>
+              <span><strong>신부</strong> 전우림 양</span>
+              <span><strong>성혼선언</strong> 신랑 측 아버님</span>
+              <span><strong>축사</strong> 최이레 님</span>
+              <span><strong>축가</strong> 장은애 님 · 다비치 팡파레</span>
+              <span><strong>연회장</strong> 12층</span>
+              <span><strong>주차</strong> 1층 신한은행 앞 · 2시간 등록</span>
+            </div>
+          </details>
+          <details class="reading-tools" open>
+            <summary>읽기 도구</summary>
+            <div class="control-group reading-controls" aria-label="읽기 설정">
+              <span class="control-label">읽기</span>
+              <button type="button" data-action="focus" aria-pressed="false">집중</button>
+              <button type="button" data-action="cues" aria-pressed="false">큐 숨김</button>
+              <div class="font-controls" aria-label="글자 크기">
+                <span>글자</span>
+                <button type="button" data-action="smaller">A-</button>
+                <button type="button" data-action="larger">A+</button>
+              </div>
+              <button type="button" data-action="theme" aria-pressed="false">야간</button>
+            </div>
+          </details>
+          <div class="control-group output-controls" aria-label="준비 도구">
+            <button type="button" data-action="print">인쇄</button>
+          </div>
         </div>
       </div>
       <div class="progress" aria-hidden="true"><span id="progress"></span></div>
@@ -624,7 +839,7 @@
             <li><b>신부</b> 전우림 양</li>
             <li><b>성혼선언</b> 신랑 측 아버님</li>
             <li><b>축사</b> 최이레 님</li>
-            <li><b>축가</b> 장은애 님 · 다비치 &lt;팡파레&gt;</li>
+            <li><b>축가</b> 장은애 님 · 다비치 팡파레</li>
             <li><b>연회장</b> 12층</li>
             <li><b>주차</b> 1층 신한은행 앞 안내데스크 · 2시간 등록</li>
           </ul>
@@ -641,7 +856,7 @@
           <p class="eyebrow">읽는 사람을 위한 진행 원고</p>
           <h1>멘트는 크게, 큐는 조용하게.</h1>
           <p>
-            괄호와 꺾쇠 안의 문장은 진행 확인용 큐입니다. 본식에서는 멘트만 읽고, 큐는 동선과 타이밍을 확인하는 용도로 사용하세요.
+            본식에서는 멘트만 읽고, 큐는 동선과 타이밍을 확인하는 용도로 사용하세요.
           </p>
           <div class="meta-row" aria-label="문서 정보">
             <span class="pill">주례 없는 예식</span>
@@ -690,18 +905,18 @@
             ["line", "먼저 양가 어머님께서<br />두 사람의 앞날을 밝히는 화촉에 점화해 주시겠습니다."],
             ["line", "하객 여러분께서는 양가 어머님을<br />따뜻한 박수로 맞이해 주시기 바랍니다."],
             ["line call", "“양가 어머님 입장”"],
-            ["cue", "(박수 유도)"],
-            ["cue", "&lt;양가 어머님 화촉 앞에 자리 후&gt;"],
+            ["cue", "박수 유도"],
+            ["cue", "양가 어머님 화촉 앞에 자리 후"],
             ["line", "양가 어머님께서는<br />단상에 마련된 화촉에 점화해 주시기 바랍니다."],
-            ["cue", "&lt;화촉 점화 시&gt;"],
+            ["cue", "화촉 점화 시"],
             ["line", "양가 어머님께서 밝혀주시는 한 쌍의 화촉이<br />신랑 신부가 함께 걸어갈 앞날을<br />따뜻하게 비추어주기를 바랍니다."],
-            ["cue", "&lt;화촉 점화 후 단상 앞으로 이동&gt;"],
+            ["cue", "화촉 점화 후 단상 앞으로 이동"],
             ["line", "이어서 양가 어머님께서 서로 마주 보시고<br />인사를 나누시겠습니다."],
             ["line call", "“양가 어머님 맞절”"],
-            ["cue", "(박수 유도)"],
+            ["cue", "박수 유도"],
             ["line", "다음은 바쁘신 가운데 찾아주신 하객 여러분께<br />양가 어머님께서 감사의 인사를 드리겠습니다."],
             ["line call", "“양가 어머님 인사”"],
-            ["cue", "(박수 유도)"],
+            ["cue", "박수 유도"],
             ["line", "양가 어머님께서는 자리로 이동해 주시기 바랍니다."]
           ]
         },
@@ -714,7 +929,7 @@
             ["line", "이제 오늘의 주인공,<br />신랑 <strong>정경하 군</strong>의 입장이 있겠습니다."],
             ["line", "하객 여러분께서는 설레는 마음으로 이 자리에 선 신랑을<br />큰 박수로 맞이해 주시기 바랍니다."],
             ["line call", "“신랑 입장”"],
-            ["cue", "(박수 유도)"]
+            ["cue", "박수 유도"]
           ]
         },
         {
@@ -730,16 +945,16 @@
             ["line", "하객 여러분께서는 신부의 입장과<br />두 사람이 함께하는 첫걸음에<br />따뜻한 박수로 축복해 주시기 바랍니다."],
             ["line", "신랑 <strong>정경하 군</strong>은 신부를 맞이할 자리로 이동해 주시기 바랍니다."],
             ["line call", "“신부 입장”"],
-            ["cue", "(박수 유도)"],
-            ["cue", "&lt;웨딩로드 약 1/3 지점에서 신랑이 신부를 맞이&gt;"],
+            ["cue", "박수 유도"],
+            ["cue", "웨딩로드 약 1/3 지점에서 신랑이 신부를 맞이"],
             ["line", "신랑이 신부에게 부케를 전하고 있습니다."],
-            ["cue", "&lt;신부가 신랑에게 부토니에를 달아줌&gt;"],
+            ["cue", "신부가 신랑에게 부토니에를 달아줌"],
             ["line", "신부가 신랑에게 부토니에를 달아주며,<br />두 사람이 서로의 마음을 나누고 있습니다."],
             ["line", "따뜻한 박수 부탁드립니다."],
-            ["cue", "&lt;부토니에 전달 후 함께 입장 시작&gt;"],
+            ["cue", "부토니에 전달 후 함께 입장 시작"],
             ["line", "이제 두 사람이 함께 걸어옵니다."],
             ["line", "하객 여러분께서는 더 큰 박수로<br />두 사람의 아름다운 걸음을 축복해 주시기 바랍니다."],
-            ["cue", "&lt;신랑 신부 단상 도착 후&gt;"],
+            ["cue", "신랑 신부 단상 도착 후"],
             ["line", "두 사람에게 다시 한 번 큰 박수 부탁드립니다."]
           ]
         },
@@ -753,7 +968,7 @@
             ["line", "신랑 신부는 서로 마주 봐 주시기 바랍니다."],
             ["line", "서로를 존중하는 마음을 담아<br />맞절을 하겠습니다."],
             ["line call", "“신랑, 신부 맞절”"],
-            ["cue", "(사회 진행)"]
+            ["cue", "사회 진행"]
           ]
         },
         {
@@ -765,7 +980,7 @@
             ["line", "다음은 혼인서약 순서입니다."],
             ["line", "오늘의 혼인서약은<br />신랑 신부가 서로에게 전하는<br />사랑과 약속의 말로 진행되겠습니다."],
             ["line call", "“신랑 신부 혼인서약 낭독”"],
-            ["cue", "&lt;혼인서약 낭독 후&gt;"],
+            ["cue", "혼인서약 낭독 후"],
             ["line", "두 사람이 함께 써 내려갈 약속에<br />따뜻한 박수를 부탁드립니다."]
           ]
         },
@@ -779,8 +994,8 @@
             ["line", "성혼선언문은 신랑 측 아버님께서 낭독해 주시겠습니다."],
             ["line", "아버님께서는 단상 앞으로 자리해 주시기 바랍니다.<br />하객 여러분께서는 따뜻한 박수로 맞이해 주시기 바랍니다."],
             ["line call", "“성혼선언문 낭독”"],
-            ["cue", "(신랑 측 아버님 진행)"],
-            ["cue", "&lt;성혼선언문 낭독 후&gt;"],
+            ["cue", "신랑 측 아버님 진행"],
+            ["cue", "성혼선언문 낭독 후"],
             ["line", "감사합니다."],
             ["line", "이로써 신랑 <strong>정경하 군</strong>과 신부 <strong>전우림 양</strong>의<br />성혼이 이루어졌음을 함께 확인하였습니다."]
           ]
@@ -791,20 +1006,20 @@
           shortTitle: "덕담/축사",
           summary: "신랑 측 아버님 덕담, 신부 친구 최이레 님 축사",
           blocks: [
-            ["cue", "&lt;혼주 덕담&gt;"],
+            ["cue", "혼주 덕담"],
             ["line", "이어서 신랑 측 아버님께서<br />두 사람을 위한 따뜻한 덕담을 전해주시겠습니다."],
             ["line call", "“덕담 말씀”"],
-            ["cue", "(신랑 측 아버님 진행)"],
-            ["cue", "&lt;덕담 후&gt;"],
+            ["cue", "신랑 측 아버님 진행"],
+            ["cue", "덕담 후"],
             ["line", "두 사람을 향한 깊은 마음이 느껴지는 말씀 감사드립니다."],
             ["line", "아버님께 다시 한 번 큰 박수 부탁드립니다."],
-            ["cue", "&lt;친구 축사&gt;"],
+            ["cue", "친구 축사"],
             ["line", "다음은 신부 <strong>전우림 양</strong>의 친구<br /><strong>최이레 님</strong>의 축사가 있겠습니다."],
             ["line", "최이레 님은 신부와 13년간 인연을 이어온<br />대구교대 극예술연구회 31기 동기로,<br />신부의 많은 순간을 가까이에서 함께해 온 소중한 친구입니다."],
             ["line", "최이레 님을 따뜻한 박수로 모시겠습니다."],
             ["line call", "“축사 말씀”"],
-            ["cue", "(진행)"],
-            ["cue", "&lt;친구 축사 후&gt;"],
+            ["cue", "진행"],
+            ["cue", "친구 축사 후"],
             ["line", "소중한 마음을 담은 축사 감사드립니다."],
             ["line", "최이레 님께 다시 한 번 큰 박수 부탁드립니다."]
           ]
@@ -817,11 +1032,11 @@
           blocks: [
             ["line", "다음은 두 사람의 행복한 시작을 축하하는<br />축가 순서가 있겠습니다."],
             ["line", "오늘 축가는 신부가 함께해 온<br />연극교육연구회 담쟁이의 <strong>장은애 님</strong>께서 준비해 주셨습니다."],
-            ["line", "곡은 다비치의 <strong>&lt;팡파레&gt;</strong>입니다."],
+            ["line", "곡은 다비치의 <strong>팡파레</strong>입니다."],
             ["line", "장은애 님을 따뜻한 박수로 맞이해 주시기 바랍니다."],
             ["line call", "“축가”"],
-            ["cue", "(진행)"],
-            ["cue", "&lt;축가 후&gt;"],
+            ["cue", "진행"],
+            ["cue", "축가 후"],
             ["line", "두 사람을 향한 축복의 마음이 담긴<br />멋진 축가 잘 들었습니다."],
             ["line", "가사처럼 신랑 신부의 앞날에도<br />환한 팡파레와 찬란한 날들이 가득하길 바랍니다."],
             ["line", "장은애 님께 다시 한 번 큰 박수 부탁드립니다."]
@@ -837,12 +1052,12 @@
             ["line", "먼저 신부 부모님께 인사를 올리겠습니다."],
             ["line", "그동안 사랑과 정성으로 길러주신 은혜에 감사드리며,<br />앞으로 행복하게 잘 살겠다는 마음을 담아 인사드리겠습니다."],
             ["line call", "“신랑, 신부 인사”"],
-            ["cue", "&lt;인사 후&gt;"],
+            ["cue", "인사 후"],
             ["line", "신부 부모님께서는<br />사위와 딸을 따뜻하게 안아주시기 바랍니다."],
             ["line", "이어서 신랑 부모님께 인사를 올리겠습니다."],
             ["line", "한결같은 사랑으로 길러주신 은혜에 감사드리며,<br />새로운 가정을 이루어 잘 살아가겠다는 마음을 담아 인사드리겠습니다."],
             ["line call", "“신랑, 신부 인사”"],
-            ["cue", "&lt;인사 후&gt;"],
+            ["cue", "인사 후"],
             ["line", "신랑 부모님께서는<br />며느리와 아들을 따뜻하게 안아주시기 바랍니다."],
             ["line", "양가 부모님께서는 자리로 돌아가 주시기 바랍니다."],
             ["line", "다음은 오늘 두 사람을 축복하기 위해 자리해주신<br />하객 여러분께 감사의 인사를 드리겠습니다."],
@@ -861,7 +1076,7 @@
             ["line", "이제 오늘 예식의 마지막 순서인<br />신랑 신부 행진이 있겠습니다."],
             ["line", "가족과 하객 여러분의 축복 속에<br />부부로서 새로운 첫걸음을 내딛는 두 사람에게<br />아낌없는 축복의 박수를 보내주시기 바랍니다."],
             ["line call", "“신랑, 신부 행진”"],
-            ["cue", "(박수 유도)"]
+            ["cue", "박수 유도"]
           ]
         },
         {
@@ -910,14 +1125,23 @@
       const scriptRoot = document.querySelector("#script");
       const tocRoot = document.querySelector("#toc");
       const mobileJump = document.querySelector("#mobile-jump");
+      const readingTools = document.querySelector(".reading-tools");
+      let pendingJumpId = "";
+      let jumpTimer = 0;
+
+      const cleanCueText = (html) =>
+        html
+          .replace(/^(&lt;|<|\()\s*/, "")
+          .replace(/\s*(&gt;|>|\))$/, "");
 
       const render = () => {
         scriptRoot.innerHTML = sections
           .map((section) => {
             const blocks = section.blocks
               .map(([type, html]) => {
-                const cueType = type === "cue" && html.startsWith("(") ? " action" : "";
-                return `<p class="${type}${cueType}">${html}</p>`;
+                const content = type === "cue" ? cleanCueText(html) : html;
+                const cueType = type === "cue" && /박수|진행/.test(content) ? " action" : "";
+                return `<p class="${type}${cueType}">${content}</p>`;
               })
               .join("");
             return `
@@ -979,7 +1203,60 @@
         return topbarHeight;
       };
 
+      const sectionIds = () => [...document.querySelectorAll(".section")].map((section) => section.id);
+
+      const syncCurrentSection = (id) => {
+        const allSections = [...document.querySelectorAll(".section")];
+        const current = document.querySelector(`#${id}`);
+        if (!current) return;
+        allSections.forEach((section) => section.classList.toggle("current", section === current));
+        document.querySelectorAll(".toc a").forEach((link) => {
+          link.classList.toggle("active", link.getAttribute("href") === `#${id}`);
+        });
+        mobileJump.value = id;
+      };
+
+      const scrollToSection = (id) => {
+        const target = document.querySelector(`#${id}`);
+        if (!target) return;
+        pendingJumpId = id;
+        const topbarHeight = updateTopbarMetrics();
+        const compact = window.matchMedia("(max-width: 860px)").matches;
+        const targetTop = compact ? target.offsetTop : target.getBoundingClientRect().top + window.scrollY;
+        const scrollTop = Math.max(0, targetTop - topbarHeight - 16);
+        if (compact) {
+          const previousScrollBehavior = document.documentElement.style.scrollBehavior;
+          document.documentElement.style.scrollBehavior = "auto";
+          window.scrollTo({ top: scrollTop, behavior: "auto" });
+          document.documentElement.style.scrollBehavior = previousScrollBehavior;
+        } else {
+          window.scrollTo({ top: scrollTop, behavior: "smooth" });
+        }
+        syncCurrentSection(id);
+        window.setTimeout(() => {
+          if (pendingJumpId === id) pendingJumpId = "";
+          syncCurrentSection(id);
+        }, compact ? 120 : 420);
+      };
+
+      const moveSection = (direction) => {
+        const ids = sectionIds();
+        const currentId = document.querySelector(".section.current")?.id || ids[0];
+        const currentIndex = Math.max(0, ids.indexOf(currentId));
+        const nextIndex = Math.min(ids.length - 1, Math.max(0, currentIndex + direction));
+        scrollToSection(ids[nextIndex]);
+      };
+
+      const syncReadingToolsDisclosure = () => {
+        if (window.matchMedia("(max-width: 860px)").matches) {
+          readingTools.removeAttribute("open");
+        } else {
+          readingTools.setAttribute("open", "");
+        }
+      };
+
       const setActive = () => {
+        if (pendingJumpId) return;
         const readingOffset = updateTopbarMetrics() + 24;
         const allSections = [...document.querySelectorAll(".section")];
         let current = allSections[0];
@@ -994,7 +1271,6 @@
         document.querySelectorAll(".toc a").forEach((link) => {
           link.classList.toggle("active", link.getAttribute("href") === `#${current.id}`);
         });
-        if (mobileJump.value !== current.id) mobileJump.value = current.id;
 
         const max = document.documentElement.scrollHeight - window.innerHeight;
         const progress = max > 0 ? (window.scrollY / max) * 100 : 0;
@@ -1020,10 +1296,14 @@
       };
 
       render();
+      syncReadingToolsDisclosure();
       setActive();
 
       document.addEventListener("scroll", setActive, { passive: true });
-      window.addEventListener("resize", setActive);
+      window.addEventListener("resize", () => {
+        syncReadingToolsDisclosure();
+        setActive();
+      });
 
       document.querySelector(".controls").addEventListener("click", (event) => {
         const button = event.target.closest("button");
@@ -1037,12 +1317,15 @@
         if (action === "cues") {
           const active = document.body.classList.toggle("hide-cues");
           button.setAttribute("aria-pressed", String(active));
+          button.textContent = active ? "큐 보임" : "큐 숨김";
         }
         if (action === "theme") {
           const active = document.documentElement.dataset.theme !== "dark";
           document.documentElement.dataset.theme = active ? "dark" : "";
           button.setAttribute("aria-pressed", String(active));
         }
+        if (action === "prev") moveSection(-1);
+        if (action === "next") moveSection(1);
         if (action === "print") window.print();
         if (action === "larger" || action === "smaller") {
           const current = Number.parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--font-scale")) || 1;
@@ -1052,16 +1335,16 @@
       });
 
       document.querySelector("#search").addEventListener("input", (event) => applySearch(event.target.value));
-      mobileJump.addEventListener("change", (event) => {
-        const target = document.querySelector(`#${event.target.value}`);
-        if (!target) return;
-        const topbarHeight = updateTopbarMetrics();
-        const targetTop = target.getBoundingClientRect().top + window.scrollY;
-        window.scrollTo({
-          top: Math.max(0, targetTop - topbarHeight - 16),
-          behavior: "smooth"
-        });
-      });
+      const handleSectionJump = (event) => {
+        window.clearTimeout(jumpTimer);
+        jumpTimer = window.setTimeout(() => {
+          const value = mobileJump.value;
+          if (!value) return;
+          scrollToSection(value);
+        }, 120);
+      };
+      mobileJump.addEventListener("input", handleSectionJump);
+      mobileJump.addEventListener("change", handleSectionJump);
     </script>
   </body>
 </html>
