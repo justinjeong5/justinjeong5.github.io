@@ -14,6 +14,7 @@ import {
 import {
   siteData,
   getAllCases,
+  getAllEssays,
   getAllNotes,
   getAllLogs,
 } from '../lib/content';
@@ -44,6 +45,9 @@ function HomePage() {
   );
   const recentNotes = (tendedNotes.length >= 4 ? tendedNotes : getAllNotes()).slice(0, 4);
   const recentLogs = getAllLogs().slice(0, 3);
+  const featuredEssays = (siteData.featuredEssaySlugs || [])
+    .map((slug) => getAllEssays().find((e) => e.slug === slug))
+    .filter(Boolean);
 
   return (
     <>
@@ -166,6 +170,27 @@ function HomePage() {
         </ul>
         <Link to={ROUTES.notes} className="see-all-link">
           모든 노트 보기 <ArrowUpRight size={16} aria-hidden="true" />
+        </Link>
+      </section>
+
+      <section className="featured-section">
+        <div className="section-header">
+          <p className="eyebrow">Long-form</p>
+          <h2>길게 풀어낸 판단</h2>
+          <p>제품·플랫폼 결정과 일하는 방식을 서사로 정리한 글.</p>
+        </div>
+        <ul className="case-preview-grid">
+          {featuredEssays.map((essay) => (
+            <li key={essay.slug}>
+              <Link to={ROUTES.essayDetail(essay.slug)} className="case-preview-card">
+                <h3>{essay.title}</h3>
+                <p>{essay.summary}</p>
+              </Link>
+            </li>
+          ))}
+        </ul>
+        <Link to={ROUTES.essays} className="see-all-link">
+          모든 에세이 보기 <ArrowUpRight size={16} aria-hidden="true" />
         </Link>
       </section>
 
