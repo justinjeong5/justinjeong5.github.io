@@ -28,6 +28,7 @@
         --font-scale: 1;
         --topbar-height: 76px;
         --reading-width: 760px;
+        --section-divider-gap: 1rem;
       }
 
       [data-theme="dark"] {
@@ -488,8 +489,12 @@
 
       .section {
         scroll-margin-top: calc(var(--topbar-height) + 24px);
-        border-bottom: 1px solid var(--line);
-        padding: 1.65rem 0;
+        padding: var(--section-divider-gap) 0 0;
+      }
+
+      .section + .section {
+        margin-top: var(--section-divider-gap);
+        border-top: 1px solid var(--line);
       }
 
       .section-header {
@@ -1118,7 +1123,7 @@
         }
 
         .section {
-          padding: 1.25rem 0;
+          padding: var(--section-divider-gap) 0 0;
         }
 
         .reader {
