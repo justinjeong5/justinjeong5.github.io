@@ -70,7 +70,8 @@
       }
 
       button,
-      input {
+      input,
+      select {
         font: inherit;
       }
 
@@ -146,6 +147,10 @@
         gap: 0.45rem;
       }
 
+      .mobile-jump {
+        display: none;
+      }
+
       .progress {
         height: 3px;
         background: var(--line);
@@ -214,6 +219,15 @@
         background: transparent;
         color: var(--ink);
         padding: 0.65rem 0.85rem;
+      }
+
+      .mobile-jump {
+        border: 1px solid color-mix(in srgb, var(--accent) 34%, var(--line));
+        border-radius: 999px;
+        background: var(--panel);
+        color: var(--ink);
+        padding: 0.48rem 2rem 0.48rem 0.78rem;
+        font-size: 0.92rem;
       }
 
       .toc {
@@ -498,6 +512,11 @@
           flex: 0 0 auto;
         }
 
+        .mobile-jump {
+          display: block;
+          flex: 0 0 10.75rem;
+        }
+
         .shell {
           display: flex;
           flex-direction: column;
@@ -587,6 +606,9 @@
           <button type="button" data-action="smaller">A-</button>
           <button type="button" data-action="larger">A+</button>
           <button type="button" data-action="theme" aria-pressed="false">야간</button>
+          <select class="mobile-jump" id="mobile-jump" aria-label="순서 이동">
+            <option value="">순서 이동</option>
+          </select>
           <button type="button" data-action="print">인쇄</button>
         </div>
       </div>
@@ -887,6 +909,7 @@
 
       const scriptRoot = document.querySelector("#script");
       const tocRoot = document.querySelector("#toc");
+      const mobileJump = document.querySelector("#mobile-jump");
 
       const render = () => {
         scriptRoot.innerHTML = sections
@@ -943,6 +966,11 @@
                 `<a href="#section-${section.no}" title="${section.title}"><small>${section.no}</small><span>${section.shortTitle || section.title}</span></a>`
             )
             .join("") + `<a href="#appendix"><small>+</small><span>부록</span></a>`;
+
+        mobileJump.innerHTML =
+          `<option value="">순서 이동</option>` +
+          sections.map((section) => `<option value="section-${section.no}">${section.no}. ${section.shortTitle || section.title}</option>`).join("") +
+          `<option value="appendix">부록</option>`;
       };
 
       const updateTopbarMetrics = () => {
@@ -966,6 +994,7 @@
         document.querySelectorAll(".toc a").forEach((link) => {
           link.classList.toggle("active", link.getAttribute("href") === `#${current.id}`);
         });
+        if (mobileJump.value !== current.id) mobileJump.value = current.id;
 
         const max = document.documentElement.scrollHeight - window.innerHeight;
         const progress = max > 0 ? (window.scrollY / max) * 100 : 0;
@@ -1023,6 +1052,16 @@
       });
 
       document.querySelector("#search").addEventListener("input", (event) => applySearch(event.target.value));
+      mobileJump.addEventListener("change", (event) => {
+        const target = document.querySelector(`#${event.target.value}`);
+        if (!target) return;
+        const topbarHeight = updateTopbarMetrics();
+        const targetTop = target.getBoundingClientRect().top + window.scrollY;
+        window.scrollTo({
+          top: Math.max(0, targetTop - topbarHeight - 16),
+          behavior: "smooth"
+        });
+      });
     </script>
   </body>
 </html>
