@@ -23,6 +23,8 @@
         --shadow: 0 12px 30px rgba(50, 38, 28, 0.07);
         --radius: 8px;
         --font-scale: 1;
+        --topbar-height: 76px;
+        --reading-width: 760px;
       }
 
       [data-theme="dark"] {
@@ -154,7 +156,7 @@
         display: grid;
         grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
         gap: 1.4rem;
-        max-width: 1180px;
+        max-width: 1120px;
         margin: 0 auto;
         padding: 1.4rem 1rem 4rem;
       }
@@ -241,6 +243,8 @@
 
       .main {
         min-width: 0;
+        width: 100%;
+        max-width: var(--reading-width);
       }
 
       .hero {
@@ -265,7 +269,7 @@
       }
 
       .hero p {
-        max-width: 760px;
+        max-width: 680px;
         margin: 1rem 0 0;
         color: var(--muted);
         font-size: 1rem;
@@ -288,7 +292,7 @@
       }
 
       .section {
-        scroll-margin-top: 92px;
+        scroll-margin-top: calc(var(--topbar-height) + 24px);
         border-bottom: 1px solid var(--line);
         padding: 1.65rem 0;
       }
@@ -422,15 +426,23 @@
 
       body.focus-mode .shell {
         display: block;
-        max-width: 840px;
+        max-width: min(760px, calc(100vw - 2rem));
       }
 
       body.focus-mode .line {
         font-size: calc(1.22rem * var(--font-scale));
       }
 
+      body.focus-mode .section {
+        transition: opacity 160ms ease;
+      }
+
       body.focus-mode .section:not(.current) {
-        opacity: 0.5;
+        opacity: 0.46;
+      }
+
+      body.focus-mode .section.current {
+        opacity: 1;
       }
 
       @media (max-width: 860px) {
@@ -471,6 +483,7 @@
 
         .main {
           order: 1;
+          max-width: none;
         }
 
         .sidebar {
@@ -499,6 +512,12 @@
 
         .reader {
           gap: 0.62rem;
+        }
+      }
+
+      @media (max-width: 1024px) {
+        button[data-action="print"] {
+          display: none;
         }
       }
 
@@ -903,11 +922,18 @@
             .join("") + `<a href="#appendix"><small>+</small><span>부록</span></a>`;
       };
 
+      const updateTopbarMetrics = () => {
+        const topbarHeight = Math.ceil(document.querySelector(".topbar").getBoundingClientRect().height);
+        document.documentElement.style.setProperty("--topbar-height", `${topbarHeight}px`);
+        return topbarHeight;
+      };
+
       const setActive = () => {
+        const readingOffset = updateTopbarMetrics() + 24;
         const allSections = [...document.querySelectorAll(".section")];
         let current = allSections[0];
         for (let index = allSections.length - 1; index >= 0; index -= 1) {
-          if (allSections[index].getBoundingClientRect().top < 130) {
+          if (allSections[index].getBoundingClientRect().top <= readingOffset) {
             current = allSections[index];
             break;
           }
