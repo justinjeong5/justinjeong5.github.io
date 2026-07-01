@@ -169,6 +169,16 @@
         font-weight: 760;
       }
 
+      .toolbar-toggle::after {
+        content: "⌃";
+        font-size: 0.8em;
+        margin-left: 0.25rem;
+      }
+
+      .topbar.collapsed .toolbar-toggle::after {
+        content: "⌄";
+      }
+
       .controls {
         display: flex;
         flex-wrap: wrap;
@@ -641,23 +651,22 @@
           padding: 0.68rem 1rem;
         }
 
+        .topbar:not(.collapsed) {
+          box-shadow: 0 14px 34px rgba(77, 55, 42, 0.12);
+        }
+
         .topbar.collapsed .topbar-inner {
+          display: flex;
+          align-items: center;
           display: grid;
           grid-template-columns: minmax(0, 1fr) auto;
           align-items: center;
-          gap: 0.55rem;
-          padding: 0.5rem 1rem;
+          gap: 0.45rem;
+          padding: 0.18rem 0.78rem 0.22rem;
         }
 
         .topbar.collapsed .brand {
-          min-width: 0;
-        }
-
-        .topbar.collapsed .brand strong {
-          overflow: hidden;
-          font-size: 0.9rem;
-          text-overflow: ellipsis;
-          white-space: nowrap;
+          display: none;
         }
 
         .brand span {
@@ -666,23 +675,45 @@
 
         .topbar-actions {
           width: 100%;
-          justify-content: space-between;
+          justify-content: flex-end;
         }
 
         .topbar.collapsed .topbar-actions {
           width: auto;
-          justify-content: flex-end;
+          justify-content: center;
         }
 
         .topbar.collapsed .header-current {
-          display: none;
+          display: inline-flex;
+          max-width: none;
+          min-height: 2.2rem;
+          align-items: center;
+          border: 0;
+          background: transparent;
+          padding: 0;
+          color: var(--ink);
+          font-size: 0.84rem;
+        }
+
+        .toolbar-toggle {
+          min-height: 2.75rem;
+          padding: 0.34rem 0.66rem;
+          font-size: 0.86rem;
+        }
+
+        .topbar:not(.collapsed) .topbar-inner {
+          max-height: 55vh;
+          overflow-y: auto;
+          overscroll-behavior: contain;
         }
 
         .controls {
           width: 100%;
           display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 0.45rem;
+          grid-template-columns: repeat(2, auto);
+          align-items: start;
+          justify-content: start;
+          gap: 0.38rem;
         }
 
         .controls button {
@@ -701,10 +732,33 @@
           gap: 0.35rem;
         }
 
+        .flow-controls button,
+        .section-jump {
+          min-height: 2.75rem;
+        }
+
         .quick-check-tools summary,
         .reading-tools summary {
           justify-content: center;
-          width: 100%;
+          width: auto;
+        }
+
+        .quick-check-tools summary {
+          min-height: 2.75rem;
+          padding: 0.34rem 0.62rem;
+          font-size: 0.84rem;
+        }
+
+        .quick-check-tools summary::after {
+          content: "⌄";
+          color: var(--muted);
+          font-size: 0.8rem;
+          font-weight: 700;
+          margin-left: 0.25rem;
+        }
+
+        .quick-check-tools[open] summary::after {
+          content: "⌃";
         }
 
         .quick-check-tools[open],
@@ -718,13 +772,13 @@
 
         .reading-tools summary {
           display: inline-flex;
-          min-height: 2.5rem;
+          min-height: 2.75rem;
           align-items: center;
           border: 1px solid var(--line);
           border-radius: 999px;
           background: var(--panel);
-          padding: 0.48rem 0.78rem;
-          font-size: 0.92rem;
+          padding: 0.34rem 0.62rem;
+          font-size: 0.84rem;
           cursor: pointer;
           list-style: none;
         }
@@ -734,14 +788,15 @@
         }
 
         .reading-tools summary::after {
-          content: " 열기";
+          content: "⌄";
           color: var(--muted);
-          font-size: 0.78rem;
+          font-size: 0.8rem;
           font-weight: 700;
+          margin-left: 0.25rem;
         }
 
         .reading-tools[open] summary::after {
-          content: " 닫기";
+          content: "⌃";
         }
 
         .reading-controls {
@@ -864,7 +919,7 @@
         </div>
         <div class="topbar-actions">
           <span class="header-current" id="header-current" aria-live="polite">1. 개식예고</span>
-          <button class="toolbar-toggle" type="button" aria-expanded="true" aria-controls="toolbar-controls">상단 접기</button>
+          <button class="toolbar-toggle" type="button" aria-expanded="true" aria-controls="toolbar-controls">닫기</button>
         </div>
         <div class="controls" id="toolbar-controls" aria-label="진행, 확인 및 읽기 도구">
           <div class="control-group flow-controls" aria-label="진행 이동">
@@ -1307,7 +1362,7 @@
         topbar.classList.toggle("collapsed", collapsed);
         toolbarControls.toggleAttribute("hidden", collapsed);
         toolbarToggle.setAttribute("aria-expanded", String(!collapsed));
-        toolbarToggle.textContent = collapsed ? "상단 열기" : "상단 접기";
+        toolbarToggle.textContent = collapsed ? "열기" : "닫기";
         if (collapsed) {
           document.querySelector(".quick-check-tools")?.removeAttribute("open");
           readingTools.removeAttribute("open");
