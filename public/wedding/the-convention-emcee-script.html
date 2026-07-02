@@ -27,6 +27,7 @@
         --topbar-height: 76px;
         --reading-width: 760px;
         --section-divider-gap: 2.5rem;
+        --content-divider: 1px solid var(--line);
       }
 
       [data-theme="dark"] {
@@ -218,6 +219,12 @@
         background: color-mix(in srgb, var(--accent-quiet) 5%, var(--panel));
       }
 
+      .flow-search {
+        display: grid;
+        gap: 0.35rem;
+        min-width: min(18rem, 100%);
+      }
+
       .reading-controls button,
       .output-controls button,
       .flow-controls button {
@@ -330,44 +337,16 @@
       }
 
       .shell {
-        display: grid;
-        grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
-        gap: 1.4rem;
-        max-width: 1120px;
+        display: block;
+        max-width: var(--reading-width);
         margin: 0 auto;
         padding: 1.4rem 1rem 4rem;
-      }
-
-      .sidebar {
-        position: sticky;
-        top: 78px;
-        align-self: start;
-        max-height: calc(100vh - 96px);
-        overflow: auto;
-        border: 1px solid var(--line);
-        border-radius: var(--radius);
-        background: var(--panel);
-        box-shadow: var(--shadow);
-      }
-
-      .search-panel {
-        border-bottom: 1px solid var(--line);
-        padding: 1rem;
-      }
-
-      .search-panel h2,
-      .toc h2 {
-        margin: 0 0 0.65rem;
-        font-size: 0.84rem;
-        letter-spacing: 0;
-        color: var(--muted);
       }
 
       .top-summary {
         display: grid;
         gap: 0.72rem;
-        border-bottom: 1px solid var(--line);
-        padding: 1rem 0 1.1rem;
+        padding: 1rem 0 0;
       }
 
       .top-summary h2 {
@@ -426,51 +405,21 @@
         font-weight: 680;
       }
 
-      .toc {
-        padding: 1rem;
-      }
-
-      .toc nav {
-        display: grid;
-        gap: 0.25rem;
-      }
-
-      .toc a {
-        display: grid;
-        grid-template-columns: 2.2rem 1fr;
-        gap: 0.45rem;
-        align-items: baseline;
-        border-radius: 6px;
-        padding: 0.48rem 0.52rem;
-        color: var(--muted);
-        font-size: 0.9rem;
-      }
-
-      .toc a.active,
-      .toc a:hover {
-        background: color-mix(in srgb, var(--accent) 13%, transparent);
-        color: var(--ink);
-      }
-
-      .toc a.active small {
-        color: var(--accent);
-        font-weight: 820;
-      }
-
-      .toc small {
-        font-variant-numeric: tabular-nums;
-        color: var(--accent-quiet);
-      }
-
       .main {
         min-width: 0;
         width: 100%;
-        max-width: var(--reading-width);
       }
 
       .hero {
-        border-bottom: 1px solid var(--line);
-        padding: 1.8rem 0 1.3rem;
+        padding: 0;
+      }
+
+      .top-summary + .hero,
+      .hero + #script .section:first-child,
+      .section + .section {
+        margin-top: var(--section-divider-gap);
+        border-top: var(--content-divider);
+        padding-top: var(--section-divider-gap);
       }
 
       .eyebrow {
@@ -514,12 +463,6 @@
 
       .section {
         scroll-margin-top: calc(var(--topbar-height) + 24px);
-        padding: var(--section-divider-gap) 0 0;
-      }
-
-      .section + .section {
-        margin-top: var(--section-divider-gap);
-        border-top: 1px solid var(--line);
       }
 
       .section-header {
@@ -621,8 +564,7 @@
         font-weight: 650;
       }
 
-      .section.current .section-number,
-      .toc a.active {
+      .section.current .section-number {
         border-color: color-mix(in srgb, var(--accent) 38%, var(--line));
       }
 
@@ -692,7 +634,6 @@
         display: none;
       }
 
-      body.focus-mode .sidebar,
       body.focus-mode .hero p,
       body.focus-mode .meta-row {
         display: none;
@@ -1027,6 +968,11 @@
           line-height: 1.1;
         }
 
+        .flow-search {
+          grid-column: 1 / -1;
+          min-width: 0;
+        }
+
         .flow-controls button {
           min-width: 3.35rem;
           border-color: transparent;
@@ -1240,37 +1186,17 @@
           max-width: none;
         }
 
-        .sidebar {
-          order: 2;
-          position: static;
-          max-height: none;
-          margin: 1rem 0 0;
-        }
-
-        .toc nav {
-          grid-template-columns: 1fr;
-          gap: 0.1rem;
-        }
-
         .section-header {
           grid-template-columns: 2.45rem minmax(0, 1fr);
         }
 
-        .hero {
-          padding: 1.35rem 0 1.05rem;
-        }
-
         .top-summary {
-          padding: 1rem 0 1.05rem;
+          padding: 1rem 0 0;
         }
 
         .top-summary .quick-list {
           grid-template-columns: 1fr;
           gap: 0.4rem;
-        }
-
-        .section {
-          padding: var(--section-divider-gap) 0 0;
         }
 
         .reader {
@@ -1294,7 +1220,7 @@
 
       @media print {
         .topbar,
-        .sidebar {
+        #toc {
           display: none;
         }
 
@@ -1347,6 +1273,10 @@
             <select class="section-jump" id="mobile-jump" aria-label="순서 이동">
               <option value="">순서 이동</option>
             </select>
+            <div class="flow-search">
+              <label class="control-label" for="search">검색</label>
+              <input class="search" id="search" type="search" placeholder="대본 검색" aria-label="대본 검색" />
+            </div>
             <button type="button" data-action="prev">이전</button>
             <button type="button" data-action="next">다음</button>
             <div class="sequence-strip" id="sequence-strip" aria-label="가까운 순서 이동"></div>
@@ -1403,16 +1333,7 @@
     </nav>
 
     <div class="shell">
-      <aside class="sidebar" aria-label="대본 탐색">
-        <section class="search-panel">
-          <h2>검색</h2>
-          <input class="search" id="search" type="search" placeholder="대본 검색" aria-label="대본 검색" />
-        </section>
-        <section class="toc">
-          <h2>순서</h2>
-          <nav id="toc"></nav>
-        </section>
-      </aside>
+      <nav id="toc" hidden aria-hidden="true"></nav>
 
       <main class="main">
         <section class="top-summary" aria-label="핵심 정보">
@@ -1718,6 +1639,7 @@
       const mobileFlowCurrent = document.querySelector("#mobile-flow-current");
       const mobileFlowBar = document.querySelector(".mobile-flow-bar");
       const mobileFlowButton = document.querySelector(".mobile-flow-current");
+      const searchInput = document.querySelector("#search");
       const compactQuery = window.matchMedia("(max-width: 860px)");
       let pendingJumpId = "";
       let jumpTimer = 0;
@@ -1851,7 +1773,7 @@
         const current = document.querySelector(`#${id}`);
         if (!current) return;
         allSections.forEach((section) => section.classList.toggle("current", section === current));
-        document.querySelectorAll(".toc a").forEach((link) => {
+        document.querySelectorAll("#toc a").forEach((link) => {
           link.classList.toggle("active", link.getAttribute("href") === `#${id}`);
         });
         mobileJump.value = id;
@@ -1998,7 +1920,7 @@
         }
 
         allSections.forEach((section) => section.classList.toggle("current", section === current));
-        document.querySelectorAll(".toc a").forEach((link) => {
+        document.querySelectorAll("#toc a").forEach((link) => {
           link.classList.toggle("active", link.getAttribute("href") === `#${current.id}`);
         });
         syncCurrentSection(current.id);
@@ -2011,22 +1933,46 @@
       const applySearch = (query) => {
         const normalized = query.trim().toLowerCase();
         document.querySelectorAll(".line, .cue").forEach((node) => {
-          const raw = node.textContent;
-          node.innerHTML = node.dataset.original || node.innerHTML;
-          node.dataset.original = node.innerHTML;
+          if (!node.dataset.original) {
+            node.dataset.original = node.innerHTML;
+          }
+          node.innerHTML = node.dataset.original;
           if (!normalized) return;
-          const text = node.textContent.toLowerCase();
-          const index = text.indexOf(normalized);
-          if (index === -1) return;
-          const original = node.textContent;
-          const before = original.slice(0, index);
-          const match = original.slice(index, index + normalized.length);
-          const after = original.slice(index + normalized.length);
-          node.innerHTML = `${before}<mark>${match}</mark>${after}`;
+          const walker = document.createTreeWalker(node, NodeFilter.SHOW_TEXT);
+          let textNode = walker.nextNode();
+          while (textNode) {
+            const index = textNode.nodeValue.toLowerCase().indexOf(normalized);
+            if (index >= 0) {
+              const matchNode = textNode.splitText(index);
+              const restNode = matchNode.splitText(normalized.length);
+              const mark = document.createElement("mark");
+              mark.textContent = matchNode.nodeValue;
+              matchNode.parentNode.insertBefore(mark, restNode);
+              matchNode.remove();
+              return;
+            }
+            textNode = walker.nextNode();
+          }
         });
       };
 
+      const syncSearchParam = (query) => {
+        const url = new URL(window.location.href);
+        const trimmed = query.trim();
+        if (trimmed) {
+          url.searchParams.set("q", trimmed);
+        } else {
+          url.searchParams.delete("q");
+        }
+        window.history.replaceState({}, "", url);
+      };
+
       render();
+      const initialSearch = new URLSearchParams(window.location.search).get("q") || "";
+      if (initialSearch) {
+        searchInput.value = initialSearch;
+        applySearch(initialSearch);
+      }
       syncToolbarDisclosure();
       setActive();
 
@@ -2139,7 +2085,10 @@
         }
       });
 
-      document.querySelector("#search").addEventListener("input", (event) => applySearch(event.target.value));
+      searchInput.addEventListener("input", (event) => {
+        applySearch(event.target.value);
+        syncSearchParam(event.target.value);
+      });
       const handleSectionJump = (event) => {
         window.clearTimeout(jumpTimer);
         jumpTimer = window.setTimeout(() => {
