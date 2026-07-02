@@ -576,12 +576,12 @@
       }
 
       .cue {
-        border-left: 2px solid color-mix(in srgb, var(--cue) 36%, var(--line));
-        background: transparent;
-        color: var(--cue);
-        padding: 0.22rem 0 0.22rem 0.68rem;
+        border-left: 3px solid color-mix(in srgb, var(--cue) 58%, var(--line));
+        background: color-mix(in srgb, var(--cue) 7%, var(--panel));
+        color: color-mix(in srgb, var(--cue) 86%, var(--ink));
+        padding: 0.34rem 0.62rem 0.34rem 0.72rem;
         font-size: calc(0.86rem * var(--font-scale));
-        font-weight: 520;
+        font-weight: 620;
       }
 
       .cue::before {
@@ -589,10 +589,10 @@
         display: inline-block;
         margin-right: 0.38rem;
         border-radius: 999px;
-        color: var(--muted);
+        color: color-mix(in srgb, var(--cue) 72%, var(--muted));
         padding: 0;
         font-size: 0.72rem;
-        font-weight: 650;
+        font-weight: 760;
       }
 
       .section.current .section-number {
@@ -1388,6 +1388,7 @@
           <p>
             본문의 일반 문장은 그대로 읽어주시고, 큐는 동선과 타이밍을 확인하실 때만 참고해 주세요.
             현장 상황에 맞게 자연스럽게 조정해주셔도 괜찮습니다.
+            우측 상단의 도구 버튼을 열면 아래 기능을 사용할 수 있습니다.
           </p>
           <ul class="guide-list" aria-label="도구 안내">
             <li><b>순서</b><span>상단 왼쪽 메뉴에서 식순으로 바로 이동할 수 있습니다.</span></li>
