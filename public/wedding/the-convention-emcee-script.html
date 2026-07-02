@@ -20,7 +20,6 @@
         --accent: #8c4d3f;
         --accent-2: #2f6f73;
         --accent-quiet: #a96b57;
-        --call-bg: #f5ebe5;
         --cue: #596675;
         --shadow: 0 12px 30px rgba(50, 38, 28, 0.07);
         --radius: 8px;
@@ -40,7 +39,6 @@
         --accent: #e6a08b;
         --accent-2: #80c4c5;
         --accent-quiet: #f0b8a8;
-        --call-bg: #33241f;
         --cue: #9cc5ff;
         --shadow: 0 18px 45px rgba(0, 0, 0, 0.32);
       }
@@ -584,11 +582,23 @@
       }
 
       .line.call {
-        border-left: 4px solid var(--accent);
-        background: var(--call-bg);
-        color: color-mix(in srgb, var(--ink) 82%, var(--accent));
-        padding: 0.58rem 0.78rem;
-        font-weight: 780;
+        display: grid;
+        grid-template-columns: minmax(1rem, 1fr) auto minmax(1rem, 1fr);
+        gap: 0.72rem;
+        align-items: center;
+        background: transparent;
+        color: color-mix(in srgb, var(--accent) 86%, var(--ink));
+        padding: 0.7rem 0;
+        font-size: calc(0.98rem * var(--font-scale));
+        font-weight: 820;
+        text-align: center;
+      }
+
+      .line.call::before,
+      .line.call::after {
+        content: "";
+        height: 1px;
+        background: color-mix(in srgb, var(--accent-quiet) 34%, var(--line));
       }
 
       .cue {
@@ -1720,12 +1730,14 @@
           .replace(/^(&lt;|<|\()\s*/, "")
           .replace(/\s*(&gt;|>|\))$/, "");
 
+      const cleanCallText = (html) => html.replace(/^["“”]+|["“”]+$/g, "");
+
       const render = () => {
         scriptRoot.innerHTML = sections
           .map((section) => {
             const blocks = section.blocks
               .map(([type, html]) => {
-                const content = type === "cue" ? cleanCueText(html) : html;
+                const content = type === "cue" ? cleanCueText(html) : type.includes("call") ? cleanCallText(html) : html;
                 return `<p class="${type}">${content}</p>`;
               })
               .join("");
