@@ -219,12 +219,6 @@
         background: color-mix(in srgb, var(--accent-quiet) 5%, var(--panel));
       }
 
-      .flow-search {
-        display: grid;
-        gap: 0.35rem;
-        min-width: min(18rem, 100%);
-      }
-
       .reading-controls button,
       .output-controls button,
       .flow-controls button {
@@ -985,8 +979,8 @@
           display: grid;
           grid-column: 1 / -1;
           width: 100%;
-          grid-template-columns: minmax(0, 1fr) auto auto;
-          gap: 0.46rem;
+          grid-template-columns: minmax(0, 1fr);
+          gap: 0.5rem;
           padding-top: 0.1rem;
         }
 
@@ -997,11 +991,6 @@
           font-size: 0.76rem;
           font-weight: 820;
           line-height: 1.1;
-        }
-
-        .flow-search {
-          grid-column: 1 / -1;
-          min-width: 0;
         }
 
         .flow-controls button {
@@ -1155,8 +1144,8 @@
           z-index: 22;
           display: grid;
           width: min(calc(100vw - 1.5rem), 34rem);
-          grid-template-columns: minmax(4.25rem, auto) minmax(0, 1fr) minmax(4.25rem, auto);
-          gap: 0.45rem;
+          grid-template-columns: minmax(0, 1fr);
+          gap: 0.42rem;
           border: 1px solid var(--line);
           border-radius: 16px;
           background: color-mix(in srgb, var(--panel) 94%, transparent);
@@ -1164,6 +1153,13 @@
           padding: 0.4rem;
           backdrop-filter: blur(18px);
           transform: translateX(-50%);
+        }
+
+        .mobile-flow-actions {
+          display: grid;
+          grid-template-columns: minmax(4.2rem, 0.7fr) minmax(0, 1.6fr) minmax(4.2rem, 0.7fr);
+          gap: 0.42rem;
+          align-items: stretch;
         }
 
         .topbar:not(.collapsed) + .mobile-flow-bar,
@@ -1174,12 +1170,14 @@
         .mobile-flow-bar button {
           min-height: 2.75rem;
           border-radius: 12px;
+          padding-right: 0.54rem;
+          padding-left: 0.54rem;
           font-weight: 720;
         }
 
         .mobile-flow-bar button:not(.mobile-flow-current) {
-          border-color: transparent;
-          background: transparent;
+          border-color: color-mix(in srgb, var(--line) 58%, transparent);
+          background: color-mix(in srgb, var(--bg) 45%, var(--panel));
           color: var(--ink);
         }
 
@@ -1194,6 +1192,18 @@
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
+        }
+
+        .mobile-flow-search {
+          display: grid;
+        }
+
+        .mobile-flow-search .search {
+          min-height: 2.55rem;
+          border-color: color-mix(in srgb, var(--line) 74%, transparent);
+          background: color-mix(in srgb, var(--bg) 36%, var(--panel));
+          padding: 0.52rem 0.78rem;
+          font-size: 0.9rem;
         }
 
         .font-controls {
@@ -1235,7 +1245,7 @@
         }
 
         .signature-footer {
-          padding-bottom: calc(5rem + env(safe-area-inset-bottom));
+          padding-bottom: calc(8rem + env(safe-area-inset-bottom));
         }
       }
 
@@ -1304,12 +1314,6 @@
             <select class="section-jump" id="mobile-jump" aria-label="순서 이동">
               <option value="">순서 이동</option>
             </select>
-            <div class="flow-search">
-              <label class="control-label" for="search">검색</label>
-              <input class="search" id="search" type="search" placeholder="대본 검색" aria-label="대본 검색" />
-            </div>
-            <button type="button" data-action="prev">이전</button>
-            <button type="button" data-action="next">다음</button>
             <div class="sequence-strip" id="sequence-strip" aria-label="가까운 순서 이동"></div>
           </div>
           <section class="quick-check-tools sheet-panel" id="sheet-panel-check" role="tabpanel" aria-labelledby="sheet-tab-check" data-panel="check" hidden>
@@ -1357,10 +1361,15 @@
       <div class="progress" aria-hidden="true"><span id="progress"></span></div>
     </header>
 
-    <nav class="mobile-flow-bar" aria-label="진행 빠른 이동">
-      <button type="button" data-action="prev">이전</button>
-      <button class="mobile-flow-current" type="button" data-action="tools" aria-label="현재 순서 1. 개식예고, 진행 도구 열기"><span id="mobile-flow-current">1. 개식예고</span></button>
-      <button type="button" data-action="next">다음</button>
+    <nav class="mobile-flow-bar" aria-label="진행 빠른 이동과 대본 검색">
+      <div class="mobile-flow-actions">
+        <button type="button" data-action="prev">이전</button>
+        <button class="mobile-flow-current" type="button" data-action="tools" aria-label="현재 순서 1. 개식예고, 진행 도구 열기"><span id="mobile-flow-current">1. 개식예고</span></button>
+        <button type="button" data-action="next">다음</button>
+      </div>
+      <div class="mobile-flow-search">
+        <input class="search" id="search" type="search" placeholder="대본 검색" aria-label="대본 검색" />
+      </div>
     </nav>
 
     <div class="shell">
@@ -1392,7 +1401,8 @@
           </p>
           <ul class="guide-list" aria-label="도구 안내">
             <li><b>순서</b><span>상단 왼쪽 메뉴에서 식순으로 바로 이동할 수 있습니다.</span></li>
-            <li><b>진행</b><span>이전·다음 이동과 대본 검색을 사용할 수 있습니다.</span></li>
+            <li><b>하단바</b><span>이전·다음 이동과 대본 검색을 바로 사용할 수 있습니다.</span></li>
+            <li><b>진행</b><span>도구 안에서 전체 순서와 가까운 식순을 확인할 수 있습니다.</span></li>
             <li><b>정보</b><span>신랑·신부, 성혼선언, 축사, 축가를 빠르게 확인할 수 있습니다.</span></li>
             <li><b>설정</b><span>집중모드, 큐 숨김, 글자 크기, 화면 톤을 조정할 수 있습니다.</span></li>
           </ul>
