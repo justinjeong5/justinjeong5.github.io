@@ -21,14 +21,13 @@
         --accent-2: #2f6f73;
         --accent-quiet: #a96b57;
         --call-bg: #f5ebe5;
-        --action-bg: #eaf3f1;
         --cue: #596675;
         --shadow: 0 12px 30px rgba(50, 38, 28, 0.07);
         --radius: 8px;
         --font-scale: 1;
         --topbar-height: 76px;
         --reading-width: 760px;
-        --section-divider-gap: 2rem;
+        --section-divider-gap: 2.5rem;
       }
 
       [data-theme="dark"] {
@@ -42,7 +41,6 @@
         --accent-2: #80c4c5;
         --accent-quiet: #f0b8a8;
         --call-bg: #33241f;
-        --action-bg: #1d3030;
         --cue: #9cc5ff;
         --shadow: 0 18px 45px rgba(0, 0, 0, 0.32);
       }
@@ -611,12 +609,6 @@
         padding: 0;
         font-size: 0.72rem;
         font-weight: 650;
-      }
-
-      .cue.action {
-        border-left-color: color-mix(in srgb, var(--accent-2) 42%, var(--line));
-        background: color-mix(in srgb, var(--accent-2) 8%, transparent);
-        color: color-mix(in srgb, var(--ink) 70%, var(--accent-2));
       }
 
       .section.current .section-number,
@@ -1734,8 +1726,7 @@
             const blocks = section.blocks
               .map(([type, html]) => {
                 const content = type === "cue" ? cleanCueText(html) : html;
-                const cueType = type === "cue" && /박수|진행/.test(content) ? " action" : "";
-                return `<p class="${type}${cueType}">${content}</p>`;
+                return `<p class="${type}">${content}</p>`;
               })
               .join("");
             return `
