@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+    <meta name="author" content="정경하" />
+    <meta property="og:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="description" content="하루 단위 집계·상한을 UTC나 서버 로컬 자정에 묶으면 자정 직전 항목이 다음 날 버킷을 미리 선점한다. 의미 있는 운영 경계 시각에 명시적으로 앵커한다." />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="일일 카운트는 자정이 아니라 비즈니스 경계에 앵커한다 — 일일 집계·cap·랭킹의 자정 선점 | 정경하" />
+    <meta property="og:description" content="하루 단위 집계·상한을 UTC나 서버 로컬 자정에 묶으면 자정 직전 항목이 다음 날 버킷을 미리 선점한다. 의미 있는 운영 경계 시각에 명시적으로 앵커한다." />
+    <meta property="og:url" content="https://justinjeong5.github.io/notes/daily-cap-timezone-anchor/" />
+    <meta name="twitter:title" content="일일 카운트는 자정이 아니라 비즈니스 경계에 앵커한다 — 일일 집계·cap·랭킹의 자정 선점 | 정경하" />
+    <meta name="twitter:description" content="하루 단위 집계·상한을 UTC나 서버 로컬 자정에 묶으면 자정 직전 항목이 다음 날 버킷을 미리 선점한다. 의미 있는 운영 경계 시각에 명시적으로 앵커한다." />
+    <link rel="canonical" href="https://justinjeong5.github.io/notes/daily-cap-timezone-anchor/" />
+    <title>일일 카운트는 자정이 아니라 비즈니스 경계에 앵커한다 — 일일 집계·cap·랭킹의 자정 선점 | 정경하</title>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "일일 카운트는 자정이 아니라 비즈니스 경계에 앵커한다 — 일일 집계·cap·랭킹의 자정 선점 | 정경하",
+  "description": "하루 단위 집계·상한을 UTC나 서버 로컬 자정에 묶으면 자정 직전 항목이 다음 날 버킷을 미리 선점한다. 의미 있는 운영 경계 시각에 명시적으로 앵커한다.",
+  "url": "https://justinjeong5.github.io/notes/daily-cap-timezone-anchor/",
+  "mainEntityOfPage": "https://justinjeong5.github.io/notes/daily-cap-timezone-anchor/",
+  "author": {
+    "@type": "Person",
+    "name": "정경하",
+    "url": "https://justinjeong5.github.io/",
+    "jobTitle": "Product-minded Frontend Engineer",
+    "sameAs": [
+      "https://github.com/justinjeong5"
+    ]
+  }
+}
+</script>
+    <script>
+      // 테마 사전 설정 — prerender된 HTML에 data-theme를 즉시 적용해 CSS flash를 막는다.
+      // (다른 스크립트보다 먼저 실행되어야 한다.)
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages — restore deep-link path written by 404.html
+      // https://github.com/rafgraph/spa-github-pages
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
+    </script>
+    <script type="module" crossorigin src="/assets/index-Bn3xoPrC.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-QTnfLwEv.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-cases-CBUDB2ZQ.js">
+    <link rel="modulepreload" crossorigin href="/assets/router-DLpn8xiv.js">
+    <link rel="modulepreload" crossorigin href="/assets/search-CiN4C8Nu.js">
+    <link rel="modulepreload" crossorigin href="/assets/icons-BAaLLYA_.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-xPABecuM.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-essays-eznFQalv.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-logs-D5PTorQn.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-notes-C8z_T_Pg.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-sbCSPT96.css">
+    <link rel="stylesheet" crossorigin href="/assets/pretendard-NPFyShNs.css">
+  </head>
+  <body>
+    <div id="root"><a href="#main-content" class="skip-link">본문 바로가기</a><header class="site-nav" aria-label="Primary"><a class="brand" aria-label="정경하 홈" href="/" data-discover="true">JKH</a><nav class="primary-nav"><a class="nav-link" href="/cases" data-discover="true">Cases</a><a aria-current="page" class="nav-link is-active" href="/notes" data-discover="true">Notes</a><a class="nav-link" href="/essays" data-discover="true">Essays</a><a class="nav-link" href="/logs" data-discover="true">Logs</a><a class="nav-link" href="/about" data-discover="true">About</a></nav><div class="nav-actions"><button type="button" class="search-trigger" aria-label="검색" title="검색 (⌘K 또는 /)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg><span>검색</span><kbd>⌘K</kbd></button><button type="button" class="icon-button" aria-label="테마: 라이트. 클릭하여 변경" title="테마: 라이트 · T 키로도 전환"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg></button><button type="button" class="icon-button desktop-only" aria-label="키보드 단축키" aria-expanded="false" aria-haspopup="dialog" title="키보드 단축키 (? 키)"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-keyboard" aria-hidden="true"><path d="M10 8h.01"></path><path d="M12 12h.01"></path><path d="M14 8h.01"></path><path d="M16 12h.01"></path><path d="M18 8h.01"></path><path d="M6 8h.01"></path><path d="M7 16h10"></path><path d="M8 12h.01"></path><rect width="20" height="16" x="2" y="4" rx="2"></rect></svg></button><button type="button" class="icon-button menu-trigger" aria-label="메뉴 열기" aria-expanded="false" aria-haspopup="dialog" title="메뉴"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button></div></header><main id="main-content" tabindex="-1"><article class="page note-detail"><header class="page-header note-detail-header"><p class="eyebrow growth-eyebrow"><span aria-hidden="true">🌱</span>Seedling</p><h1>일일 카운트는 자정이 아니라 비즈니스 경계에 앵커한다 — 일일 집계·cap·랭킹의 자정 선점</h1><p class="page-lead">하루 단위 집계·상한을 UTC나 서버 로컬 자정에 묶으면 자정 직전 항목이 다음 날 버킷을 미리 선점한다. 의미 있는 운영 경계 시각에 명시적으로 앵커한다.</p><ul class="topic-list" aria-label="topics"><li>#<!-- -->backend</li><li>#<!-- -->distributed</li><li>#<!-- -->timezone</li><li>#<!-- -->scheduling</li></ul></header><div class="prose"><h2>문제 — &quot;하루&quot;의 경계가 암묵적이다</h2>
+<p>daily-cap(&quot;하루 N건까지&quot;), 랭킹 기준일, 일일 집계 — 전부 &quot;하루&quot;라는 버킷 경계가 필요하다. 그런데 그 경계가 어디인지 명시하지 않으면, 대개 두 기본값 중 하나로 조용히 떨어진다.</p>
+<ul>
+<li><strong>UTC 자정</strong>: <code>datetime.utcnow().date()</code> 또는 <code>floor(ts / 86400)</code></li>
+<li><strong>서버 로컬 자정</strong>: 서버 타임존에 따라 달라짐 (배포 환경마다 다를 수 있음)</li>
+</ul>
+<p>둘 다 &quot;사용자가 체감하는 하루&quot;와 어긋난다. KST(UTC+9) 사용자에게 UTC 자정은 <strong>오전 9시</strong>다. 운영팀이 보는 하루, 사용자가 느끼는 하루, 코드가 세는 하루가 전부 다른 시각에 리셋된다.</p>
+<h2>자정 선점 — 경계 직전 항목이 다음 날을 먹는다</h2>
+<p>가장 사고가 잘 나는 지점은 경계 근처다.</p>
+<pre><code>하루 cap = 3, 경계 = UTC 자정
+23:56 UTC  알림 1  → 오늘 버킷  (오늘 1건)
+23:58 UTC  알림 2  → 오늘 버킷  (오늘 2건)
+23:59 UTC  알림 3  → 오늘 버킷  (오늘 3건 = cap 도달)
+00:00 UTC  알림 4  → 내일 버킷  (내일 1건)  ← 4분 만에 4건이지만 cap 미위반
+</code></pre>
+<p>사용자는 4분 안에 4건을 받았는데 daily-cap은 모두 통과한다. 오늘 버킷은 cap(3)까지 정확히 찼고, 4번째 알림은 자정을 막 넘긴 &quot;내일&quot; 버킷에 <strong>선점(preempt)</strong> 됐기 때문이다. 카운팅 로직은 한 건도 틀리지 않았는데, 경계가 사용자 의미와 어긋난 탓에 실제 체감은 &quot;4분에 4건&quot;이 된다.</p>
+<p>이건 정렬·재시도·timeout 같은 분산 문제가 아니라 <strong>버킷 경계를 잘못 그은</strong> 문제다. 카운팅 로직이 아무리 정확해도, 경계가 사용자 의미와 어긋나면 cap은 의도대로 동작하지 않는다.</p>
+<h2>해결 — 의미 있는 운영 경계에 명시적으로 앵커</h2>
+<p>&quot;하루&quot;를 자정이 아니라 <strong>운영상 의미 있는 시각</strong>에 앵커한다. 예를 들어 알림이 오전에 시작되는 서비스라면, 사용자 타임존 기준 이른 아침을 하루 경계로 잡는다. 핵심은 경계가 &quot;아무도 활동하지 않는 시각&quot;에 오도록 골라, 경계 폭발이 실제 사용자에게 닿지 않게 하는 것이다.</p>
+<p>(아래는 개념 전달용 일반 예시다. 특정 서비스의 코드가 아니다.)</p>
+<pre><code class="language-python">from datetime import time, date, timedelta
+from zoneinfo import ZoneInfo  # Python 3.9+ 표준 라이브러리
+
+# 경계를 코드 상수로 박는다 — 자정이 아니라 운영 시작 시각
+BUSINESS_TZ = ZoneInfo(&quot;Asia/Seoul&quot;)
+DAY_ANCHOR = time(7, 0)  # 매일 07:00 KST에 새 &quot;하루&quot;가 시작
+
+def business_day(ts) -&gt; date:
+    &quot;&quot;&quot;경계 이전이면 전날로 귀속시킨 &#x27;비즈니스 기준일&#x27;을 돌려준다.&quot;&quot;&quot;
+    local = ts.astimezone(BUSINESS_TZ)
+    if local.time() &lt; DAY_ANCHOR:
+        local -= timedelta(days=1)
+    return local.date()
+</code></pre>
+<p>그리고 <strong>모든 비교를 이 기준일로</strong> 한다. cap 키, 집계 GROUP BY, 랭킹 기준일이 전부 <code>business_day(ts)</code>를 거치게 만든다. 일부만 자정 기준이고 일부만 앵커 기준이면 경계가 둘로 쪼개져 더 나쁘다.</p>
+<pre><code class="language-python">key = f&quot;cap:{user_id}:{business_day(now)}&quot;  # date()가 아니라 business_day()
+</code></pre>
+<h2>왜 상수로 박아야 하나</h2>
+<p>경계 시각을 환경 변수나 요청 타임존에서 동적으로 끌어오면, 배포·리전·서버 시간대에 따라 경계가 흔들린다. 경계가 흔들리면 같은 사건이 환경마다 다른 버킷에 들어가 디버깅이 불가능해진다.</p>
+<ul>
+<li><strong>타임존을 IANA 이름으로</strong> (<code>Asia/Seoul</code>), <code>UTC+9</code> 같은 오프셋 하드코딩 금지 — DST·서머타임 변경을 라이브러리가 처리한다 (KST는 DST가 없지만, 이 원칙은 DST 있는 타임존에서 사고를 막는다)</li>
+<li><strong>앵커 시각을 명시 상수로</strong> — 코드를 읽는 사람이 &quot;하루가 언제 시작하는지&quot; 한 줄로 안다</li>
+<li><strong>단위 테스트로 경계를 고정</strong> — 앵커 직전/직후 타임스탬프가 의도한 기준일로 가는지 검증. 이게 &quot;자정 선점이 다시 들어왔는지&quot;를 자동으로 잡는 결정론적 루프다</li>
+</ul>
+<h2>실제 사례 — 알림 봇의 daily-cap</h2>
+<p>개인 자동화(공개 레포)의 알림 봇에서 daily-cap 기준일을 <strong>KST 07:00 시작</strong>으로 앵커해 자정 선점을 막은 적이 있다(2026-06-10). UTC 자정 기준일 때는 KST 오전 9시에 카운터가 리셋돼, 이른 아침 알림과 전날 밤 알림이 같은 &quot;하루&quot;로 묶이지 않는 어긋남이 있었다.</p>
+<p><code>floor(ts / 86400)</code>(UTC 자정) → <code>business_day(ts, anchor=07:00 KST)</code>로 바꾼 것이 전부다. 로직은 한 함수만 건드렸고, 경계 직전/직후 타임스탬프에 대한 테스트가 회귀를 막는 장치가 됐다. 핵심은 <strong>단순 자정이 아니라 운영 시작 시각(07:00)에 맞춘</strong> 것 — 사람이 활동하지 않는 시각이 경계여야 경계 폭발이 사용자에게 닿지 않는다.</p>
+<h2>함정</h2>
+<ul>
+<li><strong>암묵적 UTC 자정</strong>: <code>utcnow().date()</code>는 KST 사용자에게 오전 9시 경계다. &quot;하루&quot;의 시작을 코드가 결정하게 두지 말고 명시한다.</li>
+<li><strong>서버 로컬 시간 의존</strong>: 배포 환경 타임존에 따라 경계가 바뀐다. 같은 코드가 다른 버킷을 만든다.</li>
+<li><strong>오프셋 하드코딩</strong>: <code>UTC+9</code> 직접 더하기는 DST 있는 타임존에서 깨진다. IANA 이름 + 표준 라이브러리로 (위 &quot;왜 상수로 박아야 하나&quot; 참조).</li>
+<li><strong>경계 = 사용자 활동 피크</strong>: 앵커를 사람이 활발한 시각에 두면 경계 폭발이 그대로 사용자에게 노출된다. 한산한 시각으로 잡아야 선점이 사용자에게 닿지 않는다.</li>
+<li><strong>경계 테스트 누락</strong>: 앵커 직전/직후 타임스탬프 테스트가 없으면 자정 선점 회귀를 못 잡는다. 이 한 쌍의 테스트가 결정론적 안전장치다.</li>
+</ul>
+<h2>핵심</h2>
+<blockquote>
+<p>&quot;하루&quot;는 자정이 아니다. 일일 카운트의 경계는 사용자·운영이 체감하는 의미 있는 시각에 명시적으로 앵커하고, 그 경계를 코드 상수로 박아 모든 비교를 한 기준으로 통일한다.</p>
+</blockquote>
+<h2>관련</h2>
+<p><a href="/notes/frequency-capping-distributed">/notes/frequency-capping-distributed</a> — 고정 윈도우 자정 리셋의 경계 폭발과 슬라이딩 윈도우
+<a href="/essays/same-defect-class-across-repos">/essays/same-defect-class-across-repos</a> — 경계 가정 오류가 여러 봇에 반복되는 결함 클래스</p></div><section class="related-block"><h2>관련 노트</h2><ul class="note-grid"><li><a class="note-card" href="/notes/dead-retry-bounded-executor" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->죽은 재시도 인프라 — 만들어두고 연결 안 한 retry는 0번 재시도한다</h3><p>재시도를 만들어두고 연결을 안 하면 0번 재시도하고, 무제한으로 풀면 폭주하고, 영구 에러까지 재시도하면 헛고생을 반복한다. 세 증상의 공통 원인은 빠진 한 조각이다.</p></a></li><li><a class="note-card" href="/notes/ad-metric-traps" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->광고 지표 함정 — CTR·CVR·viewability·정산 불일치</h3><p>광고주와 매체가 같은 &quot;클릭&quot;을 두고 싸운다. 버그가 아니라 정의 차이였고, 나는 지표를 양면 시장의 신뢰 계약으로 바꿨다.</p></a></li><li><a class="note-card" href="/notes/frequency-capping-distributed" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->Frequency capping을 분산 환경에서 — 정확성 vs 비용</h3><p>&quot;같은 광고 하루 3번까지&quot;가 서버 수십 대를 만나는 순간, 정확한 카운팅은 매출을 갉아먹는 병목이 된다. 광고를 망치지 않으면서 비용을 비선형으로 줄인 방법.</p></a></li><li><a class="note-card" href="/notes/public-api-integration-patterns" data-discover="true"><h3><span aria-hidden="true">🌿</span> <!-- -->혼자 7개 공개 API를 한 시스템에 욱여넣으며 배운 것</h3><p>홈레이더를 만들며 국토부·네이버·카카오 등 공개 API 7개를 혼자 통합했다. case문 더미가 되기 직전, rate limit·재시도·boundary를 라이브러리 수준으로 끌어올린 기록.</p></a></li><li><a class="note-card" href="/notes/notion-lightweight-backend" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->서버 0대로 백엔드를 굴렸다 — 노션 DB 7개로 만든 무료 인프라</h3><p>홈레이더 백엔드를 노션 DB 7개로 직접 설계했다. 서버비 0원으로 굴리며 PK도 JOIN도 없는 한계를 hotfix로 직접 넘은 기록.</p></a></li></ul></section><footer class="page-footer"><a class="see-all-link" href="/notes" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg> 노트 목록</a></footer></article></main><footer class="site-footer"><div class="footer-brand"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg>정경하</span><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open-text" aria-hidden="true"><path d="M12 7v14"></path><path d="M16 12h2"></path><path d="M16 8h2"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path><path d="M6 12h2"></path><path d="M6 8h2"></path></svg>Cases, notes, logs, and proof of work</span></div><nav class="footer-nav" aria-label="Secondary"><a href="/uses" data-discover="true">Uses</a><a href="/now" data-discover="true">Now</a><a href="/reading" data-discover="true">Reading</a><a href="/cv" data-discover="true">CV</a></nav><span class="footer-meta"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-clock" aria-hidden="true"><path d="M16 14v2.2l1.6 1"></path><path d="M16 2v4"></path><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"></path><path d="M3 10h5"></path><path d="M8 2v4"></path><circle cx="16" cy="16" r="6"></circle></svg>Updated <!-- -->2026-06-29 11:30</span></footer></div>
+  </body>
+</html>

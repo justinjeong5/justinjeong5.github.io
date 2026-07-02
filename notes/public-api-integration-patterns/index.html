@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+    <meta name="author" content="정경하" />
+    <meta property="og:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="description" content="홈레이더를 만들며 국토부·네이버·카카오 등 공개 API 7개를 혼자 통합했다. case문 더미가 되기 직전, rate limit·재시도·boundary를 라이브러리 수준으로 끌어올린 기록." />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="혼자 7개 공개 API를 한 시스템에 욱여넣으며 배운 것 | 정경하" />
+    <meta property="og:description" content="홈레이더를 만들며 국토부·네이버·카카오 등 공개 API 7개를 혼자 통합했다. case문 더미가 되기 직전, rate limit·재시도·boundary를 라이브러리 수준으로 끌어올린 기록." />
+    <meta property="og:url" content="https://justinjeong5.github.io/notes/public-api-integration-patterns/" />
+    <meta name="twitter:title" content="혼자 7개 공개 API를 한 시스템에 욱여넣으며 배운 것 | 정경하" />
+    <meta name="twitter:description" content="홈레이더를 만들며 국토부·네이버·카카오 등 공개 API 7개를 혼자 통합했다. case문 더미가 되기 직전, rate limit·재시도·boundary를 라이브러리 수준으로 끌어올린 기록." />
+    <link rel="canonical" href="https://justinjeong5.github.io/notes/public-api-integration-patterns/" />
+    <title>혼자 7개 공개 API를 한 시스템에 욱여넣으며 배운 것 | 정경하</title>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "혼자 7개 공개 API를 한 시스템에 욱여넣으며 배운 것 | 정경하",
+  "description": "홈레이더를 만들며 국토부·네이버·카카오 등 공개 API 7개를 혼자 통합했다. case문 더미가 되기 직전, rate limit·재시도·boundary를 라이브러리 수준으로 끌어올린 기록.",
+  "url": "https://justinjeong5.github.io/notes/public-api-integration-patterns/",
+  "mainEntityOfPage": "https://justinjeong5.github.io/notes/public-api-integration-patterns/",
+  "author": {
+    "@type": "Person",
+    "name": "정경하",
+    "url": "https://justinjeong5.github.io/",
+    "jobTitle": "Product-minded Frontend Engineer",
+    "sameAs": [
+      "https://github.com/justinjeong5"
+    ]
+  }
+}
+</script>
+    <script>
+      // 테마 사전 설정 — prerender된 HTML에 data-theme를 즉시 적용해 CSS flash를 막는다.
+      // (다른 스크립트보다 먼저 실행되어야 한다.)
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages — restore deep-link path written by 404.html
+      // https://github.com/rafgraph/spa-github-pages
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
+    </script>
+    <script type="module" crossorigin src="/assets/index-Bn3xoPrC.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-QTnfLwEv.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-cases-CBUDB2ZQ.js">
+    <link rel="modulepreload" crossorigin href="/assets/router-DLpn8xiv.js">
+    <link rel="modulepreload" crossorigin href="/assets/search-CiN4C8Nu.js">
+    <link rel="modulepreload" crossorigin href="/assets/icons-BAaLLYA_.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-xPABecuM.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-essays-eznFQalv.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-logs-D5PTorQn.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-notes-C8z_T_Pg.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-sbCSPT96.css">
+    <link rel="stylesheet" crossorigin href="/assets/pretendard-NPFyShNs.css">
+  </head>
+  <body>
+    <div id="root"><a href="#main-content" class="skip-link">본문 바로가기</a><header class="site-nav" aria-label="Primary"><a class="brand" aria-label="정경하 홈" href="/" data-discover="true">JKH</a><nav class="primary-nav"><a class="nav-link" href="/cases" data-discover="true">Cases</a><a aria-current="page" class="nav-link is-active" href="/notes" data-discover="true">Notes</a><a class="nav-link" href="/essays" data-discover="true">Essays</a><a class="nav-link" href="/logs" data-discover="true">Logs</a><a class="nav-link" href="/about" data-discover="true">About</a></nav><div class="nav-actions"><button type="button" class="search-trigger" aria-label="검색" title="검색 (⌘K 또는 /)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg><span>검색</span><kbd>⌘K</kbd></button><button type="button" class="icon-button" aria-label="테마: 라이트. 클릭하여 변경" title="테마: 라이트 · T 키로도 전환"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg></button><button type="button" class="icon-button desktop-only" aria-label="키보드 단축키" aria-expanded="false" aria-haspopup="dialog" title="키보드 단축키 (? 키)"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-keyboard" aria-hidden="true"><path d="M10 8h.01"></path><path d="M12 12h.01"></path><path d="M14 8h.01"></path><path d="M16 12h.01"></path><path d="M18 8h.01"></path><path d="M6 8h.01"></path><path d="M7 16h10"></path><path d="M8 12h.01"></path><rect width="20" height="16" x="2" y="4" rx="2"></rect></svg></button><button type="button" class="icon-button menu-trigger" aria-label="메뉴 열기" aria-expanded="false" aria-haspopup="dialog" title="메뉴"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button></div></header><main id="main-content" tabindex="-1"><article class="page note-detail"><header class="page-header note-detail-header"><p class="eyebrow growth-eyebrow"><span aria-hidden="true">🌿</span>Budding</p><h1>혼자 7개 공개 API를 한 시스템에 욱여넣으며 배운 것</h1><p class="page-lead">홈레이더를 만들며 국토부·네이버·카카오 등 공개 API 7개를 혼자 통합했다. case문 더미가 되기 직전, rate limit·재시도·boundary를 라이브러리 수준으로 끌어올린 기록.</p><ul class="topic-list" aria-label="topics"><li>#<!-- -->api</li><li>#<!-- -->integration</li><li>#<!-- -->backend</li><li>#<!-- -->side-project</li></ul></header><div class="prose"><p>홈레이더를 혼자 만들면서, 어느 날 cron이 통째로 멈춰 있는 걸 발견했다. 네이버 Cloud Maps 하나가 rate limit에 걸려 hang 됐고, 그 hang이 국토부·카카오·한국은행까지 전부 끌고 들어가 같은 배치를 막고 있었다. API는 7개인데 내가 짠 코드는 그걸 하나처럼 다루고 있었던 것이다.</p>
+<p>붙여야 할 공개 API가 국토부 RTMS, 네이버 Cloud Maps, 카카오 모빌리티, 학교알리미, 한국은행 ECOS까지 7개. 그런데 같은 게 하나도 없었다.</p>
+<ul>
+<li>rate limit이 다름 (초당 3·10·100·무제한)</li>
+<li>응답 schema가 다름 (JSON·XML·둘 다)</li>
+<li>에러 표현이 다름 (status code·body field·둘 다)</li>
+<li>인증이 다름 (header·query·subkey)</li>
+</ul>
+<p>처음엔 API마다 분기로 받아냈다. case문이 늘수록 새 API를 붙일 때마다 기존 코드를 다시 읽어야 했고, 위 같은 장애가 났을 때 어디가 원인인지 추적이 안 됐다. 그래서 분기를 늘리는 대신, 다양성을 한 층 아래로 내려 라이브러리 수준에서 흡수하기로 방향을 틀었다. 아래는 그렇게 다시 짠 골격이다.</p>
+<h2>API별로 끊어 둔 rate limit</h2>
+<pre><code class="language-ts">import Bottleneck from &#x27;bottleneck&#x27;;
+
+const naverLimiter = new Bottleneck({
+  minTime: 100, // 10 req/sec
+  maxConcurrent: 1,
+});
+
+await naverLimiter.schedule(() =&gt; axios.get(url));
+</code></pre>
+<p>핵심은 limiter를 API마다 따로 둔 것이다. 처음 장애의 원인이 정확히 여기였다 — 하나로 묶인 limiter는 한 API의 burst가 전체 배치를 멈춘다. 분리한 뒤로는 네이버가 막혀도 나머지 6개는 영향 0.</p>
+<h2>timeout이 빠져 있던 자리</h2>
+<p>cron이 멈췄던 또 다른 이유는 timeout이 없어서였다. 외부 API가 응답을 안 주고 매달려 있으면 배치 전체가 같이 멈춘다. 그래서 모든 호출에 timeout을 명시하고, 그 위에 재시도를 얹었다. 429·5xx·timeout은 일시적일 가능성이 높으니 한 번에 포기할 이유가 없다.</p>
+<pre><code class="language-ts">import axiosRetry from &#x27;axios-retry&#x27;;
+
+axiosRetry(axios, {
+  retries: 3,
+  retryDelay: axiosRetry.exponentialDelay,
+  retryCondition: (err) =&gt;
+    err.response?.status === 429 || err.response?.status &gt;= 500,
+});
+</code></pre>
+<p>429는 exponential backoff로 물러섰다 다시. 4xx는 재시도하지 않게 막았다 — 영구 에러를 계속 두드리면 무한 루프에 ban까지 따라온다.</p>
+<h2>외부 응답을 한 번도 그냥 믿지 않기</h2>
+<p>다음으로 깨진 곳은 응답이었다. 국토부 schema가 말도 없이 바뀐 날, 코드는 멀쩡히 돌면서 엉뚱한 값을 DB에 넣고 있었다. 그래서 모든 외부 응답을 들어오는 자리에서 zod로 한 번씩 검증하게 했다.</p>
+<pre><code class="language-ts">import { z } from &#x27;zod&#x27;;
+
+const PriceSchema = z.object({
+  aptName: z.string(),
+  dealAmount: z.string().transform((s) =&gt; parseInt(s.replace(/,/g, &#x27;&#x27;))),
+  dealYear: z.number(),
+});
+
+const data = PriceSchema.parse(response.data); // 깨지면 여기서 명확한 에러
+</code></pre>
+<p>이 한 줄을 boundary에 박아 두니 schema가 바뀌면 다음 cron에서 곧장 alert가 떴다. 조용히 틀린 값이 흘러 들어가던 자리가 시끄럽게 멈추는 자리로 바뀐 것이다. 덤으로 <code>any</code>의 전염이 끊겼고, string→number 같은 transform도 한곳에 모였다. <code>as</code> 캐스팅으로 넘겼다면 영영 못 잡았을 일이다.</p>
+<h2>페이지네이션은 호출자가 몰라도 되게</h2>
+<p>API마다 페이지네이션이 cursor·offset·page-token으로 제각각이라, 호출하는 쪽에서 매번 그걸 신경 쓰게 두기 싫었다. async generator 하나로 덮었다.</p>
+<pre><code class="language-ts">async function* paginate(api: string, params: object) {
+  let cursor: string | undefined;
+  while (true) {
+    const { items, nextCursor } = await fetchPage(api, params, cursor);
+    yield* items;
+    if (!nextCursor) break;
+    cursor = nextCursor;
+  }
+}
+
+for await (const item of paginate(&#x27;rtms&#x27;, { region: &#x27;A&#x27; })) {
+  // process
+}
+</code></pre>
+<p>호출자는 페이지를 신경 쓰지 않고, for-await가 알아서 끝까지 돌다 멈춘다.</p>
+<h2>그리고 다시 새벽에 깨지 않으려고</h2>
+<p>처음 cron이 멈췄을 때 가장 괴로웠던 건 원인을 찾는 데 걸린 시간이었다. 어느 API의 어느 단계에서 났는지가 로그에 안 보였다. 그래서 pino로 모든 요청·에러를 구조화 JSON으로 남겼다.</p>
+<pre><code class="language-ts">logger.info(&#x27;api.request&#x27;, { api: &#x27;naver_maps&#x27;, endpoint: &#x27;geocode&#x27;, params });
+logger.error(&#x27;api.error&#x27;, { api: &#x27;naver_maps&#x27;, status: err.status, body: err.response?.data });
+</code></pre>
+<p>이걸 깔고 나서야 디버깅이 로그를 grep 한 번 하는 일이 됐다.</p>
+<h2>위 골격으로도 안 잡혀서 따로 밟은 것들</h2>
+<p>그래도 몇 개는 직접 데인 뒤에야 알았다. status가 200인데 body 안에 error 코드를 숨겨 두는 API가 있어서, 응답 검증 때 본문까지 같이 봐야 했다. API key는 처음에 코드에 박았다가 env var + GitHub Secrets로 빼고 로그에선 redact 처리했다. 이런 건 패턴으로 일반화되지 않고, 한 번 깨져 봐야 손에 남는 종류였다.</p>
+<h2>남은 것</h2>
+<p>7개를 다 붙이고 나서 든 생각은, 통합의 비용이 API 개수가 아니라 정책의 다양성이라는 거였다. 그 다양성을 분기로 받으면 코드가 case문 더미가 되고, 한 층 아래 라이브러리 수준으로 내려 흡수하면 새 API를 붙이는 일이 골격에 끼워 넣는 작업이 된다.</p>
+<blockquote>
+<p>혼자 7개를 붙여 보고 남은 한 줄: 외부 API 통합은 개수 싸움이 아니라, 다양성을 어느 층에서 흡수하느냐의 싸움이다.</p>
+</blockquote>
+<h2>관련</h2>
+<p><a href="/notes/notion-lightweight-backend">/notes/notion-lightweight-backend</a> — 같은 rate limit 한계의 다른 케이스</p></div><section class="related-block"><h2>관련 노트</h2><ul class="note-grid"><li><a class="note-card" href="/notes/daily-cap-timezone-anchor" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->일일 카운트는 자정이 아니라 비즈니스 경계에 앵커한다 — 일일 집계·cap·랭킹의 자정 선점</h3><p>하루 단위 집계·상한을 UTC나 서버 로컬 자정에 묶으면 자정 직전 항목이 다음 날 버킷을 미리 선점한다. 의미 있는 운영 경계 시각에 명시적으로 앵커한다.</p></a></li><li><a class="note-card" href="/notes/dead-retry-bounded-executor" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->죽은 재시도 인프라 — 만들어두고 연결 안 한 retry는 0번 재시도한다</h3><p>재시도를 만들어두고 연결을 안 하면 0번 재시도하고, 무제한으로 풀면 폭주하고, 영구 에러까지 재시도하면 헛고생을 반복한다. 세 증상의 공통 원인은 빠진 한 조각이다.</p></a></li><li><a class="note-card" href="/notes/ad-metric-traps" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->광고 지표 함정 — CTR·CVR·viewability·정산 불일치</h3><p>광고주와 매체가 같은 &quot;클릭&quot;을 두고 싸운다. 버그가 아니라 정의 차이였고, 나는 지표를 양면 시장의 신뢰 계약으로 바꿨다.</p></a></li><li><a class="note-card" href="/notes/frequency-capping-distributed" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->Frequency capping을 분산 환경에서 — 정확성 vs 비용</h3><p>&quot;같은 광고 하루 3번까지&quot;가 서버 수십 대를 만나는 순간, 정확한 카운팅은 매출을 갉아먹는 병목이 된다. 광고를 망치지 않으면서 비용을 비선형으로 줄인 방법.</p></a></li><li><a class="note-card" href="/notes/personal-infra-stack" data-discover="true"><h3><span aria-hidden="true">🌿</span> <!-- -->개인 인프라 스택 — 회사 인프라 없이도 production-grade</h3><p>회사 인프라 없이, 외부 API 7개를 긁어 Notion 7개에 쌓는 시스템을 신용카드 0원으로 굴리는 중. GitHub과 Notion 무료 한계를 어디까지 밀어붙일 수 있는지 직접 부딪혀 본 기록.</p></a></li></ul></section><footer class="page-footer"><a class="see-all-link" href="/notes" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg> 노트 목록</a></footer></article></main><footer class="site-footer"><div class="footer-brand"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg>정경하</span><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open-text" aria-hidden="true"><path d="M12 7v14"></path><path d="M16 12h2"></path><path d="M16 8h2"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path><path d="M6 12h2"></path><path d="M6 8h2"></path></svg>Cases, notes, logs, and proof of work</span></div><nav class="footer-nav" aria-label="Secondary"><a href="/uses" data-discover="true">Uses</a><a href="/now" data-discover="true">Now</a><a href="/reading" data-discover="true">Reading</a><a href="/cv" data-discover="true">CV</a></nav><span class="footer-meta"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-clock" aria-hidden="true"><path d="M16 14v2.2l1.6 1"></path><path d="M16 2v4"></path><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"></path><path d="M3 10h5"></path><path d="M8 2v4"></path><circle cx="16" cy="16" r="6"></circle></svg>Updated <!-- -->2026-06-29 11:30</span></footer></div>
+  </body>
+</html>

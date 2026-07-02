@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+    <meta name="author" content="정경하" />
+    <meta property="og:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="description" content="&quot;같은 광고 하루 3번까지&quot;가 서버 수십 대를 만나는 순간, 정확한 카운팅은 매출을 갉아먹는 병목이 된다. 광고를 망치지 않으면서 비용을 비선형으로 줄인 방법." />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Frequency capping을 분산 환경에서 — 정확성 vs 비용 | 정경하" />
+    <meta property="og:description" content="&quot;같은 광고 하루 3번까지&quot;가 서버 수십 대를 만나는 순간, 정확한 카운팅은 매출을 갉아먹는 병목이 된다. 광고를 망치지 않으면서 비용을 비선형으로 줄인 방법." />
+    <meta property="og:url" content="https://justinjeong5.github.io/notes/frequency-capping-distributed/" />
+    <meta name="twitter:title" content="Frequency capping을 분산 환경에서 — 정확성 vs 비용 | 정경하" />
+    <meta name="twitter:description" content="&quot;같은 광고 하루 3번까지&quot;가 서버 수십 대를 만나는 순간, 정확한 카운팅은 매출을 갉아먹는 병목이 된다. 광고를 망치지 않으면서 비용을 비선형으로 줄인 방법." />
+    <link rel="canonical" href="https://justinjeong5.github.io/notes/frequency-capping-distributed/" />
+    <title>Frequency capping을 분산 환경에서 — 정확성 vs 비용 | 정경하</title>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Frequency capping을 분산 환경에서 — 정확성 vs 비용 | 정경하",
+  "description": "\"같은 광고 하루 3번까지\"가 서버 수십 대를 만나는 순간, 정확한 카운팅은 매출을 갉아먹는 병목이 된다. 광고를 망치지 않으면서 비용을 비선형으로 줄인 방법.",
+  "url": "https://justinjeong5.github.io/notes/frequency-capping-distributed/",
+  "mainEntityOfPage": "https://justinjeong5.github.io/notes/frequency-capping-distributed/",
+  "author": {
+    "@type": "Person",
+    "name": "정경하",
+    "url": "https://justinjeong5.github.io/",
+    "jobTitle": "Product-minded Frontend Engineer",
+    "sameAs": [
+      "https://github.com/justinjeong5"
+    ]
+  }
+}
+</script>
+    <script>
+      // 테마 사전 설정 — prerender된 HTML에 data-theme를 즉시 적용해 CSS flash를 막는다.
+      // (다른 스크립트보다 먼저 실행되어야 한다.)
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages — restore deep-link path written by 404.html
+      // https://github.com/rafgraph/spa-github-pages
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
+    </script>
+    <script type="module" crossorigin src="/assets/index-Bn3xoPrC.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-QTnfLwEv.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-cases-CBUDB2ZQ.js">
+    <link rel="modulepreload" crossorigin href="/assets/router-DLpn8xiv.js">
+    <link rel="modulepreload" crossorigin href="/assets/search-CiN4C8Nu.js">
+    <link rel="modulepreload" crossorigin href="/assets/icons-BAaLLYA_.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-xPABecuM.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-essays-eznFQalv.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-logs-D5PTorQn.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-notes-C8z_T_Pg.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-sbCSPT96.css">
+    <link rel="stylesheet" crossorigin href="/assets/pretendard-NPFyShNs.css">
+  </head>
+  <body>
+    <div id="root"><a href="#main-content" class="skip-link">본문 바로가기</a><header class="site-nav" aria-label="Primary"><a class="brand" aria-label="정경하 홈" href="/" data-discover="true">JKH</a><nav class="primary-nav"><a class="nav-link" href="/cases" data-discover="true">Cases</a><a aria-current="page" class="nav-link is-active" href="/notes" data-discover="true">Notes</a><a class="nav-link" href="/essays" data-discover="true">Essays</a><a class="nav-link" href="/logs" data-discover="true">Logs</a><a class="nav-link" href="/about" data-discover="true">About</a></nav><div class="nav-actions"><button type="button" class="search-trigger" aria-label="검색" title="검색 (⌘K 또는 /)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg><span>검색</span><kbd>⌘K</kbd></button><button type="button" class="icon-button" aria-label="테마: 라이트. 클릭하여 변경" title="테마: 라이트 · T 키로도 전환"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg></button><button type="button" class="icon-button desktop-only" aria-label="키보드 단축키" aria-expanded="false" aria-haspopup="dialog" title="키보드 단축키 (? 키)"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-keyboard" aria-hidden="true"><path d="M10 8h.01"></path><path d="M12 12h.01"></path><path d="M14 8h.01"></path><path d="M16 12h.01"></path><path d="M18 8h.01"></path><path d="M6 8h.01"></path><path d="M7 16h10"></path><path d="M8 12h.01"></path><rect width="20" height="16" x="2" y="4" rx="2"></rect></svg></button><button type="button" class="icon-button menu-trigger" aria-label="메뉴 열기" aria-expanded="false" aria-haspopup="dialog" title="메뉴"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button></div></header><main id="main-content" tabindex="-1"><article class="page note-detail"><header class="page-header note-detail-header"><p class="eyebrow growth-eyebrow"><span aria-hidden="true">🌱</span>Seedling</p><h1>Frequency capping을 분산 환경에서 — 정확성 vs 비용</h1><p class="page-lead">&quot;같은 광고 하루 3번까지&quot;가 서버 수십 대를 만나는 순간, 정확한 카운팅은 매출을 갉아먹는 병목이 된다. 광고를 망치지 않으면서 비용을 비선형으로 줄인 방법.</p><ul class="topic-list" aria-label="topics"><li>#<!-- -->advertising</li><li>#<!-- -->distributed</li><li>#<!-- -->performance</li><li>#<!-- -->backend</li></ul></header><div class="prose"><h2>광고주가 화났다</h2>
+<p>&quot;하루 3번까지로 캡을 걸었는데, 우리 광고가 한 사용자한테 열 몇 번씩 뜬다&quot;는 항의가 들어왔다. 설정은 분명 3번이었다. 코드도 멀쩡했다. 그런데 실제 노출은 캡을 한참 넘기고 있었다.</p>
+<p>범인은 산수였다. 광고 서버가 한 대가 아니라 수십 대였고, 사용자 요청은 그 중 아무 서버로나 흩어졌다. 각 서버가 자기 메모리에서 &quot;이 사용자에게 3번까지&quot; 세고 있으니, 서버가 10대면 같은 광고가 최대 30번 나갈 수 있었다. 캡 자체가 서버 수만큼 곱해져 새고 있던 것이다.</p>
+<p>단일 서버면 이런 일은 없다. 메모리에 <code>(user, ad) → count</code> 하나 두고 증가시키면 끝이다. 문제는 우리가 서버 한 대로 굴러가는 회사가 아니라는 것이었다.</p>
+<ul>
+<li>광고 서버 수십 대 — 요청이 아무 서버로나 감</li>
+<li>초당 수만~수십만 요청</li>
+<li>카운트는 모든 서버가 같은 값을 공유해야 캡이 의미를 가짐</li>
+</ul>
+<p>해법은 자명해 보였다. 모든 서버가 공유하는 카운터 하나를 두면 된다. 그런데 매 요청마다 중앙 저장소를 읽고 쓰는 순간, 이번엔 그 카운터가 전체 광고 서빙의 병목이 됐다. 정확성을 사면 비용이 따라왔다. 여기서부터가 진짜 문제였다.</p>
+<h2>정확성을 얼마나 살 것인가</h2>
+<p>광고주에게 다시 답을 주려면 먼저 내가 답해야 했다. &quot;정확히 3번&quot;을 보장하는 건 얼마나 비싼가, 그리고 우리는 정말 &quot;정확히&quot;가 필요한가. 캡을 거는 쪽 입장에서 보면 광고는 대개 &quot;정확히 N번&quot;이 아니라 &quot;대략 N번&quot;이면 매출도 사용자 경험도 흔들리지 않는다. 그래서 선택지는 단순한 on/off가 아니라, 정확성을 어디까지 사고 어디서부터 근사로 갈아탈지의 스펙트럼이었다. 그 스펙트럼을 우리가 실제로 밟은 순서대로 적는다.</p>
+<h3>1단계 — 중앙 Redis (정확, 비쌈)</h3>
+<p>매 노출마다 Redis <code>INCR</code>.</p>
+<pre><code>INCR freq:{user}:{ad}:{date}
+EXPIRE freq:{user}:{ad}:{date} 86400
+</code></pre>
+<ul>
+<li>정확함 (모든 서버가 같은 카운터)</li>
+<li>비용: 매 요청 Redis 왕복. 초당 수만이면 Redis가 핫스팟.</li>
+</ul>
+<p>소규모거나 정확성이 매출에 직결되면 이 단계.</p>
+<h3>2단계 — 로컬 캐시 + 주기 동기화 (근사)</h3>
+<p>각 서버가 로컬 카운트 + 주기적으로 중앙에 flush.</p>
+<ul>
+<li>비용 ↓ (Redis 왕복이 매 요청 → 주기적)</li>
+<li>부정확 ↑ (flush 사이의 윈도우에서 over-delivery)</li>
+</ul>
+<p>cap이 3인데 서버 10대가 각자 로컬로 세다 flush하면 일시적으로 3 초과 가능. &quot;대략 3번&quot;으로 충분하면 OK.</p>
+<h3>3단계 — 확률적 카운팅 (대규모 근사)</h3>
+<p>수억 사용자 × 수만 광고면 <code>(user, ad)</code> 카운터 자체가 메모리 폭발.</p>
+<ul>
+<li><strong>HyperLogLog</strong>: 고유 노출 카운트 근사 (오차 ~2%)</li>
+<li><strong>Count-Min Sketch</strong>: 빈도 근사, 고정 메모리</li>
+<li><strong>확률적 capping</strong>: cap 근처에서 확률적으로 drop (정확한 카운트 없이)</li>
+</ul>
+<p>정확도를 일부 포기하고 메모리를 고정. 대규모 플랫폼의 현실적 선택.</p>
+<h3>4단계 — 계층 (hot/cold 분리)</h3>
+<ul>
+<li><strong>hot</strong>: 활성 캠페인은 정확하게 (Redis)</li>
+<li><strong>cold</strong>: 저빈도 캠페인은 근사 (로컬+flush)</li>
+</ul>
+<p>캠페인 특성에 따라 단계를 섞는다. 모든 캠페인에 같은 정확도를 적용하지 않음.</p>
+<h2>시간 윈도우 처리</h2>
+<p>&quot;하루 3번&quot;의 &quot;하루&quot;도 함정.</p>
+<ul>
+<li><strong>고정 윈도우</strong>: 자정 리셋. 23:59에 3번 + 0:01에 3번 = 2분에 6번 노출 (경계 폭발)</li>
+<li><strong>슬라이딩 윈도우</strong>: 최근 24시간. 정확하지만 비쌈 (타임스탬프 목록 유지)</li>
+<li><strong>슬라이딩 윈도우 근사</strong>: 시간 버킷 + 가중치. 비용/정확성 절충</li>
+</ul>
+<p>frequency capping에서 고정 윈도우의 경계 폭발은 사용자 경험을 해친다(짧은 시간 도배). 슬라이딩 근사가 보통 적절.</p>
+<h2>eventual consistency 받아들이기</h2>
+<p>분산 frequency capping의 핵심 통찰: <strong>약간의 over-delivery를 받아들인다</strong>.</p>
+<ul>
+<li>cap 3에 실제 3.2번 평균 노출 → 매출/UX 영향 작음</li>
+<li>정확히 3번을 위해 매 요청 강한 일관성 → 비용 폭발</li>
+</ul>
+<p>&quot;정확히 N번&quot;이 비즈니스 요구인지 &quot;대략 N번&quot;이면 되는지를 먼저 확정. 대부분 후자다. 강한 일관성은 비용이 정당화될 때만.</p>
+<h2>함정</h2>
+<ul>
+<li><strong>단일 서버 코드를 분산에 그대로</strong>: 로컬 카운터는 서버 수만큼 cap 초과. 공유 카운터 필요.</li>
+<li><strong>매 요청 중앙 Redis</strong>: 초당 수만이면 Redis 핫스팟. 로컬 캐시 + flush 고려.</li>
+<li><strong>고정 윈도우 경계 폭발</strong>: 자정 리셋이 경계에서 도배. 슬라이딩 윈도우.</li>
+<li><strong>모든 캠페인 같은 정확도</strong>: hot/cold 분리로 비용 차등.</li>
+<li><strong>&quot;정확히 N번&quot; 과잉 요구</strong>: 대부분 &quot;대략&quot;이면 충분. over-delivery 허용 범위를 비즈니스와 합의.</li>
+<li><strong>카운터 TTL 누락</strong>: 날짜별 키가 영원히 남으면 메모리 증가. EXPIRE 필수.</li>
+</ul>
+<h2>핵심</h2>
+<p>광고주에게는 결국 이렇게 답했다. &quot;정확히 3번이 아니라 평균 3번 안팎으로 맞추겠다. 그 대신 광고는 멈추지 않고 비용도 안 터진다.&quot; 그게 받아들여졌고, 캡은 잘 동작했다.</p>
+<blockquote>
+<p>엔지니어링 문제처럼 보이던 &quot;캡이 샌다&quot;는 사실 비즈니스 질문이었다 — <em>정확히 N번이 정말 필요한가, 아니면 대략 N번이면 되는가.</em> 답이 후자인 순간, 약간의 over-delivery를 허락하는 대가로 비용은 비선형으로 줄어든다. 분산 시스템에서 가장 비싼 요구사항은 &quot;강한 일관성&quot;이 아니라 <strong>검증 안 된 채로 들고 있는 &#x27;정확히&#x27;라는 단어</strong>다.</p>
+</blockquote>
+<h2>관련</h2>
+<p><a href="/notes/ad-metric-traps">/notes/ad-metric-traps</a> — 노출 카운트의 정의 문제
+<a href="/essays/two-sided-market-decisions">/essays/two-sided-market-decisions</a> — over-delivery가 매체·광고주에 미치는 영향</p></div><section class="related-block"><h2>관련 노트</h2><ul class="note-grid"><li><a class="note-card" href="/notes/daily-cap-timezone-anchor" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->일일 카운트는 자정이 아니라 비즈니스 경계에 앵커한다 — 일일 집계·cap·랭킹의 자정 선점</h3><p>하루 단위 집계·상한을 UTC나 서버 로컬 자정에 묶으면 자정 직전 항목이 다음 날 버킷을 미리 선점한다. 의미 있는 운영 경계 시각에 명시적으로 앵커한다.</p></a></li><li><a class="note-card" href="/notes/dead-retry-bounded-executor" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->죽은 재시도 인프라 — 만들어두고 연결 안 한 retry는 0번 재시도한다</h3><p>재시도를 만들어두고 연결을 안 하면 0번 재시도하고, 무제한으로 풀면 폭주하고, 영구 에러까지 재시도하면 헛고생을 반복한다. 세 증상의 공통 원인은 빠진 한 조각이다.</p></a></li><li><a class="note-card" href="/notes/ad-metric-traps" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->광고 지표 함정 — CTR·CVR·viewability·정산 불일치</h3><p>광고주와 매체가 같은 &quot;클릭&quot;을 두고 싸운다. 버그가 아니라 정의 차이였고, 나는 지표를 양면 시장의 신뢰 계약으로 바꿨다.</p></a></li><li><a class="note-card" href="/notes/public-api-integration-patterns" data-discover="true"><h3><span aria-hidden="true">🌿</span> <!-- -->혼자 7개 공개 API를 한 시스템에 욱여넣으며 배운 것</h3><p>홈레이더를 만들며 국토부·네이버·카카오 등 공개 API 7개를 혼자 통합했다. case문 더미가 되기 직전, rate limit·재시도·boundary를 라이브러리 수준으로 끌어올린 기록.</p></a></li><li><a class="note-card" href="/notes/notion-lightweight-backend" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->서버 0대로 백엔드를 굴렸다 — 노션 DB 7개로 만든 무료 인프라</h3><p>홈레이더 백엔드를 노션 DB 7개로 직접 설계했다. 서버비 0원으로 굴리며 PK도 JOIN도 없는 한계를 hotfix로 직접 넘은 기록.</p></a></li></ul></section><footer class="page-footer"><a class="see-all-link" href="/notes" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg> 노트 목록</a></footer></article></main><footer class="site-footer"><div class="footer-brand"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg>정경하</span><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open-text" aria-hidden="true"><path d="M12 7v14"></path><path d="M16 12h2"></path><path d="M16 8h2"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path><path d="M6 12h2"></path><path d="M6 8h2"></path></svg>Cases, notes, logs, and proof of work</span></div><nav class="footer-nav" aria-label="Secondary"><a href="/uses" data-discover="true">Uses</a><a href="/now" data-discover="true">Now</a><a href="/reading" data-discover="true">Reading</a><a href="/cv" data-discover="true">CV</a></nav><span class="footer-meta"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-clock" aria-hidden="true"><path d="M16 14v2.2l1.6 1"></path><path d="M16 2v4"></path><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"></path><path d="M3 10h5"></path><path d="M8 2v4"></path><circle cx="16" cy="16" r="6"></circle></svg>Updated <!-- -->2026-06-29 11:30</span></footer></div>
+  </body>
+</html>

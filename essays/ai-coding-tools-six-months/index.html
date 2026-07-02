@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+    <meta name="author" content="정경하" />
+    <meta property="og:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="description" content="6개월 전에는 Cursor만 썼다. 지금은 Claude Code + Codex CLI + Cursor 세 도구를 같이 쓴다. 각 도구의 자리가 어떻게 다른지, 도구 셋이 만드는 새로운 워크플로우는 무엇인지의 관찰." />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="AI 코딩 도구 6개월 — Claude Code, Codex, Cursor 세 도구를 같이 쓴 후 | 정경하" />
+    <meta property="og:description" content="6개월 전에는 Cursor만 썼다. 지금은 Claude Code + Codex CLI + Cursor 세 도구를 같이 쓴다. 각 도구의 자리가 어떻게 다른지, 도구 셋이 만드는 새로운 워크플로우는 무엇인지의 관찰." />
+    <meta property="og:url" content="https://justinjeong5.github.io/essays/ai-coding-tools-six-months/" />
+    <meta name="twitter:title" content="AI 코딩 도구 6개월 — Claude Code, Codex, Cursor 세 도구를 같이 쓴 후 | 정경하" />
+    <meta name="twitter:description" content="6개월 전에는 Cursor만 썼다. 지금은 Claude Code + Codex CLI + Cursor 세 도구를 같이 쓴다. 각 도구의 자리가 어떻게 다른지, 도구 셋이 만드는 새로운 워크플로우는 무엇인지의 관찰." />
+    <link rel="canonical" href="https://justinjeong5.github.io/essays/ai-coding-tools-six-months/" />
+    <title>AI 코딩 도구 6개월 — Claude Code, Codex, Cursor 세 도구를 같이 쓴 후 | 정경하</title>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "AI 코딩 도구 6개월 — Claude Code, Codex, Cursor 세 도구를 같이 쓴 후 | 정경하",
+  "description": "6개월 전에는 Cursor만 썼다. 지금은 Claude Code + Codex CLI + Cursor 세 도구를 같이 쓴다. 각 도구의 자리가 어떻게 다른지, 도구 셋이 만드는 새로운 워크플로우는 무엇인지의 관찰.",
+  "url": "https://justinjeong5.github.io/essays/ai-coding-tools-six-months/",
+  "mainEntityOfPage": "https://justinjeong5.github.io/essays/ai-coding-tools-six-months/",
+  "author": {
+    "@type": "Person",
+    "name": "정경하",
+    "url": "https://justinjeong5.github.io/",
+    "jobTitle": "Product-minded Frontend Engineer",
+    "sameAs": [
+      "https://github.com/justinjeong5"
+    ]
+  },
+  "datePublished": "2026-05-28",
+  "dateModified": "2026-05-28"
+}
+</script>
+    <script>
+      // 테마 사전 설정 — prerender된 HTML에 data-theme를 즉시 적용해 CSS flash를 막는다.
+      // (다른 스크립트보다 먼저 실행되어야 한다.)
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages — restore deep-link path written by 404.html
+      // https://github.com/rafgraph/spa-github-pages
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
+    </script>
+    <script type="module" crossorigin src="/assets/index-Bn3xoPrC.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-QTnfLwEv.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-cases-CBUDB2ZQ.js">
+    <link rel="modulepreload" crossorigin href="/assets/router-DLpn8xiv.js">
+    <link rel="modulepreload" crossorigin href="/assets/search-CiN4C8Nu.js">
+    <link rel="modulepreload" crossorigin href="/assets/icons-BAaLLYA_.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-xPABecuM.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-essays-eznFQalv.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-logs-D5PTorQn.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-notes-C8z_T_Pg.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-sbCSPT96.css">
+    <link rel="stylesheet" crossorigin href="/assets/pretendard-NPFyShNs.css">
+  </head>
+  <body>
+    <div id="root"><a href="#main-content" class="skip-link">본문 바로가기</a><header class="site-nav" aria-label="Primary"><a class="brand" aria-label="정경하 홈" href="/" data-discover="true">JKH</a><nav class="primary-nav"><a class="nav-link" href="/cases" data-discover="true">Cases</a><a class="nav-link" href="/notes" data-discover="true">Notes</a><a aria-current="page" class="nav-link is-active" href="/essays" data-discover="true">Essays</a><a class="nav-link" href="/logs" data-discover="true">Logs</a><a class="nav-link" href="/about" data-discover="true">About</a></nav><div class="nav-actions"><button type="button" class="search-trigger" aria-label="검색" title="검색 (⌘K 또는 /)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg><span>검색</span><kbd>⌘K</kbd></button><button type="button" class="icon-button" aria-label="테마: 라이트. 클릭하여 변경" title="테마: 라이트 · T 키로도 전환"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg></button><button type="button" class="icon-button desktop-only" aria-label="키보드 단축키" aria-expanded="false" aria-haspopup="dialog" title="키보드 단축키 (? 키)"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-keyboard" aria-hidden="true"><path d="M10 8h.01"></path><path d="M12 12h.01"></path><path d="M14 8h.01"></path><path d="M16 12h.01"></path><path d="M18 8h.01"></path><path d="M6 8h.01"></path><path d="M7 16h10"></path><path d="M8 12h.01"></path><rect width="20" height="16" x="2" y="4" rx="2"></rect></svg></button><button type="button" class="icon-button menu-trigger" aria-label="메뉴 열기" aria-expanded="false" aria-haspopup="dialog" title="메뉴"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button></div></header><main id="main-content" tabindex="-1"><article class="page essay-detail"><header class="page-header"><p class="eyebrow">Essay<!-- --> · 7분</p><h1>AI 코딩 도구 6개월 — Claude Code, Codex, Cursor 세 도구를 같이 쓴 후</h1><p class="page-lead">6개월 전에는 Cursor만 썼다. 지금은 Claude Code + Codex CLI + Cursor 세 도구를 같이 쓴다. 각 도구의 자리가 어떻게 다른지, 도구 셋이 만드는 새로운 워크플로우는 무엇인지의 관찰.</p></header><div class="prose"><h2>6개월 전 vs 지금</h2>
+<p>6개월 전 IDE는 Cursor였다. AI 도구는 Cursor 안에서 chat 또는 inline edit으로 끝났다. 단일 도구, 단일 자리.</p>
+<p>지금은 다르다. 세 도구를 같이 쓴다.</p>
+<ul>
+<li><strong>Claude Code</strong> (CLI + IDE 확장) — 메인 작업 환경</li>
+<li><strong>Codex CLI</strong> — 병렬 검증·경쟁</li>
+<li><strong>Cursor</strong> — 가벼운 chat·시안 탐색</li>
+</ul>
+<p>세 도구가 같은 문제를 푸는 게 아니라 <strong>다른 자리</strong>를 차지한다. 6개월 전엔 안 보였던 그림이 이제 보인다.</p>
+<h2>Claude Code — 작업의 메인 자리</h2>
+<p>Claude Code가 메인이 된 이유는 명확하다.</p>
+<ul>
+<li><strong>CLI</strong>: terminal에서 직접 호출. 단축키 + 자동화 가능</li>
+<li><strong>스킬 시스템</strong>: 본인이 만든 워크플로우(dispatch·quality-gate·personas)를 도구 안에 박을 수 있음</li>
+<li><strong>메모리/세션</strong>: 컨텍스트가 turn 단위가 아닌 세션 단위</li>
+<li><strong>multi-edit</strong>: 한 번에 여러 파일 수정 (Cursor의 inline edit보다 큰 단위)</li>
+<li><strong>에이전트 스폰</strong>: 서브에이전트로 병렬 작업 가능</li>
+</ul>
+<p>&quot;매번 chat에 컨텍스트 적기&quot;가 사라졌다. CLAUDE.md에 원칙을 박고, memory에 자산을 누적하고, 스킬에 워크플로우를 박는다. 한 번 만든 게 다음 호출에 그대로 적용된다.</p>
+<p>가장 큰 변화는 <strong>본인 도구를 만들 수 있다는 것</strong>. Cursor에서는 도구의 동작을 바꾸기 어려웠다. Claude Code에서는 dispatch 같은 라우터를 직접 짜고 모든 메시지가 그 라우터를 거치게 만들 수 있다.</p>
+<h2>Codex CLI — 검증과 경쟁의 자리</h2>
+<p>Codex는 메인이 아니라 <strong>두 번째 의견</strong>의 자리다.</p>
+<ul>
+<li>Claude가 만든 코드를 Codex가 리뷰</li>
+<li>Claude가 분석한 결과를 Codex가 교차 검증</li>
+<li>같은 작업을 둘 다 굴려서 두 결과 비교</li>
+</ul>
+<p>가장 큰 가치는 <strong>사각지대 발견</strong>. 같은 모델이 만들고 같은 모델이 리뷰하면 같은 사각지대를 공유한다. 다른 모델 백엔드(GPT 계열)인 Codex는 다른 사각지대를 가진다. 한쪽만 발견한 엣지 케이스가 거의 항상 진짜다. 이 <a href="/notes/codex-competition">Codex 경쟁</a> 패턴은 본인 워크플로우의 기본값이 됐다.</p>
+<p>비용은 토큰 2배. 시간도 직렬이면 2배(병렬이면 max). 이 비용이 가치를 넘는가? <strong>설계 결정·복잡한 리팩토링·보안 리뷰</strong>에서는 명확히 가치 &gt; 비용. 단순 한 줄 수정에서는 가치 &lt; 비용.</p>
+<p>CLAUDE.md에 &quot;모든 작업에서 Codex 경쟁 기본&quot;이라고 박아뒀다. 단독 진행은 사용자가 &quot;코덱스 없이&quot;라고 명시한 경우만. 강제 기본값이 그게 더 안전해서다.</p>
+<h2>Cursor — 가벼운 chat의 자리</h2>
+<p>Cursor를 안 버린 이유는 하나다. <strong>가볍게 물어볼 자리</strong>가 필요해서.</p>
+<ul>
+<li>&quot;이거 어떻게 동작하지?&quot; 같은 단문 질문</li>
+<li>코드 한 조각의 의미 파악</li>
+<li>잠깐 시안 탐색 (&quot;이거 React 19에서 어떻게 쓰지?&quot;)</li>
+</ul>
+<p>Claude Code는 메인 작업 환경이라 묵직하다. Cursor는 IDE 안에 박혀있어서 inline으로 빠르게 물어볼 수 있다. 두 도구의 자리가 다르다.</p>
+<p>다만 Cursor의 비중이 6개월 전 100%에서 지금 15-20% 정도로 줄었다. 진짜 작업은 Claude Code, 가볍게는 Cursor.</p>
+<h2>셋이 만드는 새로운 워크플로우</h2>
+<p>이 세 도구가 각자 도는 게 아니라 <strong>체인</strong>을 이룬다. 며칠 써본 패턴은 이렇다.</p>
+<pre><code>[가벼운 탐색] Cursor — &quot;이 API 뭐지?&quot;
+    ↓
+[설계 결정] Claude Code + personas — 트레이드오프 비교
+    ↓
+[구현] Claude Code + ship — 코드 작성
+    ↓
+[검증] Codex CLI — 같은 작업 다시 굴려서 비교
+    ↓
+[리뷰] Claude Code + review-changes — 6관점 병렬 리뷰
+    ↓
+[PR] Claude Code + create-pr — PR 생성
+    ↓
+[CI 대응] Claude Code + pr-shepherd — 머지까지
+</code></pre>
+<p>각 단계가 적합한 도구를 골랐다. 단일 도구에 모든 단계를 떠넘기지 않는다.</p>
+<h2>토큰 사용량</h2>
+<p>도구 셋을 같이 쓰니 토큰 사용량이 6개월 전 대비 4-5배다. Claude Pro 외에 Codex 별도 결제도 있다. 그런데 결과 품질의 차이가 토큰 비용을 뛰어넘는다.</p>
+<p><strong>비용 정당성</strong>:</p>
+<ul>
+<li>사각지대 감소 → 프로덕션 버그 비용 회피 (1개 버그가 며칠 비용)</li>
+<li>의사결정 품질 → 재설계 비용 회피</li>
+<li>매번 처음부터 안 함 → 시간 비용 회피</li>
+</ul>
+<p>토큰을 아끼는 게 미덕이 아니다. <strong>결과 품질이 토큰 비용을 회수</strong>하면 토큰을 더 쓰는 게 합리적이다.</p>
+<h2>6개월 후 무엇이 달라질까</h2>
+<p>추측해본다.</p>
+<ul>
+<li><strong>도구 통합</strong>: 셋이 점점 통합될 가능성. Cursor가 CLI를 강화하거나, Claude Code가 IDE 통합을 강화하거나, Codex가 자체 워크플로우를 갖거나.</li>
+<li><strong>에이전트 자율성 증가</strong>: 지금은 사람이 도구를 호출하는데, 곧 도구가 도구를 호출하는 비중이 늘어난다 (이미 dispatch가 그렇다).</li>
+<li><strong>본인 시스템 가치 ↑</strong>: 도구가 통합되든 자율성이 늘어나든 <strong>본인이 자기 워크플로우를 시스템으로 만들었는지</strong>가 격차의 핵심이 된다. 도구 좋아진다고 시스템 없는 사람이 따라잡지 못한다.</li>
+</ul>
+<p>가장 큰 위험은 <strong>도구에 종속</strong>되는 것이다. 본인 시스템이 도구별 lock-in이면 도구 교체 비용이 커진다. dispatch·quality-gate 같은 패턴은 도구가 바뀌어도 옮길 수 있게 추상화해야 한다.</p>
+<h2>함정</h2>
+<ul>
+<li><strong>도구를 늘리기만 함</strong>: 도구 셋이 자리가 다른지 확인 안 하고 그냥 셋 다 쓰면 노이즈. 각 도구의 자리를 명확히.</li>
+<li><strong>모든 작업에 모든 도구</strong>: 단순 한 줄 수정에 도구 셋을 다 굴리면 시간 낭비. 작업 크기 대비 도구 수를 조절.</li>
+<li><strong>본인 시스템 없이 도구만</strong>: 도구가 좋아져도 본인 워크플로우 시스템이 없으면 매번 처음부터. CLAUDE.md·memory·skill에 시스템 박기.</li>
+<li><strong>도구 lock-in</strong>: 본인 시스템을 도구 specific하게 만들면 도구 교체 비용 ↑. 추상화 가능한 패턴으로.</li>
+<li><strong>검증의 자기 confirmation</strong>: Claude만 쓰면 Claude의 사각지대를 공유. 같은 모델에 반복 위임하면 <a href="/notes/ai-output-mode-collapse">출력이 한 점으로 수렴</a>하기도 한다. 다른 모델로 교차 검증 필수.</li>
+</ul>
+<h2>결론</h2>
+<p>AI 코딩 도구의 가치는 단일 도구 잘 쓰는 게 아니다. <strong>각 도구의 자리를 알고 셋을 체인으로 엮는 것</strong>이다.</p>
+<p>Claude Code가 메인, Codex가 검증, Cursor가 가벼운 chat. 이 셋이 따로 도는 게 아니라 dispatch → personas → ship → review-changes → create-pr → pr-shepherd 같은 워크플로우로 엮인다.</p>
+<p>6개월 전 단일 도구 100%에서 지금 셋이 자리가 다른 시스템으로 바뀌었다. 6개월 후엔 다섯 도구가 될 수도 있다. 도구 수가 늘어나도 본인 시스템의 형태가 같으면 자연스럽게 흡수할 수 있다.</p>
+<p>도구는 매년 바뀐다. <strong>본인 워크플로우를 시스템으로 만들어둔 사람</strong>과 매번 새 도구 하나씩 다시 배우는 사람의 6개월 후, 1년 후, 5년 후 격차는 비선형이다.</p></div><footer class="page-footer"><a class="see-all-link" href="/essays" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg> 에세이 목록</a></footer></article></main><footer class="site-footer"><div class="footer-brand"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg>정경하</span><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open-text" aria-hidden="true"><path d="M12 7v14"></path><path d="M16 12h2"></path><path d="M16 8h2"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path><path d="M6 12h2"></path><path d="M6 8h2"></path></svg>Cases, notes, logs, and proof of work</span></div><nav class="footer-nav" aria-label="Secondary"><a href="/uses" data-discover="true">Uses</a><a href="/now" data-discover="true">Now</a><a href="/reading" data-discover="true">Reading</a><a href="/cv" data-discover="true">CV</a></nav><span class="footer-meta"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-clock" aria-hidden="true"><path d="M16 14v2.2l1.6 1"></path><path d="M16 2v4"></path><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"></path><path d="M3 10h5"></path><path d="M8 2v4"></path><circle cx="16" cy="16" r="6"></circle></svg>Updated <!-- -->2026-06-29 11:30</span></footer></div>
+  </body>
+</html>
