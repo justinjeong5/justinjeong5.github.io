@@ -2201,7 +2201,7 @@
             )
             .join("") +
           appendix
-            .map((item) => `<a href="#${item.id}" title="${item.title}"><small>+</small><span>${item.shortTitle || item.title}</span></a>`)
+            .map((item) => `<a href="#${item.id}" title="${item.title}"><small>부록</small><span>${item.shortTitle || item.title}</span></a>`)
             .join("");
 
         mobileJump.innerHTML =
@@ -2217,7 +2217,7 @@
             )
             .join("") +
           appendix
-            .map((item) => `<button type="button" data-index-jump="${item.id}"><small>+</small><span>${item.shortTitle || item.title}</span></button>`)
+            .map((item) => `<button type="button" data-index-jump="${item.id}"><small>부록</small><span>${item.shortTitle || item.title}</span></button>`)
             .join("");
       };
 
