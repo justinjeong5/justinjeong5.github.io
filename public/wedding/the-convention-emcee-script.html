@@ -1479,6 +1479,33 @@
 
         .mobile-flow-search {
           display: grid;
+          grid-template-columns: minmax(0, 1fr) 2.75rem;
+          gap: 0.38rem;
+          justify-self: end;
+          width: 2.75rem;
+          min-width: 0;
+          overflow: hidden;
+          transition: width 180ms ease;
+        }
+
+        .mobile-flow-search.open {
+          width: 100%;
+        }
+
+        .mobile-search-field {
+          min-width: 0;
+          overflow: hidden;
+          opacity: 0;
+          transform: scaleX(0.96);
+          transform-origin: right center;
+          transition:
+            opacity 140ms ease,
+            transform 180ms ease;
+        }
+
+        .mobile-flow-search.open .mobile-search-field {
+          opacity: 1;
+          transform: scaleX(1);
         }
 
         .mobile-flow-search .search {
@@ -1486,6 +1513,63 @@
           border-color: color-mix(in srgb, var(--line) 74%, transparent);
           background: color-mix(in srgb, var(--bg) 36%, var(--panel));
           padding: 0.5rem 0.78rem;
+        }
+
+        .mobile-flow-search .search:focus-visible {
+          border-color: color-mix(in srgb, var(--accent) 64%, var(--line));
+          outline: 2px solid color-mix(in srgb, var(--accent) 28%, transparent);
+          outline-offset: 2px;
+        }
+
+        .mobile-search-toggle {
+          position: relative;
+          display: grid;
+          min-width: 2.75rem;
+          min-height: 2.55rem;
+          place-items: center;
+          border-color: color-mix(in srgb, var(--accent) 24%, var(--line));
+          background: color-mix(in srgb, var(--bg) 42%, var(--panel));
+          color: var(--accent);
+        }
+
+        .mobile-search-toggle::before,
+        .mobile-search-toggle::after {
+          content: "";
+          display: block;
+          grid-area: 1 / 1;
+        }
+
+        .mobile-search-toggle::before {
+          width: 0.82rem;
+          height: 0.82rem;
+          border: 2px solid currentColor;
+          border-radius: 999px;
+          transform: translate(-0.12rem, -0.12rem);
+        }
+
+        .mobile-search-toggle::after {
+          width: 0.44rem;
+          height: 2px;
+          border-radius: 999px;
+          background: currentColor;
+          transform: translate(0.42rem, 0.42rem) rotate(45deg);
+        }
+
+        .mobile-flow-search.open .mobile-search-toggle::before {
+          width: 0.55rem;
+          height: 0.55rem;
+          border-width: 0 2px 2px 0;
+          border-radius: 0;
+          transform: translate(-0.06rem, 0) rotate(-45deg);
+        }
+
+        .mobile-flow-search.open .mobile-search-toggle::after {
+          display: none;
+        }
+
+        .mobile-flow-search.has-query .mobile-search-toggle {
+          border-color: color-mix(in srgb, var(--accent) 58%, var(--line));
+          background: color-mix(in srgb, var(--accent) 10%, var(--panel));
         }
 
         .font-controls {
@@ -1654,8 +1738,11 @@
         <button class="mobile-flow-current" type="button" data-action="tools" aria-label="현재 순서 1. 개식예고, 진행 도구 열기"><span id="mobile-flow-current">1. 개식예고</span></button>
         <button type="button" data-action="next">다음</button>
       </div>
-      <div class="mobile-flow-search">
-        <input class="search" id="search" type="search" placeholder="대본 검색" aria-label="대본 검색" />
+      <div class="mobile-flow-search" id="mobile-flow-search">
+        <div class="mobile-search-field">
+          <input class="search" id="search" type="search" placeholder="대본 검색" aria-label="대본 검색" autocomplete="off" />
+        </div>
+        <button class="mobile-search-toggle" type="button" data-action="search-toggle" aria-expanded="false" aria-label="대본 검색 열기"></button>
       </div>
     </nav>
 
@@ -1999,6 +2086,8 @@
       const mobileFlowCurrent = document.querySelector("#mobile-flow-current");
       const mobileFlowBar = document.querySelector(".mobile-flow-bar");
       const mobileFlowButton = document.querySelector(".mobile-flow-current");
+      const mobileFlowSearch = document.querySelector("#mobile-flow-search");
+      const mobileSearchToggle = document.querySelector(".mobile-search-toggle");
       const searchInput = document.querySelector("#search");
       const compactQuery = window.matchMedia("(max-width: 860px)");
       let pendingJumpId = "";
@@ -2327,12 +2416,30 @@
         window.history.replaceState({}, "", url);
       };
 
+      const setSearchOpen = (open, options = {}) => {
+        mobileFlowSearch.classList.toggle("open", open);
+        mobileSearchToggle.setAttribute("aria-expanded", String(open));
+        mobileSearchToggle.setAttribute("aria-label", open ? "대본 검색 축소" : "대본 검색 열기");
+        searchInput.tabIndex = open ? 0 : -1;
+        if (open && options.focus !== false) {
+          window.requestAnimationFrame(() => searchInput.focus());
+        } else if (!open && document.activeElement === searchInput) {
+          mobileSearchToggle.focus();
+        }
+      };
+
+      const syncSearchState = () => {
+        mobileFlowSearch.classList.toggle("has-query", Boolean(searchInput.value.trim()));
+      };
+
       render();
       const initialSearch = new URLSearchParams(window.location.search).get("q") || "";
       if (initialSearch) {
         searchInput.value = initialSearch;
         applySearch(initialSearch);
       }
+      setSearchOpen(Boolean(initialSearch), { focus: false });
+      syncSearchState();
       syncToolbarDisclosure();
       setActive();
 
@@ -2390,6 +2497,9 @@
         if (action === "tools") {
           toolbarManuallyToggled = true;
           setToolbarCollapsed(false, { restoreFocusTo: button });
+        }
+        if (action === "search-toggle") {
+          setSearchOpen(!mobileFlowSearch.classList.contains("open"));
         }
         if (action === "prev") moveSection(-1);
         if (action === "next") moveSection(1);
@@ -2454,6 +2564,7 @@
       searchInput.addEventListener("input", (event) => {
         applySearch(event.target.value);
         syncSearchParam(event.target.value);
+        syncSearchState();
       });
       const handleSectionJump = (event) => {
         window.clearTimeout(jumpTimer);
