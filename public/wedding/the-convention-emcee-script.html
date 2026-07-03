@@ -2055,7 +2055,9 @@
 
       const appendix = [
         {
+          id: "appendix-marriage-declaration",
           title: "성혼선언문",
+          shortTitle: "성혼선언문",
           lines: [
             "오늘 신랑 정경하 군과 신부 전우림 양은<br />소중한 가족과 친지, 그리고 두 사람을 아껴주시는 하객 여러분 앞에서<br />서로를 사랑하고 존중하며, 평생 함께 걸어갈 것을 약속하였습니다.",
             "두 사람이 오늘 나눈 이 약속이<br />앞으로의 삶 속에서도 변함없이 이어지기를 바라며,<br />이 자리에 함께하신 모든 분들의 축복을 담아<br />두 사람이 정식으로 부부가 되었음을 선언합니다.",
@@ -2064,7 +2066,9 @@
           ]
         },
         {
+          id: "appendix-father-remark",
           title: "신랑 아버지 덕담",
+          shortTitle: "아버지 덕담",
           lines: [
             "안녕하십니까? 오늘 결혼하는 신랑 정경하의 아버지 정창우입니다.",
             "양가 가족을 대표하여 우리 아들 경하와 새 가족이 된 우림이의 앞날을 축복해 주시고 격려해 주시기 위해 바쁘신 와중에도 귀한 발걸음을 해주신 양가의 가족들과 친지, 친구들, 그리고 모든 하객 여러분께 진심으로 감사의 말씀을 드립니다.",
@@ -2088,7 +2092,9 @@
           ]
         },
         {
+          id: "appendix-vows",
           title: "혼인서약",
+          shortTitle: "혼인서약",
           lines: [
             "<strong>신랑 정경하:</strong><br />사랑하는 우림아.<br />너를 만나고, 함께 시간을 보내며<br />내 삶의 많은 순간들이 더 따뜻해졌습니다.",
             "오늘 나는 너의 남편이 되어<br />앞으로의 모든 계절을 함께 걸어가려 합니다.<br />기쁜 날에는 너와 마음껏 웃고,<br />힘든 날에는 조용히 곁을 지키는 사람이 되겠습니다.",
@@ -2171,7 +2177,7 @@
               ${appendix
                 .map(
                   (item) => `
-                  <article>
+                  <article class="appendix-item" id="${item.id}" data-title="${item.title}" data-summary="부록 원문" data-nav-label="부록 · ${item.shortTitle || item.title}">
                     <h3>${item.title}</h3>
                     <div class="reader">${item.lines.map((line) => `<p class="line">${line}</p>`).join("")}</div>
                   </article>`
@@ -2187,12 +2193,15 @@
               (section) =>
                 `<a href="#section-${section.no}" title="${section.title}"><small>${section.no}</small><span>${section.shortTitle || section.title}</span></a>`
             )
-            .join("") + `<a href="#appendix"><small>+</small><span>부록</span></a>`;
+            .join("") +
+          appendix
+            .map((item) => `<a href="#${item.id}" title="${item.title}"><small>+</small><span>${item.shortTitle || item.title}</span></a>`)
+            .join("");
 
         mobileJump.innerHTML =
           `<option value="">순서 이동</option>` +
           sections.map((section) => `<option value="section-${section.no}">${section.no}. ${section.shortTitle || section.title}</option>`).join("") +
-          `<option value="appendix">부록</option>`;
+          appendix.map((item) => `<option value="${item.id}">부록 · ${item.shortTitle || item.title}</option>`).join("");
 
         mobileIndexList.innerHTML =
           sections
@@ -2200,7 +2209,10 @@
               (section) =>
                 `<button type="button" data-index-jump="section-${section.no}"><small>${section.no}</small><span>${section.shortTitle || section.title}</span></button>`
             )
-            .join("") + `<button type="button" data-index-jump="appendix"><small>+</small><span>부록</span></button>`;
+            .join("") +
+          appendix
+            .map((item) => `<button type="button" data-index-jump="${item.id}"><small>+</small><span>${item.shortTitle || item.title}</span></button>`)
+            .join("");
       };
 
       const updateTopbarMetrics = () => {
@@ -2211,13 +2223,20 @@
 
       const isCompact = () => compactQuery.matches;
 
-      const sectionIds = () => [...document.querySelectorAll(".section")].map((section) => section.id);
+      const navTargets = () => [...document.querySelectorAll(".section:not(#appendix), .appendix-item")];
+
+      const sectionIds = () => navTargets().map((section) => section.id);
 
       const sequenceLabel = (id) => {
         const section = document.querySelector(`#${id}`);
         if (!section) return "";
-        const number = section.querySelector(".section-number")?.textContent || "";
-        const title = sections.find((item) => `section-${item.no}` === id)?.shortTitle || section.dataset.title || section.querySelector("h2")?.textContent || "";
+        const number = section.dataset.number || section.querySelector(".section-number")?.textContent || "";
+        const title =
+          sections.find((item) => `section-${item.no}` === id)?.shortTitle ||
+          appendix.find((item) => item.id === id)?.shortTitle ||
+          section.dataset.title ||
+          section.querySelector("h2, h3")?.textContent ||
+          "";
         return number && number !== "+" ? `${number}. ${title}` : title;
       };
 
@@ -2248,7 +2267,7 @@
       };
 
       const syncCurrentSection = (id) => {
-        const allSections = [...document.querySelectorAll(".section")];
+        const allSections = navTargets();
         const current = document.querySelector(`#${id}`);
         if (!current) return;
         allSections.forEach((section) => section.classList.toggle("current", section === current));
@@ -2256,9 +2275,9 @@
           link.classList.toggle("active", link.getAttribute("href") === `#${id}`);
         });
         mobileJump.value = id;
-        const sectionTitle = current.dataset.title || current.querySelector("h2")?.textContent || "현재 순서";
-        const sectionNumber = current.querySelector(".section-number")?.textContent || "";
-        const summary = current.querySelector(".section-summary")?.textContent || "";
+        const sectionTitle = current.dataset.navLabel || current.dataset.title || current.querySelector("h2, h3")?.textContent || "현재 순서";
+        const sectionNumber = current.dataset.number || current.querySelector(".section-number")?.textContent || "";
+        const summary = current.dataset.summary || current.querySelector(".section-summary")?.textContent || "";
         const title = sectionNumber && sectionNumber !== "+" ? `${sectionNumber}. ${sectionTitle}` : sectionTitle;
         headerCurrent.innerHTML = `<strong>${title}</strong>${summary ? `<span>${summary}</span>` : ""}`;
         topbar.dataset.dialogLabel = `${title} 진행 도구`;
@@ -2361,7 +2380,7 @@
         pendingJumpId = id;
         const topbarHeight = updateTopbarMetrics();
         const compact = isCompact();
-        const targetTop = compact ? target.offsetTop : target.getBoundingClientRect().top + window.scrollY;
+        const targetTop = target.getBoundingClientRect().top + window.scrollY;
         const scrollTop = Math.max(0, targetTop - topbarHeight - 16);
         if (compact) {
           const previousScrollBehavior = document.documentElement.style.scrollBehavior;
@@ -2380,7 +2399,7 @@
 
       const moveSection = (direction) => {
         const ids = sectionIds();
-        const currentId = document.querySelector(".section.current")?.id || ids[0];
+        const currentId = navTargets().find((target) => target.classList.contains("current"))?.id || ids[0];
         const currentIndex = Math.max(0, ids.indexOf(currentId));
         const nextIndex = Math.min(ids.length - 1, Math.max(0, currentIndex + direction));
         scrollToSection(ids[nextIndex]);
@@ -2389,7 +2408,7 @@
       const setActive = () => {
         if (pendingJumpId) return;
         const readingOffset = updateTopbarMetrics() + 24;
-        const allSections = [...document.querySelectorAll(".section")];
+        const allSections = navTargets();
         let current = allSections[0];
         for (let index = allSections.length - 1; index >= 0; index -= 1) {
           if (allSections[index].getBoundingClientRect().top <= readingOffset) {
