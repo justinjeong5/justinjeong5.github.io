@@ -1483,8 +1483,9 @@
 
         .mobile-flow-search {
           position: fixed;
-          right: max(0.5rem, calc((100vw - 34rem) / 2 + 0.5rem));
+          right: auto;
           bottom: calc(4.65rem + env(safe-area-inset-bottom));
+          left: 50%;
           z-index: 23;
           display: grid;
           grid-template-columns: minmax(0, 1fr) 2.75rem;
@@ -1494,12 +1495,16 @@
           min-width: 0;
           overflow: visible;
           padding: 0.25rem;
-          transition: width 180ms ease;
+          transform: translateX(calc(-50% + min(calc((100vw - 1.5rem) / 2), 17rem) - 1.625rem));
+          transition:
+            transform 180ms ease,
+            width 180ms ease;
         }
 
         .mobile-flow-search.open {
           gap: 0.38rem;
-          width: min(calc(100vw - 1rem), 34.5rem);
+          width: min(calc(100vw - 1.5rem), 34rem);
+          transform: translateX(-50%);
         }
 
         .topbar:not(.collapsed) ~ .mobile-search-dock,
