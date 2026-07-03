@@ -334,6 +334,10 @@
         display: none;
       }
 
+      .mobile-flow-search {
+        display: none;
+      }
+
       .desktop-step-actions {
         display: none;
       }
@@ -1478,18 +1482,27 @@
         }
 
         .mobile-flow-search {
+          position: fixed;
+          right: max(0.75rem, calc((100vw - 34rem) / 2 + 0.75rem));
+          bottom: calc(4.9rem + env(safe-area-inset-bottom));
+          z-index: 23;
           display: grid;
           grid-template-columns: minmax(0, 1fr) 2.75rem;
           gap: 0.38rem;
-          justify-self: end;
           width: 2.75rem;
+          max-width: min(calc(100vw - 1.5rem), 34rem);
           min-width: 0;
           overflow: hidden;
           transition: width 180ms ease;
         }
 
         .mobile-flow-search.open {
-          width: 100%;
+          width: min(calc(100vw - 1.5rem), 34rem);
+        }
+
+        .topbar:not(.collapsed) ~ .mobile-search-dock,
+        .topbar.index-open ~ .mobile-search-dock {
+          display: none;
         }
 
         .mobile-search-field {
@@ -1553,6 +1566,15 @@
           border-radius: 999px;
           background: currentColor;
           transform: translate(0.42rem, 0.42rem) rotate(45deg);
+        }
+
+        .mobile-search-toggle:hover {
+          outline: 0;
+        }
+
+        .mobile-search-toggle:focus-visible {
+          outline: 2px solid color-mix(in srgb, var(--accent) 38%, transparent);
+          outline-offset: 2px;
         }
 
         .mobile-flow-search.open .mobile-search-toggle::before {
@@ -1738,13 +1760,13 @@
         <button class="mobile-flow-current" type="button" data-action="tools" aria-label="현재 순서 1. 개식예고, 진행 도구 열기"><span id="mobile-flow-current">1. 개식예고</span></button>
         <button type="button" data-action="next">다음</button>
       </div>
-      <div class="mobile-flow-search" id="mobile-flow-search">
-        <div class="mobile-search-field">
-          <input class="search" id="search" type="search" placeholder="대본 검색" aria-label="대본 검색" autocomplete="off" />
-        </div>
-        <button class="mobile-search-toggle" type="button" data-action="search-toggle" aria-expanded="false" aria-label="대본 검색 열기"></button>
-      </div>
     </nav>
+    <div class="mobile-flow-search mobile-search-dock" id="mobile-flow-search">
+      <div class="mobile-search-field">
+        <input class="search" id="search" type="search" placeholder="대본 검색" aria-label="대본 검색" autocomplete="off" />
+      </div>
+      <button class="mobile-search-toggle" type="button" data-action="search-toggle" aria-expanded="false" aria-label="대본 검색 열기"></button>
+    </div>
 
     <div class="shell">
       <nav id="toc" hidden aria-hidden="true"></nav>
@@ -2514,6 +2536,7 @@
       document.querySelector(".controls").addEventListener("click", handleAction);
       mobileIndexMenu.addEventListener("click", handleAction);
       mobileFlowBar.addEventListener("click", handleAction);
+      mobileFlowSearch.addEventListener("click", handleAction);
 
       indexToggle.addEventListener("click", () => {
         const shouldOpen = mobileIndexMenu.hasAttribute("hidden");
