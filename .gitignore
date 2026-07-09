@@ -186,5 +186,9 @@ public/sitemap.xml
 SESSION.md
 SESSION_HISTORY.md
 
+# Local print exports — generated for physical printing, not for publishing
+output/
+public/wedding/print/
+
 # Local Claude Code config
 .claude/
