@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+    <meta name="author" content="정경하" />
+    <meta property="og:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="description" content="GitHub Pages는 SSR이 없어 클라이언트 라우팅 새로고침 시 404가 뜬다. public/404.html에 SPA fallback redirect를 두면 해결." />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="GitHub Pages에서 SPA 라우팅을 동작시키는 404 트릭 | 정경하" />
+    <meta property="og:description" content="GitHub Pages는 SSR이 없어 클라이언트 라우팅 새로고침 시 404가 뜬다. public/404.html에 SPA fallback redirect를 두면 해결." />
+    <meta property="og:url" content="https://justinjeong5.github.io/notes/github-pages-spa-fallback/" />
+    <meta name="twitter:title" content="GitHub Pages에서 SPA 라우팅을 동작시키는 404 트릭 | 정경하" />
+    <meta name="twitter:description" content="GitHub Pages는 SSR이 없어 클라이언트 라우팅 새로고침 시 404가 뜬다. public/404.html에 SPA fallback redirect를 두면 해결." />
+    <link rel="canonical" href="https://justinjeong5.github.io/notes/github-pages-spa-fallback/" />
+    <title>GitHub Pages에서 SPA 라우팅을 동작시키는 404 트릭 | 정경하</title>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "GitHub Pages에서 SPA 라우팅을 동작시키는 404 트릭 | 정경하",
+  "description": "GitHub Pages는 SSR이 없어 클라이언트 라우팅 새로고침 시 404가 뜬다. public/404.html에 SPA fallback redirect를 두면 해결.",
+  "url": "https://justinjeong5.github.io/notes/github-pages-spa-fallback/",
+  "mainEntityOfPage": "https://justinjeong5.github.io/notes/github-pages-spa-fallback/",
+  "author": {
+    "@type": "Person",
+    "name": "정경하",
+    "url": "https://justinjeong5.github.io/",
+    "jobTitle": "Product-minded Frontend Engineer",
+    "sameAs": [
+      "https://github.com/justinjeong5"
+    ]
+  }
+}
+</script>
+    <script>
+      // 테마 사전 설정 — prerender된 HTML에 data-theme를 즉시 적용해 CSS flash를 막는다.
+      // (다른 스크립트보다 먼저 실행되어야 한다.)
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages — restore deep-link path written by 404.html
+      // https://github.com/rafgraph/spa-github-pages
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
+    </script>
+    <script type="module" crossorigin src="/assets/index-CGfvnX9D.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-QTnfLwEv.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-cases-CBUDB2ZQ.js">
+    <link rel="modulepreload" crossorigin href="/assets/router-DLpn8xiv.js">
+    <link rel="modulepreload" crossorigin href="/assets/search-CiN4C8Nu.js">
+    <link rel="modulepreload" crossorigin href="/assets/icons-BAaLLYA_.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-xPABecuM.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-essays-eznFQalv.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-logs-D1X2-vgQ.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-notes-C8z_T_Pg.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-sbCSPT96.css">
+    <link rel="stylesheet" crossorigin href="/assets/pretendard-NPFyShNs.css">
+  </head>
+  <body>
+    <div id="root"><a href="#main-content" class="skip-link">본문 바로가기</a><header class="site-nav" aria-label="Primary"><a class="brand" aria-label="정경하 홈" href="/" data-discover="true">JKH</a><nav class="primary-nav"><a class="nav-link" href="/cases" data-discover="true">Cases</a><a aria-current="page" class="nav-link is-active" href="/notes" data-discover="true">Notes</a><a class="nav-link" href="/essays" data-discover="true">Essays</a><a class="nav-link" href="/logs" data-discover="true">Logs</a><a class="nav-link" href="/about" data-discover="true">About</a></nav><div class="nav-actions"><button type="button" class="search-trigger" aria-label="검색" title="검색 (⌘K 또는 /)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg><span>검색</span><kbd>⌘K</kbd></button><button type="button" class="icon-button" aria-label="테마: 라이트. 클릭하여 변경" title="테마: 라이트 · T 키로도 전환"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg></button><button type="button" class="icon-button desktop-only" aria-label="키보드 단축키" aria-expanded="false" aria-haspopup="dialog" title="키보드 단축키 (? 키)"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-keyboard" aria-hidden="true"><path d="M10 8h.01"></path><path d="M12 12h.01"></path><path d="M14 8h.01"></path><path d="M16 12h.01"></path><path d="M18 8h.01"></path><path d="M6 8h.01"></path><path d="M7 16h10"></path><path d="M8 12h.01"></path><rect width="20" height="16" x="2" y="4" rx="2"></rect></svg></button><button type="button" class="icon-button menu-trigger" aria-label="메뉴 열기" aria-expanded="false" aria-haspopup="dialog" title="메뉴"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button></div></header><main id="main-content" tabindex="-1"><article class="page note-detail"><header class="page-header note-detail-header"><p class="eyebrow growth-eyebrow"><span aria-hidden="true">🌱</span>Seedling</p><h1>GitHub Pages에서 SPA 라우팅을 동작시키는 404 트릭</h1><p class="page-lead">GitHub Pages는 SSR이 없어 클라이언트 라우팅 새로고침 시 404가 뜬다. public/404.html에 SPA fallback redirect를 두면 해결.</p><ul class="topic-list" aria-label="topics"><li>#<!-- -->frontend</li><li>#<!-- -->github-pages</li><li>#<!-- -->routing</li><li>#<!-- -->deployment</li></ul></header><div class="prose"><h2>문제</h2>
+<p>React SPA를 GitHub Pages에 배포 → <code>/cases/proof-hub-rebuild</code> 깊은 링크 새로고침 → <strong>404</strong>.</p>
+<p>원인: GitHub Pages는 정적 파일 서버라 <code>/cases/proof-hub-rebuild</code> 경로 자체를 모름. SPA 라우팅은 클라이언트에서만 동작하므로 서버가 <code>/index.html</code>을 못 반환.</p>
+<h2>해결 — spa-github-pages 패턴</h2>
+<p><code>public/404.html</code>에 redirect 스크립트:</p>
+<pre><code class="language-html">&lt;script&gt;
+  var l = window.location;
+  l.replace(
+    l.protocol + &#x27;//&#x27; + l.hostname + l.pathname.split(&#x27;/&#x27;).slice(0, 1).join(&#x27;/&#x27;) +
+    &#x27;/?/&#x27; + l.pathname.slice(1) + (l.search ? &#x27;&amp;&#x27; + l.search.slice(1) : &#x27;&#x27;) + l.hash,
+  );
+&lt;/script&gt;
+</code></pre>
+<p><code>index.html</code> <code>&lt;head&gt;</code>에 복원 스크립트:</p>
+<pre><code class="language-js">(function (l) {
+  if (l.search[1] === &#x27;/&#x27;) {
+    var decoded = l.search.slice(1).split(&#x27;&amp;&#x27;).join(&#x27;?&#x27;);
+    window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+  }
+})(window.location);
+</code></pre>
+<p>흐름: 404 → 쿼리로 변환 → SPA mount → history API로 URL 복원.</p>
+<h2>이 사이트에서 — 실제 적용 기록</h2>
+<p>이 노트는 일반론이 아니라 <strong>이 사이트가 지금 쓰는 패턴</strong>이다. justinjeong5.github.io는 user site(<code>*.github.io</code>)라 <code>pathSegmentsToKeep = 0</code>. <code>public/404.html</code>이 redirect를, <code>index.html</code> <code>&lt;head&gt;</code>가 복원을 담당한다.</p>
+<p>실제로 겪은 두 가지:</p>
+<ul>
+<li><strong>빌드 산출물에 404.html이 들어가야 한다</strong>: Vite <code>public/</code>에 두면 <code>dist/404.html</code>로 복사된다. 처음엔 <code>src</code>에 뒀다가 dist에 안 들어가 deep-link가 계속 404. <code>public/</code>이 정답.</li>
+<li><strong>로컬 dev에선 재현 안 됨</strong>: Vite dev 서버는 SPA fallback을 자동 처리해서 <code>/cases/x</code> 새로고침이 로컬에선 멀쩡하다. <strong>GitHub Pages 배포 후에야 404가 드러난다.</strong> 그래서 로컬 통과 = 안전이 아니다 — 배포 후 deep-link 새로고침을 반드시 수동 확인.</li>
+</ul>
+<p>이 트릭 덕분에 <code>/cases/*</code>·<code>/notes/*</code> 깊은 링크를 공유해도 새로고침이 깨지지 않는다.</p>
+<h2>함정</h2>
+<ul>
+<li><code>pathSegmentsToKeep</code> — user/org site (<code>*.github.io</code>)는 <code>0</code>, project site는 <code>1</code></li>
+<li>검색엔진은 404 redirect를 그대로 따라오지 못할 수 있음 (SEO 약함)</li>
+<li>메타 OG 태그는 모두 index.html 기본값만 적용 (페이지별 동적 OG 불가)</li>
+</ul>
+<h2>대안</h2>
+<p>진짜 SEO·동적 OG가 필요하면 Next.js SSG 또는 Astro로 빌드 후 GitHub Pages. 다만 빌드 복잡도 ↑.</p>
+<h2>관련</h2>
+<p><a href="/notes/mdx-content-as-files">/notes/mdx-content-as-files</a> — 콘텐츠를 파일로 두고 라우팅과 분리하면 SPA fallback과도 잘 맞물린다
+<a href="/notes/vite-manual-chunks">/notes/vite-manual-chunks</a> — fallback 흐름에 함께 영향 받는 첫 로드 청크 크기 다루기
+<a href="/cases/proof-hub-rebuild">/cases/proof-hub-rebuild</a> — 이 라우팅이 적용된 사이트 리빌드 케이스</p></div><section class="related-block"><h2>관련 노트</h2><ul class="note-grid"><li><a class="note-card" href="/notes/mdx-content-as-files" data-discover="true"><h3><span aria-hidden="true">🌳</span> <!-- -->콘텐츠 = 파일 — MDX + Vite의 자동 확장 패턴</h3><p>콘텐츠 한 개 = MDX 파일 한 개. import.meta.glob으로 자동 인덱싱하면 코드 수정 없이 사이트가 확장된다.</p></a></li><li><a class="note-card" href="/notes/dispatch-routing-pattern" data-discover="true"><h3><span aria-hidden="true">🌳</span> <!-- -->dispatch — 의도 기반 라우팅 패턴</h3><p>모든 사용자 메시지를 3 에이전트 경쟁으로 최적 스킬에 라우팅. 키워드 매칭이 아닌 의미론적 의도 분석.</p></a></li><li><a class="note-card" href="/notes/korean-letter-spacing" data-discover="true"><h3><span aria-hidden="true">🌿</span> <!-- -->한국어 letter-spacing — Pretendard에서 -0.025em이 상한</h3><p>영문 헤딩의 -0.04em letter-spacing은 한국어에 적용하면 받침 있는 자모가 뭉친다. -0.02em ~ -0.025em이 한글 균형점.</p></a></li><li><a class="note-card" href="/notes/vite-manual-chunks" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->vite manualChunks — vendor와 콘텐츠를 분리해 캐시 효율 ↑</h3><p>단일 청크는 작은 콘텐츠 변경에도 전체 재다운로드. vendor(거의 안 바뀜) + 콘텐츠(자주 바뀜) 분리하면 캐시 hit 비율 ↑, 첫 로드도 줄어든다.</p></a></li></ul></section><footer class="page-footer"><a class="see-all-link" href="/notes" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg> 노트 목록</a></footer></article></main><footer class="site-footer"><div class="footer-brand"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg>정경하</span><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open-text" aria-hidden="true"><path d="M12 7v14"></path><path d="M16 12h2"></path><path d="M16 8h2"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path><path d="M6 12h2"></path><path d="M6 8h2"></path></svg>Cases, notes, logs, and proof of work</span></div><nav class="footer-nav" aria-label="Secondary"><a href="/uses" data-discover="true">Uses</a><a href="/now" data-discover="true">Now</a><a href="/reading" data-discover="true">Reading</a><a href="/cv" data-discover="true">CV</a></nav><span class="footer-meta"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-clock" aria-hidden="true"><path d="M16 14v2.2l1.6 1"></path><path d="M16 2v4"></path><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"></path><path d="M3 10h5"></path><path d="M8 2v4"></path><circle cx="16" cy="16" r="6"></circle></svg>Updated <!-- -->2026-07-06 21:30</span></footer></div>
+  </body>
+</html>

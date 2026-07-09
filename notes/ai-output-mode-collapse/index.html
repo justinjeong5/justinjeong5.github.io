@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+    <meta name="author" content="정경하" />
+    <meta property="og:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="description" content="AI에게 &quot;5개 더&quot;를 반복했더니 다섯 묶음이 다 닮아 있었다. 다양성은 모델의 기본값이 아니다 — 워크플로우로 강제해야 나온다." />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="AI 반복 위임의 mode collapse — 출력이 한 점으로 수렴한다 | 정경하" />
+    <meta property="og:description" content="AI에게 &quot;5개 더&quot;를 반복했더니 다섯 묶음이 다 닮아 있었다. 다양성은 모델의 기본값이 아니다 — 워크플로우로 강제해야 나온다." />
+    <meta property="og:url" content="https://justinjeong5.github.io/notes/ai-output-mode-collapse/" />
+    <meta name="twitter:title" content="AI 반복 위임의 mode collapse — 출력이 한 점으로 수렴한다 | 정경하" />
+    <meta name="twitter:description" content="AI에게 &quot;5개 더&quot;를 반복했더니 다섯 묶음이 다 닮아 있었다. 다양성은 모델의 기본값이 아니다 — 워크플로우로 강제해야 나온다." />
+    <link rel="canonical" href="https://justinjeong5.github.io/notes/ai-output-mode-collapse/" />
+    <title>AI 반복 위임의 mode collapse — 출력이 한 점으로 수렴한다 | 정경하</title>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "AI 반복 위임의 mode collapse — 출력이 한 점으로 수렴한다 | 정경하",
+  "description": "AI에게 \"5개 더\"를 반복했더니 다섯 묶음이 다 닮아 있었다. 다양성은 모델의 기본값이 아니다 — 워크플로우로 강제해야 나온다.",
+  "url": "https://justinjeong5.github.io/notes/ai-output-mode-collapse/",
+  "mainEntityOfPage": "https://justinjeong5.github.io/notes/ai-output-mode-collapse/",
+  "author": {
+    "@type": "Person",
+    "name": "정경하",
+    "url": "https://justinjeong5.github.io/",
+    "jobTitle": "Product-minded Frontend Engineer",
+    "sameAs": [
+      "https://github.com/justinjeong5"
+    ]
+  }
+}
+</script>
+    <script>
+      // 테마 사전 설정 — prerender된 HTML에 data-theme를 즉시 적용해 CSS flash를 막는다.
+      // (다른 스크립트보다 먼저 실행되어야 한다.)
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages — restore deep-link path written by 404.html
+      // https://github.com/rafgraph/spa-github-pages
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
+    </script>
+    <script type="module" crossorigin src="/assets/index-CGfvnX9D.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-QTnfLwEv.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-cases-CBUDB2ZQ.js">
+    <link rel="modulepreload" crossorigin href="/assets/router-DLpn8xiv.js">
+    <link rel="modulepreload" crossorigin href="/assets/search-CiN4C8Nu.js">
+    <link rel="modulepreload" crossorigin href="/assets/icons-BAaLLYA_.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-xPABecuM.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-essays-eznFQalv.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-logs-D1X2-vgQ.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-notes-C8z_T_Pg.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-sbCSPT96.css">
+    <link rel="stylesheet" crossorigin href="/assets/pretendard-NPFyShNs.css">
+  </head>
+  <body>
+    <div id="root"><a href="#main-content" class="skip-link">본문 바로가기</a><header class="site-nav" aria-label="Primary"><a class="brand" aria-label="정경하 홈" href="/" data-discover="true">JKH</a><nav class="primary-nav"><a class="nav-link" href="/cases" data-discover="true">Cases</a><a aria-current="page" class="nav-link is-active" href="/notes" data-discover="true">Notes</a><a class="nav-link" href="/essays" data-discover="true">Essays</a><a class="nav-link" href="/logs" data-discover="true">Logs</a><a class="nav-link" href="/about" data-discover="true">About</a></nav><div class="nav-actions"><button type="button" class="search-trigger" aria-label="검색" title="검색 (⌘K 또는 /)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg><span>검색</span><kbd>⌘K</kbd></button><button type="button" class="icon-button" aria-label="테마: 라이트. 클릭하여 변경" title="테마: 라이트 · T 키로도 전환"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg></button><button type="button" class="icon-button desktop-only" aria-label="키보드 단축키" aria-expanded="false" aria-haspopup="dialog" title="키보드 단축키 (? 키)"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-keyboard" aria-hidden="true"><path d="M10 8h.01"></path><path d="M12 12h.01"></path><path d="M14 8h.01"></path><path d="M16 12h.01"></path><path d="M18 8h.01"></path><path d="M6 8h.01"></path><path d="M7 16h10"></path><path d="M8 12h.01"></path><rect width="20" height="16" x="2" y="4" rx="2"></rect></svg></button><button type="button" class="icon-button menu-trigger" aria-label="메뉴 열기" aria-expanded="false" aria-haspopup="dialog" title="메뉴"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button></div></header><main id="main-content" tabindex="-1"><article class="page note-detail"><header class="page-header note-detail-header"><p class="eyebrow growth-eyebrow"><span aria-hidden="true">🌱</span>Seedling</p><h1>AI 반복 위임의 mode collapse — 출력이 한 점으로 수렴한다</h1><p class="page-lead">AI에게 &quot;5개 더&quot;를 반복했더니 다섯 묶음이 다 닮아 있었다. 다양성은 모델의 기본값이 아니다 — 워크플로우로 강제해야 나온다.</p><ul class="topic-list" aria-label="topics"><li>#<!-- -->ai</li><li>#<!-- -->workflow</li><li>#<!-- -->collaboration</li><li>#<!-- -->content</li></ul></header><div class="prose"><h2>다섯 묶음을 한자리에 놓고서야 알았다</h2>
+<p>이 사이트의 주간 글을 AI에게 맡기는 잡을 돌리고 있다. 매주 &quot;초안 5개 써줘&quot;를 던지고, 다음 주에 또 &quot;5개 더&quot;를 던졌다. 한 묶음씩 보면 매번 괜찮았다. 그러다 몇 주치를 한 화면에 펼쳐 놓고서야 보였다 — 같은 목소리, 같은 뼈대, 같은 추상화 수준. 형식도 관점도 거의 한 점으로 모여 있었다.</p>
+<p>코드에서도 같은 걸 봤다. &quot;테스트 케이스 더 만들어줘&quot;는 같은 형태만 반복했고, &quot;이 컴포넌트 변형 만들어줘&quot;는 미묘하게 같은 레이아웃을 돌려줬다. 개별 산출물의 품질 문제가 아니었다. 묶음의 <strong>분포</strong>가 죽어 있었다. 이게 mode collapse다.</p>
+<h2>왜 수렴하는가</h2>
+<p>LLM은 다음 토큰을 확률 분포에서 고른다. 별다른 제약이 없으면 <strong>고확률 영역</strong>(가장 &quot;전형적&quot;인 표현)을 반복 샘플링한다. 같은 프롬프트를 반복하면 매번 그 분포의 중심 근처에서 뽑으니 출력이 한 점으로 모인다.</p>
+<p>사람은 &quot;지난번과 다르게 써야지&quot;라는 메타 인지가 자동으로 작동한다. AI는 그 제약을 프롬프트에 명시하지 않으면 매 호출을 <strong>독립적으로</strong> 처리해서 직전 출력을 회피하지 않는다.</p>
+<p>(용어 주의: &quot;mode collapse&quot;는 본래 GAN에서 생성기가 소수 출력만 내는 현상을 가리킨다. LLM의 반복 생성 수렴은 엄밀히는 mode-seeking 샘플링·낮은 다양성에 가깝지만, &quot;출력이 한 점으로 모인다&quot;는 직관이 같아 빌려 쓴다.)</p>
+<p>핵심: <strong>다양성은 모델의 기본값이 아니다.</strong> 명시적 제약이 없으면 평균으로 수렴한다.</p>
+<h2>잡 자체를 고쳤다</h2>
+<p>그래서 글쓰기 잡의 프롬프트를 바꿨다. 핵심은 매번 분포를 다른 영역으로 밀어내는 제약을 명시적으로 넣는 것이었다.</p>
+<p>먼저 라운드마다 &quot;이번 묶음의 시그니처&quot;를 박아 넣었다. &quot;5개 더&quot;가 아니라 &quot;직전과 다른 축으로 5개&quot;가 프롬프트다.</p>
+<pre><code>직전 5개: 메타 운영 관점, 자기 경험 소스
+이번 5개: 외부 데이터 소스(API·통계), 구체 코드 중심
+→ 관점·소스·추상화 수준을 직전과 다르게
+</code></pre>
+<p>그리고 직전에 이미 만든 것들의 목록을 회피 대상으로 같이 던진다. &quot;이것들과 토픽·구조가 겹치지 않게.&quot; 모델이 회피 제약을 받으면 분포의 중심이 아니라 다른 영역에서 샘플링한다.</p>
+<p>묶음 안의 분산은 차원 매트릭스로 강제했다. 5개가 각각 다른 셀을 채우도록 먼저 표를 정의해 두면, 생성이 자동으로 흩어진다.</p>
+<table><thead><tr><th>항목</th><th>형식</th><th>관점</th><th>추상화</th></tr></thead><tbody><tr><td>1</td><td>코드 노트</td><td>구체</td><td>낮음</td></tr><tr><td>2</td><td>회고</td><td>경험</td><td>중간</td></tr><tr><td>3</td><td>에세이</td><td>원칙</td><td>높음</td></tr></tbody></table>
+<p>마지막으로, 만든 뒤에 묶음을 분포로 다시 측정한다. &quot;5개 중 4개가 같은 형식&quot;이면 또 수렴한 것이고, 그건 <a href="/notes/coverage-gap-analysis">coverage gap 분석</a>으로 잡는다. 사람이 눈으로 닮음을 발견하던 단계를 잡 안으로 끌어들인 셈이다.</p>
+<h2>일반화 — 콘텐츠만의 문제가 아니다</h2>
+<p>mode collapse는 모든 반복 AI 위임에 나타난다.</p>
+<ul>
+<li><strong>코드 생성</strong>: 같은 패턴·같은 추상화. &quot;다른 접근으로 한 번 더&quot;를 명시 안 하면 첫 답의 변주만.</li>
+<li><strong>테스트 생성</strong>: happy path만 반복. &quot;엣지·에러·경계 케이스&quot;를 차원으로 명시해야 분산.</li>
+<li><strong>디자인 변형</strong>: 미묘하게 같은 레이아웃. &quot;완전히 다른 레이아웃 원리로&quot;를 강제.</li>
+<li><strong>네이밍·카피</strong>: 같은 톤. 후보를 뽑을 때 &quot;톤이 다른 3개&quot;를 명시.</li>
+</ul>
+<h2>함정</h2>
+<ul>
+<li><strong>&quot;창의적으로 해줘&quot;로 다양성 기대</strong>: 추상적 지시는 약하다. 구체적 회피 대상·차원을 명시해야 분산.</li>
+<li><strong>temperature만 높이기</strong>: 무작위성은 늘지만 품질이 떨어지고 진짜 다른 관점은 안 나온다. 제약이 무작위성보다 효과적.</li>
+<li><strong>한 번에 다 시키기</strong>: &quot;20개 써줘&quot;는 더 심한 수렴. 5개씩 + 직전 회피가 낫다.</li>
+<li><strong>수렴을 품질 문제로 오진</strong>: 각 항목은 잘 썼는데 묶음이 단조로운 것. 개별 품질이 아니라 분포의 문제.</li>
+<li><strong>사람도 같은 함정</strong>: 사람도 관성으로 비슷하게 만든다. mode collapse는 AI 고유가 아니라 명시적 다양성 제약의 부재 문제.</li>
+</ul>
+<h2>핵심</h2>
+<blockquote>
+<p>AI를 반복 위임할 때 진짜 일은 프롬프트 한 줄이 아니라, <strong>수렴을 감지하고 분포를 다시 벌리는 루프를 잡 안에 넣는 것</strong>이다. 다양성은 모델이 주는 게 아니라 워크플로우가 만든다.</p>
+</blockquote>
+<h2>관련</h2>
+<p><a href="/notes/coverage-gap-analysis">/notes/coverage-gap-analysis</a> — 생성물의 분포를 측정해 수렴 감지
+<a href="/notes/operationalizing-vague-requests">/notes/operationalizing-vague-requests</a> — &quot;다양하게&quot;를 측정 기준으로
+<a href="/notes/codex-competition">/notes/codex-competition</a> — 다른 모델로 분포 자체를 다양화
+<a href="/notes/dispatch-routing-pattern">/notes/dispatch-routing-pattern</a> — 3 에이전트 경쟁도 수렴 회피의 한 형태
+<a href="/essays/ai-coding-tools-six-months">/essays/ai-coding-tools-six-months</a> — AI 도구 6개월 사용 회고</p></div><section class="related-block"><h2>관련 노트</h2><ul class="note-grid"><li><a class="note-card" href="/notes/codex-competition" data-discover="true"><h3><span aria-hidden="true">🌳</span> <!-- -->Codex 경쟁 — 모든 작업을 두 번 굴려보기</h3><p>중요한 작업은 Claude와 Codex 두 모델에 동시에 던지고, 결론이 갈리는 지점만 사람이 판단한다. 내 검증 루프에 두 번째 모델을 상시 배치한 방식.</p></a></li><li><a class="note-card" href="/notes/dispatch-routing-pattern" data-discover="true"><h3><span aria-hidden="true">🌳</span> <!-- -->dispatch — 의도 기반 라우팅 패턴</h3><p>모든 사용자 메시지를 3 에이전트 경쟁으로 최적 스킬에 라우팅. 키워드 매칭이 아닌 의미론적 의도 분석.</p></a></li><li><a class="note-card" href="/notes/incident-ai-pair-debugging" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->새벽 장애를 AI 페어와 7단계로 — 결정은 사람, 검증은 AI</h3><p>알람이 울리면 가장 먼저 AI 세션을 연다. rollback 영향 범위부터 PR 본문까지 검증을 위임하고, 결정만 내 손에 남기는 야간 incident 워크플로우.</p></a></li><li><a class="note-card" href="/notes/operationalizing-vague-requests" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->AI에게 &quot;잘 해줘&quot;는 통하지 않는다 — 모호함을 측정 기준으로 번역하기</h3><p>AI에게 &quot;전체적으로 개선해줘&quot;를 던지면 매번 다른 결과가 나온다. 코드 0줄 쓰기 전에 모호한 품질 단어를 셀 수 있는 기준으로 번역하는 것 — 이게 내가 AI 위임에서 재작업을 줄이는 방식이다.</p></a></li><li><a class="note-card" href="/notes/plan-mode-one-shot" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->Plan Mode → Auto 1-shot — 재작업 30% 절감 패턴</h3><p>80%를 만들고서야 &quot;이게 아닌데&quot;를 깨닫던 AI 코딩 루프를, 코드 0줄 상태에서 방향을 합의하고 Auto로 한 번에 구현하는 워크플로우로 바꾼 기록.</p></a></li></ul></section><footer class="page-footer"><a class="see-all-link" href="/notes" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg> 노트 목록</a></footer></article></main><footer class="site-footer"><div class="footer-brand"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg>정경하</span><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open-text" aria-hidden="true"><path d="M12 7v14"></path><path d="M16 12h2"></path><path d="M16 8h2"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path><path d="M6 12h2"></path><path d="M6 8h2"></path></svg>Cases, notes, logs, and proof of work</span></div><nav class="footer-nav" aria-label="Secondary"><a href="/uses" data-discover="true">Uses</a><a href="/now" data-discover="true">Now</a><a href="/reading" data-discover="true">Reading</a><a href="/cv" data-discover="true">CV</a></nav><span class="footer-meta"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-clock" aria-hidden="true"><path d="M16 14v2.2l1.6 1"></path><path d="M16 2v4"></path><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"></path><path d="M3 10h5"></path><path d="M8 2v4"></path><circle cx="16" cy="16" r="6"></circle></svg>Updated <!-- -->2026-07-06 21:30</span></footer></div>
+  </body>
+</html>

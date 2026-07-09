@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+    <meta name="author" content="정경하" />
+    <meta property="og:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="description" content="서로 무관한 두 저장소가 같은 날, &quot;한 번만 조회하고 나머지를 조용히 버리는&quot; 같은 결함에 독립적으로 빠졌습니다. 게다가 한 저장소 안에서는 같은 버그를 한 곳만 고치고 복제 경로에 남겨, 12일 뒤 같은 자리가 또 터졌습니다. 공간축 재발에 시간축 재발이 겹친 한 결함 클래스의 기록입니다." />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="단발 조회가 초과분을 조용히 버린다 — truncation 결함의 시·공간 재발 | 정경하" />
+    <meta property="og:description" content="서로 무관한 두 저장소가 같은 날, &quot;한 번만 조회하고 나머지를 조용히 버리는&quot; 같은 결함에 독립적으로 빠졌습니다. 게다가 한 저장소 안에서는 같은 버그를 한 곳만 고치고 복제 경로에 남겨, 12일 뒤 같은 자리가 또 터졌습니다. 공간축 재발에 시간축 재발이 겹친 한 결함 클래스의 기록입니다." />
+    <meta property="og:url" content="https://justinjeong5.github.io/essays/silent-truncation-recurrence/" />
+    <meta name="twitter:title" content="단발 조회가 초과분을 조용히 버린다 — truncation 결함의 시·공간 재발 | 정경하" />
+    <meta name="twitter:description" content="서로 무관한 두 저장소가 같은 날, &quot;한 번만 조회하고 나머지를 조용히 버리는&quot; 같은 결함에 독립적으로 빠졌습니다. 게다가 한 저장소 안에서는 같은 버그를 한 곳만 고치고 복제 경로에 남겨, 12일 뒤 같은 자리가 또 터졌습니다. 공간축 재발에 시간축 재발이 겹친 한 결함 클래스의 기록입니다." />
+    <link rel="canonical" href="https://justinjeong5.github.io/essays/silent-truncation-recurrence/" />
+    <title>단발 조회가 초과분을 조용히 버린다 — truncation 결함의 시·공간 재발 | 정경하</title>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "단발 조회가 초과분을 조용히 버린다 — truncation 결함의 시·공간 재발 | 정경하",
+  "description": "서로 무관한 두 저장소가 같은 날, \"한 번만 조회하고 나머지를 조용히 버리는\" 같은 결함에 독립적으로 빠졌습니다. 게다가 한 저장소 안에서는 같은 버그를 한 곳만 고치고 복제 경로에 남겨, 12일 뒤 같은 자리가 또 터졌습니다. 공간축 재발에 시간축 재발이 겹친 한 결함 클래스의 기록입니다.",
+  "url": "https://justinjeong5.github.io/essays/silent-truncation-recurrence/",
+  "mainEntityOfPage": "https://justinjeong5.github.io/essays/silent-truncation-recurrence/",
+  "author": {
+    "@type": "Person",
+    "name": "정경하",
+    "url": "https://justinjeong5.github.io/",
+    "jobTitle": "Product-minded Frontend Engineer",
+    "sameAs": [
+      "https://github.com/justinjeong5"
+    ]
+  },
+  "datePublished": "2026-06-29",
+  "dateModified": "2026-06-29"
+}
+</script>
+    <script>
+      // 테마 사전 설정 — prerender된 HTML에 data-theme를 즉시 적용해 CSS flash를 막는다.
+      // (다른 스크립트보다 먼저 실행되어야 한다.)
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages — restore deep-link path written by 404.html
+      // https://github.com/rafgraph/spa-github-pages
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
+    </script>
+    <script type="module" crossorigin src="/assets/index-CGfvnX9D.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-QTnfLwEv.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-cases-CBUDB2ZQ.js">
+    <link rel="modulepreload" crossorigin href="/assets/router-DLpn8xiv.js">
+    <link rel="modulepreload" crossorigin href="/assets/search-CiN4C8Nu.js">
+    <link rel="modulepreload" crossorigin href="/assets/icons-BAaLLYA_.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-xPABecuM.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-essays-eznFQalv.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-logs-D1X2-vgQ.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-notes-C8z_T_Pg.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-sbCSPT96.css">
+    <link rel="stylesheet" crossorigin href="/assets/pretendard-NPFyShNs.css">
+  </head>
+  <body>
+    <div id="root"><a href="#main-content" class="skip-link">본문 바로가기</a><header class="site-nav" aria-label="Primary"><a class="brand" aria-label="정경하 홈" href="/" data-discover="true">JKH</a><nav class="primary-nav"><a class="nav-link" href="/cases" data-discover="true">Cases</a><a class="nav-link" href="/notes" data-discover="true">Notes</a><a aria-current="page" class="nav-link is-active" href="/essays" data-discover="true">Essays</a><a class="nav-link" href="/logs" data-discover="true">Logs</a><a class="nav-link" href="/about" data-discover="true">About</a></nav><div class="nav-actions"><button type="button" class="search-trigger" aria-label="검색" title="검색 (⌘K 또는 /)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg><span>검색</span><kbd>⌘K</kbd></button><button type="button" class="icon-button" aria-label="테마: 라이트. 클릭하여 변경" title="테마: 라이트 · T 키로도 전환"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg></button><button type="button" class="icon-button desktop-only" aria-label="키보드 단축키" aria-expanded="false" aria-haspopup="dialog" title="키보드 단축키 (? 키)"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-keyboard" aria-hidden="true"><path d="M10 8h.01"></path><path d="M12 12h.01"></path><path d="M14 8h.01"></path><path d="M16 12h.01"></path><path d="M18 8h.01"></path><path d="M6 8h.01"></path><path d="M7 16h10"></path><path d="M8 12h.01"></path><rect width="20" height="16" x="2" y="4" rx="2"></rect></svg></button><button type="button" class="icon-button menu-trigger" aria-label="메뉴 열기" aria-expanded="false" aria-haspopup="dialog" title="메뉴"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button></div></header><main id="main-content" tabindex="-1"><article class="page essay-detail"><header class="page-header"><p class="eyebrow">Essay<!-- --> · 6분</p><h1>단발 조회가 초과분을 조용히 버린다 — truncation 결함의 시·공간 재발</h1><p class="page-lead">서로 무관한 두 저장소가 같은 날, &quot;한 번만 조회하고 나머지를 조용히 버리는&quot; 같은 결함에 독립적으로 빠졌습니다. 게다가 한 저장소 안에서는 같은 버그를 한 곳만 고치고 복제 경로에 남겨, 12일 뒤 같은 자리가 또 터졌습니다. 공간축 재발에 시간축 재발이 겹친 한 결함 클래스의 기록입니다.</p></header><div class="prose"><h2>같은 날, 두 저장소</h2>
+<p>6월 22일에 고친 버그 두 개를 나란히 놓고서야 같은 얼굴인 걸 알았습니다. 하나는 청약 공고 수집기(Python)였습니다. 청약홈 OpenAPI를 <code>page=1</code>, <code>perPage=100</code>으로 <strong>한 번만</strong> 호출하고 끝냈는데, 공고가 100건을 넘으면 101번째부터는 조용히 사라졌습니다. 다른 하나는 청첩장 관리자 대시보드(TypeScript)였습니다. 방문·행동 집계 쿼리가 <code>.limit(5000)</code> 단발 조회였는데, PostgREST 서버가 <code>max-rows</code> 기본값 1,000에서 응답을 잘랐습니다. 헬스체크 실측으로는 30일 분석 이벤트 8,900여 행 중 1,000행만 집계되고 있었습니다.</p>
+<p>도메인도, 언어도, 데이터 소스도 다릅니다. 공유하는 코드도 없습니다. 그런데 결함의 모양이 정확히 같았습니다. <strong>한 번 조회하고, 상한을 넘긴 나머지를 에러 없이 버린다.</strong> 같은 날 다른 저장소에서 같은 자리가 비어 있었습니다.</p>
+<p><a href="/essays/same-defect-class-across-repos">무관한 자동화 여섯 개가 같은 자리에서 무너졌다</a>에서 공간축 재발을 다뤘습니다. 그때의 결함 클래스는 원자적 쓰기·dry-run의 read-only 보장·per-item 격리였습니다. 이번엔 거기 없던 새 클래스가 같은 축으로 또 튀어나왔습니다 — 페이지네이션 truncation입니다.</p>
+<h2>truncation이 유독 위험한 이유</h2>
+<p>대부분의 버그는 무언가를 던집니다. 500이 나거나, 예외가 올라오거나, 타임아웃이 납니다. 그래서 모니터링이 잡습니다. truncation은 그렇지 않습니다. 서버는 200을 주고, 1,000행은 진짜 유효한 데이터이며, 코드는 정상적으로 끝납니다. <strong>&quot;부분 응답&quot;은 에러가 아니라 정상적인 성공으로 집계됩니다.</strong> 잘렸다는 신호가 응답 어디에도 없습니다.</p>
+<p>그래서 이 결함은 도입된 시점이 아니라 한참 뒤에 발견됩니다. 데이터가 상한 미만일 때는 멀쩡히 돌다가, 트래픽이 상한을 넘는 순간부터 조용히 일부만 세기 시작합니다. 대시보드는 여전히 숫자를 보여주고, 그 숫자는 그럴듯합니다. 다만 틀렸을 뿐입니다. 예식일처럼 트래픽이 몰리는 날일수록 더 많이 잘리고, 하필 그날 수치가 가장 중요합니다.</p>
+<h2>절단점 바깥에 있던 죽은 가드</h2>
+<p>더 뼈아픈 건 대시보드에 truncation을 감지하라고 둔 가드가 <strong>이미 있었다</strong>는 점입니다. <code>rows.length &gt;= 5000</code>이면 &quot;잘렸을 수 있음&quot;으로 표시하는 코드였습니다. 그런데 서버가 1,000행에서 먼저 자르니, 받은 행 수가 5,000에 닿을 길이 애초에 없었습니다. 가드의 임계가 실제 절단점보다 위에 있어서, 정의돼 있어도 영원히 발화하지 않는 <a href="/logs#2026-06-18-dead-safeguards">죽은 안전장치</a>였던 것입니다.</p>
+<p>이건 <a href="/notes/dead-retry-bounded-executor">정의만 되고 호출자가 0건이던 재시도</a>와 같은 계열의, 그러나 다른 모양입니다. 그건 &quot;안 돈다&quot;였고, 이건 &quot;돌 수 있는 좌표 밖에 있다&quot;입니다. 침묵을 막으라고 둔 가드가, 침묵하는 실패가 일어나는 지점과 다른 좌표계에 살고 있었습니다. 가드는 클라이언트가 요청한 상한(5,000)을 보고 있었고, 실패는 서버가 정한 상한(1,000)에서 일어났습니다.</p>
+<h2>시간축 재발 — 한 곳만 고치고 복제를 남겼다</h2>
+<p>대시보드의 이 버그는 사실 그 저장소에서 처음 본 얼굴도 아니었습니다. 12일 전, 같은 결함을 텔레그램 일일 브리핑에서 먼저 고쳤습니다. 그때도 <code>.limit()</code> 단발 조회가 서버 max-rows에 잘려, 전일 대비 수치가 이미 오염돼 있었습니다. 페이지네이션으로 고쳤고, 닫혔다고 생각했습니다.</p>
+<p>문제는 브리핑과 대시보드가 <strong>같은 쿼리를 각자 복제해서</strong> 쓰고 있었다는 것입니다. 한 곳을 고칠 때 복제본을 남기면, 그 복제가 다음 재발의 씨앗이 됩니다. 12일 뒤 헬스체크가 대시보드 쪽 잔존분을 잡았습니다. 같은 결함이 같은 저장소 안에서, 복제 경로를 타고 시간 간격을 두고 다시 터진 <a href="/notes/recurring-trap-to-checklist">시간축 재발</a>입니다.</p>
+<p>그래서 두 번째 수정은 페이지네이션을 또 한 벌 짜는 대신, 공용 헬퍼 하나로 추출하고 브리핑의 복제본까지 그 헬퍼로 흡수했습니다. 패치를 하나 더 바르는 게 아니라, <strong>복제 경로 자체를 없애 재발 계열을 제거</strong>하는 쪽입니다. 같은 버그를 N번째 고칠 땐 &quot;이 fix가 들어갈 자리가 여기 말고 또 어디 있나&quot;가 진짜 질문입니다.</p>
+<h2>&quot;가득 찬 페이지&quot; 가정을 버린다</h2>
+<p>페이지네이션으로 고칠 때도 함정이 하나 더 있었습니다. 흔한 종료 조건은 &quot;받은 행이 페이지 크기보다 적으면 마지막 페이지&quot;입니다. 그런데 서버 max-rows가 페이지 크기보다 작으면(여기선 1,000 &lt; 요청 크기), 첫 페이지부터 &quot;덜 찬 페이지&quot;로 보여 한 바퀴 만에 멈춰 버립니다 — truncation을 고치려던 코드가 같은 방식으로 다시 자르는 것입니다.</p>
+<p>그래서 종료 조건을 &quot;페이지가 가득 찼는가&quot;가 아니라 **&quot;빈 페이지가 나왔는가&quot;**로 바꾸고, 매번 실제로 받은 행 수만큼만 다음 오프셋을 전진시켰습니다. 이러면 서버 상한이 페이지 크기보다 낮아도 절단되지 않습니다. 이 불변식은 텔레그램 브리핑을 고칠 때 독립적인 리뷰 렌즈 두 개가 같은 결론으로 수렴해 찾아낸 것이고, 청약 수집기 쪽도 결국 같은 모양으로 — 짧은 페이지가 나올 때까지 돌고, 안전 상한(10페이지)에 닿으면 로그로 경고 — 정착했습니다.</p>
+<h2>메커니즘은 달라도 증상은 같다</h2>
+<p>공간축으로 묶인 두 사례의 원인은 사실 서로 다릅니다. 청약 수집기는 <code>perPage</code>를 100으로 명시한 단발 호출이었고, 대시보드는 PostgREST의 전역 <code>max-rows</code>라는 보이지 않는 서버 설정이었습니다. 한쪽은 내가 쓴 숫자, 다른 쪽은 인프라가 정한 숫자입니다. 그런데 증상은 똑같았습니다 — <strong>상한을 넘긴 데이터가 에러 없이 사라진다.</strong></p>
+<p>이게 결함 클래스로 묶이는 이유입니다. &quot;단발 조회 + 암묵적 상한&quot;이라는 구조는 그 상한이 내 코드에 있든 서버 설정에 있든 같은 침묵을 만듭니다. 그러니 처방도 출처를 가리지 않습니다. 외부에서 목록을 받아오는 모든 자리에 같은 질문을 던지면 됩니다 — &quot;이 응답에 상한이 있나? 있다면 넘쳤을 때 그걸 알 방법이 있나?&quot; 답이 &quot;끝까지 페이지를 넘긴다&quot;와 &quot;상한에 닿으면 시끄럽게 운다&quot; 둘 다 아니라면, 그 자리는 언젠가 조용히 일부만 세기 시작할 자리입니다.</p>
+<p>목록을 한 번에 가져오는 코드는, 그 목록이 짧을 때만 옳습니다. 길어질 수 있는 목록을 단발로 조회하는 순간, truncation은 버그가 아니라 예약된 미래입니다.</p>
+<p>관련: <a href="/essays/same-defect-class-across-repos">/essays/same-defect-class-across-repos</a>, <a href="/notes/recurring-trap-to-checklist">/notes/recurring-trap-to-checklist</a>, <a href="/notes/dead-retry-bounded-executor">/notes/dead-retry-bounded-executor</a>, <a href="/logs#2026-06-18-dead-safeguards">/logs#2026-06-18-dead-safeguards</a>, <a href="/logs#2026-06-07-healthcheck-six-bots">/logs#2026-06-07-healthcheck-six-bots</a></p></div><footer class="page-footer"><a class="see-all-link" href="/essays" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg> 에세이 목록</a></footer></article></main><footer class="site-footer"><div class="footer-brand"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg>정경하</span><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open-text" aria-hidden="true"><path d="M12 7v14"></path><path d="M16 12h2"></path><path d="M16 8h2"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path><path d="M6 12h2"></path><path d="M6 8h2"></path></svg>Cases, notes, logs, and proof of work</span></div><nav class="footer-nav" aria-label="Secondary"><a href="/uses" data-discover="true">Uses</a><a href="/now" data-discover="true">Now</a><a href="/reading" data-discover="true">Reading</a><a href="/cv" data-discover="true">CV</a></nav><span class="footer-meta"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-clock" aria-hidden="true"><path d="M16 14v2.2l1.6 1"></path><path d="M16 2v4"></path><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"></path><path d="M3 10h5"></path><path d="M8 2v4"></path><circle cx="16" cy="16" r="6"></circle></svg>Updated <!-- -->2026-07-06 21:30</span></footer></div>
+  </body>
+</html>

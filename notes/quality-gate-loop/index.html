@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+    <meta name="author" content="정경하" />
+    <meta property="og:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="description" content="모호한 품질 목표를 측정 가능한 rubric으로 바꾸고, 페르소나 평가로 채점한 뒤, 통과까지 개선·재평가하는 패턴." />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="quality-gate — 결정론적 평가·개선 루프 | 정경하" />
+    <meta property="og:description" content="모호한 품질 목표를 측정 가능한 rubric으로 바꾸고, 페르소나 평가로 채점한 뒤, 통과까지 개선·재평가하는 패턴." />
+    <meta property="og:url" content="https://justinjeong5.github.io/notes/quality-gate-loop/" />
+    <meta name="twitter:title" content="quality-gate — 결정론적 평가·개선 루프 | 정경하" />
+    <meta name="twitter:description" content="모호한 품질 목표를 측정 가능한 rubric으로 바꾸고, 페르소나 평가로 채점한 뒤, 통과까지 개선·재평가하는 패턴." />
+    <link rel="canonical" href="https://justinjeong5.github.io/notes/quality-gate-loop/" />
+    <title>quality-gate — 결정론적 평가·개선 루프 | 정경하</title>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "quality-gate — 결정론적 평가·개선 루프 | 정경하",
+  "description": "모호한 품질 목표를 측정 가능한 rubric으로 바꾸고, 페르소나 평가로 채점한 뒤, 통과까지 개선·재평가하는 패턴.",
+  "url": "https://justinjeong5.github.io/notes/quality-gate-loop/",
+  "mainEntityOfPage": "https://justinjeong5.github.io/notes/quality-gate-loop/",
+  "author": {
+    "@type": "Person",
+    "name": "정경하",
+    "url": "https://justinjeong5.github.io/",
+    "jobTitle": "Product-minded Frontend Engineer",
+    "sameAs": [
+      "https://github.com/justinjeong5"
+    ]
+  }
+}
+</script>
+    <script>
+      // 테마 사전 설정 — prerender된 HTML에 data-theme를 즉시 적용해 CSS flash를 막는다.
+      // (다른 스크립트보다 먼저 실행되어야 한다.)
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages — restore deep-link path written by 404.html
+      // https://github.com/rafgraph/spa-github-pages
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
+    </script>
+    <script type="module" crossorigin src="/assets/index-CGfvnX9D.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-QTnfLwEv.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-cases-CBUDB2ZQ.js">
+    <link rel="modulepreload" crossorigin href="/assets/router-DLpn8xiv.js">
+    <link rel="modulepreload" crossorigin href="/assets/search-CiN4C8Nu.js">
+    <link rel="modulepreload" crossorigin href="/assets/icons-BAaLLYA_.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-xPABecuM.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-essays-eznFQalv.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-logs-D1X2-vgQ.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-notes-C8z_T_Pg.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-sbCSPT96.css">
+    <link rel="stylesheet" crossorigin href="/assets/pretendard-NPFyShNs.css">
+  </head>
+  <body>
+    <div id="root"><a href="#main-content" class="skip-link">본문 바로가기</a><header class="site-nav" aria-label="Primary"><a class="brand" aria-label="정경하 홈" href="/" data-discover="true">JKH</a><nav class="primary-nav"><a class="nav-link" href="/cases" data-discover="true">Cases</a><a aria-current="page" class="nav-link is-active" href="/notes" data-discover="true">Notes</a><a class="nav-link" href="/essays" data-discover="true">Essays</a><a class="nav-link" href="/logs" data-discover="true">Logs</a><a class="nav-link" href="/about" data-discover="true">About</a></nav><div class="nav-actions"><button type="button" class="search-trigger" aria-label="검색" title="검색 (⌘K 또는 /)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg><span>검색</span><kbd>⌘K</kbd></button><button type="button" class="icon-button" aria-label="테마: 라이트. 클릭하여 변경" title="테마: 라이트 · T 키로도 전환"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg></button><button type="button" class="icon-button desktop-only" aria-label="키보드 단축키" aria-expanded="false" aria-haspopup="dialog" title="키보드 단축키 (? 키)"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-keyboard" aria-hidden="true"><path d="M10 8h.01"></path><path d="M12 12h.01"></path><path d="M14 8h.01"></path><path d="M16 12h.01"></path><path d="M18 8h.01"></path><path d="M6 8h.01"></path><path d="M7 16h10"></path><path d="M8 12h.01"></path><rect width="20" height="16" x="2" y="4" rx="2"></rect></svg></button><button type="button" class="icon-button menu-trigger" aria-label="메뉴 열기" aria-expanded="false" aria-haspopup="dialog" title="메뉴"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button></div></header><main id="main-content" tabindex="-1"><article class="page note-detail"><header class="page-header note-detail-header"><p class="eyebrow growth-eyebrow"><span aria-hidden="true">🌳</span>Evergreen</p><h1>quality-gate — 결정론적 평가·개선 루프</h1><p class="page-lead">모호한 품질 목표를 측정 가능한 rubric으로 바꾸고, 페르소나 평가로 채점한 뒤, 통과까지 개선·재평가하는 패턴.</p><ul class="topic-list" aria-label="topics"><li>#<!-- -->workflow</li><li>#<!-- -->verification</li><li>#<!-- -->ai</li><li>#<!-- -->design</li></ul></header><div class="prose"><h2>핵심 명제</h2>
+<p>&quot;좋아 보인다&quot;는 사람이 확인해야 하지만, &quot;rubric의 각 축이 4점 이상인가&quot;는 기계가 검증할 수 있다. 디자인·콘텐츠·코드 모두 동일하다.</p>
+<h2>표준 패턴</h2>
+<ol>
+<li><strong>목표 → rubric</strong>: &quot;세련되게&quot;를 8축으로 분해 (컬러 팔레트, 타이포, 일관성, 인터랙션, ...)</li>
+<li><strong>페르소나 평가</strong>: 디자이너·기획자·개발자 각자 자기 영역 채점</li>
+<li><strong>통과 기준</strong>: 평균 ≥ 4.5/5, 모든 항목 ≥ 4, FAIL 0</li>
+<li><strong>미달 시</strong>: 가장 점수 낮은 항목 1~2개 우선 개선 → 재평가</li>
+<li><strong>종료</strong>: 통과 또는 3 사이클 매몰 (진전 없음)</li>
+</ol>
+<h2>두 번의 적용 사례</h2>
+<h3>디자인 톤</h3>
+<ul>
+<li>사이클 1: 평균 3.28/5. 누런 cream + 그림자 + 하드코딩 hex 30+. &quot;엄청 못생겼어&quot; 피드백.</li>
+<li>사이클 3: 평균 4.44/5. white-zinc-indigo 토큰화, single source 회복.</li>
+</ul>
+<h3>모바일 최적화</h3>
+<ul>
+<li>사이클 1: 평균 2.75/5. iOS HIG 44 미달, viewport-fit 누락, focus trap 없음.</li>
+<li>사이클 3: 평균 4.75/5. iOS Safari 패키지 + 터치 타겟 + inert 패턴 + 콘텐츠 우선순위.</li>
+</ul>
+<h2>핵심 인사이트 세 가지</h2>
+<p><strong>평균이 아니라 최저 항목이 통과를 결정한다.</strong> 한 항목만 3점이어도 평균 4.7이라도 FAIL.</p>
+<p><strong>BLOCKING 항목은 별도 표시한다.</strong> 평균 통과해도 BLOCKING 4점 미만이면 게이트가 닫힌다.</p>
+<p><strong>rubric을 사전에 명확히 정의하지 않으면 평가가 흔들린다.</strong> &quot;터치 타겟&quot;이라는 단어만으로는 부족하고 &quot;iOS HIG 44×44 + 간격 충분&quot;으로 명세해야 채점 분산이 줄어든다.</p>
+<h2>임계를 어떻게 정하나 — 4.5 vs 4.7</h2>
+<p>통과 임계(평균 4.5? 4.7?)는 고정값이 아니라 <strong>작업의 외부 노출도</strong>로 정한다.</p>
+<table><thead><tr><th>임계</th><th>적용</th></tr></thead><tbody><tr><td>4.5</td><td>내부 작업, 되돌릴 수 있는 결정, 빠른 반복</td></tr><tr><td>4.7</td><td>외부 게시, 포트폴리오, 신뢰가 자산인 산출물</td></tr><tr><td>4.8+</td><td>한 번 나가면 회수 불가 (one-way door)</td></tr></tbody></table>
+<p>임계를 높이면 사이클이 늘고 비용이 커진다. 그래서 &quot;무조건 높게&quot;가 아니라 노출도에 맞춘다. 외부 게시 콘텐츠를 4.7로 두는 건 — 게시 후 회수가 <a href="/notes/one-way-two-way-door">one-way door</a>에 가깝고 신뢰 비용이 크기 때문이다.</p>
+<p>rubric 차원도 작업마다 다르다. 콘텐츠라면 &quot;일반화 가능성&quot;(독자에게 전이되는가)을 별도 축으로 두면 자기 참조적 글이 자동으로 걸러진다. 모호한 &quot;좋은 글&quot;을 <a href="/notes/operationalizing-vague-requests">측정 가능한 차원으로 번역</a>하는 게 rubric 설계의 핵심.</p>
+<h2>한계</h2>
+<ul>
+<li>페르소나가 코드만 보고 평가하면 실제 사용감 일부 놓침. 라이브 디바이스 검증이 종종 필요.</li>
+<li>같은 페르소나가 두 사이클 연속 평가하면 confirmation bias 생김 — 변경 요약을 명확히 전달해 판단 기준 재설정 필요.</li>
+</ul>
+<h2>함정</h2>
+<ul>
+<li><strong>rubric이 너무 복잡 → 평가가 노이즈</strong>: 7축 이상은 채점 분산이 커지고 일관성이 떨어짐. 4-6축이 적정.</li>
+<li><strong>평균만 보고 최저 4 무시</strong>: 평균 4.7이라도 한 항목 2점이면 사용자 체감 큰 약점. 통과 기준에 &quot;모든 항목 ≥ 4&quot; 포함.</li>
+<li><strong>사이클 무한 반복</strong>: 진전 없는데 3사이클 이상 굴리면 시간만 소비. &quot;3 사이클 매몰&quot; 룰 강제.</li>
+<li><strong>같은 페르소나가 두 번 평가</strong>: confirmation bias. 변경 요약을 명확히 전달해 기준 재설정.</li>
+<li><strong>BLOCKING 표시 안 함</strong>: 평균 통과해도 BLOCKING 4점 미만이면 게이트 닫혀야 한다. 사전에 BLOCKING 항목 명시.</li>
+</ul>
+<h2>관련</h2>
+<p><a href="/notes/deterministic-loop">/notes/deterministic-loop</a> — quality-gate가 적용하는 일반 검증 루프
+<a href="/notes/codex-competition">/notes/codex-competition</a> — 페르소나 평가의 모델 다양성 버전
+<a href="/notes/dispatch-routing-pattern">/notes/dispatch-routing-pattern</a> — 라우팅 결정에도 평가 루프
+<a href="/notes/operationalizing-vague-requests">/notes/operationalizing-vague-requests</a> — rubric은 모호한 목표의 번역
+<a href="/notes/self-persona-evaluation">/notes/self-persona-evaluation</a> — rubric에 본인 차원을 넣어 솔직한 BLOCKING 노출
+<a href="/cases/quality-gate-system">/cases/quality-gate-system</a> — 이 루프를 디자인·모바일·콘텐츠에 적용한 케이스</p></div><section class="related-block"><h2>관련 노트</h2><ul class="note-grid"><li><a class="note-card" href="/notes/codex-competition" data-discover="true"><h3><span aria-hidden="true">🌳</span> <!-- -->Codex 경쟁 — 모든 작업을 두 번 굴려보기</h3><p>중요한 작업은 Claude와 Codex 두 모델에 동시에 던지고, 결론이 갈리는 지점만 사람이 판단한다. 내 검증 루프에 두 번째 모델을 상시 배치한 방식.</p></a></li><li><a class="note-card" href="/notes/ai-output-mode-collapse" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->AI 반복 위임의 mode collapse — 출력이 한 점으로 수렴한다</h3><p>AI에게 &quot;5개 더&quot;를 반복했더니 다섯 묶음이 다 닮아 있었다. 다양성은 모델의 기본값이 아니다 — 워크플로우로 강제해야 나온다.</p></a></li><li><a class="note-card" href="/notes/dispatch-routing-pattern" data-discover="true"><h3><span aria-hidden="true">🌳</span> <!-- -->dispatch — 의도 기반 라우팅 패턴</h3><p>모든 사용자 메시지를 3 에이전트 경쟁으로 최적 스킬에 라우팅. 키워드 매칭이 아닌 의미론적 의도 분석.</p></a></li><li><a class="note-card" href="/notes/incident-ai-pair-debugging" data-discover="true"><h3><span aria-hidden="true">🌱</span> <!-- -->새벽 장애를 AI 페어와 7단계로 — 결정은 사람, 검증은 AI</h3><p>알람이 울리면 가장 먼저 AI 세션을 연다. rollback 영향 범위부터 PR 본문까지 검증을 위임하고, 결정만 내 손에 남기는 야간 incident 워크플로우.</p></a></li><li><a class="note-card" href="/notes/korean-letter-spacing" data-discover="true"><h3><span aria-hidden="true">🌿</span> <!-- -->한국어 letter-spacing — Pretendard에서 -0.025em이 상한</h3><p>영문 헤딩의 -0.04em letter-spacing은 한국어에 적용하면 받침 있는 자모가 뭉친다. -0.02em ~ -0.025em이 한글 균형점.</p></a></li></ul></section><footer class="page-footer"><a class="see-all-link" href="/notes" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg> 노트 목록</a></footer></article></main><footer class="site-footer"><div class="footer-brand"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg>정경하</span><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open-text" aria-hidden="true"><path d="M12 7v14"></path><path d="M16 12h2"></path><path d="M16 8h2"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path><path d="M6 12h2"></path><path d="M6 8h2"></path></svg>Cases, notes, logs, and proof of work</span></div><nav class="footer-nav" aria-label="Secondary"><a href="/uses" data-discover="true">Uses</a><a href="/now" data-discover="true">Now</a><a href="/reading" data-discover="true">Reading</a><a href="/cv" data-discover="true">CV</a></nav><span class="footer-meta"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-clock" aria-hidden="true"><path d="M16 14v2.2l1.6 1"></path><path d="M16 2v4"></path><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"></path><path d="M3 10h5"></path><path d="M8 2v4"></path><circle cx="16" cy="16" r="6"></circle></svg>Updated <!-- -->2026-07-06 21:30</span></footer></div>
+  </body>
+</html>
