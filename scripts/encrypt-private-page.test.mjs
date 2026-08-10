@@ -3,6 +3,7 @@ import { access, mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { test } from 'node:test';
+import vm from 'node:vm';
 
 import {
   GENERATED_PASSWORD_BYTES,
@@ -28,6 +29,13 @@ test('encryptHtml은 올바른 비밀번호로만 원문을 복원한다', () =>
   assert.equal(payload.cipher, 'AES-GCM');
   assert.equal(decryptPayload(payload, password), source);
   assert.throws(() => decryptPayload(payload, 'this password is wrong'));
+  assert.throws(() => encryptHtml(source, 'short-password'), /128비트/u);
+  assert.throws(() => encryptHtml(source, '', { allowWeakPassword: true }), /비어 있을 수 없습니다/u);
+  assert.throws(() => encryptHtml(source, '   ', { allowWeakPassword: true }), /비어 있을 수 없습니다/u);
+  assert.throws(() => encryptHtml(source, ' short-password ', { allowWeakPassword: true }), /앞뒤에는 공백/u);
+
+  const explicitlyWeakPayload = encryptHtml(source, 'short-password', { allowWeakPassword: true });
+  assert.equal(decryptPayload(explicitlyWeakPayload, 'short-password'), source);
 });
 
 test('매 암호화마다 salt와 IV와 암호문이 달라진다', () => {
@@ -56,7 +64,20 @@ test('보호 페이지에는 원문이 없고 sandbox에서 영구 저장 권한
   assert.match(protectedHtml, /noindex,nofollow,noarchive,nosnippet/);
   assert.match(protectedHtml, /sandbox="allow-scripts allow-modals/);
   assert.doesNotMatch(protectedHtml, /allow-same-origin/);
+  assert.match(protectedHtml, /frame\.srcdoc =/u);
+  assert.match(protectedHtml, /private-static-page-ready/u);
+  assert.match(protectedHtml, /event\.source !== frame\.contentWindow/u);
+  assert.match(protectedHtml, /event\.data\?\.parentBlocked !== true/u);
+  assert.match(protectedHtml, /frame\.srcdoc = ''/u);
+  assert.doesNotMatch(protectedHtml, /URL\.createObjectURL|new Blob/u);
   assert.match(protectedHtml, /비밀번호를 확인해주세요/);
+  assert.match(protectedHtml, /Safari 또는 Chrome에서 다시 열어주세요/u);
+  assert.match(protectedHtml, /autocapitalize="none" autocorrect="off" spellcheck="false"/u);
+  assert.match(protectedHtml, /passwordInput\.value\.trim\(\)/u);
+
+  const script = protectedHtml.match(/<script>\s*([\s\S]+)\s*<\/script>/u)?.[1];
+  assert.ok(script);
+  assert.doesNotThrow(() => new vm.Script(script));
 });
 
 test('generatePassword는 128비트 무작위 비밀번호만 만든다', () => {

@@ -43,6 +43,15 @@ export function assertGeneratedPassword(password) {
   }
 }
 
+function assertPassword(password) {
+  if (typeof password !== 'string' || password.trim().length === 0) {
+    throw new Error('비밀번호는 비어 있을 수 없습니다.');
+  }
+  if (password !== password.trim()) {
+    throw new Error('비밀번호 앞뒤에는 공백을 사용할 수 없습니다.');
+  }
+}
+
 export function prepareSourceHtml(source) {
   if (!/<head(?:\s[^>]*)?>/iu.test(source) || !/<\/html>/iu.test(source)) {
     throw new Error('완전한 HTML 문서가 아닙니다.');
@@ -65,7 +74,8 @@ export function prepareSourceHtml(source) {
 }
 
 export function encryptHtml(source, password, options = {}) {
-  assertGeneratedPassword(password);
+  if (options.allowWeakPassword) assertPassword(password);
+  else assertGeneratedPassword(password);
   const salt = options.salt ?? randomBytes(16);
   const iv = options.iv ?? randomBytes(12);
   const key = pbkdf2Sync(password, salt, PBKDF2_ITERATIONS, 32, 'sha256');
@@ -143,7 +153,7 @@ export function buildProtectedHtml(payload) {
       <p>공유받은 비밀번호를 입력하면 이 기기 안에서 내용을 복호화합니다.</p>
       <form id="unlockForm">
         <label for="password">비밀번호</label>
-        <input id="password" type="password" autocomplete="off" required autofocus />
+        <input id="password" type="password" autocomplete="current-password" autocapitalize="none" autocorrect="off" spellcheck="false" required autofocus />
         <button id="unlockButton" type="submit">열기</button>
         <div class="message" id="message" role="alert" aria-live="polite"></div>
       </form>
@@ -160,7 +170,8 @@ export function buildProtectedHtml(payload) {
       const button = document.querySelector('#unlockButton');
       const message = document.querySelector('#message');
       const frame = document.querySelector('#contentFrame');
-      let contentUrl;
+      const renderErrorCode = 'CONTENT_RENDER_FAILED';
+      const renderTimeoutMs = 8_000;
 
       const bytes = (value) => Uint8Array.from(atob(value), (character) => character.charCodeAt(0));
 
@@ -187,30 +198,74 @@ export function buildProtectedHtml(payload) {
         return new TextDecoder('utf-8', { fatal: true }).decode(plaintext);
       }
 
+      function renderContent(html) {
+        return new Promise((resolve, reject) => {
+          if (!('srcdoc' in frame)) {
+            reject(new Error(renderErrorCode));
+            return;
+          }
+
+          const token = Array.from(
+            crypto.getRandomValues(new Uint8Array(16)),
+            (value) => value.toString(16).padStart(2, '0'),
+          ).join('');
+          let timeoutId;
+
+          const cleanup = () => {
+            clearTimeout(timeoutId);
+            removeEventListener('message', handleReady);
+          };
+          const fail = () => {
+            cleanup();
+            frame.srcdoc = '';
+            reject(new Error(renderErrorCode));
+          };
+          const handleReady = (event) => {
+            if (
+              event.source !== frame.contentWindow
+              || event.data?.type !== 'private-static-page-ready'
+              || event.data?.token !== token
+              || event.data?.parentBlocked !== true
+            ) {
+              return;
+            }
+            cleanup();
+            resolve();
+          };
+
+          addEventListener('message', handleReady);
+          timeoutId = setTimeout(fail, renderTimeoutMs);
+          const readyScript = '<script>(()=>{let parentBlocked=false;try{void parent.document.body}catch{parentBlocked=true}parent.postMessage({type:"private-static-page-ready",token:"'
+            + token
+            + '",parentBlocked},"*")})()<\\/script>';
+          frame.srcdoc = /<\\/body>/iu.test(html)
+            ? html.replace(/<\\/body>/iu, readyScript + '</body>')
+            : html + readyScript;
+        });
+      }
+
       form.addEventListener('submit', async (event) => {
         event.preventDefault();
         button.disabled = true;
         button.textContent = '여는 중…';
         message.textContent = '';
         try {
-          const html = await decrypt(passwordInput.value);
+          const html = await decrypt(passwordInput.value.trim());
+          await renderContent(html);
           passwordInput.value = '';
-          contentUrl = URL.createObjectURL(new Blob([html], { type: 'text/html;charset=utf-8' }));
-          frame.src = contentUrl;
           frame.hidden = false;
           document.querySelector('#unlockView').hidden = true;
-        } catch {
+        } catch (error) {
           passwordInput.select();
-          message.textContent = '비밀번호를 확인해주세요.';
+          message.textContent = error?.message === renderErrorCode
+            ? '이 브라우저에서 내용을 표시하지 못했습니다. Safari 또는 Chrome에서 다시 열어주세요.'
+            : '비밀번호를 확인해주세요.';
         } finally {
           button.disabled = false;
           button.textContent = '열기';
         }
       });
 
-      addEventListener('beforeunload', () => {
-        if (contentUrl) URL.revokeObjectURL(contentUrl);
-      });
     })();
   </script>
 </body>
