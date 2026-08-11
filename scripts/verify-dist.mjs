@@ -17,6 +17,56 @@ const rootDir = path.resolve(fileURLToPath(new URL('..', import.meta.url)));
 const DEFAULT_DIST_DIR = path.join(rootDir, 'dist');
 const DEFAULT_PROTECTED_MANIFEST_PATH = path.join(rootDir, 'scripts/private-pages.manifest.json');
 const PROTECTED_ROOT = 'shared';
+const GOOGLE_AUTH_MODE = 'google-supabase-whitelist';
+
+function normalizeManifestEntry(entry) {
+  if (typeof entry === 'string') return { mode: 'encrypted', digest: entry };
+  if (
+    entry
+    && typeof entry === 'object'
+    && !Array.isArray(entry)
+    && entry.mode === GOOGLE_AUTH_MODE
+    && typeof entry.digest === 'string'
+  ) {
+    return entry;
+  }
+  return null;
+}
+
+function verifyGoogleAuthPage(html, relativePath) {
+  const requiredPatterns = [
+    /BUILD: google-auth-only/iu,
+    /id="authGate"/u,
+    /id="appShell"[^>]*\shidden(?:\s|>)/u,
+    /signInWithOAuth/u,
+    /sb_publishable_[A-Za-z0-9_-]+/u,
+    /<script src="https:\/\/cdn\.jsdelivr\.net\/npm\/@supabase\/supabase-js@\d+\.\d+\.\d+" integrity="sha384-[A-Za-z0-9+/=]+" crossorigin="anonymous"><\/script>/u,
+    /function unlockApplication\(\)[\s\S]{0,240}#appShell"\)\.hidden = false/u,
+    /async function checkWhitelistAccess[\s\S]+?supabaseClient\.rpc\("is_couple_budget_user_allowed"\)[\s\S]+?if \(!authAccess\.allowed\)[\s\S]+?clearLocalBudgetCache\(\)[\s\S]+?return false;[\s\S]+?await loadCloudAndUnlock\(\)/u,
+    /function captureCloudSession\(\)[\s\S]+?generation:\s*authSessionGeneration[\s\S]+?function isCloudSessionCurrent\(session\)[\s\S]+?authSessionGeneration === session\.generation[\s\S]+?isCloudReady\(\)/u,
+    /async function loadCloudAndUnlock[\s\S]+?loadSession = captureCloudSession\(\)[\s\S]+?syncMeta\.connectionFingerprint[\s\S]+?clearLocalBudgetCache\(\)[\s\S]+?readCloudSnapshot\(\)[\s\S]+?if \(!isCloudSessionCurrent\(loadSession\)\)[\s\S]+?if \(syncMeta\.dirty\)[\s\S]+?remoteVersion !== knownVersion[\s\S]+?showSyncConflict\(remote\)[\s\S]+?writeCloudSnapshot\(\)[\s\S]+?if \(!isCloudSessionCurrent\(loadSession\)\)[\s\S]+?applyCloudSnapshot\(remote[\s\S]+?unlockApplication\(\)/u,
+    /async function prepareCloudAccess[\s\S]+?if \(!await checkWhitelistAccess\(\{ syncAfter: false \}\)\) return false;/u,
+  ];
+  const missing = requiredPatterns.find((pattern) => !pattern.test(html));
+  if (missing) return `${relativePath} Google 인증 보호 마커가 누락됨`;
+  if (/['"]sb_secret_[A-Za-z0-9_-]+['"]/u.test(html)) {
+    return `${relativePath}에 프런트엔드 사용 금지 Supabase secret key가 포함됨`;
+  }
+  if (/[\w.%+-]+@[\w.-]+\.[A-Za-z]{2,}/u.test(html)) {
+    return `${relativePath}에 이메일 allowlist가 평문으로 포함됨`;
+  }
+  if (/TOKEN_REFRESHED[\s\S]{0,500}allowed:\s*true/u.test(html)) {
+    return `${relativePath}가 토큰 갱신 시 서버 화이트리스트 재검증을 우회함`;
+  }
+  if (/else\s*\{\s*unlockApplication\(\);\s*renderSyncStatus/u.test(html)) {
+    return `${relativePath}가 주기적 화이트리스트 확인마다 화면을 최상단으로 이동함`;
+  }
+  const staleResponseGuards = html.match(/if \(!isCloudSessionCurrent\([^)]*\)\)/gu) || [];
+  if (staleResponseGuards.length < 8) {
+    return `${relativePath}의 클라우드 응답 세션 재검증이 일부 경로에서 누락됨`;
+  }
+  return null;
+}
 
 // 정적 라우트 하한(routes.js STATIC 라우트 수) — 이보다 적으면 정적 페이지조차 누락된 파국.
 // 콘텐츠 무결성의 1차 가드는 parity(route수==sitemap loc수)와 마커 검사다:
@@ -77,6 +127,11 @@ async function verifyProtectedPages(distDir, providedManifest) {
     errors.push(`보호 페이지 manifest 경로 형식 불일치 — ${invalidManifestKeys.join(',')}`);
     return { errors, protectedPages: 0 };
   }
+  const invalidManifestEntries = manifestKeys.filter((key) => !normalizeManifestEntry(manifest.pages[key]));
+  if (invalidManifestEntries.length > 0) {
+    errors.push(`보호 페이지 manifest 항목 형식 불일치 — ${invalidManifestEntries.join(',')}`);
+    return { errors, protectedPages: 0 };
+  }
   const protectedPageIds = manifestKeys.map((key) => key.match(PROTECTED_PAGE_KEY_PATTERN)[1]).sort();
 
   const protectedRoot = path.join(distDir, PROTECTED_ROOT);
@@ -125,6 +180,17 @@ async function verifyProtectedPages(distDir, providedManifest) {
     }
     protectedPages++;
 
+    const manifestEntry = normalizeManifestEntry(manifest.pages[relativePath]);
+    if (manifestEntry.mode === GOOGLE_AUTH_MODE) {
+      const authError = verifyGoogleAuthPage(html, relativePath);
+      if (authError) errors.push(authError);
+      const digest = `sha256-${createHash('sha256').update(html).digest('base64')}`;
+      if (manifestEntry.digest !== digest) {
+        errors.push(`${relativePath} 해시가 보호 페이지 manifest와 일치하지 않음`);
+      }
+      continue;
+    }
+
     const match = html.match(/const payload = (\{[^;]+\});/u);
     if (!match) {
       errors.push(`${relativePath}에 암호화 payload가 없음`);
@@ -170,7 +236,7 @@ async function verifyProtectedPages(distDir, providedManifest) {
       errors.push(`${relativePath}가 canonical 보호 페이지 출력과 일치하지 않음`);
     }
     const digest = `sha256-${createHash('sha256').update(html).digest('base64')}`;
-    if (manifest?.pages?.[relativePath] !== digest) {
+    if (manifestEntry.digest !== digest) {
       errors.push(`${relativePath} 해시가 보호 페이지 manifest와 일치하지 않음`);
     }
   }

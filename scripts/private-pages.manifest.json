@@ -1,6 +1,9 @@
 {
   "version": 1,
   "pages": {
-    "shared/5535ce5e830e6aec2912501d/index.html": "sha256-RrLEnU6zxEN4Z6ps59KKGhGh1Ea3+cMevw2aXispGj4="
+    "shared/5535ce5e830e6aec2912501d/index.html": {
+      "mode": "google-supabase-whitelist",
+      "digest": "sha256-muBm1Dp1d9W8JAJVS4LGxLXhqmAATVr2lLetvjU5FvI="
+    }
   }
 }
