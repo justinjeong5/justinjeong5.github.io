@@ -1,0 +1,69 @@
+---
+title: 첫 오픈소스 기여와 권한의 경계 — Fork, PR, 그리고 신뢰 모델
+date: '2026-08-18 13:45'
+type: Building
+summary: AI 코딩 토큰을 메뉴바에 띄워주는 오픈소스 PokeTokenBar에 Antigravity 2.0 지원을 기여하며 겪은 기록. 사내 단일 저장소 협업과 오픈소스 Fork & Pull 모델의 구조적 차이, Fork가 단순 복제가 아니라 Git 객체 참조라는 점, 그리고 런타임 크래시 픽스와 Before/After 증거까지 챙긴 오픈소스 PR 엔지니어링 과정을 정리했다.
+---
+
+## 맥락
+
+로컬에서 AI 코딩 토큰 사용량을 메뉴바에서 포켓몬과 함께 모니터링하는 오픈소스 도구인 PokeTokenBar를 사용하고 있다. Claude Code나 Codex, Gemini 등 다양한 도구의 로컬 사용량을 잘 추적해 주는데, 최근 Antigravity 2.0(AGY 2.0) 환경으로 작업하면서 Antigravity의 토큰 사용량이 메뉴바에 집계되지 않는 현상을 발견했다.
+
+오픈소스 코드를 직접 열어보니 원인은 경로 탐색에 있었다. 기존 코드는 레거시 CLI 경로인 `~/.gemini/antigravity-cli/conversations/*.db`만 하드코딩으로 조회하고 있었는데, 현재 Antigravity 2.0 및 IDE 환경에서는 `~/.gemini/antigravity/conversations/` 또는 `~/.gemini/antigravity-ide/conversations/`에 대화 DB가 생성된다.
+
+로컬에서 심볼릭 링크로 우회할 수도 있었지만, 오픈소스에 직접 기여하여 다른 사용자들도 별도 설정 없이 바로 쓸 수 있도록 기능을 개선하고 PR을 올리기로 했다.
+
+## 발견과 설계 — 통합 탭과 Multi-Root 탐색
+
+코드를 수정하기 전 제품의 철학과 구조를 먼저 검토했다.
+
+1. **분리인가, 통합인가 (One Tool Ecosystem = One Tab)**  
+   Antigravity CLI, 2.0, IDE를 별도 탭으로 쪼갤 것인지, 아니면 하나로 합칠 것인지 고민했다. PokeTokenBar의 다른 프로바이더(Claude Code의 CLI와 Desktop 등)를 보니 실행 환경과 무관하게 서비스 단위로 1개의 탭을 제공하고 있었다. 사용자가 관심 있는 건 "이 AI 플랫폼에서 오늘 총 얼마를 썼는가"이지, 탭이 파편화되는 것이 아니었다.
+   게다가 DB 내부의 `response_id` 기반 중복 제거(`LocalUsageReader.dedupKeepMax`)가 이미 구현되어 있어, 여러 폴더를 동시에 훑어도 토큰이 이중 집계될 위험이 없었다. 따라서 단일 `Antigravity` 탭으로 통합 집계하기로 결정했다.
+
+2. **Multi-Root Discovery**  
+   `defaultRoots` 배열을 두어 `antigravity`, `antigravity-cli`, `antigravity-ide` 후보 디렉토리를 모두 순회하도록 `LocalAntigravityUsageReader`와 캐시 계층을 개편했다. 기존 단일 경로 호출자들과의 하위 호환성을 위해 오버로드 시그니처도 온전히 유지했다.
+
+## 사내 협업 vs 오픈소스 협업 — 왜 Clone이 아니라 Fork인가?
+
+사내 프로젝트에만 익숙하다 보면 처음 오픈소스에 기여할 때 권한 모델에서 생소함을 느끼기 쉽다.
+
+* **사내 공유 저장소 모델 (Shared Repository Model)**: 팀원 모두가 저장소 쓰기(Write) 권한을 가진다. 원본을 바로 `clone`하고, 저장소 안에 브랜치를 따서 같은 저장소의 `main`으로 PR을 올린다.
+* **오픈소스 포크 모델 (Fork & Pull Model)**: 불특정 다수에게 원본 쓰기 권한을 열어둘 수 없다. 그래서 외부 기여자는 원본 저장소를 내 계정으로 **Fork(복사)**한 뒤, 내 저장소에 푸시하고 원본 저장소의 `main`으로 머지를 요청(PR)한다.
+
+여기서 Fork는 단순히 ZIP 파일로 코드를 내려받아 새로 올리는 것과 완전히 다르다. GitHub은 부모 저장소(`upstream`)와 자식 저장소(`fork`)의 관계를 시스템적으로 연결해 둔다. Git의 커밋 히스토리 그래프(DAG)와 객체 포인터를 그대로 공유하기 때문에, Git은 내 브랜치가 원본의 정확히 어느 커밋에서 갈라져 나왔는지를 알고 3-way Merge와 정밀한 diff 계산을 수행할 수 있다.
+
+PR 화면의 사이드바에서 Reviewer나 Assignee를 내가 직접 지정할 수 없는 이유도 여기에 있다. 외부 기여자에게는 원본 저장소의 관리 권한이 없기 때문이다. 대신 오픈소스에서는 PR을 올리면 메인테이너에게 알림이 가고, 메인테이너가 이를 검토하여 스스로 리뷰어를 지정하거나 머지하는 자율적인 흐름으로 작동한다.
+
+## 뜻밖의 발견 — Swift 6 Actor Isolation 크래시 수정
+
+기능 구현 후 로컬에서 직접 빌드하여 팝오버를 열어보던 중, 첫 클릭 시 앱이 비정상 종료(`SIGTRAP / _dispatch_assert_queue_fail`)되는 현상을 마주쳤다.
+
+진단 로그를 분석해 보니 `@MainActor`로 선언된 `UsageStore` 클래스에서 팝오버 첫 오픈 시 알림 권한을 요청하는 `UNUserNotificationCenter.requestAuthorization`의 completion handler 클로저가 백그라운드 큐에서 실행되면서, Swift 6의 엄격한 동시성 검사(Strict Concurrency Check)와 충돌하고 있었다.
+
+```swift
+// ❌ 백그라운드 콜백이 MainActor 컨텍스트와 충돌하여 크래시 발생
+UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { _, _ in }
+
+// ✅ Swift Concurrency Task와 async/await로 안전하게 전환
+Task {
+    try? await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound])
+}
+```
+
+이 버그는 최신 macOS 15 / Swift 6 환경에서 팝오버를 처음 여는 모든 사용자가 겪을 수 있는 런타임 크래시였다. Antigravity 기능 추가와 함께 이 픽스를 함께 포함하여 PR의 완성도를 한 단계 더 높였다.
+
+## PR의 품질 — 기술 설명보다 '왜 필요한가'와 '어떻게 달라지는가'
+
+오픈소스 PR을 작성할 때는 불특정 다수의 컨트리뷰터와 바쁜 메인테이너를 배려해야 한다. 구체적인 구현 코드는 diff로 확인하면 되지만, **"이 작업이 왜 필요한지(Why)"**와 **"적용하면 무엇이 어떻게 바뀌는지(Before & After)"**는 PR 본문에서 명확히 전달되어야 한다.
+
+1. **명확한 전후 비교 (Visual Evidence)**: Antigravity 탭이 보이지 않던 Before 화면과, 16.5M 토큰이 정상 집계되어 탭이 활성화된 After 화면을 나란히 캡처하여 첨부했다.
+2. **레포지토리 컨벤션 준수**: 프로젝트의 `CONTRIBUTING.md`와 `PULL_REQUEST_TEMPLATE.md`를 분석하여 Conventional Commits 영문 제목, 단위 테스트 케이스별 검증 목표, 로컬 재현 커맨드까지 꼼꼼히 채웠다.
+
+## 회고
+
+오픈소스는 코드만 던져놓는 곳이 아니라 신뢰(Trust)를 교환하는 곳이다.
+
+작은 경로 추가 작업이었지만, 도구의 UX 철학에 맞는 설계 판단을 내리고, 잠재된 런타임 크래시를 선제적으로 잡아내고, 메인테이너가 1분 안에 납득할 수 있는 증거와 문서를 갖추는 일련의 과정 자체가 큰 배움이었다.
+
+꾸준히 신뢰할 수 있는 기여를 쌓아가다 보면 단순한 기여자(Contributor)를 넘어 프로젝트의 협력자(Collaborator)로 성장하게 된다. 오늘 보낸 첫 PR([chattymin/PokeTokenBar#182](https://github.com/chattymin/PokeTokenBar/pull/182))이 그 좋은 출발점이 되어줄 것이다.
