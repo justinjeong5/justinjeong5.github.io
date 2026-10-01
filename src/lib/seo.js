@@ -7,9 +7,9 @@
 export const SITE_URL = 'https://justinjeong5.github.io';
 
 export const DEFAULT_META = {
-  title: '정경하 | Product-minded Frontend Engineer',
+  title: '정경하 | Frontend Engineer',
   description:
-    '정경하의 개인 사이트. 제품 문제 해결, 프론트엔드, 자동화, 운영 경험을 케이스 스터디와 빌더 로그로 정리합니다.',
+    '운영 제품의 상태, 외부 응답의 계약, 기술 변경의 호환과 후속 대응을 실제 업무 기록과 관련 글로 연결합니다.',
 };
 
 // 경로를 정본 URL로 정규화한다. 홈('/')은 루트, 나머지는 trailing slash를 붙인다.
@@ -27,8 +27,8 @@ export function toCanonical(path) {
 export const STATIC_META = {
   '/': DEFAULT_META,
   '/cases': {
-    title: '일하는 방식의 기록 | 정경하',
-    description: '문제 → 의사결정(버린 선택지) → 산출물 → 임팩트로 정리한 제품·실무 케이스와 빌더 로그.',
+    title: '판단과 구현의 기록 | 정경하',
+    description: '문제·본인 판단·협업·구현·확인 범위를 제품과 운영, 외부 계약, 기술 선택의 세 관점으로 읽습니다.',
   },
   '/notes': {
     title: '디지털 가든 | 정경하',
@@ -40,7 +40,7 @@ export const STATIC_META = {
   },
   '/logs': {
     title: '빌더 로그 | 정경하',
-    description: '오늘 만든 것·막힌 것·다음 시도를 시간순으로 쌓는 빌더 로그.',
+    description: '이전 회고의 주제와 설계 질문을 다시 정리한 작업 로그. 당시 결과와 현재 검증 범위를 구분합니다.',
   },
   '/uses': {
     title: '지금 쓰는 도구 | 정경하',
@@ -59,8 +59,8 @@ export const STATIC_META = {
     description: '정경하가 일하는 방식과 운영 원칙, 그리고 이 사이트에 대하여.',
   },
   '/cv': {
-    title: '시간순 이력 | 정경하',
-    description: '정경하의 시간순 경력과 이력.',
+    title: '실제 기록을 먼저 읽기 | 정경하',
+    description: '이전 이력 페이지 대신 판단과 구현의 기록을 읽는 안내입니다.',
   },
 };
 
@@ -96,7 +96,8 @@ export function resolveMeta(url, getters) {
     return {
       title: `${entry.title} | 정경하`,
       description: entry.summary || DEFAULT_META.description,
-      canonical,
+      canonical: entry.archived === true && /^\/(cases|notes|essays)\/[^/?#]+$/.test(entry.supersededBy || '') ? toCanonical(entry.supersededBy) : canonical,
+      robots: entry.archived === true ? 'noindex, follow' : 'index, follow',
       ogType: 'article',
       datePublished: entry.date || undefined,
       dateModified: entry.updated || entry.date || undefined,

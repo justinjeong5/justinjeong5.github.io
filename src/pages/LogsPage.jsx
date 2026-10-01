@@ -36,8 +36,8 @@ function LogsPage() {
     <div className="page page-list">
       <header className="page-header">
         <p className="eyebrow">Builder log</p>
-        <h1>오늘 만든 것, 막힌 것, 다음 시도</h1>
-        <p>큰 프로젝트가 아니어도 작은 판단·개선이 다음 기회의 입력이 되도록 시간순으로 쌓습니다.</p>
+        <h1>작업 기록에서 남긴 질문</h1>
+        <p>이전 회고의 주제와 설계 질문을 다시 정리했습니다. 표시는 원래 기록 날짜이며, 당시 실행·출시·효과를 이번에 새로 검증한 성과로 사용하지 않습니다.</p>
       </header>
 
       {logs.length === 0 ? (
@@ -57,7 +57,7 @@ function LogsPage() {
                   <span className="log-date">{log.date}</span>
                   <span className={`log-type log-type-${(log.type || 'building').toLowerCase()}`}>
                     <Sprout size={14} aria-hidden="true" />
-                    {log.type}
+                    {log.type === 'Reviewed' ? '재정리' : log.type}
                   </span>
                 </header>
                 <h2>{log.title}</h2>

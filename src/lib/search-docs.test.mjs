@@ -51,6 +51,11 @@ test('buildDocsFrom: 인자 없으면 빈 배열', () => {
   assert.deepEqual(buildDocsFrom({}), []);
 });
 
+test('buildDocsFrom: archived aliases are not searchable', () => {
+  const archived = { slug: 'old', title: 'Old', archived: true };
+  assert.deepEqual(buildDocsFrom({ cases: [archived], notes: [archived], essays: [archived], logs: [archived] }), []);
+});
+
 test('groupByType: 타입별로 그룹핑하고 알 수 없는 타입은 무시', () => {
   const results = [
     { type: 'case', slug: 'c1' },

@@ -52,6 +52,7 @@ function makeFakeDoc() {
   const els = {
     title: makeEl(),
     'meta[name="description"]': makeEl(),
+    'meta[name="robots"]': makeEl(),
     'meta[property="og:type"]': makeEl(),
     'meta[property="og:title"]': makeEl(),
     'meta[property="og:description"]': makeEl(),
@@ -92,6 +93,14 @@ test('applyMetaToDom: ogType 누락 시 website로 기본값', () => {
   const doc = makeFakeDoc();
   applyMetaToDom(doc, { title: 'T', description: 'D', canonical: `${SITE_URL}/x/` });
   assert.equal(doc.els['meta[property="og:type"]'].attrs.content, 'website');
+});
+
+test('navigation from an archived page restores normal indexing metadata', () => {
+  const doc = makeFakeDoc();
+  applyMetaToDom(doc, { ...sampleMeta, robots: 'noindex, follow' });
+  assert.equal(doc.els['meta[name="robots"]'].attrs.content, 'noindex, follow');
+  applyMetaToDom(doc, sampleMeta);
+  assert.equal(doc.els['meta[name="robots"]'].attrs.content, 'index, follow');
 });
 
 test('applyMetaToDom: 누락된 head 요소가 있어도 throw하지 않는다', () => {

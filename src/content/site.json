@@ -1,62 +1,31 @@
 {
   "name": "정경하",
-  "role": "Product-minded Frontend Engineer",
-  "headline": "제품 문제를 빠르게 구조화하고, 프론트엔드를 중심으로 백엔드·자동화까지 연결해 실제 운영 흐름을 개선합니다.",
-  "summary": "AI 워크플로우로 실행을 레버리지하는 엔지니어입니다. 모호한 제품 문제를 구조화하고, 다수의 에이전트·자동화로 작게 빠르게 배포해 운영 흐름을 움직입니다.",
+  "role": "Frontend Engineer",
+  "headline": "운영자의 행동, 외부 응답, 기술 변경의 경계를 다룹니다.",
+  "summary": "광고 운영 도구와 앱 내 웹 제품에서 문제를 구체화하고 디자인·QA·서버 담당자와 구현 범위를 조율했습니다. 여기에는 제안부터 후속 수정까지 확인된 과정을 연결했습니다.",
   "location": "Seoul, Korea",
   "email": "justin.jeong5@gmail.com",
   "github": "https://github.com/justinjeong5",
   "avatar": "https://github.com/justinjeong5.png?size=512",
   "currentFocus": [
-    "반복 운영 업무를 줄이는 자동화 시스템 설계",
-    "사용자 행동 데이터를 읽는 제품 개선 루프",
-    "다수 AI 에이전트로 품질을 검증하는 워크플로우"
+    "상태를 이해하고 행동하는 운영 제품",
+    "외부 계약과 비동기 결과의 경계",
+    "기술 선택의 호환과 후속 대응"
   ],
   "featuredCaseSlugs": [
-    "home-radar-system",
-    "team-onboarding-doc-system",
-    "dispatch-routing-system"
+    "bulk-partial-results",
+    "bridge-observation-contract",
+    "build-cache-compatibility"
   ],
   "featuredEssaySlugs": [
     "why-not-traditional-resume",
-    "two-sided-market-decisions",
-    "ai-workflow-chains"
+    "context-before-preference",
+    "automation-doesnt-reduce-work"
   ],
-  "heroProof": [
-    {
-      "label": "What I shipped",
-      "value": "수작업 → 0분",
-      "detail": "공개 API 7곳을 묶은 부동산 레이더로 주 1–2시간 수동 수집을 완전 자동화했습니다."
-    },
-    {
-      "label": "How I leverage AI",
-      "value": "워크플로우를 시스템화",
-      "detail": "dispatch·품질 게이트·페르소나 토론을 직접 만들어 다수 에이전트가 교차 검증하도록 강제합니다."
-    },
-    {
-      "label": "Team impact",
-      "value": "온보딩 절반으로",
-      "detail": "온보딩 문서 시스템으로 첫 PR을 5–7일에서 2–3일로, 첫 배포 책임을 3개월에서 1.5개월로 당겼습니다."
-    }
-  ],
-  "visitorPaths": [
-    {
-      "audience": "Hiring manager",
-      "question": "이 사람에게 우리 제품 문제를 맡길 수 있을까?",
-      "answer": "케이스의 '제품·실무'에서 문제·결정·산출물·임팩트를, '빌더 로그'에서 일하는 방식을 확인합니다.",
-      "to": "/cases"
-    },
-    {
-      "audience": "Teammate",
-      "question": "같이 일하면 어떤 방식으로 움직일까?",
-      "answer": "About의 운영 원칙과 노트에서 협업·검증 습관을 봅니다.",
-      "to": "/about"
-    },
-    {
-      "audience": "Future me",
-      "question": "오늘의 판단을 어떻게 내일의 자산으로 만들까?",
-      "answer": "빌더 로그에 오늘의 판단을 시간순으로 쌓아 공개 가능한 자산으로 남깁니다.",
-      "to": "/logs"
-    }
+  "featuredNoteSlugs": [
+    "operationalizing-vague-requests",
+    "ai-supported-decisions",
+    "public-api-integration-patterns",
+    "spike-throwaway-code"
   ]
 }

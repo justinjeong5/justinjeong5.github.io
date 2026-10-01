@@ -1,67 +1,29 @@
 ---
-title: 홈레이더 — 5개 지역 아파트 자동 추적 시스템
-status: Live
-category: product
-role: 기획·아키텍처·구현·운영
-period: 2026.05
-summary: 관심 지역 5곳의 아파트 실거래가·평수·세대수·주차·학군·교통을 공개 API 7곳에서 주1회 자동 수집해 노션 DB에 정리. 거시지표·정책 레지스트리까지 포함한 personal real estate intelligence.
+title: "공개 자료 수집에서 완전성과 운영 조건을 보기"
+summary: "개인 자료 수집의 기존 설계 기록에서 성공·빈 결과·부분 결과와 운영 부담의 질문을 남긴다."
+status: Documented
+statusLabel: 설계/구현 기록
+category: builder-log
+role: "설계와 source의 기록"
+period: "2026"
 date: 2026-05-21
-tags: [side-project, automation, notion, github-actions, typescript]
+updated: 2026-10-01
+lastTendedAt: 2026-10-01
+tags: ["설계","경계"]
 ---
 
-## 문제
+## 기존 프로젝트의 설계 기록
 
-이사 시기가 오면 매번 같은 지역을 검색한다. 호갱노노·KB부동산·네이버부동산을 돌며 같은 단지의 실거래가·평수·세대수·주차·학군·역세권을 확인한다. 한 단지당 10-15분, 5곳을 보면 1-2시간.
+공개 자료를 수집해 관리 도구에서 읽는 개인 프로젝트의 기존 글을 재정리했다. 자료마다 조회·페이지네이션·오류의 의미가 다르고, 자동 수집이 끝났다는 상태와 필요한 자료가 다 모였다는 상태는 같지 않다.
 
-매주 같은 작업을 반복하는데 시간이 누적된다. 더 큰 문제는 비교 기준이 매번 달라지는 것. 어떤 단지는 학군만 봤고 어떤 단지는 교통만 봤다면 의사결정 일관성이 깨진다.
+이 글에는 관리 화면을 재사용하는 선택과 공급자 정책·부분 결과·후속 갱신의 질문을 남긴다. 현재 모든 수집 경로의 가동 여부나 효과를 새로 감사한 결과는 아니다.
 
-## 결정
+## 운영에서 구분할 것
 
-**노션을 lightweight backend로**: 직접 DB·서버를 띄우는 대신 노션 API + 노션 DB 7개를 백엔드로. 무료, 시각화 자동, 모바일 앱 자동.
+정상 빈 결과, 요청 실패, 일부만 수집한 결과가 같은 성공 표시로 합쳐지지 않는지 본다. 오래된 집계·재시도·알림이 실제 상태와 어떤 관계인지도 확인한다. writer의 조회 후 생성과 실행의 겹침은 수집 성공과 다른 경계다.
 
-**5개 관심 지역으로 좁힘**: 하남 미사, 송파 오금/개롱, 용인 수지, 인천 구월, 화성 동탄. 5곳 이상은 데이터 노이즈만 늘림.
+## 별도 근거가 필요한 결과
 
-**YAML 설정으로 단지 추가**: `apartments.yml`만 수정하면 새 단지 추가 — 코드 수정 0.
+기존 글의 수작업 시간·비용·API/행 수를 현재 성과로 재사용하지 않는다. 관련 코드를 읽은 것과 배포된 실행을 본 것, 매일 사용하는 결과와 집계 효과는 다른 자료다.
 
-**Phase 단위 점진 빌드**: Phase 0(기반) → 1(MVP) → 2(enrichment) → 2.5(hotfix) → 3-A(가격 영향 metric) → 3-B(거시지표·정책). 매 phase는 PR 단위.
-
-**무료 인프라**: GitHub Actions cron(주1회) + Notion 무료 플랜. 운영 비용 0원.
-
-## 산출물
-
-- TypeScript + axios + bottleneck + zod + winston (production 패턴)
-- 노션 DB 7개: 지역별 Apartments 5개 + PriceSnapshots_2026 + LocationStats
-- 공개 API 7개 통합: 국토부 RTMS, 네이버 Cloud Maps, 네이버 Search Local, 카카오 모빌리티, 카카오 로컬, 학교알리미, 한국은행 ECOS
-- GitHub Actions cron + pending poll(15분)
-- Phase 3-A 가격 영향 metric 9개: 시장 동학 + 입지 + 기피 시설
-- Phase 3-B: 한국은행 거시지표 + 정책 레지스트리(region × 규제 × timeline)
-- CodeRabbit 자동 PR 리뷰
-- vitest 테스트 + ESLint
-
-## 임팩트
-
-- 매주 1-2시간 검색 작업 → 0분 (자동)
-- 비교 기준 일관 (같은 metric으로 5개 지역)
-- 3년 가격 추이 자동 차트 (RTMS 백필)
-- 거시지표·정책 변화가 자동 트래킹 (Phase 3-B)
-- **의사결정 시 한 곳에서 데이터를 본다**는 것 자체가 큰 변화
-
-## 다음
-
-- 알림 채널 통합 (Slack/email)
-- 더 많은 metric (전세가율 추이·갭투자 적합도)
-- ML 기반 단지 추천 (현재 metric 9개 → 가중치 학습)
-
-## 배운 것
-
-side project가 production 패턴을 가르친다. 회사 코드에선 자유롭게 쓰기 어려운 zod boundary 검증·bottleneck rate limit·winston 구조화 로그를 자유롭게 실험. 한 번 쓰면 회사 코드에도 자연스럽게 옮겨가는 게 진짜 학습.
-
-또 하나: **Phase 단위 점진 빌드**가 매몰을 막는다. Phase 1 MVP에서 모든 걸 다 만들려고 했다면 한 달 후에도 안 끝났을 것. Phase 0 → 1 → 2 → 2.5 hotfix → 3-A → 3-B 순서로 매번 작은 PR을 머지하면서 자라난 형태가 sustained delivery의 답이다.
-
-## 운영 후일담
-
-배포로 끝나는 매끈한 성공담은 아니었다. 주1회 자동 수집을 돌리는 동안 세 건의 실제 결함을 헬스체크로 잡아냈다. (1) dry-run이 현재연도 DB를 오염시켜 거래연도 구분 없이 데이터가 섞이던 silent failure를 발견해 연도별 DB 라우팅으로 격리했고, (2) 외부 소스의 silent drop을 정상 종료로 오인하던 경로에 결손 경보를 달았고, (3) enrichment 파이프라인을 순수 함수로 추출하고 characterization 테스트로 안전망을 둘렀다. 자동화는 "만들면 끝"이 아니라, 조용히 틀리는 경로를 계속 잡아내는 운영이 본체였다.
-
-레포: [github.com/justinjeong5/j-home-radar](https://github.com/justinjeong5/j-home-radar)
-
-관련: [/notes/notion-lightweight-backend](/notes/notion-lightweight-backend), [/notes/public-api-integration-patterns](/notes/public-api-integration-patterns), [/logs#2026-06-07-healthcheck-six-bots](/logs#2026-06-07-healthcheck-six-bots)
+[외부 API의 결과 완전성](/notes/public-api-integration-patterns), [관리 화면을 재사용하는 비용](/notes/notion-lightweight-backend), [기존 동시 실행 로그](/logs#2026-08-31-a-job-racing-itself).

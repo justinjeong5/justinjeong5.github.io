@@ -1,116 +1,22 @@
 ---
-title: 혼자 7개 공개 API를 한 시스템에 욱여넣으며 배운 것
+title: "외부 API의 성공과 결과의 완전성을 나누기"
 growth: Budding
-topics: [api, integration, backend, side-project]
-summary: 홈레이더를 만들며 국토부·네이버·카카오 등 공개 API 7개를 혼자 통합했다. case문 더미가 되기 직전, rate limit·재시도·boundary를 라이브러리 수준으로 끌어올린 기록.
+topics: ["외부 계약","데이터","실패"]
+summary: "공급자별 정책·오류 의미·페이지네이션·부분 결과를 구분하는 통합 메모."
 plantedAt: 2026-05-18
-lastTendedAt: 2026-05-29
+lastTendedAt: 2026-10-01
 ---
 
-홈레이더를 혼자 만들면서, 어느 날 cron이 통째로 멈춰 있는 걸 발견했다. 네이버 Cloud Maps 하나가 rate limit에 걸려 hang 됐고, 그 hang이 국토부·카카오·한국은행까지 전부 끌고 들어가 같은 배치를 막고 있었다. API는 7개인데 내가 짠 코드는 그걸 하나처럼 다루고 있었던 것이다.
+## 응답은 상태 코드보다 많은 것을 말한다
 
-붙여야 할 공개 API가 국토부 RTMS, 네이버 Cloud Maps, 카카오 모빌리티, 학교알리미, 한국은행 ECOS까지 7개. 그런데 같은 게 하나도 없었다.
+HTTP 성공과 서비스 body의 오류, 정상 빈 결과와 수집 실패를 나눈다. 여러 소스가 모이면 전체 성공·부분 성공·실패의 의미도 먼저 정의한다. 성공한 일부 데이터를 모두 버릴지, 불완전함을 표시하고 유지할지도 제품의 계약이다.
 
-- rate limit이 다름 (초당 3·10·100·무제한)
-- 응답 schema가 다름 (JSON·XML·둘 다)
-- 에러 표현이 다름 (status code·body field·둘 다)
-- 인증이 다름 (header·query·subkey)
+공급자의 속도 제한·오류·응답 형태를 한 값으로 합치지 않는다. 정책을 나눠도 공통 자원과 전체 작업 시간 같은 영향은 남을 수 있다.
 
-처음엔 API마다 분기로 받아냈다. case문이 늘수록 새 API를 붙일 때마다 기존 코드를 다시 읽어야 했고, 위 같은 장애가 났을 때 어디가 원인인지 추적이 안 됐다. 그래서 분기를 늘리는 대신, 다양성을 한 층 아래로 내려 라이브러리 수준에서 흡수하기로 방향을 틀었다. 아래는 그렇게 다시 짠 골격이다.
+## 끝까지 읽었다는 조건
 
-## API별로 끊어 둔 rate limit
+페이지 번호·cursor·마지막 페이지의 의미는 공급자별로 확인한다. 요청 상한이 있다면 그 상한을 넘는 응답과 전체 자료를 구분해야 한다. 일부만 읽고도 완료 상태를 올리는 실패는 눈에 덜 보인다.
 
-```ts
-import Bottleneck from 'bottleneck';
+로그는 원문 요청/응답을 무조건 남기기보다 상태·오류 종류·시점·처리 수처럼 필요한 범위로 제한한다. 비밀값과 사용자 식별자는 별도 보호 대상이다.
 
-const naverLimiter = new Bottleneck({
-  minTime: 100, // 10 req/sec
-  maxConcurrent: 1,
-});
-
-await naverLimiter.schedule(() => axios.get(url));
-```
-
-핵심은 limiter를 API마다 따로 둔 것이다. 처음 장애의 원인이 정확히 여기였다 — 하나로 묶인 limiter는 한 API의 burst가 전체 배치를 멈춘다. 분리한 뒤로는 네이버가 막혀도 나머지 6개는 영향 0.
-
-## timeout이 빠져 있던 자리
-
-cron이 멈췄던 또 다른 이유는 timeout이 없어서였다. 외부 API가 응답을 안 주고 매달려 있으면 배치 전체가 같이 멈춘다. 그래서 모든 호출에 timeout을 명시하고, 그 위에 재시도를 얹었다. 429·5xx·timeout은 일시적일 가능성이 높으니 한 번에 포기할 이유가 없다.
-
-```ts
-import axiosRetry from 'axios-retry';
-
-axiosRetry(axios, {
-  retries: 3,
-  retryDelay: axiosRetry.exponentialDelay,
-  retryCondition: (err) =>
-    err.response?.status === 429 || err.response?.status >= 500,
-});
-```
-
-429는 exponential backoff로 물러섰다 다시. 4xx는 재시도하지 않게 막았다 — 영구 에러를 계속 두드리면 무한 루프에 ban까지 따라온다.
-
-## 외부 응답을 한 번도 그냥 믿지 않기
-
-다음으로 깨진 곳은 응답이었다. 국토부 schema가 말도 없이 바뀐 날, 코드는 멀쩡히 돌면서 엉뚱한 값을 DB에 넣고 있었다. 그래서 모든 외부 응답을 들어오는 자리에서 zod로 한 번씩 검증하게 했다.
-
-```ts
-import { z } from 'zod';
-
-const PriceSchema = z.object({
-  aptName: z.string(),
-  dealAmount: z.string().transform((s) => parseInt(s.replace(/,/g, ''))),
-  dealYear: z.number(),
-});
-
-const data = PriceSchema.parse(response.data); // 깨지면 여기서 명확한 에러
-```
-
-이 한 줄을 boundary에 박아 두니 schema가 바뀌면 다음 cron에서 곧장 alert가 떴다. 조용히 틀린 값이 흘러 들어가던 자리가 시끄럽게 멈추는 자리로 바뀐 것이다. 덤으로 `any`의 전염이 끊겼고, string→number 같은 transform도 한곳에 모였다. `as` 캐스팅으로 넘겼다면 영영 못 잡았을 일이다.
-
-## 페이지네이션은 호출자가 몰라도 되게
-
-API마다 페이지네이션이 cursor·offset·page-token으로 제각각이라, 호출하는 쪽에서 매번 그걸 신경 쓰게 두기 싫었다. async generator 하나로 덮었다.
-
-```ts
-async function* paginate(api: string, params: object) {
-  let cursor: string | undefined;
-  while (true) {
-    const { items, nextCursor } = await fetchPage(api, params, cursor);
-    yield* items;
-    if (!nextCursor) break;
-    cursor = nextCursor;
-  }
-}
-
-for await (const item of paginate('rtms', { region: 'A' })) {
-  // process
-}
-```
-
-호출자는 페이지를 신경 쓰지 않고, for-await가 알아서 끝까지 돌다 멈춘다.
-
-## 그리고 다시 새벽에 깨지 않으려고
-
-처음 cron이 멈췄을 때 가장 괴로웠던 건 원인을 찾는 데 걸린 시간이었다. 어느 API의 어느 단계에서 났는지가 로그에 안 보였다. 그래서 pino로 모든 요청·에러를 구조화 JSON으로 남겼다.
-
-```ts
-logger.info('api.request', { api: 'naver_maps', endpoint: 'geocode', params });
-logger.error('api.error', { api: 'naver_maps', status: err.status, body: err.response?.data });
-```
-
-이걸 깔고 나서야 디버깅이 로그를 grep 한 번 하는 일이 됐다.
-
-## 위 골격으로도 안 잡혀서 따로 밟은 것들
-
-그래도 몇 개는 직접 데인 뒤에야 알았다. status가 200인데 body 안에 error 코드를 숨겨 두는 API가 있어서, 응답 검증 때 본문까지 같이 봐야 했다. API key는 처음에 코드에 박았다가 env var + GitHub Secrets로 빼고 로그에선 redact 처리했다. 이런 건 패턴으로 일반화되지 않고, 한 번 깨져 봐야 손에 남는 종류였다.
-
-## 남은 것
-
-7개를 다 붙이고 나서 든 생각은, 통합의 비용이 API 개수가 아니라 정책의 다양성이라는 거였다. 그 다양성을 분기로 받으면 코드가 case문 더미가 되고, 한 층 아래 라이브러리 수준으로 내려 흡수하면 새 API를 붙이는 일이 골격에 끼워 넣는 작업이 된다.
-
-> 혼자 7개를 붙여 보고 남은 한 줄: 외부 API 통합은 개수 싸움이 아니라, 다양성을 어느 층에서 흡수하느냐의 싸움이다.
-
-## 관련
-
-[/notes/notion-lightweight-backend](/notes/notion-lightweight-backend) — 같은 rate limit 한계의 다른 케이스
+[재시도의 시간과 복구 주체](/notes/dead-retry-bounded-executor), [리포트의 날짜/한계](/cases/retention-report-boundaries), [자료 수집 프로젝트](/cases/home-radar-system).

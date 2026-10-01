@@ -44,6 +44,7 @@ export function applyMetaToDom(doc, meta) {
   const ogType = meta.ogType || 'website';
   setText('title', meta.title);
   setAttr('meta[name="description"]', 'content', meta.description);
+  setAttr('meta[name="robots"]', 'content', meta.robots || 'index, follow');
   setAttr('meta[property="og:type"]', 'content', ogType);
   setAttr('meta[property="og:title"]', 'content', meta.title);
   setAttr('meta[property="og:description"]', 'content', meta.description);

@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 
 import { getAllNotes } from '../lib/content';
 import { ROUTES } from '../lib/routes';
+import { visibleEntries } from '../lib/work-paths';
 
 const growthIcon = {
   Seedling: '🌱',
@@ -16,7 +17,7 @@ const growthLabel = {
 };
 
 function NotesPage() {
-  const notes = getAllNotes();
+  const notes = visibleEntries(getAllNotes());
 
   const grouped = notes.reduce((acc, note) => {
     const key = note.growth || 'Seedling';

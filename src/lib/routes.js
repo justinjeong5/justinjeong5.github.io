@@ -15,7 +15,7 @@ export const ROUTES = {
 };
 
 export const PRIMARY_NAV = [
-  { label: 'Cases', to: ROUTES.cases },
+  { label: '경험 기록', to: ROUTES.cases },
   { label: 'Notes', to: ROUTES.notes },
   { label: 'Essays', to: ROUTES.essays },
   { label: 'Logs', to: ROUTES.logs },
@@ -26,5 +26,4 @@ export const SECONDARY_NAV = [
   { label: 'Uses', to: ROUTES.uses },
   { label: 'Now', to: ROUTES.now },
   { label: 'Reading', to: ROUTES.reading },
-  { label: 'CV', to: ROUTES.cv },
 ];

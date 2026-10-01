@@ -3,9 +3,10 @@ import { ArrowUpRight } from 'lucide-react';
 
 import { getAllEssays } from '../lib/content';
 import { ROUTES } from '../lib/routes';
+import { visibleEntries } from '../lib/work-paths';
 
 function EssaysPage() {
-  const essays = getAllEssays();
+  const essays = visibleEntries(getAllEssays());
 
   return (
     <div className="page page-list">

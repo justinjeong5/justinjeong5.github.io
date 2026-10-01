@@ -1,5 +1,16 @@
 import assert from 'node:assert/strict';
+import { buildHeadMeta } from '../../scripts/prerender-head.mjs';
 import { test } from 'node:test';
+
+test('merged archives preserve an accessible URL without inviting indexing', () => {
+  const getters = { notes: () => ({ title: '이전 글', archived: true, supersededBy: '/notes/new' }) };
+  const meta = resolveMeta('/notes/old', getters);
+  assert.equal(meta.canonical, toCanonical('/notes/new'));
+  assert.equal(meta.robots, 'noindex, follow');
+  assert.match(buildHeadMeta(meta), /name="robots" content="noindex, follow"/);
+  const invalid = resolveMeta('/notes/old', { notes: () => ({ archived: true, supersededBy: 'https://example.com' }) });
+  assert.equal(invalid.canonical, toCanonical('/notes/old'));
+});
 
 import { SITE_URL, DEFAULT_META, STATIC_META, toCanonical, normalizePath, resolveMeta, isDetailPath } from './seo.js';
 import { ROUTES } from './routes.js';

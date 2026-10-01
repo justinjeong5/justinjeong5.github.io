@@ -3,6 +3,7 @@ import { ArrowLeft } from 'lucide-react';
 
 import { getNote, getAllNotes } from '../lib/content';
 import { ROUTES } from '../lib/routes';
+import { visibleEntries } from '../lib/work-paths';
 
 const growthIcon = {
   Seedling: '🌱',
@@ -13,7 +14,7 @@ const growthIcon = {
 function findRelated(note) {
   if (!note || !note.topics || note.topics.length === 0) return [];
   const topicSet = new Set(note.topics);
-  return getAllNotes()
+  return visibleEntries(getAllNotes())
     .filter((other) => other.slug !== note.slug)
     .filter((other) => (other.topics || []).some((t) => topicSet.has(t)))
     .slice(0, 5);
@@ -43,7 +44,7 @@ function NoteDetailPage() {
       <header className="page-header note-detail-header">
         <p className="eyebrow growth-eyebrow">
           <span aria-hidden="true">{growthIcon[note.growth] || '🌱'}</span>
-          {note.growth || 'Seedling'}
+          {note.archived ? '통합한 이전 노트' : note.growth || 'Seedling'}
         </p>
         <h1>{note.title}</h1>
         {note.summary ? <p className="page-lead">{note.summary}</p> : null}

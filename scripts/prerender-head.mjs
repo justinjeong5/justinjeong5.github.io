@@ -63,10 +63,11 @@ export function buildJsonLd({ canonical, ogType, title, description, datePublish
 // 라우트 메타로 head의 SEO 블록 내용을 생성한다. 마커는 제거되고 메타 태그만 남는다.
 // 첫 줄 들여쓰기는 템플릿의 <!-- seo:start --> 줄 들여쓰기가 그대로 남으므로 생략한다.
 // ogType(기본 'website')을 og:type 태그로 항상 주입 — index.html 템플릿의 고정 og:type과 중복을 없앤다.
-export function buildHeadMeta({ title, description, canonical, ogType = 'website', datePublished, dateModified }) {
+export function buildHeadMeta({ title, description, canonical, robots = 'index, follow', ogType = 'website', datePublished, dateModified }) {
   const e = htmlEscape;
   const lines = [
     `<meta name="description" content="${e(description)}" />`,
+    `    <meta name="robots" content="${e(robots)}" />`,
     `    <meta property="og:type" content="${e(ogType)}" />`,
     `    <meta property="og:title" content="${e(title)}" />`,
     `    <meta property="og:description" content="${e(description)}" />`,

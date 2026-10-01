@@ -2,47 +2,25 @@ import { Link } from 'react-router-dom';
 import { ArrowUpRight, BriefcaseBusiness } from 'lucide-react';
 
 import { getAllCases } from '../lib/content';
-import { ROUTES } from '../lib/routes';
+import { useReadingView } from '../lib/use-reading-view';
+import { WORK_PATHS, WORK_SERIES, resolveWorkPath, selectWorkCases, workPathUrl, caseStudyUrl, visibleEntries } from '../lib/work-paths';
 
-const GROUPS = [
-  {
-    key: 'product',
-    title: '제품·실무',
-    blurb: '회사·사이드 프로젝트에서 문제를 풀고 운영한 기록.',
-  },
-  {
-    key: 'builder-log',
-    title: '이 사이트를 만든 기록 (Builder log)',
-    blurb: '이 사이트와 AI 워크플로우를 어떻게 만들고 운영했는지의 과정 기록.',
-  },
-];
-
-function CaseCard({ study }) {
+function CaseCard({ study, view }) {
   return (
     <li>
-      <Link to={ROUTES.caseDetail(study.slug)} className="case-card-link">
+      <Link to={caseStudyUrl(study.slug, view)} className="case-card-link">
         <article>
           <div className="case-card-top">
-            <span className={`status-pill status-${(study.status || 'draft').toLowerCase()}`}>
-              {study.status}
-            </span>
+            <span className="status-pill">{study.statusLabel || study.status}</span>
             <BriefcaseBusiness size={18} aria-hidden="true" />
           </div>
           <h3>{study.title}</h3>
           <p className="case-summary">{study.summary}</p>
           <dl className="case-mini-meta">
-            <div>
-              <dt>Role</dt>
-              <dd>{study.role}</dd>
-            </div>
-            <div>
-              <dt>Period</dt>
-              <dd>{study.period}</dd>
-            </div>
+            <div><dt>담당</dt><dd>{study.role}</dd></div>
+            <div><dt>시기</dt><dd>{study.period}</dd></div>
           </dl>
-          <span className="see-detail">
-            자세히 보기 <ArrowUpRight size={14} aria-hidden="true" />
-          </span>
+          <span className="see-detail">과정 읽기 <ArrowUpRight size={14} aria-hidden="true" /></span>
         </article>
       </Link>
     </li>
@@ -50,37 +28,36 @@ function CaseCard({ study }) {
 }
 
 function CasesPage() {
-  const cases = getAllCases();
-  const grouped = GROUPS.map((g) => ({
-    ...g,
-    items: cases.filter((c) => (c.category || 'builder-log') === g.key),
-  })).filter((g) => g.items.length > 0);
+  const requested = useReadingView();
+  const path = resolveWorkPath(requested);
+  const view = requested === 'previous' ? 'previous' : path?.id || 'all';
+  const all = getAllCases();
+  const previous = visibleEntries(all).filter((study) => study.series !== WORK_SERIES);
+  const cases = view === 'previous' ? previous : selectWorkCases(all, view);
+  const tabs = [{ id: 'all', label: '업무 기록' }, ...WORK_PATHS, { id: 'previous', label: '개인 프로젝트와 탐구' }];
 
   return (
     <div className="page page-list">
       <header className="page-header">
-        <p className="eyebrow">Cases</p>
-        <h1>일하는 방식의 기록</h1>
-        <p>각 케이스는 문제, 버린 선택지, 산출물, 임팩트의 네 칸을 채워 일하는 방식을 증명합니다. 제품·실무와 이 사이트를 만든 기록을 나눠 둡니다.</p>
+        <p className="eyebrow">Work records</p>
+        <h1>판단과 구현의 기록</h1>
+        <p className="page-lead">어떤 문제를 발견했고, 누구와 무엇을 조율했으며, 어느 범위까지 구현하고 확인했는지 기록합니다. 하나의 정체성보다 서로 다른 질문에서 같은 일을 읽습니다.</p>
       </header>
-
-      {cases.length === 0 ? (
-        <p className="empty-state">아직 케이스가 없습니다. 곧 채워집니다.</p>
-      ) : (
-        grouped.map((g) => (
-          <section key={g.key} className="case-group">
-            <div className="case-group-head">
-              <h2 className="case-group-title">{g.title}</h2>
-              <p className="case-group-blurb">{g.blurb}</p>
-            </div>
-            <ul className="case-grid">
-              {g.items.map((study) => (
-                <CaseCard key={study.slug} study={study} />
-              ))}
-            </ul>
-          </section>
-        ))
-      )}
+      <nav className="reading-tabs" aria-label="경험을 읽는 관점">
+        {tabs.map((tab) => (
+          <Link key={tab.id} to={workPathUrl(tab.id)} aria-current={view === tab.id ? 'page' : undefined} className={view === tab.id ? 'is-selected' : ''}>
+            {tab.label}
+          </Link>
+        ))}
+      </nav>
+      <section className="case-group" aria-labelledby="case-view-title">
+        <div className="case-group-head">
+          <h2 id="case-view-title" className="case-group-title">{path?.question || (view === 'previous' ? '다른 맥락에서의 선택' : '제품과 운영에서 다룬 일')}</h2>
+          <p className="case-group-blurb">{path?.description || (view === 'previous' ? '기존 글에서 수치와 실행 범위를 다시 구분한 개인 프로젝트·사이트 구현 기록입니다.' : '제안·협의·구현·후속 대응의 연결을 중심으로 정리했습니다. 운영 효과는 확인된 범위와 구분합니다.')}</p>
+          <span className="meta">{cases.length}개의 기록</span>
+        </div>
+        {cases.length ? <ul className="case-grid">{cases.map((study) => <CaseCard key={study.slug} study={study} view={view} />)}</ul> : <p className="empty-state">이 관점의 기록이 아직 없습니다.</p>}
+      </section>
     </div>
   );
 }

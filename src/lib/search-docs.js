@@ -6,12 +6,13 @@
 
 import { ROUTES } from './routes.js';
 import { logUrl } from './log-url.js';
+import { visibleEntries } from './work-paths.js';
 
 // 타입별 콘텐츠 엔트리 컬렉션을 공통 검색 문서 shape로 변환한다.
 // 타입별 필드 차이(topics 소스, growth, date)와 기본값, url 규칙을 한곳에 고정한다.
 export function buildDocsFrom({ cases = [], notes = [], essays = [], logs = [] } = {}) {
   return [
-    ...cases.map((entry) => ({
+    ...visibleEntries(cases).map((entry) => ({
       type: 'case',
       typeLabel: 'Case',
       slug: entry.slug,
@@ -20,7 +21,7 @@ export function buildDocsFrom({ cases = [], notes = [], essays = [], logs = [] }
       topics: entry.tags || [],
       url: ROUTES.caseDetail(entry.slug),
     })),
-    ...notes.map((entry) => ({
+    ...visibleEntries(notes).map((entry) => ({
       type: 'note',
       typeLabel: 'Note',
       slug: entry.slug,
@@ -30,7 +31,7 @@ export function buildDocsFrom({ cases = [], notes = [], essays = [], logs = [] }
       growth: entry.growth || 'Seedling',
       url: ROUTES.noteDetail(entry.slug),
     })),
-    ...essays.map((entry) => ({
+    ...visibleEntries(essays).map((entry) => ({
       type: 'essay',
       typeLabel: 'Essay',
       slug: entry.slug,
@@ -39,7 +40,7 @@ export function buildDocsFrom({ cases = [], notes = [], essays = [], logs = [] }
       topics: [],
       url: ROUTES.essayDetail(entry.slug),
     })),
-    ...logs.map((entry) => ({
+    ...visibleEntries(logs).map((entry) => ({
       type: 'log',
       typeLabel: 'Log',
       slug: entry.slug,
