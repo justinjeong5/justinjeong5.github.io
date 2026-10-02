@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+    <meta name="author" content="정경하" />
+    <meta property="og:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="description" content="개발환경을 실행하고 확인할 준비가 느리면 작은 시도도 부담이 된다. 빌드를 빠르게 만들고, 배포 충돌로 되돌린 뒤 다시 구성한 이야기." />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="빌드 최적화가 호환 문제와 회귀를 만났을 때 | 정경하" />
+    <meta property="og:description" content="개발환경을 실행하고 확인할 준비가 느리면 작은 시도도 부담이 된다. 빌드를 빠르게 만들고, 배포 충돌로 되돌린 뒤 다시 구성한 이야기." />
+    <meta property="og:url" content="https://justinjeong5.github.io/cases/build-cache-compatibility/" />
+    <meta name="twitter:title" content="빌드 최적화가 호환 문제와 회귀를 만났을 때 | 정경하" />
+    <meta name="twitter:description" content="개발환경을 실행하고 확인할 준비가 느리면 작은 시도도 부담이 된다. 빌드를 빠르게 만들고, 배포 충돌로 되돌린 뒤 다시 구성한 이야기." />
+    <link rel="canonical" href="https://justinjeong5.github.io/cases/build-cache-compatibility/" />
+    <title>빌드 최적화가 호환 문제와 회귀를 만났을 때 | 정경하</title>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "빌드 최적화가 호환 문제와 회귀를 만났을 때 | 정경하",
+  "description": "개발환경을 실행하고 확인할 준비가 느리면 작은 시도도 부담이 된다. 빌드를 빠르게 만들고, 배포 충돌로 되돌린 뒤 다시 구성한 이야기.",
+  "url": "https://justinjeong5.github.io/cases/build-cache-compatibility/",
+  "mainEntityOfPage": "https://justinjeong5.github.io/cases/build-cache-compatibility/",
+  "author": {
+    "@type": "Person",
+    "name": "정경하",
+    "url": "https://justinjeong5.github.io/",
+    "jobTitle": "Product-minded Frontend Engineer",
+    "sameAs": [
+      "https://github.com/justinjeong5"
+    ]
+  },
+  "datePublished": "2026-10-01",
+  "dateModified": "2026-10-02"
+}
+</script>
+    <script>
+      // 테마 사전 설정 — prerender된 HTML에 data-theme를 즉시 적용해 CSS flash를 막는다.
+      // (다른 스크립트보다 먼저 실행되어야 한다.)
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages — restore deep-link path written by 404.html
+      // https://github.com/rafgraph/spa-github-pages
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
+    </script>
+    <script type="module" crossorigin src="/assets/index-RTG-v12g.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-QTnfLwEv.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-cases-DChycUU4.js">
+    <link rel="modulepreload" crossorigin href="/assets/router-DHr7_4vB.js">
+    <link rel="modulepreload" crossorigin href="/assets/search-CiN4C8Nu.js">
+    <link rel="modulepreload" crossorigin href="/assets/icons-BFVjGqNZ.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-GvAxKW9K.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-essays-CUi0-p3l.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-logs-BL9oopOB.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-notes-Dy5dfcdc.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-Bi89xwtE.css">
+    <link rel="stylesheet" crossorigin href="/assets/pretendard-NPFyShNs.css">
+  </head>
+  <body>
+    <div id="root"><a href="#main-content" class="skip-link">본문 바로가기</a><header class="site-nav" aria-label="Primary"><a class="brand" aria-label="정경하 홈" href="/" data-discover="true">JKH</a><nav class="primary-nav"><a aria-current="page" class="nav-link is-active" href="/cases" data-discover="true">경험 기록</a><a class="nav-link" href="/notes" data-discover="true">Notes</a><a class="nav-link" href="/essays" data-discover="true">Essays</a><a class="nav-link" href="/logs" data-discover="true">Logs</a><a class="nav-link" href="/about" data-discover="true">About</a></nav><div class="nav-actions"><button type="button" class="search-trigger" aria-label="검색" title="검색 (⌘K 또는 /)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg><span>검색</span><kbd>⌘K</kbd></button><button type="button" class="icon-button" aria-label="테마: 라이트. 클릭하여 변경" title="테마: 라이트 · T 키로도 전환"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg></button><button type="button" class="icon-button desktop-only" aria-label="키보드 단축키" aria-expanded="false" aria-haspopup="dialog" title="키보드 단축키 (? 키)"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-keyboard" aria-hidden="true"><path d="M10 8h.01"></path><path d="M12 12h.01"></path><path d="M14 8h.01"></path><path d="M16 12h.01"></path><path d="M18 8h.01"></path><path d="M6 8h.01"></path><path d="M7 16h10"></path><path d="M8 12h.01"></path><rect width="20" height="16" x="2" y="4" rx="2"></rect></svg></button><button type="button" class="icon-button menu-trigger" aria-label="메뉴 열기" aria-expanded="false" aria-haspopup="dialog" title="메뉴"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button></div></header><main id="main-content" tabindex="-1"><article class="page case-detail"><header class="page-header case-detail-header"><p class="eyebrow">과정 기록</p><h1>빌드 최적화가 호환 문제와 회귀를 만났을 때</h1><p class="page-lead">개발환경을 실행하고 확인할 준비가 느리면 작은 시도도 부담이 된다. 빌드를 빠르게 만들고, 배포 충돌로 되돌린 뒤 다시 구성한 이야기.</p><dl class="case-meta"><div><dt>담당</dt><dd>병목 분석·설정 변경·동료 적용 안내·후속 대응</dd></div><div><dt>시기</dt><dd>2021-2022</dd></div><div><dt>주제</dt><dd>#개발환경 #호환성 #회귀</dd></div></dl></header><div class="prose"><p>코드를 고쳤다고 바로 화면에서 확인할 수 있는 것은 아니다. 브라우저가 실행할 코드로 만드는 빌드가 먼저 끝나야 한다. 개발환경을 실행하고 다시 확인하는 준비가 느리면, 작은 변경을 시험하는 일 앞에도 기다림이 붙는다.</p>
+<p>한 번 오래 걸리는 것보다 같은 대기를 반복하는 것이 문제였다. 개발자는 화면을 보고 다시 고칠 부분을 찾는데, 그 피드백을 받기 전에 기다리는 시간이 계속 들어간다. Dash 개발 빌드를 최적화할 때 줄이려던 것도 이런 반복 준비의 비용이었다.</p>
+<p>하지만 &#x27;빌드가 느리다&#x27;는 말만으로 무엇을 바꿀지 정할 수는 없었다. 파일을 변환하는 작업, 라이브러리를 처리하는 작업, 분석 도구가 쓰는 시간이 섞여 있었다. 처음 실행과 이미 처리한 결과를 재사용하는 실행도 달랐다. 설정을 하나 바꿔 전체 숫자가 줄어도 어떤 조건에서 효과가 난 것인지 알아야 했다.</p>
+<p>이후에는 속도와 배포 호환성도 부딪혔다. 개발 중 빠르게 만든 구성을 새 의존성 조건에서 그대로 유지할 수 없었다. 어디에 시간이 쓰이는지부터 읽고, 빨라진 설정을 되돌린 뒤의 비용까지 따라가는 작업이 됐다.</p>
+<h2>느리다는 말을 loader와 plugin의 시간으로 바꾸기</h2>
+<p>개발 서버를 측정하는 별도 명령을 두고 loader·plugin별 시간을 볼 수 있도록 측정 도구와 분석을 연결했다. 느린 빌드를 하나의 숫자로만 보면 캐시와 변환 작업, 라이브러리 정리 중 무엇부터 할지 판단하기 어렵기 때문이다.</p>
+<p>먼저 바꾼 대상은 Vue·CSS·JavaScript를 처리하는 loader 앞의 캐시와 라이브러리 변환 설정이었다. 반복 빌드에서 다시 거치는 변환 작업을 재사용하는 쪽에 손댄 것이다. 미사용 파일이나 중복 라이브러리 정리도 가능했지만 당시에는 노력 대비 효과가 낮다고 판단해 뒤로 뒀다.</p>
+<p>최초 빌드와 반복 빌드도 구분했다. 2021년 작업 기록에는 기존 빌드의 10회 평균이 약 45초, 변경 뒤 최초 빌드가 약 35~40초, 캐시 이후의 반복 빌드가 약 25초로 남아 있다. 명령·기기·캐시 초기화 조건을 고정해둔 기록은 아니므로 세 값을 하나의 개선율로 묶기보다 당시 관찰한 차이로 읽는다. 그때 보고한 변화는 처음 실행에서 기다림을 크게 없앤 것보다 반복 작업의 비용을 줄인 쪽에 있었다.</p>
+<h2>측정 도구도 시간을 쓴다는 피드백</h2>
+<p>2021년의 loader 캐시 변경 뒤, 2022년에는 Webpack 5 전환을 별도로 진행했다. 이때 동료들에게 업데이트와 설치 방법을 안내하고, 처음 빌드는 시간이 걸리지만 이후 캐시 빌드는 더 빠르다고 설명했다. 적용 방법뿐 아니라 언제 효과가 나타나는지 함께 전달할 필요가 있었다.</p>
+<p>측정 화면을 본 동료는 BundleAnalyzerPlugin 자체도 약 2초를 쓰고 있다고 짚었다. 평소에는 분석을 항상 켜지 않으니, 분석 화면의 총 시간이 일반 개발 실행의 시간과 같지는 않다는 의견이었다. 나는 그 지적을 받아들였다.</p>
+<p>무엇을 켠 실행인지, 캐시가 있는 실행인지에 따라 비교할 대상이 달라졌다. 최초·반복 빌드의 구분과 측정 도구의 비용을 함께 읽어야 했다.</p>
+<h2>빨라진 설정을 배포 때문에 제거해야 했다</h2>
+<p>Webpack 전환 뒤에는 기존 cache-loader와의 의존성 충돌에 대응해야 했다. 배포 가능한 구성을 먼저 회복하기 위해 cache-loader를 의존성과 loader chain에서 제거했고, 당시의 Webpack filesystem cache 설정도 함께 뺐다. 개발 중 빨랐던 구성을 그대로 유지하는 것보다 배포 호환성을 먼저 맞춘 변경이었다.</p>
+<p>하지만 설정을 뺐다고 일이 끝나지는 않았다. 이후 개발 빌드 속도가 예전 수준으로 돌아왔다고 팀에 알리고, Webpack과 각 loader가 제공하는 캐시로 다시 작업하고 있음을 공유했다. 호환 문제를 해결한 변경이 개발 피드백에 새로운 비용을 만든 것이다.</p>
+<p>후속 변경은 작업 방향을 알리는 데서 끝나지 않았다. Webpack filesystem cache의 저장 위치를 정하고, Babel의 변환 캐시와 ESLint의 검사 캐시를 설정한 변경을 병합했다. 별도의 cache-loader를 각 변환 단계 앞에 다시 넣는 대신, 이미 사용하던 도구들이 자기 결과를 재사용하도록 구성을 바꿨다.</p>
+<h2>회귀 공유에서 대체 설정의 병합까지</h2>
+<p>처음 최적화에서는 반복 빌드의 준비 비용을 줄이는 변화를 관찰했고, 이후 호환 문제로 제거한 캐시는 Webpack·Babel·ESLint가 제공하는 대체 설정으로 다시 구성해 병합했다. 개발자는 적용 안내를 따라 사용할 수 있는 설정을 받았고, 속도가 회귀했을 때도 그 상태와 후속 방향을 팀에 공유했다. 앞서 적은 약 25초는 2021년의 관찰값으로, 새 대체 구성의 최종 속도와는 구분한다.</p>
+<p>동료가 분석 도구 자체의 시간도 포함됐다고 짚은 대화는 측정값을 함께 해석한 장면이었다. 후속 사용 대화에서는 내 기기의 속도 개선과 다른 기기의 성능 차이를 이야기했고, 장비 교체도 요청했다. 같은 설정의 숫자 하나만으로 모든 개발자의 환경을 설명할 수는 없었다.</p>
+<p>이 경험을 지금 돌아보면 최적화의 끝은 빠른 설정을 한 번 만드는 데 있지 않다. 어떤 실행에서 효과가 나는지 전달하고, 호환 문제로 되돌린 비용을 알리고, 다른 구성까지 이어가는 과정이 함께 있었다. 내 관심도 캐시를 유지할지에서 어느 도구가 캐시를 책임질지로 옮겨갔다. 코드의 속도와 동료가 실제로 쓰는 환경을 같이 읽게 한 작업이었다.</p></div><section class="related-block"><h2>다른 관점에서 함께 읽기</h2><div class="reading-tabs"><a href="/cases?view=delivery" data-discover="true">기술 선택과 변경</a></div></section><footer class="page-footer"><a class="see-all-link" href="/cases" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg> 케이스 목록</a></footer></article></main><footer class="site-footer"><div class="footer-brand"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg>정경하</span><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open-text" aria-hidden="true"><path d="M12 7v14"></path><path d="M16 12h2"></path><path d="M16 8h2"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path><path d="M6 12h2"></path><path d="M6 8h2"></path></svg>Cases, notes, logs, and proof of work</span></div><nav class="footer-nav" aria-label="Secondary"><a href="/uses" data-discover="true">Uses</a><a href="/now" data-discover="true">Now</a><a href="/reading" data-discover="true">Reading</a></nav><span class="footer-meta"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-clock" aria-hidden="true"><path d="M16 14v2.2l1.6 1"></path><path d="M16 2v4"></path><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"></path><path d="M3 10h5"></path><path d="M8 2v4"></path><circle cx="16" cy="16" r="6"></circle></svg>Updated <!-- -->2026-10-02</span></footer></div>
+  </body>
+</html>
