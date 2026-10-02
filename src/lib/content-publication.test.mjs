@@ -16,3 +16,13 @@ test('public writing excludes private source locations and identifiers', () => {
     }
   }
 });
+
+test('personal posts do not reintroduce editorial audit notices', () => {
+  for (const type of ['cases', 'notes', 'essays', 'logs']) {
+    const dir = new URL(`../content/${type}/`, import.meta.url);
+    for (const file of readdirSync(dir).filter((name) => name.endsWith('.mdx'))) {
+      const source = readFileSync(new URL(file, dir), 'utf8');
+      assert.doesNotMatch(source, /이 글에 사용한 기록과 확인 범위|원문을 대조한 공개용 재구성|방문자가 원문을 직접 검증|이 글은 이전 회고를 다시 편집한 기록이다/, `${type}/${file}`);
+    }
+  }
+});

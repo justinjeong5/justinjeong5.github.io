@@ -15,7 +15,7 @@ function AboutPage() {
       <section className="evidence-block">
         <div className="panel-heading">
           <ShieldCheck size={22} aria-hidden="true" />
-          <h2>Evidence system — 케이스가 강해지는 네 칸</h2>
+          <h2>일을 기록하는 흐름</h2>
         </div>
         <div className="evidence-grid">
           {aboutData.evidenceSystem.map((item) => (

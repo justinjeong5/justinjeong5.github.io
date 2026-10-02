@@ -37,7 +37,7 @@ function LogsPage() {
       <header className="page-header">
         <p className="eyebrow">Builder log</p>
         <h1>작업 기록에서 남긴 질문</h1>
-        <p>이전 회고의 주제와 설계 질문을 다시 정리했습니다. 표시는 원래 기록 날짜이며, 당시 실행·출시·효과를 이번에 새로 검증한 성과로 사용하지 않습니다.</p>
+        <p>작업하면서 만난 문제와 선택, 나중에 다시 생각해보고 싶은 질문을 짧게 남깁니다.</p>
       </header>
 
       {logs.length === 0 ? (
