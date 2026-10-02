@@ -13,6 +13,13 @@ export const WORK_CASE_SLUGS = [
   'build-cache-compatibility',
   'frontend-delivery-boundary',
   'experiment-routing-context',
+  'external-entry-viewport',
+  'diagnostic-error-information',
+  'shared-popup-locale',
+  'date-filter-preset-state',
+  'operator-next-inquiry',
+  'http-test-boundary',
+  'grouped-response-positions',
 ];
 
 export const WORK_PATHS = [
@@ -20,22 +27,22 @@ export const WORK_PATHS = [
     id: 'operator',
     label: '제품과 운영자',
     question: '사용자가 상태를 이해하고 행동할 수 있게 했는가?',
-    description: '입력 순서, 부분 실패, 미확정 상태를 디자인·QA·API 계약과 함께 다룬 기록.',
-    caseSlugs: ['bulk-partial-results', 'automation-unknown-state', 'budget-rule-compatibility', 'retention-report-boundaries', 'experiment-routing-context', 'ad-response-recovery'],
+    description: '입력과 필터, 부분 실패, 다음 작업을 화면의 상태·API 계약과 함께 다룬 기록.',
+    caseSlugs: ['bulk-partial-results', 'automation-unknown-state', 'budget-rule-compatibility', 'retention-report-boundaries', 'experiment-routing-context', 'ad-response-recovery', 'date-filter-preset-state', 'operator-next-inquiry', 'shared-popup-locale'],
   },
   {
     id: 'contracts',
     label: '외부 응답과 상태',
     question: '통제할 수 없는 응답과 기존 계약을 어떻게 다뤘는가?',
-    description: '대기·탈출, 관측 소비자의 오류, 이전 요청과 최신 결과의 경계를 구분한 기록.',
-    caseSlugs: ['bridge-observation-contract', 'latest-request-boundaries', 'ad-response-recovery', 'automation-unknown-state', 'budget-rule-compatibility'],
+    description: '대기와 최신 결과, 진단 정보, HTTP 응답과 묶음 결과의 계약을 구분한 기록.',
+    caseSlugs: ['bridge-observation-contract', 'latest-request-boundaries', 'ad-response-recovery', 'automation-unknown-state', 'budget-rule-compatibility', 'diagnostic-error-information', 'http-test-boundary', 'grouped-response-positions'],
   },
   {
     id: 'delivery',
     label: '기술 선택과 변경',
     question: '도입 이후의 호환·회귀·전환 비용까지 설명할 수 있는가?',
-    description: '빌드 병목, 캐시 변경, 전달 구조, 리뷰에서 드러난 제약과 후속 선택의 기록.',
-    caseSlugs: ['build-cache-compatibility', 'frontend-delivery-boundary', 'experiment-routing-context', 'bridge-observation-contract'],
+    description: '빌드와 전달 구조, 브라우저 진단, 공용 기능의 의존성과 검증 경계를 다룬 기록.',
+    caseSlugs: ['build-cache-compatibility', 'frontend-delivery-boundary', 'experiment-routing-context', 'bridge-observation-contract', 'external-entry-viewport', 'shared-popup-locale', 'http-test-boundary', 'diagnostic-error-information'],
   },
 ];
 
