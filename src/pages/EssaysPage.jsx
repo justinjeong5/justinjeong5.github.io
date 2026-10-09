@@ -1,40 +1,18 @@
-import { Link } from 'react-router-dom';
-import { ArrowUpRight } from 'lucide-react';
-
 import { getAllEssays } from '../lib/content';
-import { ROUTES } from '../lib/routes';
 import { visibleEntries } from '../lib/work-paths';
-import { displayContextDate } from '../lib/article-dates.js';
+import CompactArticleList from '../components/ui/CompactArticleList';
 
 function EssaysPage() {
-  const essays = visibleEntries(getAllEssays());
-
+  const essays = visibleEntries(getAllEssays()).map((entry) => ({ ...entry, kind: 'essay' }));
   return (
-    <div className="page page-list">
+    <div className="page page-list scan-index">
       <header className="page-header">
         <p className="eyebrow">기술 에세이</p>
-        <h1>개발하며 바뀐 판단들</h1>
-        <p className="page-lead">여러 업무에서 반복해서 만난 문제를 연결합니다. 설계와 검증, 동료와의 협업, AI에 맡길 범위와 직접 확인할 끝점을 실제 경험으로 풀어 썼습니다.</p>
+        <h1>여러 경험에서 얻은 설계와 협업의 기준</h1>
+        <p className="page-lead">개별 구현을 넘어, 서로 다른 상황에서 왜 다른 선택을 했는지 비교한 글입니다.</p>
       </header>
-
-      {essays.length === 0 ? (
-        <p className="empty-state">아직 발행한 에세이가 없습니다.</p>
-      ) : (
-        <ul className="article-list">
-          {essays.map((essay) => (
-            <li key={essay.slug}>
-              <Link to={ROUTES.essayDetail(essay.slug)} className="article-row" aria-label={essay.title}>
-                <span className="article-period">{displayContextDate(essay)}</span>
-                <article className="article-row-copy">
-                  <h2>{essay.title}</h2>
-                  <p>{essay.summary}</p>
-                </article>
-                <ArrowUpRight className="article-row-arrow" size={20} aria-hidden="true" />
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
+      <h2 className="article-index-title">전체 기술 에세이</h2>
+      {essays.length ? <CompactArticleList entries={essays} /> : <p className="empty-state">아직 발행한 에세이가 없습니다.</p>}
     </div>
   );
 }

@@ -608,3 +608,49 @@ main {
   .reading-start ol { grid-template-columns: 1fr; gap: 1.2rem; }
   .career-timeline li { grid-template-columns: 1fr; gap: .5rem; }
 }
+.scan-home { padding-inline: clamp(18px, 5vw, 72px); }
+.scan-intro { padding: 44px 0 36px; max-width: 820px; }
+.scan-intro h1 { font-size: clamp(2rem, 4vw, 3rem); margin: 8px 0 14px; }
+.scan-headline { font-size: clamp(1.2rem, 2vw, 1.6rem); font-weight: 650; margin: 0 0 12px; }
+.scan-intro > p:not(.eyebrow):not(.scan-headline) { max-width: 740px; line-height: 1.8; color: var(--text-soft); }
+.scan-links { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; margin-top: 18px; font-size: .9rem; }
+.scan-links a { display: inline-flex; align-items: center; gap: 6px; }
+.experience-map { margin-bottom: 40px; }
+.experience-map > header h2 { font-size: 1.3rem; margin: 0 0 8px; }
+.experience-map > header p { color: var(--text-soft); line-height: 1.7; margin: 0; }
+.topic-jump { display: flex; flex-wrap: wrap; gap: 8px 20px; margin: 18px 0 24px; font-size: .88rem; }
+.experience-map-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px 30px; }
+.experience-map-grid > section { scroll-margin-top: 100px; padding: 18px 0 0; border-top: 1px solid var(--border); }
+.experience-map-grid h3 { display: flex; align-items: baseline; gap: 12px; font-size: 1.08rem; margin: 0; }
+.experience-map-grid h3 > span { color: var(--text-muted); font-size: .8rem; font-weight: 400; }
+.experience-map-grid h3 a { text-decoration: none; }
+.experience-map-grid section > p { color: var(--text-muted); font-size: .85rem; line-height: 1.7; margin: 6px 0 10px; }
+.experience-map-grid ul { padding: 0; margin: 0; list-style: none; }
+.experience-map-grid li a { display: flex; align-items: baseline; gap: 10px; padding: 8px 0; line-height: 1.55; text-decoration: none; font-size: .98rem; font-weight: 550; }
+.experience-map-grid li a > span { flex-shrink: 0; color: var(--text-muted); font-size: .7rem; font-weight: 400; }
+.experience-map-grid li a:hover { color: var(--accent-blue); text-decoration: underline; text-underline-offset: 4px; }
+.topic-more { display: inline-block; margin-top: 8px; font-size: .82rem; color: var(--text-muted); }
+.scan-index .page-header { margin-bottom: 20px; }
+.scan-index .page-header h1 { font-size: clamp(1.7rem, 3vw, 2.3rem); }
+.recommended-inline { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: .82rem; margin: 0 0 22px; }
+.recommended-inline > span { color: var(--text-muted); }
+.compact-controls { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; padding: 14px 0; font-size: .82rem; color: var(--text-muted); }
+.compact-controls button { background: var(--bg); color: var(--text-soft); border: 1px solid var(--border); border-radius: var(--radius); padding: 7px 12px; font: inherit; cursor: pointer; }
+.compact-article-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--border); }
+.compact-article-row { display: grid; grid-template-columns: minmax(0, 1fr) 145px; gap: 20px; padding: 16px 0; border-bottom: 1px solid var(--border); text-decoration: none; }
+.compact-article-row h3 { display: inline; font-size: 1.05rem; line-height: 1.65; font-weight: 600; color: var(--text); margin: 0; }
+.compact-article-row:hover h3 { color: var(--accent-blue); }
+.compact-kind { color: var(--text-muted); font-size: .72rem; margin-right: 12px; white-space: nowrap; }
+.compact-period { color: var(--text-muted); font-size: .78rem; line-height: 1.8; text-align: right; }
+.compact-article-row p { color: var(--text-soft); font-size: .9rem; line-height: 1.8; margin: 8px 0 0; }
+@media (min-width: 701px) and (max-width: 1199px) {
+  .experience-map-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 700px) {
+  .scan-home { padding-inline: 16px; }
+  .scan-intro { padding: 28px 0; }
+  .experience-map-grid { grid-template-columns: 1fr; gap: 22px; }
+  .compact-article-row { grid-template-columns: 1fr; gap: 5px; padding: 14px 0; }
+  .compact-period { text-align: left; }
+  .compact-kind { display: block; margin: 0 0 3px; }
+}

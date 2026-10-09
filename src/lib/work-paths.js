@@ -4,10 +4,50 @@ import { compareContextDates } from './article-dates.js';
 export const WORK_SERIES = 'work-evidence-2026';
 
 export const RECOMMENDED_READS = [
-  { label: '제품을 만든 과정', title: '콘텐츠 허브는 링크 목록만으로 완성되지 않았다', description: '초기 구축에서 참여 흐름, QA와 매체 출시까지.', to: ROUTES.caseDetail('playhub-product-architecture') },
-  { label: '기술적으로 파고든 문제', title: '로그를 줄이면서 한 사람의 흐름은 끊지 않기', description: '제품 지표와 진단을 나누고, 필요한 흐름은 남기기.', to: ROUTES.caseDetail('playhub-diagnostic-sampling') },
-  { label: '동료와 설계를 바꾸는 방식', title: '동료의 반론이 설계의 경계를 바꿀 때', description: '공용 도구와 출시 조건을 다시 정한 대화와 구현.', to: ROUTES.essayDetail('self-persona-blocking') },
+  { label: '제품을 만든 과정', title: '콘텐츠·리워드 허브의 FE 구축과 제품 확장', description: '초기 구축에서 참여 흐름, QA와 매체 출시까지.', to: ROUTES.caseDetail('playhub-product-architecture') },
+  { label: '기술적으로 파고든 문제', title: '진단 로그 샘플링: KPI와 조사 흐름을 함께 지키기', description: '제품 지표와 진단을 나누고, 필요한 흐름은 남기기.', to: ROUTES.caseDetail('playhub-diagnostic-sampling') },
+  { label: '동료와 설계를 바꾸는 방식', title: '동료의 반론을 아키텍처와 출시 판단에 반영하기', description: '공용 도구와 출시 조건을 다시 정한 대화와 구현.', to: ROUTES.essayDetail('self-persona-blocking') },
 ];
+
+export const WORK_TOPICS = [
+  { id: 'product', label: '제품 구축·상태 설계', description: '새 제품의 핵심 FE와 운영 흐름을 만들고 출시하기',
+    caseSlugs: ['playhub-product-architecture', 'playhub-product-flow', 'cs-workflow-product', 'article-content-integration', 'bulk-partial-results', 'budget-rule-compatibility', 'automation-unknown-state', 'date-filter-preset-state', 'experiment-routing-context', 'operator-next-inquiry'],
+    essaySlugs: ['two-sided-market-decisions', 'why-not-traditional-resume'] },
+  { id: 'runtime', label: '비동기·SDK·브라우저', description: '외부 실행과 복귀, 입력·요청의 수명을 다루기',
+    caseSlugs: ['latest-request-boundaries', 'ad-preload-lifecycle', 'canvas-input-lifecycle', 'playhub-reward-reveal', 'ad-response-recovery', 'external-entry-viewport', 'shared-popup-locale'],
+    essaySlugs: ['context-before-preference', 'same-defect-class-across-repos', 'silent-truncation-recurrence'] },
+  { id: 'observability', label: '관측·데이터', description: '조사에 필요한 정보와 제품 지표의 의미를 지키기',
+    caseSlugs: ['playhub-diagnostic-sampling', 'bridge-observation-contract', 'diagnostic-error-information', 'retention-report-boundaries'],
+    essaySlugs: ['data-trust-two-sided'] },
+  { id: 'tooling', label: '개발환경·검증·배포', description: '개발 구조의 전환과 기존 동작을 보존하는 검증',
+    caseSlugs: ['frontend-delivery-boundary', 'deployment-config-contracts', 'build-cache-compatibility', 'http-test-boundary', 'grouped-response-positions'],
+    essaySlugs: ['automation-doesnt-reduce-work', 'deterministic-design-loop'] },
+  { id: 'collaboration', label: 'AI·협업', description: '팀의 병목을 맡고 동료의 판단을 구현에 연결하기',
+    caseSlugs: ['ai-cross-functional-delivery'],
+    essaySlugs: ['ai-coding-tools-six-months', 'self-persona-blocking', 'delegation-autonomy-calibration', 'ai-workflow-chains'] },
+];
+
+export function resolveWorkTopic(id) {
+  return WORK_TOPICS.find((topic) => topic.id === id);
+}
+
+export function selectTopicArticles(cases, essays, topicId) {
+  const topic = resolveWorkTopic(topicId);
+  if (!topic) return [];
+  const byCase = new Map(visibleEntries(cases).map((entry) => [entry.slug, entry]));
+  const byEssay = new Map(visibleEntries(essays).map((entry) => [entry.slug, entry]));
+  return [
+    ...topic.caseSlugs.map((slug) => byCase.get(slug)).filter(Boolean).map((entry) => ({ ...entry, kind: 'case' })),
+    ...topic.essaySlugs.map((slug) => byEssay.get(slug)).filter(Boolean).map((entry) => ({ ...entry, kind: 'essay' })),
+  ].sort(compareContextDates);
+}
+
+export function selectAllWorkArticles(cases, essays) {
+  return [
+    ...selectWorkCases(cases).map((entry) => ({ ...entry, kind: 'case' })),
+    ...visibleEntries(essays).map((entry) => ({ ...entry, kind: 'essay' })),
+  ].sort(compareContextDates);
+}
 
 export const WORK_CASE_SLUGS = [
   'playhub-product-architecture',
@@ -74,7 +114,7 @@ export function selectWorkCases(entries, pathId) {
 }
 
 export function workPathUrl(id) {
-  return id === 'previous' || resolveWorkPath(id) ? `${ROUTES.cases}?view=${id}` : ROUTES.cases;
+  return id === 'previous' || resolveWorkPath(id) || resolveWorkTopic(id) ? `${ROUTES.cases}?view=${id}` : ROUTES.cases;
 }
 
 export function caseStudyUrl(slug, pathId) {
@@ -85,7 +125,18 @@ export function caseStudyUrl(slug, pathId) {
 export function caseListUrl(entry, pathId) {
   if (entry.archived) return ROUTES.cases;
   if (pathId === 'previous') return entry.series !== WORK_SERIES ? workPathUrl(pathId) : ROUTES.cases;
+  if (resolveWorkTopic(pathId)?.caseSlugs.includes(entry.slug)) return workPathUrl(pathId);
   return resolveWorkPath(pathId)?.caseSlugs.includes(entry.slug) ? workPathUrl(pathId) : ROUTES.cases;
+}
+
+export function essayListUrl(slug, view) {
+  if (view === 'all') return ROUTES.cases;
+  return resolveWorkTopic(view)?.essaySlugs.includes(slug) ? workPathUrl(view) : ROUTES.essays;
+}
+
+export function essayStudyUrl(slug, view) {
+  const retainView = view === 'all' || resolveWorkTopic(view)?.essaySlugs.includes(slug);
+  return `${ROUTES.essayDetail(slug)}${retainView ? `?view=${view}` : ''}`;
 }
 
 export function visibleEntries(entries) {

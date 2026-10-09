@@ -2,9 +2,62 @@ import assert from 'node:assert/strict';
 import { readdirSync, readFileSync } from 'node:fs';
 import { test } from 'node:test';
 
-import { WORK_SERIES, WORK_CASE_SLUGS, WORK_PATHS, RECOMMENDED_READS, resolveWorkPath, selectWorkCases, workPathUrl, readingPathsFor, caseStudyUrl, caseListUrl, visibleEntries } from './work-paths.js';
+import { WORK_SERIES, WORK_CASE_SLUGS, WORK_PATHS, WORK_TOPICS, RECOMMENDED_READS, resolveWorkTopic, selectAllWorkArticles, selectTopicArticles, resolveWorkPath, selectWorkCases, workPathUrl, readingPathsFor, caseStudyUrl, caseListUrl, essayListUrl, essayStudyUrl, visibleEntries } from './work-paths.js';
 
 const entries = WORK_CASE_SLUGS.map((slug) => ({ slug, series: WORK_SERIES }));
+
+test('topic map covers all work cases and published essays exactly once', () => {
+  const cases = WORK_TOPICS.flatMap((topic) => topic.caseSlugs);
+  const essays = WORK_TOPICS.flatMap((topic) => topic.essaySlugs);
+  assert.deepEqual([...cases].sort(), [...WORK_CASE_SLUGS].sort());
+  assert.equal(new Set(cases).size, cases.length);
+  const published = readdirSync(new URL('../content/essays/', import.meta.url)).filter((file) => {
+    const source = readFileSync(new URL(`../content/essays/${file}`, import.meta.url), 'utf8');
+    return /^status: Published$/m.test(source) && !/^archived: true$/m.test(source);
+  }).map((file) => file.replace('.mdx', '')).sort();
+  assert.deepEqual([...essays].sort(), published);
+  assert.equal(new Set(essays).size, essays.length);
+});
+
+test('topics combine article kinds in date order and exclude missing or archived entries', () => {
+  const cases = [
+    { slug: 'ai-cross-functional-delivery', dateBasis: 'context', date: '2026-08', period: '2026.08' },
+    { slug: 'unrelated', date: '2026-10' },
+  ];
+  const essays = [
+    { slug: 'ai-coding-tools-six-months', dateBasis: 'context', date: '2026-09' },
+    { slug: 'self-persona-blocking', dateBasis: 'context', date: '2026-10', archived: true },
+  ];
+  const selected = selectTopicArticles(cases, essays, 'collaboration');
+  assert.deepEqual(selected.map((entry) => [entry.slug, entry.kind]), [['ai-coding-tools-six-months', 'essay'], ['ai-cross-functional-delivery', 'case']]);
+  assert.equal(cases[0].kind, undefined);
+  assert.deepEqual(selectTopicArticles(cases, essays, 'unknown'), []);
+  assert.equal(resolveWorkTopic('unknown'), undefined);
+});
+
+test('case detail keeps only a topic that contains the article', () => {
+  assert.equal(workPathUrl('runtime'), '/cases?view=runtime');
+  assert.equal(caseStudyUrl('latest-request-boundaries', 'runtime'), '/cases/latest-request-boundaries?view=runtime');
+  assert.equal(caseStudyUrl('latest-request-boundaries', 'product'), '/cases/latest-request-boundaries');
+});
+
+test('all work includes both article kinds, not unrelated projects or archives', () => {
+  const source = [{ slug: 'playhub-product-flow', series: WORK_SERIES, dateBasis: 'context', date: '2026-06' }, { slug: 'personal', date: '2026-10' }];
+  const essays = [{ slug: 'current', dateBasis: 'context', date: '2026-09' }, { slug: 'retired', archived: true }];
+  assert.deepEqual(selectAllWorkArticles(source, essays).map((entry) => [entry.slug, entry.kind]), [['current', 'essay'], ['playhub-product-flow', 'case']]);
+});
+
+test('essay navigation preserves the actual all/topic/essay-list origin', () => {
+  const slug = 'self-persona-blocking';
+  assert.equal(essayStudyUrl(slug, 'all'), '/essays/self-persona-blocking?view=all');
+  assert.equal(essayListUrl(slug, 'all'), '/cases');
+  assert.equal(essayStudyUrl(slug, 'collaboration'), '/essays/self-persona-blocking?view=collaboration');
+  assert.equal(essayListUrl(slug, 'collaboration'), '/cases?view=collaboration');
+  assert.equal(essayStudyUrl(slug, 'product'), '/essays/self-persona-blocking');
+  assert.equal(essayListUrl(slug, 'product'), '/essays');
+  assert.equal(essayListUrl(slug), '/essays');
+  assert.equal(essayStudyUrl(slug, 'https://example.com'), '/essays/self-persona-blocking');
+});
 
 test('recommended reading stays separate from chronology and matches actual article titles', () => {
   assert.deepEqual(RECOMMENDED_READS.map((item) => item.to), [

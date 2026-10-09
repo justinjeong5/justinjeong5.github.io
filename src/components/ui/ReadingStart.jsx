@@ -5,7 +5,7 @@ import { RECOMMENDED_READS } from '../../lib/work-paths';
 function ReadingStart() {
   return (
     <section className="reading-start" aria-labelledby="reading-start-title">
-      <h2 id="reading-start-title">처음이라면 이 세 편부터</h2>
+      <h2 id="reading-start-title">대표 경험 깊게 읽기</h2>
       <ol>
         {RECOMMENDED_READS.map((item) => (
           <li key={item.to}>

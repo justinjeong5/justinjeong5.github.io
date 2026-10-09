@@ -4,9 +4,12 @@ import { ArrowLeft } from 'lucide-react';
 import { getEssay } from '../lib/content';
 import { ROUTES } from '../lib/routes';
 import { displayContextDate } from '../lib/article-dates.js';
+import { useReadingView } from '../lib/use-reading-view';
+import { essayListUrl } from '../lib/work-paths';
 
 function EssayDetailPage() {
   const { slug } = useParams();
+  const view = useReadingView();
   const essay = getEssay(slug);
 
   if (!essay) {
@@ -22,6 +25,7 @@ function EssayDetailPage() {
   }
 
   const { Component } = essay;
+  const returnTo = essayListUrl(slug, view);
 
   return (
     <article className="page essay-detail">
@@ -36,8 +40,8 @@ function EssayDetailPage() {
       </div>
 
       <footer className="page-footer">
-        <Link to={ROUTES.essays} className="see-all-link">
-          <ArrowLeft size={16} aria-hidden="true" /> 에세이 목록
+        <Link to={returnTo} className="see-all-link">
+          <ArrowLeft size={16} aria-hidden="true" /> {returnTo === ROUTES.essays ? '에세이 목록' : view === 'all' ? '전체 글' : '주제 목록'}
         </Link>
       </footer>
     </article>
