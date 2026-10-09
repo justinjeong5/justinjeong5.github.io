@@ -1,26 +1,26 @@
 {
   "name": "정경하",
   "role": "Frontend Engineer",
-  "headline": "화면이 보여주는 것과 실제로 일어나는 일을 함께 봅니다.",
-  "summary": "광고 운영 도구와 앱 안의 웹 화면을 만들며 겪은 일을 기록합니다. 왜 바꿔야 했는지, 동료와 무엇을 맞췄는지, 구현하면서 어떤 선택을 했는지 풀어 썼습니다.",
+  "headline": "제품의 규칙을 설계하고, 실제로 끝나는 흐름을 만듭니다.",
+  "summary": "콘텐츠·리워드 제품의 개발과 출시, 앱·웹 참여 흐름, 운영 도구와 관측 설계를 맡아 왔습니다. 어떤 제약에서 설계를 바꿨는지, 코드와 테스트로 무엇을 확인했고 출시 뒤 무엇이 달라졌는지 기록합니다.",
   "location": "Seoul, Korea",
   "email": "justin.jeong5@gmail.com",
   "github": "https://github.com/justinjeong5",
   "avatar": "https://github.com/justinjeong5.png?size=512",
   "currentFocus": [
-    "상태를 이해하고 행동하는 운영 제품",
-    "외부 계약과 비동기 결과의 경계",
-    "기술 선택의 호환과 후속 대응"
+    "제품 규칙과 앱·웹 참여 흐름",
+    "행동과 오류를 연결하는 관측 설계",
+    "AI로 범위를 넓히고 검증으로 마무리"
   ],
   "featuredCaseSlugs": [
-    "bulk-partial-results",
-    "bridge-observation-contract",
-    "build-cache-compatibility"
+    "article-content-integration",
+    "ad-preload-lifecycle",
+    "canvas-input-lifecycle"
   ],
   "featuredEssaySlugs": [
-    "why-not-traditional-resume",
-    "context-before-preference",
-    "automation-doesnt-reduce-work"
+    "ai-coding-tools-six-months",
+    "deterministic-design-loop",
+    "self-persona-blocking"
   ],
   "featuredNoteSlugs": [
     "operationalizing-vague-requests",
