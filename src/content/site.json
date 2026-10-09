@@ -1,8 +1,8 @@
 {
   "name": "정경하",
   "role": "Frontend Engineer",
-  "headline": "제품의 규칙을 설계하고, 실제로 끝나는 흐름을 만듭니다.",
-  "summary": "콘텐츠·리워드 제품의 개발과 출시, 앱·웹 참여 흐름, 운영 도구와 관측 설계를 맡아 왔습니다. 어떤 제약에서 설계를 바꿨는지, 코드와 테스트로 무엇을 확인했고 출시 뒤 무엇이 달라졌는지 기록합니다.",
+  "headline": "제품 구축부터 비동기·관측 설계까지",
+  "summary": "콘텐츠·리워드 제품의 핵심 FE를 만들고, 앱·웹 참여와 광고 실행을 연결해 왔습니다. 실제 개발에서 정한 상태, 검증과 협업의 기준을 기록합니다.",
   "location": "Seoul, Korea",
   "email": "justin.jeong5@gmail.com",
   "github": "https://github.com/justinjeong5",
