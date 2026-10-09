@@ -2,6 +2,7 @@ import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 
 import { getCase } from '../lib/content';
+import { displayWorkPeriod } from '../lib/article-dates.js';
 import { useReadingView } from '../lib/use-reading-view';
 import { ROUTES } from '../lib/routes';
 import { readingPathsFor, workPathUrl, caseListUrl } from '../lib/work-paths';
@@ -17,7 +18,7 @@ function CaseDetailPage() {
         <p className="eyebrow">404</p>
         <h1>찾을 수 없는 케이스</h1>
         <Link to={ROUTES.cases} className="see-all-link">
-          <ArrowLeft size={16} aria-hidden="true" /> 케이스 목록
+          <ArrowLeft size={16} aria-hidden="true" /> 개발 경험 목록
         </Link>
       </div>
     );
@@ -38,7 +39,7 @@ function CaseDetailPage() {
           </div>
           <div>
             <dt>시기</dt>
-            <dd>{study.period}</dd>
+            <dd>{displayWorkPeriod(study)}</dd>
           </div>
           {study.tags && study.tags.length > 0 ? (
             <div>
@@ -64,7 +65,7 @@ function CaseDetailPage() {
 
       <footer className="page-footer">
         <Link to={caseListUrl(study, view)} className="see-all-link">
-          <ArrowLeft size={16} aria-hidden="true" /> 케이스 목록
+          <ArrowLeft size={16} aria-hidden="true" /> 개발 경험 목록
         </Link>
       </footer>
     </article>

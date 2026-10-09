@@ -9,7 +9,8 @@ function Header() {
   const { openPalette, toggleHelp, helpOpen, toggleMenu, menuOpen } = useUI();
 
   return (
-    <header className="site-nav" aria-label="Primary">
+    <header className="site-nav" aria-label="주메뉴">
+      <div className="site-nav-inner">
       <Link className="brand" to={ROUTES.home} aria-label="정경하 홈">
         JKH
       </Link>
@@ -59,6 +60,7 @@ function Header() {
         >
           <Menu size={18} aria-hidden="true" />
         </button>
+      </div>
       </div>
     </header>
   );

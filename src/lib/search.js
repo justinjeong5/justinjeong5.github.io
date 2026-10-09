@@ -3,20 +3,16 @@ import Fuse from 'fuse.js';
 import {
   getAllCases,
   getAllEssays,
-  getAllLogs,
-  getAllNotes,
 } from './content';
-import { buildDocsFrom, groupByType } from './search-docs.js';
+import { buildCurrentDocsFrom, groupByType } from './search-docs.js';
 
 let cachedIndex = null;
 let cachedDocs = null;
 
 function buildDocs() {
-  return buildDocsFrom({
+  return buildCurrentDocsFrom({
     cases: getAllCases(),
-    notes: getAllNotes(),
     essays: getAllEssays(),
-    logs: getAllLogs(),
   });
 }
 

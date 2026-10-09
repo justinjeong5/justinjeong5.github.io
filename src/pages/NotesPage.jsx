@@ -31,12 +31,12 @@ function NotesPage() {
   return (
     <div className="page page-list">
       <header className="page-header">
-        <p className="eyebrow">Notes</p>
-        <h1>디지털 가든</h1>
+        <p className="eyebrow">Archive</p>
+        <h1>짧은 기록 아카이브</h1>
         <p>
-          완성된 글이 아니라 자라고 있는 노트들입니다. 🌱 새싹은 초기 아이디어, 🌿 자라는 중은
-          발전 중, 🌳 상록수는 여러 번 다듬어 정착한 노트입니다.
+          예전에 남긴 설계 메모를 보관한 곳입니다. 최근의 문제 해결 과정은 경험 기록에서 읽을 수 있습니다.
         </p>
+        <Link className="see-all-link" to={ROUTES.cases}>최근 개발 경험 읽기</Link>
       </header>
 
       {notes.length === 0 ? (

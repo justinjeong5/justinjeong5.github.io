@@ -7,6 +7,7 @@ import { SECONDARY_NAV } from '../../lib/routes';
 function Footer() {
   return (
     <footer className="site-footer">
+      <div className="site-footer-inner">
       <div className="footer-brand">
         <span>
           <Sparkles size={16} aria-hidden="true" />
@@ -14,10 +15,10 @@ function Footer() {
         </span>
         <span>
           <BookOpenText size={16} aria-hidden="true" />
-          Cases, notes, logs, and proof of work
+          기술과 제품을 만드는 과정
         </span>
       </div>
-      <nav className="footer-nav" aria-label="Secondary">
+      <nav className="footer-nav" aria-label="더 보기">
         {SECONDARY_NAV.map((item) => (
           <Link key={item.to} to={item.to}>
             {item.label}
@@ -26,8 +27,9 @@ function Footer() {
       </nav>
       <span className="footer-meta">
         <CalendarClock size={16} aria-hidden="true" />
-        Updated {getLastUpdated() || new Date().getFullYear()}
+        최근 수정 {getLastUpdated() || new Date().getFullYear()}
       </span>
+      </div>
     </footer>
   );
 }

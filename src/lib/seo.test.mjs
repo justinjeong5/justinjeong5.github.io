@@ -15,6 +15,14 @@ test('merged archives preserve an accessible URL without inviting indexing', () 
 import { SITE_URL, DEFAULT_META, STATIC_META, toCanonical, normalizePath, resolveMeta, isDetailPath } from './seo.js';
 import { ROUTES } from './routes.js';
 
+test('context date is not falsely advertised as a historic publication date', () => {
+  const meta = resolveMeta('/essays/context', { essays: () => ({ title: '경험', date: '2022', dateBasis: 'context', updated: '2026-10-09' }) });
+  assert.equal(meta.datePublished, undefined);
+  assert.equal(meta.dateModified, '2026-10-09');
+  const tended = resolveMeta('/cases/context', { cases: () => ({ title: '경험', date: '2022', dateBasis: 'context', lastTendedAt: '2026-10-01' }) });
+  assert.equal(tended.dateModified, '2026-10-01');
+});
+
 test('toCanonical: 홈/빈 경로는 루트 슬래시', () => {
   assert.equal(toCanonical('/'), `${SITE_URL}/`);
   assert.equal(toCanonical(''), `${SITE_URL}/`);

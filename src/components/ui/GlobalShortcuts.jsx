@@ -7,9 +7,7 @@ import { ROUTES } from '../../lib/routes';
 const GOTO_MAP = {
   h: ROUTES.home,
   c: ROUTES.cases,
-  n: ROUTES.notes,
   e: ROUTES.essays,
-  l: ROUTES.logs,
   a: ROUTES.about,
   u: ROUTES.uses,
   w: ROUTES.now,

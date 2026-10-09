@@ -12,10 +12,8 @@ const GROWTH_ICON = {
 };
 
 const GROUP_ORDER = [
-  { key: 'case', label: 'Cases' },
-  { key: 'note', label: 'Notes' },
-  { key: 'essay', label: 'Essays' },
-  { key: 'log', label: 'Logs' },
+  { key: 'case', label: '개발 경험' },
+  { key: 'essay', label: '기술 에세이' },
 ];
 
 function CommandPalette() {
@@ -113,7 +111,7 @@ function CommandPalette() {
             type="text"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="케이스·노트·에세이·로그 검색…"
+            placeholder="개발 경험·기술 에세이의 제목과 주제 검색…"
             aria-label="검색어"
             spellCheck="false"
             autoComplete="off"

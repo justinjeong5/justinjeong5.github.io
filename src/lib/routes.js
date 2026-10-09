@@ -15,15 +15,13 @@ export const ROUTES = {
 };
 
 export const PRIMARY_NAV = [
-  { label: '경험 기록', to: ROUTES.cases },
-  { label: 'Notes', to: ROUTES.notes },
-  { label: 'Essays', to: ROUTES.essays },
-  { label: 'Logs', to: ROUTES.logs },
-  { label: 'About', to: ROUTES.about },
+  { label: '개발 경험', to: ROUTES.cases },
+  { label: '기술 에세이', to: ROUTES.essays },
+  { label: '소개', to: ROUTES.about },
 ];
 
 export const SECONDARY_NAV = [
-  { label: 'Uses', to: ROUTES.uses },
-  { label: 'Now', to: ROUTES.now },
-  { label: 'Reading', to: ROUTES.reading },
+  { label: '도구', to: ROUTES.uses },
+  { label: '요즘', to: ROUTES.now },
+  { label: '읽은 책', to: ROUTES.reading },
 ];

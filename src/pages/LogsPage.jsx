@@ -1,8 +1,9 @@
 import { useEffect, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Sprout } from 'lucide-react';
 
 import { getAllLogs } from '../lib/content';
+import { ROUTES } from '../lib/routes';
 
 const SCROLL_MARGIN_TOP = '88px';
 
@@ -35,9 +36,10 @@ function LogsPage() {
   return (
     <div className="page page-list">
       <header className="page-header">
-        <p className="eyebrow">Builder log</p>
-        <h1>작업 기록에서 남긴 질문</h1>
-        <p>작업하면서 만난 문제와 선택, 나중에 다시 생각해보고 싶은 질문을 짧게 남깁니다.</p>
+        <p className="eyebrow">Archive</p>
+        <h1>지난 작업 기록</h1>
+        <p>시간순으로 남긴 짧은 기록을 보관합니다. 지금은 문제와 설계 판단을 묶은 경험 기록을 중심으로 글을 씁니다.</p>
+        <Link className="see-all-link" to={ROUTES.cases}>최근 개발 경험 읽기</Link>
       </header>
 
       {logs.length === 0 ? (

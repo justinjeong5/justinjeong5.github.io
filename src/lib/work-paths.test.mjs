@@ -2,9 +2,42 @@ import assert from 'node:assert/strict';
 import { readdirSync, readFileSync } from 'node:fs';
 import { test } from 'node:test';
 
-import { WORK_SERIES, WORK_CASE_SLUGS, WORK_PATHS, resolveWorkPath, selectWorkCases, workPathUrl, readingPathsFor, caseStudyUrl, caseListUrl, visibleEntries } from './work-paths.js';
+import { WORK_SERIES, WORK_CASE_SLUGS, WORK_PATHS, RECOMMENDED_READS, resolveWorkPath, selectWorkCases, workPathUrl, readingPathsFor, caseStudyUrl, caseListUrl, visibleEntries } from './work-paths.js';
 
 const entries = WORK_CASE_SLUGS.map((slug) => ({ slug, series: WORK_SERIES }));
+
+test('recommended reading stays separate from chronology and matches actual article titles', () => {
+  assert.deepEqual(RECOMMENDED_READS.map((item) => item.to), [
+    '/cases/playhub-product-architecture',
+    '/cases/playhub-diagnostic-sampling',
+    '/essays/self-persona-blocking',
+  ]);
+  for (const item of RECOMMENDED_READS) {
+    const content = readFileSync(new URL(`../content${item.to}.mdx`, import.meta.url), 'utf8');
+    assert.ok(content.includes(`title: "${item.title}"`));
+    assert.doesNotMatch(content, /^archived: true$/m);
+  }
+});
+
+test('home recent work adds different articles to the recommended starting path', () => {
+  const site = JSON.parse(readFileSync(new URL('../content/site.json', import.meta.url), 'utf8'));
+  const recommended = new Set(RECOMMENDED_READS.map((item) => item.to));
+  for (const slug of site.featuredCaseSlugs) {
+    assert.ok(!recommended.has(`/cases/${slug}`));
+    assert.ok(WORK_CASE_SLUGS.includes(slug));
+  }
+});
+
+test('all and reading paths show the latest context first, not curation or editing date', () => {
+  const source = [
+    { slug: 'bulk-partial-results', series: WORK_SERIES, dateBasis: 'context', date: '2022', updated: '2026-10-09' },
+    { slug: 'playhub-product-flow', series: WORK_SERIES, dateBasis: 'context', date: '2026-06' },
+    { slug: 'article-content-integration', series: WORK_SERIES, dateBasis: 'context', date: '2026-09' },
+  ];
+  for (const view of ['all', 'operator']) {
+    assert.deepEqual(selectWorkCases(source, view).map((entry) => entry.slug), ['article-content-integration', 'playhub-product-flow', 'bulk-partial-results']);
+  }
+});
 
 test('all view keeps the editorial order and excludes previous records', () => {
   assert.deepEqual(selectWorkCases([...entries].reverse().concat({ slug: 'old', status: 'Live' })).map((entry) => entry.slug), WORK_CASE_SLUGS);

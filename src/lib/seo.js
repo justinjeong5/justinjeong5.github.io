@@ -27,20 +27,20 @@ export function toCanonical(path) {
 export const STATIC_META = {
   '/': DEFAULT_META,
   '/cases': {
-    title: '판단과 구현의 기록 | 정경하',
+    title: '개발 경험 | 정경하',
     description: '문제·본인 판단·협업·구현·확인 범위를 제품과 운영, 외부 계약, 기술 선택의 세 관점으로 읽습니다.',
   },
   '/notes': {
-    title: '디지털 가든 | 정경하',
-    description: '완성된 글이 아니라 토픽별로 자라는 디지털 가든 노트. 🌱 새싹부터 🌳 상록수까지.',
+    title: '짧은 기록 아카이브 | 정경하',
+    description: '이전에 남긴 설계 메모를 보관합니다. 최근의 개발 과정은 경험 기록에서 읽을 수 있습니다.',
   },
   '/essays': {
-    title: '긴 글로만 풀리는 생각 | 정경하',
-    description: '짧은 노트로는 담기지 않는, 긴 호흡으로 풀어낸 글 모음.',
+    title: '기술 에세이 | 정경하',
+    description: '설계와 검증, 동료와의 협업, AI 위임과 제품 전달의 판단을 실제 개발 경험으로 풀어 쓴 글입니다.',
   },
   '/logs': {
-    title: '빌더 로그 | 정경하',
-    description: '이전 회고의 주제와 설계 질문을 다시 정리한 작업 로그. 당시 결과와 현재 검증 범위를 구분합니다.',
+    title: '지난 작업 기록 | 정경하',
+    description: '이전의 시간순 작업 기록을 보관합니다. 현재는 문제와 설계 판단을 묶은 경험 기록을 중심으로 글을 씁니다.',
   },
   '/uses': {
     title: '지금 쓰는 도구 | 정경하',
@@ -99,8 +99,8 @@ export function resolveMeta(url, getters) {
       canonical: entry.archived === true && /^\/(cases|notes|essays)\/[^/?#]+$/.test(entry.supersededBy || '') ? toCanonical(entry.supersededBy) : canonical,
       robots: entry.archived === true ? 'noindex, follow' : 'index, follow',
       ogType: 'article',
-      datePublished: entry.date || undefined,
-      dateModified: entry.updated || entry.date || undefined,
+      datePublished: entry.dateBasis === 'context' ? undefined : entry.date || undefined,
+      dateModified: entry.updated || entry.lastTendedAt || (entry.dateBasis === 'context' ? undefined : entry.date) || undefined,
     };
   }
 

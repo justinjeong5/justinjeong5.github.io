@@ -8,6 +8,10 @@ import { ROUTES } from './routes.js';
 import { logUrl } from './log-url.js';
 import { visibleEntries } from './work-paths.js';
 
+export function buildCurrentDocsFrom({ cases = [], essays = [] } = {}) {
+  return buildDocsFrom({ cases, essays });
+}
+
 // 타입별 콘텐츠 엔트리 컬렉션을 공통 검색 문서 shape로 변환한다.
 // 타입별 필드 차이(topics 소스, growth, date)와 기본값, url 규칙을 한곳에 고정한다.
 export function buildDocsFrom({ cases = [], notes = [], essays = [], logs = [] } = {}) {

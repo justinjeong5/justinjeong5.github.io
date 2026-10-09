@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { buildDocsFrom, groupByType } from './search-docs.js';
+import { buildDocsFrom, buildCurrentDocsFrom, groupByType } from './search-docs.js';
 
 const sample = {
   cases: [{ slug: 'c1', title: '케이스1', summary: '케summary', tags: ['a', 'b'] }],
@@ -9,6 +9,15 @@ const sample = {
   essays: [{ slug: 'e1', title: '에세이1', summary: '에summary' }],
   logs: [{ slug: '2026-01-01-x', title: '로그1', summary: '로summary', date: '2026-01-01' }],
 };
+
+test('current search excludes archived library types before the result budget', () => {
+  const notes = Array.from({ length: 100 }, (_, i) => ({ slug: `n${i}`, title: '동일 검색어' }));
+  const logs = Array.from({ length: 100 }, (_, i) => ({ slug: `l${i}`, title: '동일 검색어' }));
+  const docs = buildCurrentDocsFrom({ ...sample, notes, logs });
+  assert.deepEqual(docs.map((entry) => entry.type), ['case', 'essay']);
+  assert.ok(docs.slice(0, 24).some((entry) => entry.slug === 'c1'));
+  assert.equal(docs.length, 2);
+});
 
 test('buildDocsFrom: 타입별 문서 shape·라벨·url을 만든다', () => {
   const docs = buildDocsFrom(sample);

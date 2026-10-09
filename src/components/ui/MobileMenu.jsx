@@ -40,14 +40,14 @@ function MobileMenu() {
     <div className="mobile-menu-overlay" role="dialog" aria-modal="true" aria-label="메뉴" onClick={closeMenu}>
       <nav className="mobile-menu" onClick={(event) => event.stopPropagation()} aria-label="모바일 네비게이션">
         <header className="mobile-menu-header">
-          <p className="mobile-menu-eyebrow">Menu</p>
+          <p className="mobile-menu-eyebrow">메뉴</p>
           <button type="button" className="icon-button" onClick={closeMenu} aria-label="닫기">
             <X size={18} aria-hidden="true" />
           </button>
         </header>
 
         <section className="mobile-menu-section">
-          <p className="mobile-menu-eyebrow">Primary</p>
+          <p className="mobile-menu-eyebrow">주요 메뉴</p>
           <ul>
             {PRIMARY_NAV.map((item) => (
               <li key={item.to}>
@@ -60,7 +60,7 @@ function MobileMenu() {
         </section>
 
         <section className="mobile-menu-section">
-          <p className="mobile-menu-eyebrow">Secondary</p>
+          <p className="mobile-menu-eyebrow">더 보기</p>
           <ul>
             {SECONDARY_NAV.map((item) => (
               <li key={item.to}>

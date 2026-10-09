@@ -3,6 +3,7 @@ import { ArrowLeft } from 'lucide-react';
 
 import { getEssay } from '../lib/content';
 import { ROUTES } from '../lib/routes';
+import { displayContextDate } from '../lib/article-dates.js';
 
 function EssayDetailPage() {
   const { slug } = useParams();
@@ -25,7 +26,7 @@ function EssayDetailPage() {
   return (
     <article className="page essay-detail">
       <header className="page-header">
-        <p className="eyebrow">{essay.archived ? '통합한 이전 글' : 'Essay'}{essay.readingTime ? ` · ${essay.readingTime}` : ''}</p>
+        <p className="eyebrow">{essay.archived ? '통합한 이전 글' : '기술 에세이'} · {displayContextDate(essay)}</p>
         <h1>{essay.title}</h1>
         {essay.summary ? <p className="page-lead">{essay.summary}</p> : null}
       </header>

@@ -15,15 +15,13 @@ const SHORTCUTS = [
   ]},
   { group: '페이지 이동 (g 누르고 다음 키)', items: [
     { keys: ['g', 'h'], desc: '홈' },
-    { keys: ['g', 'c'], desc: 'Cases' },
-    { keys: ['g', 'n'], desc: 'Notes' },
-    { keys: ['g', 'e'], desc: 'Essays' },
-    { keys: ['g', 'l'], desc: 'Logs' },
-    { keys: ['g', 'a'], desc: 'About' },
-    { keys: ['g', 'u'], desc: 'Uses' },
-    { keys: ['g', 'w'], desc: 'Now' },
-    { keys: ['g', 'r'], desc: 'Reading' },
-    { keys: ['g', 'v'], desc: 'CV' },
+    { keys: ['g', 'c'], desc: '개발 경험' },
+    { keys: ['g', 'e'], desc: '기술 에세이' },
+    { keys: ['g', 'a'], desc: '소개' },
+    { keys: ['g', 'u'], desc: '도구' },
+    { keys: ['g', 'w'], desc: '요즘' },
+    { keys: ['g', 'r'], desc: '읽은 책' },
+    { keys: ['g', 'v'], desc: '경력 안내' },
   ]},
 ];
 

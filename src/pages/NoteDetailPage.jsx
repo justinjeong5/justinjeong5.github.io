@@ -44,10 +44,11 @@ function NoteDetailPage() {
       <header className="page-header note-detail-header">
         <p className="eyebrow growth-eyebrow">
           <span aria-hidden="true">{growthIcon[note.growth] || '🌱'}</span>
-          {note.archived ? '통합한 이전 노트' : note.growth || 'Seedling'}
+          {note.archived ? '통합한 이전 노트' : '보관한 설계 메모'}
         </p>
         <h1>{note.title}</h1>
         {note.summary ? <p className="page-lead">{note.summary}</p> : null}
+        <Link className="see-all-link" to={ROUTES.cases}>최근 개발 경험 읽기</Link>
         {note.topics && note.topics.length > 0 ? (
           <ul className="topic-list" aria-label="topics">
             {note.topics.map((topic) => (

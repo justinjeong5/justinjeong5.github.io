@@ -4,6 +4,7 @@ import readingData from '../content/reading.json';
 import cvData from '../content/cv.json';
 import aboutData from '../content/about.json';
 import siteData from '../content/site.json';
+import { compareContextDates } from './article-dates.js';
 
 const caseModules = import.meta.glob('../content/cases/*.mdx', { eager: true });
 const noteModules = import.meta.glob('../content/notes/*.mdx', { eager: true });
@@ -19,23 +20,23 @@ function pickDate(entry) {
   return entry.lastTendedAt || entry.plantedAt || entry.date || '';
 }
 
-function toEntries(modules) {
+function toEntries(modules, chronological = false) {
   return Object.entries(modules)
     .map(([path, mod]) => ({
       slug: extractSlug(path),
       ...(mod.frontmatter || {}),
       Component: mod.default,
     }))
-    .sort((a, b) => pickDate(b).localeCompare(pickDate(a)));
+    .sort(chronological ? compareContextDates : (a, b) => pickDate(b).localeCompare(pickDate(a)));
 }
 
-export const getAllCases = () => toEntries(caseModules);
+export const getAllCases = () => toEntries(caseModules, true);
 export const getCase = (slug) => getAllCases().find((entry) => entry.slug === slug);
 
 export const getAllNotes = () => toEntries(noteModules);
 export const getNote = (slug) => getAllNotes().find((entry) => entry.slug === slug);
 
-export const getAllEssays = () => toEntries(essayModules);
+export const getAllEssays = () => toEntries(essayModules, true);
 export const getEssay = (slug) => getAllEssays().find((entry) => entry.slug === slug);
 
 export const getAllLogs = () => toEntries(logModules);
