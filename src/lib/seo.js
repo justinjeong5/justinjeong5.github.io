@@ -9,7 +9,7 @@ export const SITE_URL = 'https://justinjeong5.github.io';
 export const DEFAULT_META = {
   title: '정경하 | Frontend Engineer',
   description:
-    '운영 제품의 상태, 외부 응답의 계약, 기술 변경의 호환과 후속 대응을 실제 업무 기록과 관련 글로 연결합니다.',
+    '제품과 운영 도구를 개발하며 만난 문제, 설계 선택과 바뀐 판단을 하나의 개발 이야기로 기록합니다.',
 };
 
 // 경로를 정본 URL로 정규화한다. 홈('/')은 루트, 나머지는 trailing slash를 붙인다.
@@ -28,7 +28,7 @@ export const STATIC_META = {
   '/': DEFAULT_META,
   '/cases': {
     title: '개발 경험 | 정경하',
-    description: '문제·본인 판단·협업·구현·확인 범위를 제품과 운영, 외부 계약, 기술 선택의 세 관점으로 읽습니다.',
+    description: '제품 개발과 깊이 있는 기술 문제를 시작부터 판단·구현·검증·결과까지 연결한 글입니다.',
   },
   '/notes': {
     title: '짧은 기록 아카이브 | 정경하',

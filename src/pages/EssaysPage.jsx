@@ -1,4 +1,6 @@
+import { Link } from 'react-router-dom';
 import { getAllEssays } from '../lib/content';
+import { ROUTES } from '../lib/routes';
 import { visibleEntries } from '../lib/work-paths';
 import CompactArticleList from '../components/ui/CompactArticleList';
 
@@ -8,8 +10,9 @@ function EssaysPage() {
     <div className="page page-list scan-index">
       <header className="page-header">
         <p className="eyebrow">기술 에세이</p>
-        <h1>여러 경험에서 얻은 설계와 협업의 기준</h1>
-        <p className="page-lead">개별 구현을 넘어, 서로 다른 상황에서 왜 다른 선택을 했는지 비교한 글입니다.</p>
+        <h1>비교와 회고 기록</h1>
+        <p className="page-lead">주요 개발 사례는 하나의 글로 통합했습니다. 여기는 독립적으로 남긴 비교와 운영 회고를 모았습니다.</p>
+        <Link to={ROUTES.cases}>대표 글 읽기 →</Link>
       </header>
       <h2 className="article-index-title">전체 기술 에세이</h2>
       {essays.length ? <CompactArticleList entries={essays} /> : <p className="empty-state">아직 발행한 에세이가 없습니다.</p>}

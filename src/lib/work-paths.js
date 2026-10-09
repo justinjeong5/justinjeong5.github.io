@@ -4,9 +4,9 @@ import { compareContextDates } from './article-dates.js';
 export const WORK_SERIES = 'work-evidence-2026';
 
 export const RECOMMENDED_READS = [
-  { label: '제품을 만든 과정', title: '콘텐츠·리워드 허브의 FE 구축과 제품 확장', description: '초기 구축에서 참여 흐름, QA와 매체 출시까지.', to: ROUTES.caseDetail('playhub-product-architecture') },
-  { label: '기술적으로 파고든 문제', title: '진단 로그 샘플링: KPI와 조사 흐름을 함께 지키기', description: '제품 지표와 진단을 나누고, 필요한 흐름은 남기기.', to: ROUTES.caseDetail('playhub-diagnostic-sampling') },
-  { label: '동료와 설계를 바꾸는 방식', title: '동료의 반론을 아키텍처와 출시 판단에 반영하기', description: '공용 도구와 출시 조건을 다시 정한 대화와 구현.', to: ROUTES.essayDetail('self-persona-blocking') },
+  { label: '제품을 만든 과정', title: '리워드 제품의 참여 흐름을 앱과 웹에 연결하기', description: '초기 구축에서 참여 흐름, QA와 매체 출시까지.', to: ROUTES.caseDetail('playhub-product-architecture') },
+  { label: '기술적으로 파고든 문제', title: '진단 로그를 줄이면서도 조사할 수 있는 흐름을 남기기', description: '제품 지표와 진단을 나누고 필요한 흐름을 남기기.', to: ROUTES.caseDetail('playhub-diagnostic-sampling') },
+  { label: '운영자의 작업을 연결하기', title: '적립 문의 관리 제품을 만들고, 실사용의 시간차를 해결하기', description: '판단 근거와 상태 반영, 다음 처리의 흐름.', to: ROUTES.caseDetail('cs-workflow-product') },
 ];
 
 export const WORK_TOPICS = [
@@ -114,7 +114,7 @@ export function selectWorkCases(entries, pathId) {
 }
 
 export function workPathUrl(id) {
-  return id === 'previous' || resolveWorkPath(id) || resolveWorkTopic(id) ? `${ROUTES.cases}?view=${id}` : ROUTES.cases;
+  return id === 'previous' || id === 'support' || resolveWorkPath(id) || resolveWorkTopic(id) ? `${ROUTES.cases}?view=${id}` : ROUTES.cases;
 }
 
 export function caseStudyUrl(slug, pathId) {
@@ -124,6 +124,7 @@ export function caseStudyUrl(slug, pathId) {
 
 export function caseListUrl(entry, pathId) {
   if (entry.archived) return ROUTES.cases;
+  if (pathId === 'support' && entry.series === WORK_SERIES) return workPathUrl('support');
   if (pathId === 'previous') return entry.series !== WORK_SERIES ? workPathUrl(pathId) : ROUTES.cases;
   if (resolveWorkTopic(pathId)?.caseSlugs.includes(entry.slug)) return workPathUrl(pathId);
   return resolveWorkPath(pathId)?.caseSlugs.includes(entry.slug) ? workPathUrl(pathId) : ROUTES.cases;
@@ -131,11 +132,12 @@ export function caseListUrl(entry, pathId) {
 
 export function essayListUrl(slug, view) {
   if (view === 'all') return ROUTES.cases;
+  if (view === 'support') return workPathUrl('support');
   return resolveWorkTopic(view)?.essaySlugs.includes(slug) ? workPathUrl(view) : ROUTES.essays;
 }
 
 export function essayStudyUrl(slug, view) {
-  const retainView = view === 'all' || resolveWorkTopic(view)?.essaySlugs.includes(slug);
+  const retainView = view === 'all' || view === 'support' || resolveWorkTopic(view)?.essaySlugs.includes(slug);
   return `${ROUTES.essayDetail(slug)}${retainView ? `?view=${view}` : ''}`;
 }
 

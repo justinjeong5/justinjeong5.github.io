@@ -15,8 +15,7 @@ export const ROUTES = {
 };
 
 export const PRIMARY_NAV = [
-  { label: '개발 경험', to: ROUTES.cases },
-  { label: '기술 에세이', to: ROUTES.essays },
+  { label: '글', to: ROUTES.cases },
   { label: '소개', to: ROUTES.about },
 ];
 

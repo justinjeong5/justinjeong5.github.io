@@ -6,14 +6,14 @@ import { WORK_SERIES, WORK_CASE_SLUGS, WORK_PATHS, WORK_TOPICS, RECOMMENDED_READ
 
 const entries = WORK_CASE_SLUGS.map((slug) => ({ slug, series: WORK_SERIES }));
 
-test('topic map covers all work cases and published essays exactly once', () => {
+test('legacy topic map retains every article URL, including consolidated originals', () => {
   const cases = WORK_TOPICS.flatMap((topic) => topic.caseSlugs);
   const essays = WORK_TOPICS.flatMap((topic) => topic.essaySlugs);
   assert.deepEqual([...cases].sort(), [...WORK_CASE_SLUGS].sort());
   assert.equal(new Set(cases).size, cases.length);
   const published = readdirSync(new URL('../content/essays/', import.meta.url)).filter((file) => {
     const source = readFileSync(new URL(`../content/essays/${file}`, import.meta.url), 'utf8');
-    return /^status: Published$/m.test(source) && !/^archived: true$/m.test(source);
+    return /^status: Published$/m.test(source);
   }).map((file) => file.replace('.mdx', '')).sort();
   assert.deepEqual([...essays].sort(), published);
   assert.equal(new Set(essays).size, essays.length);
@@ -63,7 +63,7 @@ test('recommended reading stays separate from chronology and matches actual arti
   assert.deepEqual(RECOMMENDED_READS.map((item) => item.to), [
     '/cases/playhub-product-architecture',
     '/cases/playhub-diagnostic-sampling',
-    '/essays/self-persona-blocking',
+    '/cases/cs-workflow-product',
   ]);
   for (const item of RECOMMENDED_READS) {
     const content = readFileSync(new URL(`../content${item.to}.mdx`, import.meta.url), 'utf8');
@@ -72,12 +72,12 @@ test('recommended reading stays separate from chronology and matches actual arti
   }
 });
 
-test('home recent work adds different articles to the recommended starting path', () => {
+test('site featured work never directs readers to consolidated originals', () => {
   const site = JSON.parse(readFileSync(new URL('../content/site.json', import.meta.url), 'utf8'));
-  const recommended = new Set(RECOMMENDED_READS.map((item) => item.to));
   for (const slug of site.featuredCaseSlugs) {
-    assert.ok(!recommended.has(`/cases/${slug}`));
     assert.ok(WORK_CASE_SLUGS.includes(slug));
+    const source = readFileSync(new URL(`../content/cases/${slug}.mdx`, import.meta.url), 'utf8');
+    assert.doesNotMatch(source, /^archived: true$/m);
   }
 });
 
@@ -160,8 +160,9 @@ test('every published work-series MDX is discoverable in the all view', () => {
     return new RegExp(`^series: ${WORK_SERIES}$`, 'm').test(source) && !/^archived: true$/m.test(source);
   }).map((file) => file.replace(/\.mdx$/, ''));
 
-  assert.deepEqual([...publishedSlugs].sort(), [...WORK_CASE_SLUGS].sort());
-  assert.deepEqual(selectWorkCases(publishedSlugs.map((slug) => ({ slug, series: WORK_SERIES }))).map((entry) => entry.slug), WORK_CASE_SLUGS);
+  const expected = WORK_CASE_SLUGS.filter((slug) => publishedSlugs.includes(slug));
+  assert.deepEqual([...publishedSlugs].sort(), [...expected].sort());
+  assert.deepEqual(selectWorkCases(publishedSlugs.map((slug) => ({ slug, series: WORK_SERIES }))).map((entry) => entry.slug), expected);
 });
 
 test('new work records retain their actual reading path on detail and return', () => {

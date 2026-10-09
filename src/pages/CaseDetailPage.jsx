@@ -6,6 +6,8 @@ import { displayWorkPeriod } from '../lib/article-dates.js';
 import { useReadingView } from '../lib/use-reading-view';
 import { ROUTES } from '../lib/routes';
 import { readingPathsFor, workPathUrl, caseListUrl } from '../lib/work-paths';
+import ConsolidationNotice from '../components/ui/ConsolidationNotice';
+import { articleCollection } from '../lib/editorial';
 
 function CaseDetailPage() {
   const { slug } = useParams();
@@ -25,11 +27,12 @@ function CaseDetailPage() {
   }
 
   const { Component } = study;
+  const collection = articleCollection(study);
 
   return (
     <article className="page case-detail">
       <header className="page-header case-detail-header">
-        <p className="eyebrow">{study.statusLabel || study.status}</p>
+        <p className="eyebrow">{collection ? <Link to={collection.url}>{collection.label}</Link> : study.statusLabel || study.status}</p>
         <h1>{study.title}</h1>
         <p className="page-lead">{study.summary}</p>
         <dl className="case-meta">
@@ -51,10 +54,11 @@ function CaseDetailPage() {
       </header>
 
       <div className="prose">
+        <ConsolidationNotice entry={study} />
         <Component />
       </div>
 
-      {readingPathsFor(slug).length > 0 ? (
+      {!study.archived && readingPathsFor(slug).length > 0 ? (
         <section className="related-block">
           <h2>다른 관점에서 함께 읽기</h2>
           <div className="reading-tabs">
