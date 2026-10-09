@@ -13,14 +13,12 @@
     "AI로 범위를 넓히고 검증으로 마무리"
   ],
   "featuredCaseSlugs": [
-    "article-content-integration",
-    "ad-preload-lifecycle",
-    "canvas-input-lifecycle"
+    "playhub-product-architecture",
+    "playhub-diagnostic-sampling",
+    "cs-workflow-product"
   ],
   "featuredEssaySlugs": [
-    "ai-coding-tools-six-months",
-    "deterministic-design-loop",
-    "self-persona-blocking"
+    "automation-doesnt-reduce-work"
   ],
   "featuredNoteSlugs": [
     "operationalizing-vague-requests",

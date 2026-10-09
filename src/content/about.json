@@ -31,7 +31,7 @@
     {
       "title": "동료의 반론을 설계 변경으로 연결하기",
       "impact": "공용 배포 도구의 규칙을 저장소 선언으로 옮기고, FE 앱의 전달 구조와 제품 QA 조건을 동료들과 다시 정했습니다. 무엇이 내 선택을 바꿨는지 구체적인 사례로 돌아봅니다.",
-      "to": "/essays/self-persona-blocking"
+      "to": "/cases/deployment-config-contracts"
     }
   ],
   "operatingPrinciples": [
