@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+    <meta name="author" content="정경하" />
+    <meta property="og:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="description" content="긴 환경 목록을 두 선택기로 나눈 뒤 제품 결합에 대한 반론을 받아 설정 기반 모델로 바꿨다. 원본 배포 대상·실제 환경 조합·늦은 응답을 보존하며 직접 소비 버전을 검증한 과정." />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="배포 선택기를 편하게 만들다 공용 도구의 계약을 다시 정하기 | 정경하" />
+    <meta property="og:description" content="긴 환경 목록을 두 선택기로 나눈 뒤 제품 결합에 대한 반론을 받아 설정 기반 모델로 바꿨다. 원본 배포 대상·실제 환경 조합·늦은 응답을 보존하며 직접 소비 버전을 검증한 과정." />
+    <meta property="og:url" content="https://justinjeong5.github.io/cases/deployment-config-contracts/" />
+    <meta name="twitter:title" content="배포 선택기를 편하게 만들다 공용 도구의 계약을 다시 정하기 | 정경하" />
+    <meta name="twitter:description" content="긴 환경 목록을 두 선택기로 나눈 뒤 제품 결합에 대한 반론을 받아 설정 기반 모델로 바꿨다. 원본 배포 대상·실제 환경 조합·늦은 응답을 보존하며 직접 소비 버전을 검증한 과정." />
+    <link rel="canonical" href="https://justinjeong5.github.io/cases/deployment-config-contracts/" />
+    <title>배포 선택기를 편하게 만들다 공용 도구의 계약을 다시 정하기 | 정경하</title>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "배포 선택기를 편하게 만들다 공용 도구의 계약을 다시 정하기 | 정경하",
+  "description": "긴 환경 목록을 두 선택기로 나눈 뒤 제품 결합에 대한 반론을 받아 설정 기반 모델로 바꿨다. 원본 배포 대상·실제 환경 조합·늦은 응답을 보존하며 직접 소비 버전을 검증한 과정.",
+  "url": "https://justinjeong5.github.io/cases/deployment-config-contracts/",
+  "mainEntityOfPage": "https://justinjeong5.github.io/cases/deployment-config-contracts/",
+  "author": {
+    "@type": "Person",
+    "name": "정경하",
+    "url": "https://justinjeong5.github.io/",
+    "jobTitle": "Product-minded Frontend Engineer",
+    "sameAs": [
+      "https://github.com/justinjeong5"
+    ]
+  },
+  "dateModified": "2026-10-09"
+}
+</script>
+    <script>
+      // 테마 사전 설정 — prerender된 HTML에 data-theme를 즉시 적용해 CSS flash를 막는다.
+      // (다른 스크립트보다 먼저 실행되어야 한다.)
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages — restore deep-link path written by 404.html
+      // https://github.com/rafgraph/spa-github-pages
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
+    </script>
+    <script type="module" crossorigin src="/assets/index-Bq1YKRQq.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-QTnfLwEv.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-cases-DA1JH-dA.js">
+    <link rel="modulepreload" crossorigin href="/assets/router-L8iQeCo_.js">
+    <link rel="modulepreload" crossorigin href="/assets/search-CiN4C8Nu.js">
+    <link rel="modulepreload" crossorigin href="/assets/icons-ChI-k7Gg.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-BlgMkQ8L.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-essays-CzunsGRO.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-logs-Bjn2cJ-R.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-notes-DH8h_0Z_.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-CwzYrqL3.css">
+    <link rel="stylesheet" crossorigin href="/assets/pretendard-NPFyShNs.css">
+  </head>
+  <body>
+    <div id="root"><a href="#main-content" class="skip-link">본문 바로가기</a><header class="site-nav" aria-label="주메뉴"><div class="site-nav-inner"><a class="brand" aria-label="정경하 홈" href="/" data-discover="true">JKH</a><nav class="primary-nav"><a class="nav-link is-active" aria-current="page" href="/cases" data-discover="true">개발 경험</a><a class="nav-link" href="/cases?view=support" data-discover="true">기술 노트</a><a class="nav-link" href="/about" data-discover="true">소개</a></nav><div class="nav-actions"><button type="button" class="search-trigger" aria-label="검색" title="검색 (⌘K 또는 /)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg><span>검색</span><kbd>⌘K</kbd></button><button type="button" class="icon-button" aria-label="테마: 라이트. 클릭하여 변경" title="테마: 라이트 · T 키로도 전환"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg></button><button type="button" class="icon-button desktop-only" aria-label="키보드 단축키" aria-expanded="false" aria-haspopup="dialog" title="키보드 단축키 (? 키)"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-keyboard" aria-hidden="true"><path d="M10 8h.01"></path><path d="M12 12h.01"></path><path d="M14 8h.01"></path><path d="M16 12h.01"></path><path d="M18 8h.01"></path><path d="M6 8h.01"></path><path d="M7 16h10"></path><path d="M8 12h.01"></path><rect width="20" height="16" x="2" y="4" rx="2"></rect></svg></button><button type="button" class="icon-button menu-trigger" aria-label="메뉴 열기" aria-expanded="false" aria-haspopup="dialog" title="메뉴"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button></div></div></header><main id="main-content" tabindex="-1"><article class="page case-detail"><header class="page-header case-detail-header"><p class="eyebrow"><a href="/cases" data-discover="true">개발 경험</a></p><h1>배포 선택기를 편하게 만들다 공용 도구의 계약을 다시 정하기</h1><p class="page-lead">긴 환경 목록을 두 선택기로 나눈 뒤 제품 결합에 대한 반론을 받아 설정 기반 모델로 바꿨다. 원본 배포 대상·실제 환경 조합·늦은 응답을 보존하며 직접 소비 버전을 검증한 과정.</p><dl class="case-meta"><div><dt>담당</dt><dd>선택 모델 재설계·설정/API/CLI와 FE 통합·소비 버전 검증</dd></div><div><dt>시기</dt><dd>2026.07–2026.08</dd></div><div><dt>주제</dt><dd>#개발 도구 #설정 계약 #비동기 상태</dd></div></dl></header><div class="prose"><p>배포 화면에는 길고 비슷한 환경 이름들이 한 목록에 있었다. 원하는 프로젝트를 찾은 뒤 정확한 환경을 고르는 작업인데, 화면은 처음부터 모든 이름을 같은 수준으로 보여줬다. 환경을 새로 만드는 문제가 아니라 이미 있는 대상을 더 쉽게 찾는 문제였다.</p>
+<p>처음에는 프로젝트와 환경을 두 번에 나눠 고르게 했다. 그런데 편리한 화면을 만든 뒤 공용 도구에 특정 제품의 이름이 들어갔다는 반론을 받았다. 이 경험의 중심은 두 선택 상자보다 <strong>제품의 표시 규칙을 어디에 두고, 기존 배포의 의미를 어떻게 지킬 것인가</strong>에 있었다.</p>
+<h2>처음부터 큰 설정 모델을 만들지 않았다</h2>
+<p>초기 설계에서 그룹을 표시한 긴 목록, Cascader, 두 Select, 공개 설정 스키마 확장을 비교했다. 긴 목록은 탐색 부담이 남았고, Cascader는 값 변환과 키보드 동작을 확인할 비용이 있었다. 처음의 단일 사례를 위해 설정 스키마까지 바로 바꾸는 선택은 영향 범위가 컸다.</p>
+<p>그래서 제한적으로 활성화하는 FE 선택기를 먼저 만들었다. 프로젝트를 고르면 환경 후보를 좁히되, 각 옵션에는 원래 환경 객체를 유지했다. 표시를 나누는 정보와 배포할 대상의 식별자는 다르게 취급했다.</p>
+<p>분류에 실패한 이름이 있으면 일부 환경만 조용히 숨기지 않고 원래 평면 목록으로 돌아갔다. 편의 기능의 실패 때문에 선택 가능한 배포 대상을 잃어서는 안 됐다. 제출 요청에도 프로젝트 같은 새 UI 필드를 추가하지 않고 기존 환경 이름을 보냈다.</p>
+<h2>반론은 UI가 아니라 규칙의 주인을 바꿨다</h2>
+<p>제품 전용 이름을 공용 코드가 해석하면, 다른 저장소가 다른 순서를 쓸 때 도구 자체를 고쳐야 한다. 이 결합에 대한 리뷰를 수용해 표시 규칙을 소비 저장소의 선언으로 옮겼다.</p>
+<p>정확히 두 차원의 이름·순서·표시와 허용 값을 설정으로 표현하고, 공용 도구는 그 선언과 원본 환경 목록을 읽도록 했다. Go 설정 처리와 API·CLI, 프론트엔드 소비 모델을 함께 바꿨다. AI에 구현과 변경 준비를 맡겼지만 바뀐 요구와 검증할 대상을 정하는 일은 내가 이어 갔다.</p>
+<p>범용화한다고 무한한 계층 선택기를 만들지는 않았다. 필요한 두 차원을 선언하게 하고 기존 환경 식별자는 계속 보존했다. 변화의 크기를 문제에 맞춘 일반화였다.</p>
+<h2>허용된 값의 곱이 실제 환경은 아니었다</h2>
+<p>설정에 프로젝트와 환경의 허용 값이 있다고 그 모든 조합이 존재하는 것은 아니다. 예를 들어 프로젝트 A의 운영 환경만 있는데, 값 목록을 곱해 검증 환경까지 만들어 보여주면 선택할 수 없는 대상을 UI가 발명한다.</p>
+<p>선택지는 실제 원본 환경들을 해석해 만들었다. 설정은 이름을 어떻게 읽을지 정하고, 존재 여부는 원본 환경 목록이 정했다. 그룹만 고른 이력 조회도 해당 그룹에 실제 존재하는 환경 이름들로 요청했다.</p>
+<table><thead><tr><th>정보</th><th>맡은 의미</th></tr></thead><tbody><tr><td>표시 설정</td><td>두 차원과 이름·순서를 해석하는 방법</td></tr><tr><td>원본 환경 목록</td><td>실제 선택하고 조회할 수 있는 대상</td></tr><tr><td>제출 값</td><td>기존 실행 계약의 원본 환경 이름</td></tr></tbody></table>
+<p>설정이 잘못됐을 때도 표시 설정의 오류와 core 배포 설정의 오류를 나눴다. 편의 설정은 경고와 평면 목록으로 돌아갈 수 있지만, 실행할 설정까지 잘못된 일을 정상처럼 넘기는 것은 다른 문제였다.</p>
+<h2>환경을 바꾸면 이전 조회의 권한도 끝난다</h2>
+<p>A의 배포 정보를 읽는 동안 사용자가 B로 바꿀 수 있었다. 선택 상자는 B인데 늦은 A의 응답이 화면을 채우면, 화면의 의미와 실제 대상이 달라진다.</p>
+<p>환경 변경 때 현재·최근 결과와 pending request를 비웠다. 응답을 적용할 때는 요청 식별자와 요청했던 원본 환경이 지금 선택과 같은지 함께 확인했다. 같은 환경에서도 새 refresh가 시작될 수 있어 환경 이름만 비교하는 것으로는 부족했다.</p>
+<p>Rollback에서는 조회 이력뿐 아니라 선택한 배포 대상도 초기화했다. 늦은 조회를 막았더라도 A에서 고른 실행 입력을 B에서 들고 있으면 문제가 남는다. 조회 데이터와 다음 명령의 대상이 같은 환경을 설명해야 했다.</p>
+<h2>정상 화면이 새 구현의 성공을 증명하지 않았다</h2>
+<p>새 설정이 들어가도 제품 전용 구 분기가 남아 있으면 같은 화면이 나올 수 있었다. 그 상태에서는 새 선언이 잘못돼도 이전 코드가 성공을 대신 설명한다.</p>
+<p>그래서 소비 저장소의 선언과 공용 도구의 전용 분기 제거가 함께 들어간 버전을 검증 대상으로 다시 정했다. 배포는 직접 진행해 환경 선택과 실제 배포를 확인했다. 보이는 선택기의 모양뿐 아니라 원래 배포 대상이 요청에 남는지를 확인하는 작업이었다.</p>
+<p>후속에서는 Home·Lock·Rollback의 탐색도 같은 계약으로 연결했다. Lock 환경별 탐색에 대한 동료의 감사가 있었고, 최근 배포 대상을 사용한 rollback도 확인했다. 오래된 SHA의 branch guard는 DevOps 동료의 작업이었다. 내가 바꾼 선택기와 배포 backend의 안전장치를 같은 성과로 합치지 않았다.</p>
+<h2>편의를 더하면서 실행의 의미는 그대로 두기</h2>
+<p>저장소는 표시 규칙을 선언할 수 있게 됐고, 도구는 제품 이름을 덜 알아도 실제 환경을 보여줄 수 있었다. 선택 변경과 늦은 응답을 함께 다뤘고, 구 구현이 성공을 대신하지 못하는 조합에서 소비 동작을 확인했다.</p>
+<p>지금 이 작업을 돌아보면 두 번의 재판단이 남는다. 리뷰에서는 편리한 화면이 공용 도구에 제품 지식을 넣고 있다는 점을 봤고, 배포 확인에서는 정상 화면을 구 코드가 대신 만들 수 있다는 점을 봤다. 하나는 규칙을 어디에 둘지, 다른 하나는 무엇을 성공의 증거로 볼지를 바꿨다.</p>
+<p>다음에 비슷한 편의 기능을 만든다면 화면의 모양보다 그 도구가 새로 알아야 할 것과 검증이 구별해야 할 것을 먼저 적고 싶다. 두 선택 상자를 잘 만드는 문제보다 그 질문이 오래 남은 경험이었다.</p></div><section class="related-block"><h2>다른 관점에서 함께 읽기</h2><div class="reading-tabs"><a href="/cases?view=contracts" data-discover="true">외부 응답과 상태</a><a href="/cases?view=delivery" data-discover="true">기술 선택과 변경</a></div></section><footer class="page-footer"><a class="see-all-link" href="/cases" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg> 개발 경험 목록</a></footer></article></main><footer class="site-footer"><div class="site-footer-inner"><div class="footer-brand"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg>정경하</span><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open-text" aria-hidden="true"><path d="M12 7v14"></path><path d="M16 12h2"></path><path d="M16 8h2"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path><path d="M6 12h2"></path><path d="M6 8h2"></path></svg>기술과 제품을 만드는 과정</span></div><nav class="footer-nav" aria-label="더 보기"><a href="/uses" data-discover="true">도구</a><a href="/now" data-discover="true">요즘</a><a href="/reading" data-discover="true">읽은 책</a></nav><span class="footer-meta"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-clock" aria-hidden="true"><path d="M16 14v2.2l1.6 1"></path><path d="M16 2v4"></path><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"></path><path d="M3 10h5"></path><path d="M8 2v4"></path><circle cx="16" cy="16" r="6"></circle></svg>최근 수정 <!-- -->2026-10-09</span></div></footer></div>
+  </body>
+</html>

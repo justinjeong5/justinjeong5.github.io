@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+    <meta name="author" content="정경하" />
+    <meta property="og:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="description" content="같은 팝업인데 어떤 화면에서는 열리고, 상위 번역 설정이 없는 곳에서는 본문을 그리지 못하는 구조였다. 공용 기능의 숨은 실행 조건을 다룬 과정." />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="다국어 팝업의 암묵적 의존성 제거 | 정경하" />
+    <meta property="og:description" content="같은 팝업인데 어떤 화면에서는 열리고, 상위 번역 설정이 없는 곳에서는 본문을 그리지 못하는 구조였다. 공용 기능의 숨은 실행 조건을 다룬 과정." />
+    <meta property="og:url" content="https://justinjeong5.github.io/cases/shared-popup-locale/" />
+    <meta name="twitter:title" content="다국어 팝업의 암묵적 의존성 제거 | 정경하" />
+    <meta name="twitter:description" content="같은 팝업인데 어떤 화면에서는 열리고, 상위 번역 설정이 없는 곳에서는 본문을 그리지 못하는 구조였다. 공용 기능의 숨은 실행 조건을 다룬 과정." />
+    <link rel="canonical" href="https://justinjeong5.github.io/cases/shared-popup-locale/" />
+    <title>다국어 팝업의 암묵적 의존성 제거 | 정경하</title>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "다국어 팝업의 암묵적 의존성 제거 | 정경하",
+  "description": "같은 팝업인데 어떤 화면에서는 열리고, 상위 번역 설정이 없는 곳에서는 본문을 그리지 못하는 구조였다. 공용 기능의 숨은 실행 조건을 다룬 과정.",
+  "url": "https://justinjeong5.github.io/cases/shared-popup-locale/",
+  "mainEntityOfPage": "https://justinjeong5.github.io/cases/shared-popup-locale/",
+  "author": {
+    "@type": "Person",
+    "name": "정경하",
+    "url": "https://justinjeong5.github.io/",
+    "jobTitle": "Product-minded Frontend Engineer",
+    "sameAs": [
+      "https://github.com/justinjeong5"
+    ]
+  },
+  "dateModified": "2026-10-02"
+}
+</script>
+    <script>
+      // 테마 사전 설정 — prerender된 HTML에 data-theme를 즉시 적용해 CSS flash를 막는다.
+      // (다른 스크립트보다 먼저 실행되어야 한다.)
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages — restore deep-link path written by 404.html
+      // https://github.com/rafgraph/spa-github-pages
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
+    </script>
+    <script type="module" crossorigin src="/assets/index-Bq1YKRQq.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-QTnfLwEv.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-cases-DA1JH-dA.js">
+    <link rel="modulepreload" crossorigin href="/assets/router-L8iQeCo_.js">
+    <link rel="modulepreload" crossorigin href="/assets/search-CiN4C8Nu.js">
+    <link rel="modulepreload" crossorigin href="/assets/icons-ChI-k7Gg.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-BlgMkQ8L.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-essays-CzunsGRO.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-logs-Bjn2cJ-R.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-notes-DH8h_0Z_.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-CwzYrqL3.css">
+    <link rel="stylesheet" crossorigin href="/assets/pretendard-NPFyShNs.css">
+  </head>
+  <body>
+    <div id="root"><a href="#main-content" class="skip-link">본문 바로가기</a><header class="site-nav" aria-label="주메뉴"><div class="site-nav-inner"><a class="brand" aria-label="정경하 홈" href="/" data-discover="true">JKH</a><nav class="primary-nav"><a class="nav-link" href="/cases" data-discover="true">개발 경험</a><a class="nav-link is-active" aria-current="page" href="/cases?view=support" data-discover="true">기술 노트</a><a class="nav-link" href="/about" data-discover="true">소개</a></nav><div class="nav-actions"><button type="button" class="search-trigger" aria-label="검색" title="검색 (⌘K 또는 /)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg><span>검색</span><kbd>⌘K</kbd></button><button type="button" class="icon-button" aria-label="테마: 라이트. 클릭하여 변경" title="테마: 라이트 · T 키로도 전환"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg></button><button type="button" class="icon-button desktop-only" aria-label="키보드 단축키" aria-expanded="false" aria-haspopup="dialog" title="키보드 단축키 (? 키)"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-keyboard" aria-hidden="true"><path d="M10 8h.01"></path><path d="M12 12h.01"></path><path d="M14 8h.01"></path><path d="M16 12h.01"></path><path d="M18 8h.01"></path><path d="M6 8h.01"></path><path d="M7 16h10"></path><path d="M8 12h.01"></path><rect width="20" height="16" x="2" y="4" rx="2"></rect></svg></button><button type="button" class="icon-button menu-trigger" aria-label="메뉴 열기" aria-expanded="false" aria-haspopup="dialog" title="메뉴"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button></div></div></header><main id="main-content" tabindex="-1"><article class="page case-detail"><header class="page-header case-detail-header"><p class="eyebrow"><a href="/cases?view=support" data-discover="true">기술 노트</a></p><h1>다국어 팝업의 암묵적 의존성 제거</h1><p class="page-lead">같은 팝업인데 어떤 화면에서는 열리고, 상위 번역 설정이 없는 곳에서는 본문을 그리지 못하는 구조였다. 공용 기능의 숨은 실행 조건을 다룬 과정.</p><dl class="case-meta"><div><dt>담당</dt><dd>공용 팝업의 번역 경계 수정·언어 선택과 독립 렌더링 테스트</dd></div><div><dt>시기</dt><dd>2026.05.27</dd></div><div><dt>주제</dt><dd>#공용 컴포넌트 #다국어 #암묵적 의존성</dd></div></dl></header><div class="prose"><p>광고를 제보하는 팝업은 여러 화면에서 호출하는 공용 기능이었다. 공용이라면 호출하는 화면을 바꿔도 필요한 안내와 버튼이 나와야 한다. 하지만 이 팝업에는 화면 밖에서 미리 제공해야 하는 번역 설정이 숨어 있었다.</p>
+<p>React의 번역 Provider는 아래쪽 컴포넌트에 사용할 언어와 문구를 제공한다. 팝업 안에도 자체 Provider와 메시지가 있어서, 그 기능만 불러오면 필요한 설정이 갖춰질 것처럼 보였다. 실제로 번역 설정이 있는 화면에서는 그런 의존성을 알아차리기 어려웠다.</p>
+<p>순서가 문제였다. 팝업이 내부 Provider를 만들기 전에 상위 Provider에서 언어부터 읽었다. 상위 설정이 없는 렌더링에서는 그 읽기가 실패해 팝업 본문까지 그릴 수 없었다. 문구를 잘못 번역하는 정도가 아니라, 공용 UI를 실행하기 위한 조건이 호출 화면에 남아 있었던 것이다.</p>
+<p>화면별 번역 범위를 조정할 때도 이 의존성이 따라왔다. 한 화면의 설정을 옮기는 일 때문에 다른 곳에서 쓰는 팝업까지 그 설정을 마련해야 한다면, 기능이 메시지를 갖고 있다는 것만으로는 독립적이라고 볼 수 없었다.</p>
+<h2>Provider가 있다는 것과 독립적으로 실행된다는 것</h2>
+<p>화면별 번역 설정의 범위를 조정하는 변경을 다루면서, 공용 기능이 어느 레이아웃의 설정을 전제로 하는지 함께 살폈다. 번역이 필요한 화면에 Provider를 두는 일과, 그 화면 밖에서도 쓰는 팝업의 실행 조건은 같은 문제가 아니었다.</p>
+<p>팝업을 쓰는 모든 화면에 상위 Provider를 추가하는 방향으로 넓히지는 않았다. 언어를 고르는 입력을 팝업이 받을 수 있게 하고, 팝업 안의 번역 Provider가 그 선택을 사용하도록 바꿨다. 메시지를 소유한 기능이 언어 선택의 기준도 함께 갖는 구조였다.</p>
+<p>중요했던 것은 Provider의 개수보다 읽는 순서였다. 내부 Provider의 자식은 그 설정을 사용할 수 있지만, Provider를 생성하는 바깥 함수가 읽는 언어까지 그 Provider가 제공하지는 않는다.</p>
+<h2>브라우저 언어만으로 고르지 않은 이유</h2>
+<p>언어 선택에는 두 조건이 있었다. 해당 서비스가 다국어를 지원하는지와, 브라우저가 어떤 언어를 사용하는지다. 브라우저가 영어라고 해서 다국어를 제공하지 않는 서비스의 안내까지 영어로 바꾸면 기존 정책과 달라진다.</p>
+<p>호출하는 쪽에서 서비스 정보를 전달하고, 다국어 지원 여부를 먼저 확인하도록 했다. 정보가 없거나 다국어를 지원하지 않으면 기본 한국어를 사용했다. 지원하는 경우에만 브라우저 언어를 지원 메시지에 대응시켰다. 지원 목록 밖의 언어도 기본값으로 돌아갔다.</p>
+<p>언어 선택은 별도 함수로 나눴다. 번역 라이브러리의 context 없이도 입력과 기본값의 관계를 확인할 수 있어야 했다. 브라우저 정보가 없는 실행에서도 같은 기본값을 사용하도록 했다.</p>
+<h2>상위 설정을 빼고 팝업을 그려보기</h2>
+<p>상위 번역 Provider가 없어도 기본 안내와 버튼을 그릴 수 있게 됐다. 번역을 위해 호출 화면마다 같은 상위 설정을 추가하는 대신, 서비스 정보를 팝업에 전달하고 팝업이 지원 정책과 브라우저 언어로 메시지를 선택한다. 서비스 정보가 없을 때는 기본값을 사용한다. 공용 기능을 쓰는 화면이 떠안을 번역 의존성을 줄인 결과였다.</p>
+<p>테스트에서는 지원 여부와 언어 매핑을 나누고, 상위 Provider를 실제로 빼고 팝업을 렌더링했다. 기본 안내와 버튼이 보이는지 확인한 변경을 함께 병합했다. 제거하려던 설정을 테스트 환경이 다시 제공하면 이 결과를 확인할 수 없었다.</p>
+<p>이 경험에서 공용이라는 말의 기준을 다시 보게 된다. 메시지와 Provider를 내부에 갖고 있어도 처음 실행하는 함수가 바깥의 context를 읽으면 독립적으로 쓸 수 없다. 재사용할 코드의 위치보다 실행에 필요한 조건을 확인하고, 그 조건이 없는 테스트도 구성해야 한다는 점이 남았다.</p></div><section class="related-block"><h2>다른 관점에서 함께 읽기</h2><div class="reading-tabs"><a href="/cases?view=operator" data-discover="true">제품과 운영자</a><a href="/cases?view=delivery" data-discover="true">기술 선택과 변경</a></div></section><footer class="page-footer"><a class="see-all-link" href="/cases" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg> 개발 경험 목록</a></footer></article></main><footer class="site-footer"><div class="site-footer-inner"><div class="footer-brand"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg>정경하</span><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open-text" aria-hidden="true"><path d="M12 7v14"></path><path d="M16 12h2"></path><path d="M16 8h2"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path><path d="M6 12h2"></path><path d="M6 8h2"></path></svg>기술과 제품을 만드는 과정</span></div><nav class="footer-nav" aria-label="더 보기"><a href="/uses" data-discover="true">도구</a><a href="/now" data-discover="true">요즘</a><a href="/reading" data-discover="true">읽은 책</a></nav><span class="footer-meta"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-clock" aria-hidden="true"><path d="M16 14v2.2l1.6 1"></path><path d="M16 2v4"></path><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"></path><path d="M3 10h5"></path><path d="M8 2v4"></path><circle cx="16" cy="16" r="6"></circle></svg>최근 수정 <!-- -->2026-10-09</span></div></footer></div>
+  </body>
+</html>

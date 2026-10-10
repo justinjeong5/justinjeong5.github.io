@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+    <meta name="author" content="정경하" />
+    <meta property="og:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="description" content="서버의 보상 성공과 화면의 금액 공개를 나눠 기록했다. 문서 교체 뒤 안내를 복구하면서, 지연된 표시 확정이 만드는 중복도 다룬 이야기." />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="외부 페이지 복귀 후 리워드 안내 복구 | 정경하" />
+    <meta property="og:description" content="서버의 보상 성공과 화면의 금액 공개를 나눠 기록했다. 문서 교체 뒤 안내를 복구하면서, 지연된 표시 확정이 만드는 중복도 다룬 이야기." />
+    <meta property="og:url" content="https://justinjeong5.github.io/cases/playhub-reward-reveal/" />
+    <meta name="twitter:title" content="외부 페이지 복귀 후 리워드 안내 복구 | 정경하" />
+    <meta name="twitter:description" content="서버의 보상 성공과 화면의 금액 공개를 나눠 기록했다. 문서 교체 뒤 안내를 복구하면서, 지연된 표시 확정이 만드는 중복도 다룬 이야기." />
+    <link rel="canonical" href="https://justinjeong5.github.io/cases/playhub-reward-reveal/" />
+    <title>외부 페이지 복귀 후 리워드 안내 복구 | 정경하</title>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "외부 페이지 복귀 후 리워드 안내 복구 | 정경하",
+  "description": "서버의 보상 성공과 화면의 금액 공개를 나눠 기록했다. 문서 교체 뒤 안내를 복구하면서, 지연된 표시 확정이 만드는 중복도 다룬 이야기.",
+  "url": "https://justinjeong5.github.io/cases/playhub-reward-reveal/",
+  "mainEntityOfPage": "https://justinjeong5.github.io/cases/playhub-reward-reveal/",
+  "author": {
+    "@type": "Person",
+    "name": "정경하",
+    "url": "https://justinjeong5.github.io/",
+    "jobTitle": "Product-minded Frontend Engineer",
+    "sameAs": [
+      "https://github.com/justinjeong5"
+    ]
+  },
+  "dateModified": "2026-10-09"
+}
+</script>
+    <script>
+      // 테마 사전 설정 — prerender된 HTML에 data-theme를 즉시 적용해 CSS flash를 막는다.
+      // (다른 스크립트보다 먼저 실행되어야 한다.)
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages — restore deep-link path written by 404.html
+      // https://github.com/rafgraph/spa-github-pages
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
+    </script>
+    <script type="module" crossorigin src="/assets/index-Bq1YKRQq.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-QTnfLwEv.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-cases-DA1JH-dA.js">
+    <link rel="modulepreload" crossorigin href="/assets/router-L8iQeCo_.js">
+    <link rel="modulepreload" crossorigin href="/assets/search-CiN4C8Nu.js">
+    <link rel="modulepreload" crossorigin href="/assets/icons-ChI-k7Gg.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-BlgMkQ8L.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-essays-CzunsGRO.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-logs-Bjn2cJ-R.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-notes-DH8h_0Z_.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-CwzYrqL3.css">
+    <link rel="stylesheet" crossorigin href="/assets/pretendard-NPFyShNs.css">
+  </head>
+  <body>
+    <div id="root"><a href="#main-content" class="skip-link">본문 바로가기</a><header class="site-nav" aria-label="주메뉴"><div class="site-nav-inner"><a class="brand" aria-label="정경하 홈" href="/" data-discover="true">JKH</a><nav class="primary-nav"><a class="nav-link is-active" aria-current="page" href="/cases" data-discover="true">개발 경험</a><a class="nav-link" href="/cases?view=support" data-discover="true">기술 노트</a><a class="nav-link" href="/about" data-discover="true">소개</a></nav><div class="nav-actions"><button type="button" class="search-trigger" aria-label="검색" title="검색 (⌘K 또는 /)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg><span>검색</span><kbd>⌘K</kbd></button><button type="button" class="icon-button" aria-label="테마: 라이트. 클릭하여 변경" title="테마: 라이트 · T 키로도 전환"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg></button><button type="button" class="icon-button desktop-only" aria-label="키보드 단축키" aria-expanded="false" aria-haspopup="dialog" title="키보드 단축키 (? 키)"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-keyboard" aria-hidden="true"><path d="M10 8h.01"></path><path d="M12 12h.01"></path><path d="M14 8h.01"></path><path d="M16 12h.01"></path><path d="M18 8h.01"></path><path d="M6 8h.01"></path><path d="M7 16h10"></path><path d="M8 12h.01"></path><rect width="20" height="16" x="2" y="4" rx="2"></rect></svg></button><button type="button" class="icon-button menu-trigger" aria-label="메뉴 열기" aria-expanded="false" aria-haspopup="dialog" title="메뉴"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button></div></div></header><main id="main-content" tabindex="-1"><article class="page case-detail"><header class="page-header case-detail-header"><p class="eyebrow"><a href="/cases" data-discover="true">개발 경험</a></p><h1>외부 페이지 복귀 후 리워드 안내 복구</h1><p class="page-lead">서버의 보상 성공과 화면의 금액 공개를 나눠 기록했다. 문서 교체 뒤 안내를 복구하면서, 지연된 표시 확정이 만드는 중복도 다룬 이야기.</p><dl class="case-meta"><div><dt>담당</dt><dd>복귀 보상 안내의 미공개 기록·재생·가시성 경합 처리</dd></div><div><dt>시기</dt><dd>2026.07</dd></div><div><dt>주제</dt><dd>#복귀 #보상 안내 #문서 수명주기</dd></div></dl></header><div class="prose"><p>외부로 이동했다 돌아온 사용자의 보상은 처리됐는데, 받았다는 안내가 사라지는 경우가 있었다. QA와 상용 확인에서 나온 문제였다. 고객 문의 담당자는 금액이 적어 보이거나 지급받지 못했다고 인지할 수 있고, 문의하지 않고 떠나는 사용자에게도 안내가 필요하다고 설명했다.</p>
+<p>서버 성공 응답을 받은 함수 안에서 오버레이를 여는 것만으로는 부족했다. 이동·복귀 중 웹 문서가 교체되면 그 화면 상태도 사라질 수 있었다. <strong>지급 요청을 다시 보내지 않고, 아직 공개하지 않은 안내만 이어갈 방법</strong>이 필요했다.</p>
+<h2>지급 요청을 다시 실행하는 문제로 보지 않았다</h2>
+<p>보상 처리와 보상 금액 공개는 다른 사건이었다. 서버가 성공했다고 해서 새 문서가 사용자에게 금액을 보여줬다는 뜻은 아니다. 반대로 안내가 없다고 지급 요청을 다시 보내면 표시 문제를 서버 처리 문제로 바꾸게 된다.</p>
+<p>나는 성공 결과를 받은 시점과 안내가 공개된 시점을 따로 기록했다. 새 문서가 이어서 사용할 UI의 성공 정보와 표시 여부를 보관하는 기록이었다.</p>
+<h2>문서가 바뀌어도 미공개 성공을 이어받게 했다</h2>
+<p>성공 후 아직 공개되지 않은 marker를 저장하고 새 문서에서 읽었다. 아무 기록이나 복구하면 다른 사용자나 오래된 보상이 섞이므로 신원·당일·유효기간 조건을 확인했다. 새 문서의 상태 조회가 준비된 뒤에만 재생하도록 했다.</p>
+<p>신원이 맞지 않는다는 이유로 저장된 모든 기록을 지우지도 않았다. 아직 신선한 다른 신원의 기록은 함부로 소비하지 않았다. 복구할 자격을 판단하는 것과 저장공간 전체를 정리하는 것은 별개였다.</p>
+<p>설명용 의사코드이며 실제 회사 코드가 아니다.</p>
+<pre><code class="language-ts">onRewardSuccess(result) {
+  savePendingReveal(result, identity, day, expiresAt);
+}
+
+onStatusReady() {
+  const pending = readPendingReveal();
+  if (matchesCurrentContext(pending)) showReveal(pending.amount);
+}
+
+onRevealVisibilityChange() {
+  if (revealIsOpen &amp;&amp; documentIsVisible) commitRevealNow();
+}
+</code></pre>
+<h2>오래 보여준 뒤 확정하는 방식에도 경합이 있었다</h2>
+<p>첫 복구만으로 끝나지 않았다. 안내가 visible 상태가 된 뒤 일정 시간 기다려 표시 완료를 기록하는 구현에서는 그 사이 문서가 교체될 수 있었다. 이전 문서가 공개했어도 표시 확정 timer는 취소되고, 새 문서는 미공개 marker를 읽어 같은 금액을 다시 연출했다.</p>
+<p>그래서 공개 상태와 문서 가시성이 함께 확인되는 즉시 표시 기록을 확정하도록 바꿨다. hidden 문서에서 오버레이 상태만 열렸다면 소비하지 않고, visible로 돌아오는 시점에 다시 확인했다.</p>
+<p>표시 확정의 기준은 UI가 공개 상태이고 문서가 visible이라는 클라이언트 신호였다. 이 조건이 맞는 시점에 기록을 남겨 다음 문서가 다시 미공개 안내로 읽지 않게 했다.</p>
+<h2>지연 확정과 조기 소비를 서로 다른 테스트로 막았다</h2>
+<p>회귀 테스트는 ‘나중에 표시 기록이 생겼는가’보다 엄격한 시점을 사용했다. visible 상태로 안내가 열린 바로 그 시각에 표시 시각이 기록돼야 했다. 다시 timer를 넣으면 이 기대 결과를 만족하지 못한다.</p>
+<table><thead><tr><th>입력·실행 순서</th><th>기대 결과</th></tr></thead><tbody><tr><td>성공 기록→상태 준비→미공개 marker 읽기</td><td>안내 재생</td></tr><tr><td>신원·날짜·유효기간 불일치</td><td>해당 안내 재생 금지</td></tr><tr><td>안내 공개, 문서 visible</td><td>같은 시점에 표시 기록 확정</td></tr><tr><td>안내 공개, 문서 hidden</td><td>표시 기록 미확정 유지</td></tr><tr><td>hidden 공개 후 visible 복귀</td><td>복귀 시 표시 기록 확정</td></tr><tr><td>저장소 읽기·쓰기 실패</td><td>실패 경로 처리, 정상 저장으로 가장하지 않음</td></tr></tbody></table>
+<p>가짜 시간·가시성·저장소를 쓰는 hook 테스트로, 문서가 visible이 되는 시점에 표시 상태를 소비하는 판단을 고정했다.</p>
+<h2>기록은 발견 이후의 흐름도 읽게 했다</h2>
+<p>write·replay·discard·commit·error를 나눠 진단 이벤트를 남겼다. 단순히 안내가 열렸다는 하나의 이벤트보다, 성공 정보가 기록됐는지 새 문서에서 재생됐는지 어떤 조건으로 버려졌는지 읽을 수 있었다.</p>
+<p>QA와 상용 확인에서 찾은 문제를, 구현 이후에는 이 기록으로 이어서 조사했다. 상태 흐름과 전후 관측을 읽을 때도 활용했다. 상세 로그를 어떻게 줄였는지는 <a href="/cases/playhub-diagnostic-sampling/">고정 표본 수집의 이야기</a>에서 다룬다.</p>
+<h2>복귀한 사용자가 안내를 이어받는 변화</h2>
+<p>수정 후 나는 같은 길이의 전후 관측을 공유했고, 제품 담당자는 많이 개선됐다고 반응했다. 성공한 보상을 새 문서가 미공개 안내로 이어받고, 공개된 안내는 문서 교체 뒤 다시 재생하지 않도록 바꾼 결과였다.</p>
+<p>지금 돌아보면 보상 UI는 성공 응답 뒤에 잠깐 붙이는 장식이 아니었다. 성공이 존재하는 시간과 그 성공을 공개하는 문서의 수명이 달랐다. 그 사이를 잇는 작은 기록과 정확한 소비 시점이, 사용자가 이미 받은 혜택을 이해할 수 있는 흐름을 만들었다.</p></div><section class="related-block"><h2>다른 관점에서 함께 읽기</h2><div class="reading-tabs"><a href="/cases?view=operator" data-discover="true">제품과 운영자</a><a href="/cases?view=contracts" data-discover="true">외부 응답과 상태</a></div></section><footer class="page-footer"><a class="see-all-link" href="/cases" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg> 개발 경험 목록</a></footer></article></main><footer class="site-footer"><div class="site-footer-inner"><div class="footer-brand"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg>정경하</span><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open-text" aria-hidden="true"><path d="M12 7v14"></path><path d="M16 12h2"></path><path d="M16 8h2"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path><path d="M6 12h2"></path><path d="M6 8h2"></path></svg>기술과 제품을 만드는 과정</span></div><nav class="footer-nav" aria-label="더 보기"><a href="/uses" data-discover="true">도구</a><a href="/now" data-discover="true">요즘</a><a href="/reading" data-discover="true">읽은 책</a></nav><span class="footer-meta"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-clock" aria-hidden="true"><path d="M16 14v2.2l1.6 1"></path><path d="M16 2v4"></path><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"></path><path d="M3 10h5"></path><path d="M8 2v4"></path><circle cx="16" cy="16" r="6"></circle></svg>최근 수정 <!-- -->2026-10-09</span></div></footer></div>
+  </body>
+</html>

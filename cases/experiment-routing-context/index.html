@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+    <meta name="author" content="정경하" />
+    <meta property="og:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="description" content="같은 사용자라도 들어온 경로에 따라 화면과 추천 배너가 달라질 수 있었다. 이동 조건의 순서와 도착한 화면의 노출을 함께 맞춘 이야기." />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="참여 화면의 라우팅과 추천 노출 조건 통합 | 정경하" />
+    <meta property="og:description" content="같은 사용자라도 들어온 경로에 따라 화면과 추천 배너가 달라질 수 있었다. 이동 조건의 순서와 도착한 화면의 노출을 함께 맞춘 이야기." />
+    <meta property="og:url" content="https://justinjeong5.github.io/cases/experiment-routing-context/" />
+    <meta name="twitter:title" content="참여 화면의 라우팅과 추천 노출 조건 통합 | 정경하" />
+    <meta name="twitter:description" content="같은 사용자라도 들어온 경로에 따라 화면과 추천 배너가 달라질 수 있었다. 이동 조건의 순서와 도착한 화면의 노출을 함께 맞춘 이야기." />
+    <link rel="canonical" href="https://justinjeong5.github.io/cases/experiment-routing-context/" />
+    <title>참여 화면의 라우팅과 추천 노출 조건 통합 | 정경하</title>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "참여 화면의 라우팅과 추천 노출 조건 통합 | 정경하",
+  "description": "같은 사용자라도 들어온 경로에 따라 화면과 추천 배너가 달라질 수 있었다. 이동 조건의 순서와 도착한 화면의 노출을 함께 맞춘 이야기.",
+  "url": "https://justinjeong5.github.io/cases/experiment-routing-context/",
+  "mainEntityOfPage": "https://justinjeong5.github.io/cases/experiment-routing-context/",
+  "author": {
+    "@type": "Person",
+    "name": "정경하",
+    "url": "https://justinjeong5.github.io/",
+    "jobTitle": "Product-minded Frontend Engineer",
+    "sameAs": [
+      "https://github.com/justinjeong5"
+    ]
+  },
+  "dateModified": "2026-10-02"
+}
+</script>
+    <script>
+      // 테마 사전 설정 — prerender된 HTML에 data-theme를 즉시 적용해 CSS flash를 막는다.
+      // (다른 스크립트보다 먼저 실행되어야 한다.)
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages — restore deep-link path written by 404.html
+      // https://github.com/rafgraph/spa-github-pages
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
+    </script>
+    <script type="module" crossorigin src="/assets/index-Bq1YKRQq.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-QTnfLwEv.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-cases-DA1JH-dA.js">
+    <link rel="modulepreload" crossorigin href="/assets/router-L8iQeCo_.js">
+    <link rel="modulepreload" crossorigin href="/assets/search-CiN4C8Nu.js">
+    <link rel="modulepreload" crossorigin href="/assets/icons-ChI-k7Gg.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-BlgMkQ8L.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-essays-CzunsGRO.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-logs-Bjn2cJ-R.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-notes-DH8h_0Z_.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-CwzYrqL3.css">
+    <link rel="stylesheet" crossorigin href="/assets/pretendard-NPFyShNs.css">
+  </head>
+  <body>
+    <div id="root"><a href="#main-content" class="skip-link">본문 바로가기</a><header class="site-nav" aria-label="주메뉴"><div class="site-nav-inner"><a class="brand" aria-label="정경하 홈" href="/" data-discover="true">JKH</a><nav class="primary-nav"><a class="nav-link" href="/cases" data-discover="true">개발 경험</a><a class="nav-link is-active" aria-current="page" href="/cases?view=support" data-discover="true">기술 노트</a><a class="nav-link" href="/about" data-discover="true">소개</a></nav><div class="nav-actions"><button type="button" class="search-trigger" aria-label="검색" title="검색 (⌘K 또는 /)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg><span>검색</span><kbd>⌘K</kbd></button><button type="button" class="icon-button" aria-label="테마: 라이트. 클릭하여 변경" title="테마: 라이트 · T 키로도 전환"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg></button><button type="button" class="icon-button desktop-only" aria-label="키보드 단축키" aria-expanded="false" aria-haspopup="dialog" title="키보드 단축키 (? 키)"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-keyboard" aria-hidden="true"><path d="M10 8h.01"></path><path d="M12 12h.01"></path><path d="M14 8h.01"></path><path d="M16 12h.01"></path><path d="M18 8h.01"></path><path d="M6 8h.01"></path><path d="M7 16h10"></path><path d="M8 12h.01"></path><rect width="20" height="16" x="2" y="4" rx="2"></rect></svg></button><button type="button" class="icon-button menu-trigger" aria-label="메뉴 열기" aria-expanded="false" aria-haspopup="dialog" title="메뉴"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button></div></div></header><main id="main-content" tabindex="-1"><article class="page case-detail"><header class="page-header case-detail-header"><p class="eyebrow"><a href="/cases?view=support" data-discover="true">기술 노트</a></p><h1>참여 화면의 라우팅과 추천 노출 조건 통합</h1><p class="page-lead">같은 사용자라도 들어온 경로에 따라 화면과 추천 배너가 달라질 수 있었다. 이동 조건의 순서와 도착한 화면의 노출을 함께 맞춘 이야기.</p><dl class="case-meta"><div><dt>담당</dt><dd>판별 API 협의·라우팅 구현·리뷰 기반 범위 선택</dd></div><div><dt>시기</dt><dd>2025</dd></div><div><dt>주제</dt><dd>#라우팅 #기존 데이터 #리뷰</dd></div></dl></header><div class="prose"><p>추천 배너를 특정 사용자군에만 보여주는 기능을 다뤘다. 같은 사용자와 캠페인이라면 추천 대상이라는 판정은 같아야 한다. 그런데 각 페이지가 이동 조건을 따로 해석하면, 어디로 들어왔는지에 따라 다른 화면으로 보내거나 다른 영역을 보여줄 수 있었다.</p>
+<p>이때는 게임·일반·추천 화면으로 가는 조건이 여러 곳에 걸쳐 있었다. 한 사람이 둘 이상의 조건을 만족할 수도 있었다. 예를 들어 게임 영상이 있는 캠페인에 들어온 사용자가 추천 대상이기도 하면, 게임 화면과 추천 화면 중 무엇을 먼저 선택해야 할까? 조건이 맞는지만 확인해서는 목적지가 정해지지 않았다.</p>
+<p>이동을 맞춰도 도착한 화면에 문제가 남을 수 있었다. 추천을 제한할 대상 구분 없이 배너를 보여주면 라우터가 한 판정을 페이지가 다시 무너뜨린다. 실제로 게임 화면에서 실험군·대조군 구분 없이 추천 배너가 동작하던 수정도 함께 다뤘다.</p>
+<p>나는 서버의 판별을 외부 API에서도 사용할 필요를 설명하고 요청했고, FE에서는 이동 조건을 공용 라우터로 모았다. 같은 사람을 어디로 보낼지와 그곳에서 무엇을 보여줄지가 이어져야 하는 문제였다.</p>
+<h2>분기를 한곳에 모아도 순서는 남는다</h2>
+<p>라우터에는 현재 경로와 판별에 필요한 context를 전달했다. 대상 경로가 현재와 같으면 다시 이동하지 않고, 판별 과정에서 오류가 나면 현재 흐름을 유지하도록 했다. 이동할 때는 기존 query 정보를 이어서 전달했다.</p>
+<p>하지만 조건을 공용 함수에 모았다고 분기의 의미까지 자동으로 맞지는 않았다. 첫 구현에서는 추천 대상 판별이 게임 영상 조건보다 앞에 있었다. 두 조건을 모두 만족하는 경우 무엇이 우선인지가 여전히 문제였다.</p>
+<p>후속 변경에서는 게임 영상이 있는 경우의 경로를 먼저 고르고, 그다음 추천 대상, 그다음 설정된 경로를 보도록 순서를 바꿨다. 이렇게 하면 게임 영상 조건과 추천 대상이 겹쳐도 게임 경로가 먼저 선택된다. 기본 경로를 사용하는 context도 함께 맞췄다.</p>
+<p>조건이 모두 참인지 검사하는 것과 어느 조건의 결과를 먼저 쓸지 정하는 것은 다른 일이었다. 이 순서는 단순 배열 배치가 아니라 상품이 요구하는 행동이었다.</p>
+<h2>노출 조건은 이동 뒤의 페이지에도 필요했다</h2>
+<p>실험군·대조군 구분 없이 추천 배너가 동작하던 문제를 수정해 배포했다고 보고한 기록도 있다. 이때 필요한 것은 목적지로 보내는 라우터만이 아니었다. 도착한 페이지에서 추천 API와 영역을 사용할 조건도 사용자군과 맞아야 했다.</p>
+<p>라우팅과 렌더링이 각자 판별하면 한쪽만 고쳐도 다른 쪽의 노출이 남는다. “어디로 보낼 것인가”와 “그 화면에서 무엇을 보여줄 것인가”를 같은 조건에서 읽어야 하는 문제였다.</p>
+<h2>새 캐시보다 이미 받은 데이터가 먼저였다</h2>
+<p>리뷰에서는 context를 이미 읽었는데 다시 조회하는 부분이 지적됐다. 캐시도 없는 상태라 같은 정보를 얻기 위해 요청이 겹치고 있었다.</p>
+<p>대안으로 이미 받은 context를 전달하는 방법과 요청 캐싱·네트워크 계층 정리가 논의됐다. 나는 먼저 페이지가 받은 context를 공용 라우터에 넘기는 좁은 변경을 선택했다. 판별을 위해 같은 정보를 다시 조회하지 않아도 됐고, 이동과 노출 조건의 정리에 집중할 수 있었다. 큰 네트워크 계층 리팩토링은 후속 기술부채로 남겼다.</p>
+<h2>같은 조건을 페이지마다 다시 해석하지 않도록</h2>
+<p>바뀐 경로에서는 게임 영상 조건과 추천 대상이 겹쳐도 적용할 순서가 공용 라우터에 남는다. 도착한 화면에서 추천을 사용할 대상도 함께 맞췄고, 실험군·대조군 구분 없이 배너가 동작하던 문제의 수정·배포를 보고했다. 사용자에게 보낼 화면과 그 화면의 노출 조건을 따로 고쳐 서로 어긋나는 대신, 같은 판별을 이어서 쓰도록 만든 변화였다.</p>
+<p>지금 다시 조건을 읽는다면 한 페이지의 if문만 보지 않을 것이다. 같은 사람이 둘 이상의 조건을 만족할 때의 우선순위와, 도착한 화면에서도 그 판정이 유지되는지까지 이어서 봐야 한다. 이번 경험에서 중요했던 것은 분기를 한곳에 모은 사실보다, 한 사람의 화면 경험을 여러 경로에 걸쳐 설명할 수 있게 한 점이다.</p></div><section class="related-block"><h2>다른 관점에서 함께 읽기</h2><div class="reading-tabs"><a href="/cases?view=operator" data-discover="true">제품과 운영자</a><a href="/cases?view=delivery" data-discover="true">기술 선택과 변경</a></div></section><footer class="page-footer"><a class="see-all-link" href="/cases" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg> 개발 경험 목록</a></footer></article></main><footer class="site-footer"><div class="site-footer-inner"><div class="footer-brand"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg>정경하</span><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open-text" aria-hidden="true"><path d="M12 7v14"></path><path d="M16 12h2"></path><path d="M16 8h2"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path><path d="M6 12h2"></path><path d="M6 8h2"></path></svg>기술과 제품을 만드는 과정</span></div><nav class="footer-nav" aria-label="더 보기"><a href="/uses" data-discover="true">도구</a><a href="/now" data-discover="true">요즘</a><a href="/reading" data-discover="true">읽은 책</a></nav><span class="footer-meta"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-clock" aria-hidden="true"><path d="M16 14v2.2l1.6 1"></path><path d="M16 2v4"></path><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"></path><path d="M3 10h5"></path><path d="M8 2v4"></path><circle cx="16" cy="16" r="6"></circle></svg>최근 수정 <!-- -->2026-10-09</span></div></footer></div>
+  </body>
+</html>

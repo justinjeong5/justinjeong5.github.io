@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+    <meta name="author" content="정경하" />
+    <meta property="og:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="description" content="광고를 봤는데 상자 열기로 넘어가지 않는다면 기다려야 할까, 다시 눌러야 할까? 완료 신호를 받지 못한 웹에서 사용자의 다음 선택을 다룬 이야기." />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="광고 완료를 확인하지 못했을 때의 복구 UX | 정경하" />
+    <meta property="og:description" content="광고를 봤는데 상자 열기로 넘어가지 않는다면 기다려야 할까, 다시 눌러야 할까? 완료 신호를 받지 못한 웹에서 사용자의 다음 선택을 다룬 이야기." />
+    <meta property="og:url" content="https://justinjeong5.github.io/cases/ad-response-recovery/" />
+    <meta name="twitter:title" content="광고 완료를 확인하지 못했을 때의 복구 UX | 정경하" />
+    <meta name="twitter:description" content="광고를 봤는데 상자 열기로 넘어가지 않는다면 기다려야 할까, 다시 눌러야 할까? 완료 신호를 받지 못한 웹에서 사용자의 다음 선택을 다룬 이야기." />
+    <link rel="canonical" href="https://justinjeong5.github.io/cases/ad-response-recovery/" />
+    <title>광고 완료를 확인하지 못했을 때의 복구 UX | 정경하</title>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "광고 완료를 확인하지 못했을 때의 복구 UX | 정경하",
+  "description": "광고를 봤는데 상자 열기로 넘어가지 않는다면 기다려야 할까, 다시 눌러야 할까? 완료 신호를 받지 못한 웹에서 사용자의 다음 선택을 다룬 이야기.",
+  "url": "https://justinjeong5.github.io/cases/ad-response-recovery/",
+  "mainEntityOfPage": "https://justinjeong5.github.io/cases/ad-response-recovery/",
+  "author": {
+    "@type": "Person",
+    "name": "정경하",
+    "url": "https://justinjeong5.github.io/",
+    "jobTitle": "Product-minded Frontend Engineer",
+    "sameAs": [
+      "https://github.com/justinjeong5"
+    ]
+  },
+  "dateModified": "2026-10-02"
+}
+</script>
+    <script>
+      // 테마 사전 설정 — prerender된 HTML에 data-theme를 즉시 적용해 CSS flash를 막는다.
+      // (다른 스크립트보다 먼저 실행되어야 한다.)
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages — restore deep-link path written by 404.html
+      // https://github.com/rafgraph/spa-github-pages
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
+    </script>
+    <script type="module" crossorigin src="/assets/index-Bq1YKRQq.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-QTnfLwEv.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-cases-DA1JH-dA.js">
+    <link rel="modulepreload" crossorigin href="/assets/router-L8iQeCo_.js">
+    <link rel="modulepreload" crossorigin href="/assets/search-CiN4C8Nu.js">
+    <link rel="modulepreload" crossorigin href="/assets/icons-ChI-k7Gg.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-BlgMkQ8L.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-essays-CzunsGRO.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-logs-Bjn2cJ-R.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-notes-DH8h_0Z_.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-CwzYrqL3.css">
+    <link rel="stylesheet" crossorigin href="/assets/pretendard-NPFyShNs.css">
+  </head>
+  <body>
+    <div id="root"><a href="#main-content" class="skip-link">본문 바로가기</a><header class="site-nav" aria-label="주메뉴"><div class="site-nav-inner"><a class="brand" aria-label="정경하 홈" href="/" data-discover="true">JKH</a><nav class="primary-nav"><a class="nav-link" href="/cases" data-discover="true">개발 경험</a><a class="nav-link is-active" aria-current="page" href="/cases?view=support" data-discover="true">기술 노트</a><a class="nav-link" href="/about" data-discover="true">소개</a></nav><div class="nav-actions"><button type="button" class="search-trigger" aria-label="검색" title="검색 (⌘K 또는 /)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg><span>검색</span><kbd>⌘K</kbd></button><button type="button" class="icon-button" aria-label="테마: 라이트. 클릭하여 변경" title="테마: 라이트 · T 키로도 전환"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg></button><button type="button" class="icon-button desktop-only" aria-label="키보드 단축키" aria-expanded="false" aria-haspopup="dialog" title="키보드 단축키 (? 키)"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-keyboard" aria-hidden="true"><path d="M10 8h.01"></path><path d="M12 12h.01"></path><path d="M14 8h.01"></path><path d="M16 12h.01"></path><path d="M18 8h.01"></path><path d="M6 8h.01"></path><path d="M7 16h10"></path><path d="M8 12h.01"></path><rect width="20" height="16" x="2" y="4" rx="2"></rect></svg></button><button type="button" class="icon-button menu-trigger" aria-label="메뉴 열기" aria-expanded="false" aria-haspopup="dialog" title="메뉴"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button></div></div></header><main id="main-content" tabindex="-1"><article class="page case-detail"><header class="page-header case-detail-header"><p class="eyebrow"><a href="/cases?view=support" data-discover="true">기술 노트</a></p><h1>광고 완료를 확인하지 못했을 때의 복구 UX</h1><p class="page-lead">광고를 봤는데 상자 열기로 넘어가지 않는다면 기다려야 할까, 다시 눌러야 할까? 완료 신호를 받지 못한 웹에서 사용자의 다음 선택을 다룬 이야기.</p><dl class="case-meta"><div><dt>담당</dt><dd>복구 UX 제안·PM 협의·웹 생명주기 처리</dd></div><div><dt>시기</dt><dd>2026</dd></div><div><dt>주제</dt><dd>#외부 의존성 #복구 UX #비동기 상태</dd></div></dl></header><div class="prose"><p>보너스 상자를 여는 흐름에는 광고 참여가 앞에 있었다. 사용자는 광고를 보고 다음 단계로 넘어가기를 기대하지만, 광고 참여와 상자 열기, 보상 지급은 각각의 처리를 거치는 단계였다. 광고를 봤다는 경험과 웹이 완료 응답을 받았다는 상태가 항상 동시에 맞아떨어지는 것은 아니었다.</p>
+<p>관련 문의에는 광고를 본 뒤에도 상자 열기가 진행되지 않아 여러 번 다시 시도하다가 포기했다는 이야기가 있었다. 기다리는 사람에게는 시청이 끝나지 않은 것인지, 처리가 늦는 것인지, 다시 눌러야 하는지 구별하기 어렵다. 문제가 생긴 위치를 몰라도 다음 행동은 결정해야 했다.</p>
+<p>웹이 아는 것은 외부 광고의 완료 응답이 아직 오지 않았다는 사실이었다. 늦은 응답이 올 수 있으니 곧바로 실패라고 확정하기도 어렵고, 시간이 지났다는 이유로 광고가 완료됐다고 처리할 수도 없었다. 그렇다고 사용자가 응답을 기약 없이 기다리게 두는 것도 제품의 문제였다.</p>
+<p>원인을 확인하는 동안 웹에서 줄 수 있는 선택은 무엇인지, 그 선택 뒤에 늦은 응답이 오면 무엇을 결과로 남길지 함께 정해야 했다.</p>
+<h2>원인 확인을 기다리는 동안에도 선택지는 필요했다</h2>
+<p>당시에는 AdMob의 timeout이나 callback 지연·누락을 의심하며 관련 담당자들과 확인했다. 나는 일정 시간 뒤 기존 skip UI를 사용할 수 있게 하는 방식을 제안했다. 외부 원인을 모두 통제할 수 없더라도 웹에서 제공할 다음 행동은 다룰 수 있었기 때문이다.</p>
+<p>PM과는 fullscreen 광고가 웹 UI를 가릴 수 있다는 제약도 논의했다. 웹에 선택지를 두어도 네이티브 광고 화면 위에서 그 버튼을 보이게 하는 것은 아니다. 내가 바꾼 대상은 웹이 완료 응답을 기다리는 상태와 그 뒤의 처리였고, fullscreen·callback 자체의 문제는 관련 담당자와 따로 살폈다.</p>
+<p>이 제안에서 시간은 광고가 실패했다고 판정하는 기준이 아니었다. 사용자가 계속 기다릴지, 대기에서 빠져나올지 선택할 수 있게 하는 시점이었다.</p>
+<h2>시간이 지나도 자동 완료로 처리하지 않기</h2>
+<p>광고가 시작된 뒤 일정 대기가 지나면 수동 복구 UI를 열도록 했다. 타이머만 지났을 때는 참여 기록을 전송하지 않고, 사용자가 버튼을 눌렀을 때 skip을 한 번 실행하는 흐름이었다.</p>
+<p>이 구분을 하지 않으면 기다림이 광고 완료를 대신해버린다. 정상 완료는 실제 광고 결과를 가진 경로로, 수동 복구는 별도의 결과로 다음 처리를 이어가야 했다. 보상 지급 자체를 웹의 대기 시간으로 결정하는 방식은 아니었다.</p>
+<p>테스트에서도 대기만 한 경우와 버튼을 누른 경우를 나눴다. 수동 복구에서는 실제 광고 식별값을 정상 완료처럼 넣지 않고, 정상 응답이 버튼 클릭보다 먼저 끝난 경우에는 skip을 실행하지 않는 조건을 구성했다.</p>
+<h2>빠져나온 뒤에도 이전 광고의 작업은 남을 수 있다</h2>
+<p>구현에서는 현재 실행 중인 attempt에 시작 여부와 skip 여부, controller를 묶었다. skip을 누르면 먼저 그 attempt가 skip됐다는 상태를 남기고 취소 신호를 전달했다. 같은 시도를 반복해서 skip하지 않는 조건도 뒀다.</p>
+<p>사용자가 skip을 고른 뒤에도 외부 Promise가 resolve되거나 reject될 수 있었다. 둘 중 어느 경로로 끝나도 이미 skip된 attempt의 결과는 복구로 남겨야 했다. resolve 쪽만 보호하면 reject나 finally가 나중에 상태를 바꿀 수 있어, 버튼을 누른 뒤의 세 경로를 함께 읽었다.</p>
+<p>정리 작업에서도 현재 활성 attempt와 자신이 같은지 확인한 뒤 ref를 비웠다. 이전 실행의 finally가 새 실행의 controller를 지우는 일을 막기 위한 조건이었다. 화면을 떠날 때의 취소와 타이머 정리도 함께 다뤘다.</p>
+<h2>사용자는 기다림을 끝낼 수 있고, 결과는 한 경로로 남는다</h2>
+<p>사용자는 정해진 대기 뒤 해당 광고에서 수동으로 빠져나올 선택을 갖게 됐다. 남은 후보가 있으면 그 처리를 이어가고, 후보 처리 뒤 참여 기록 요청이 성공하면 상자 화면으로 넘어가 상자를 열 수 있다. 계속 기다리는 것 외의 행동 경로를 웹에 만든 것이 제품에서 달라진 점이었다. 버튼 클릭을 즉시 보상 지급으로 처리하지는 않았다.</p>
+<p>정상 응답이 먼저 끝나면 정상 결과를 사용하고, 복구를 선택한 시도의 늦은 응답은 이미 한 선택을 뒤집지 않도록 했다. 테스트도 시작 후 skip·중복 클릭·늦은 응답·정상 응답 선행을 나눴다. 탈출 버튼을 보이게 하는 것과 그 선택을 끝까지 유지하는 것은 함께 확인할 일이었다.</p>
+<p>후속 자체 점검에서는 해결된 것으로 보인다고 공유하고 추가 문의가 생기면 알려달라고 요청했다. 이는 기다림의 원인만 보는 데서 멈추지 않고, 변경 뒤의 문의 흐름까지 다시 확인하려 한 과정이었다.</p>
+<p>PM과 fullscreen 광고가 웹 선택지를 가릴 수 있다는 제약을 논의하면서도, 원인 확인과 웹이 제공할 행동을 따로 다뤘다. 외부 원인이 확정되길 기다리는 동안에도 사용자의 다음 행동은 필요했다. 내가 바꿀 수 있는 부분에서 선택지를 주고, 그 선택 뒤의 결과를 어디까지 책임질지 구체적으로 정한 경험이었다.</p></div><section class="related-block"><h2>다른 관점에서 함께 읽기</h2><div class="reading-tabs"><a href="/cases?view=operator" data-discover="true">제품과 운영자</a><a href="/cases?view=contracts" data-discover="true">외부 응답과 상태</a></div></section><footer class="page-footer"><a class="see-all-link" href="/cases" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg> 개발 경험 목록</a></footer></article></main><footer class="site-footer"><div class="site-footer-inner"><div class="footer-brand"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg>정경하</span><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open-text" aria-hidden="true"><path d="M12 7v14"></path><path d="M16 12h2"></path><path d="M16 8h2"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path><path d="M6 12h2"></path><path d="M6 8h2"></path></svg>기술과 제품을 만드는 과정</span></div><nav class="footer-nav" aria-label="더 보기"><a href="/uses" data-discover="true">도구</a><a href="/now" data-discover="true">요즘</a><a href="/reading" data-discover="true">읽은 책</a></nav><span class="footer-meta"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-clock" aria-hidden="true"><path d="M16 14v2.2l1.6 1"></path><path d="M16 2v4"></path><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"></path><path d="M3 10h5"></path><path d="M8 2v4"></path><circle cx="16" cy="16" r="6"></circle></svg>최근 수정 <!-- -->2026-10-09</span></div></footer></div>
+  </body>
+</html>

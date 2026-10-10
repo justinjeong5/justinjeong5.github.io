@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+    <meta name="author" content="정경하" />
+    <meta property="og:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="description" content="여러 광고 소재를 저장했는데 일부만 성공했다면 무엇을 다시 저장해야 할까? 이미 끝난 작업과 남은 입력을 함께 다룬 이야기." />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="일괄 등록의 부분 실패와 재시도 UX 설계 | 정경하" />
+    <meta property="og:description" content="여러 광고 소재를 저장했는데 일부만 성공했다면 무엇을 다시 저장해야 할까? 이미 끝난 작업과 남은 입력을 함께 다룬 이야기." />
+    <meta property="og:url" content="https://justinjeong5.github.io/cases/bulk-partial-results/" />
+    <meta name="twitter:title" content="일괄 등록의 부분 실패와 재시도 UX 설계 | 정경하" />
+    <meta name="twitter:description" content="여러 광고 소재를 저장했는데 일부만 성공했다면 무엇을 다시 저장해야 할까? 이미 끝난 작업과 남은 입력을 함께 다룬 이야기." />
+    <link rel="canonical" href="https://justinjeong5.github.io/cases/bulk-partial-results/" />
+    <title>일괄 등록의 부분 실패와 재시도 UX 설계 | 정경하</title>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "일괄 등록의 부분 실패와 재시도 UX 설계 | 정경하",
+  "description": "여러 광고 소재를 저장했는데 일부만 성공했다면 무엇을 다시 저장해야 할까? 이미 끝난 작업과 남은 입력을 함께 다룬 이야기.",
+  "url": "https://justinjeong5.github.io/cases/bulk-partial-results/",
+  "mainEntityOfPage": "https://justinjeong5.github.io/cases/bulk-partial-results/",
+  "author": {
+    "@type": "Person",
+    "name": "정경하",
+    "url": "https://justinjeong5.github.io/",
+    "jobTitle": "Product-minded Frontend Engineer",
+    "sameAs": [
+      "https://github.com/justinjeong5"
+    ]
+  },
+  "dateModified": "2026-10-02"
+}
+</script>
+    <script>
+      // 테마 사전 설정 — prerender된 HTML에 data-theme를 즉시 적용해 CSS flash를 막는다.
+      // (다른 스크립트보다 먼저 실행되어야 한다.)
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages — restore deep-link path written by 404.html
+      // https://github.com/rafgraph/spa-github-pages
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
+    </script>
+    <script type="module" crossorigin src="/assets/index-Bq1YKRQq.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-QTnfLwEv.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-cases-DA1JH-dA.js">
+    <link rel="modulepreload" crossorigin href="/assets/router-L8iQeCo_.js">
+    <link rel="modulepreload" crossorigin href="/assets/search-CiN4C8Nu.js">
+    <link rel="modulepreload" crossorigin href="/assets/icons-ChI-k7Gg.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-BlgMkQ8L.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-essays-CzunsGRO.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-logs-Bjn2cJ-R.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-notes-DH8h_0Z_.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-CwzYrqL3.css">
+    <link rel="stylesheet" crossorigin href="/assets/pretendard-NPFyShNs.css">
+  </head>
+  <body>
+    <div id="root"><a href="#main-content" class="skip-link">본문 바로가기</a><header class="site-nav" aria-label="주메뉴"><div class="site-nav-inner"><a class="brand" aria-label="정경하 홈" href="/" data-discover="true">JKH</a><nav class="primary-nav"><a class="nav-link" href="/cases" data-discover="true">개발 경험</a><a class="nav-link is-active" aria-current="page" href="/cases?view=support" data-discover="true">기술 노트</a><a class="nav-link" href="/about" data-discover="true">소개</a></nav><div class="nav-actions"><button type="button" class="search-trigger" aria-label="검색" title="검색 (⌘K 또는 /)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg><span>검색</span><kbd>⌘K</kbd></button><button type="button" class="icon-button" aria-label="테마: 라이트. 클릭하여 변경" title="테마: 라이트 · T 키로도 전환"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg></button><button type="button" class="icon-button desktop-only" aria-label="키보드 단축키" aria-expanded="false" aria-haspopup="dialog" title="키보드 단축키 (? 키)"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-keyboard" aria-hidden="true"><path d="M10 8h.01"></path><path d="M12 12h.01"></path><path d="M14 8h.01"></path><path d="M16 12h.01"></path><path d="M18 8h.01"></path><path d="M6 8h.01"></path><path d="M7 16h10"></path><path d="M8 12h.01"></path><rect width="20" height="16" x="2" y="4" rx="2"></rect></svg></button><button type="button" class="icon-button menu-trigger" aria-label="메뉴 열기" aria-expanded="false" aria-haspopup="dialog" title="메뉴"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button></div></div></header><main id="main-content" tabindex="-1"><article class="page case-detail"><header class="page-header case-detail-header"><p class="eyebrow"><a href="/cases?view=support" data-discover="true">기술 노트</a></p><h1>일괄 등록의 부분 실패와 재시도 UX 설계</h1><p class="page-lead">여러 광고 소재를 저장했는데 일부만 성공했다면 무엇을 다시 저장해야 할까? 이미 끝난 작업과 남은 입력을 함께 다룬 이야기.</p><dl class="case-meta"><div><dt>담당</dt><dd>상태 표현 제안·제품/QA 협의·프론트엔드 구현</dd></div><div><dt>시기</dt><dd>2022</dd></div><div><dt>주제</dt><dd>#운영 UX #부분 실패 #재시도</dd></div></dl></header><div class="prose"><p>광고 소재를 일괄 등록하는 화면에서는 여러 광고 항목과 각 항목에 사용할 소재를 한꺼번에 입력했다. 소재는 사용자에게 보여줄 광고 내용을 담는 단위다. 운영자가 보기에는 입력을 모두 마친 뒤 저장 버튼을 한 번 누르는 작업이었다.</p>
+<p>그런데 버튼 하나가 실제로는 소재별 생성 요청을 실행했다. 예를 들어 같은 광고 항목의 두 소재 중 하나는 저장되고 다른 하나는 실패할 수 있었다. 화면이 “실패했습니다”라고만 알려주면, 방금 입력한 것 중 무엇이 끝났는지부터 다시 확인해야 한다.</p>
+<p>그 상태에서 전체를 다시 저장해도 되는지, 실패한 것만 고쳐야 하는지도 불분명하다. 이미 성공한 소재에도 생성 요청을 다시 보내면 끝난 일을 반복하게 된다. 반대로 화면을 비워버리면 아직 저장하지 못한 입력을 다시 구성해야 한다. 오류 메시지를 보여주는 것만으로는 다음 행동을 정할 수 없었다.</p>
+<p>이 기능에서 풀어야 했던 것은 여러 항목을 한 번에 보내는 일뿐 아니라, <strong>일부만 끝난 작업을 사용자가 어디서 이어갈 수 있게 할 것인가</strong>였다. 입력을 유지하는 방식과 저장 결과, 다음 저장의 동작을 함께 봐야 했다.</p>
+<h2>코드의 의존성을 사용자의 입력 순서로 만들 뻔했다</h2>
+<p>저장 전의 입력에서도 같은 차이가 드러났다. 화면에서는 묶음을 편집하지만 데이터는 개별 소재에 속해 있었다. 랜딩 URL의 입력 방식이 그 예였다. URL은 화면에서는 묶음의 공통 정보처럼 보였지만 데이터에서는 소재가 가진 속성이었다. 소재를 모두 지우면 소재에서 읽어오던 URL도 사라지는 구조였다.</p>
+<p>처음에는 소재를 먼저 추가한 뒤 URL을 입력하게 하면 되겠다고 제안했다. 구현의 의존성을 입력 순서로 풀려 한 것이다.</p>
+<p>동료는 다른 관점에서 봤다. 사용자는 여러 필드를 자유롭게 입력하는 화면을 보고 있는데, 실제로는 순서를 지켜야 한다면 화면이 보여주는 사용법과 동작이 맞지 않는다는 지적이었다. 이미 입력한 값이 소재 삭제와 함께 사라지는 것도 사용자에게는 예상하기 어려운 일이었다.</p>
+<p>그 의견을 받아 소재를 모두 제거해도 입력한 URL이 남도록 수정했다. 코드에서 자연스러운 구조가 화면에서도 자연스러운 것은 아니라는 점이 드러난 협의였다. 사용자의 작업을 데이터 구조에 맞추기보다, 화면이 그 차이를 다뤄야 했다.</p>
+<h2>부분 실패도 사용자가 다시 해석하게 두지 않기</h2>
+<p>저장 결과에서도 비슷한 질문이 생겼다. 같은 광고 항목의 네이티브 소재는 저장됐지만 HTML 소재는 실패할 수 있었다. 행 전체를 성공이나 실패로 표시하면 소재별로 다른 결과를 표현할 수 없었다.</p>
+<p>그래서 저장 오류를 각 소재에 보여주고 성공·실패 상태를 구분하는 표시를 제안했다. 동료들과 방식과 표시 위치를 논의했다. 운영자가 모든 입력을 다시 살피기 전에, 어느 소재의 작업이 남았는지 알 수 있어야 한다고 봤다.</p>
+<p>표시만 세분화해서도 끝나지 않았다. 화면이 알려준 결과와 다음 저장 버튼의 동작이 이어져야 했다. 성공한 소재에 다시 생성 요청을 보내는 흐름이라면, 상태를 보여줘도 운영자의 다음 행동은 여전히 불분명하다.</p>
+<h2>표시·저장·목록을 남기는 단위를 나누기</h2>
+<p>구현에서는 각 소재의 저장 호출에서 오류를 처리했다. 한 호출이 실패해도 그 오류를 해당 소재의 상태에 남기고 다음 소재의 처리를 이어갔다. 성공한 소재에는 저장 완료 상태를 남겼다.</p>
+<p>첫 저장이 끝난 뒤에는 아직 저장되지 않은 소재가 있는 묶음을 남겼다. 한 행은 공통 입력과 여러 소재를 함께 편집하는 단위였으므로, 남은 작업도 그 행에서 이어갔다. 결과적으로 성공한 소재와 실패한 소재가 같이 보여도 어떤 묶음에서 무엇이 끝났는지 읽을 수 있었다.</p>
+<p>동작을 작은 예로 보면 다음과 같다.</p>
+<table><thead><tr><th>첫 저장 이후의 묶음</th><th>화면에 남기는 것</th><th>다음 저장에서 처리할 것</th></tr></thead><tbody><tr><td>두 소재 모두 성공</td><td>묶음을 남기지 않음</td><td>없음</td></tr><tr><td>한 소재 성공, 한 소재 실패</td><td>두 소재가 들어 있는 묶음</td><td>아직 저장되지 않은 소재</td></tr><tr><td>두 소재 모두 실패</td><td>두 소재가 들어 있는 묶음</td><td>두 소재</td></tr></tbody></table>
+<p>따라서 재시도에서는 묶음이 남아 있다는 사실만으로 그 안의 모든 소재를 다시 저장하면 안 됐다. 개별 소재의 저장 완료 상태를 확인해 이미 성공한 생성 호출은 건너뛰었다. 이 상태는 같은 화면에 남아 있는 저장 결과였다.</p>
+<p>소재별 오류 표시와 일부 개별 필드의 비활성화도 저장 상태에 연결했다. 이미 저장된 소재의 이름과 삭제 버튼은 비활성화했고, 남은 소재는 수정해 다시 생성할 수 있게 했다. 공통 URL 입력은 화면에 남은 값에 반영되지만, 이미 저장된 소재에는 다음 생성 요청을 보내지 않는다. 이 화면의 재시도는 남은 소재를 만드는 절차이지 완료한 소재까지 수정하는 명령은 아니었다.</p>
+<p>이 작업에서 화면의 표시 단위는 소재, 남길 목록의 단위는 묶음, 재시도할 요청의 단위는 미저장 소재였다.</p>
+<h2>입력을 유지하고 남은 소재를 이어서 저장할 수 있게</h2>
+<p>운영자는 소재를 모두 지웠다가 다시 추가해도 이미 입력한 URL을 이어서 쓸 수 있게 됐다. 저장이 일부만 끝나도 남은 묶음을 다시 구성할 필요는 없었다. 같은 화면의 성공·실패 표시를 보고 미저장 소재를 수정해 다시 저장하며, 이미 성공한 소재의 생성 요청은 건너뛴다. 일괄 등록은 한 번 보내는 기능에서, 중간까지 끝난 작업을 이어갈 수 있는 화면이 됐다.</p>
+<p>부분 결과를 나눠 보여주는 제안에는 제품·QA 담당자가 긍정적으로 답했고, 표시 위치도 함께 논의했다. 사전 QA 확인 뒤에는 미리 확인한 보람이 있었다는 피드백도 주고받았다. 결과 표시와 다음 저장의 행동을 함께 맞춘 협의가 있었다.</p>
+<p>처음의 내 제안은 데이터 구조에 맞춰 사용자의 입력 순서를 제한하는 쪽이었다. 동료의 반론을 받아 수정하면서, 그 구조의 차이를 사용자가 감당하게 할지 화면이 다룰지를 다시 보게 됐다. 지금 이 경험에서 남는 배움은 오류를 잘 표시하는 것만이 아니다. 끝난 일을 보존하고 남은 일을 이어가게 만드는 것까지 사용자의 작업으로 봐야 한다는 점이다.</p></div><section class="related-block"><h2>다른 관점에서 함께 읽기</h2><div class="reading-tabs"><a href="/cases?view=operator" data-discover="true">제품과 운영자</a></div></section><footer class="page-footer"><a class="see-all-link" href="/cases" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg> 개발 경험 목록</a></footer></article></main><footer class="site-footer"><div class="site-footer-inner"><div class="footer-brand"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg>정경하</span><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open-text" aria-hidden="true"><path d="M12 7v14"></path><path d="M16 12h2"></path><path d="M16 8h2"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path><path d="M6 12h2"></path><path d="M6 8h2"></path></svg>기술과 제품을 만드는 과정</span></div><nav class="footer-nav" aria-label="더 보기"><a href="/uses" data-discover="true">도구</a><a href="/now" data-discover="true">요즘</a><a href="/reading" data-discover="true">읽은 책</a></nav><span class="footer-meta"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-clock" aria-hidden="true"><path d="M16 14v2.2l1.6 1"></path><path d="M16 2v4"></path><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"></path><path d="M3 10h5"></path><path d="M8 2v4"></path><circle cx="16" cy="16" r="6"></circle></svg>최근 수정 <!-- -->2026-10-09</span></div></footer></div>
+  </body>
+</html>

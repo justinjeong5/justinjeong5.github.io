@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+    <meta name="author" content="정경하" />
+    <meta property="og:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="description" content="KPI와 진단 이벤트를 나누고 기기 고정 표본을 적용한 과정, 그리고 리텐션 표의 빈칸·0을 돌아보며 생산자와 소비자가 같은 데이터를 읽는 조건을 살핀다." />
+    <meta name="robots" content="noindex, follow" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="데이터의 의미를 지키는 수집·변환 설계 | 정경하" />
+    <meta property="og:description" content="KPI와 진단 이벤트를 나누고 기기 고정 표본을 적용한 과정, 그리고 리텐션 표의 빈칸·0을 돌아보며 생산자와 소비자가 같은 데이터를 읽는 조건을 살핀다." />
+    <meta property="og:url" content="https://justinjeong5.github.io/cases/playhub-diagnostic-sampling/" />
+    <meta name="twitter:title" content="데이터의 의미를 지키는 수집·변환 설계 | 정경하" />
+    <meta name="twitter:description" content="KPI와 진단 이벤트를 나누고 기기 고정 표본을 적용한 과정, 그리고 리텐션 표의 빈칸·0을 돌아보며 생산자와 소비자가 같은 데이터를 읽는 조건을 살핀다." />
+    <link rel="canonical" href="https://justinjeong5.github.io/cases/playhub-diagnostic-sampling/" />
+    <title>데이터의 의미를 지키는 수집·변환 설계 | 정경하</title>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "데이터의 의미를 지키는 수집·변환 설계 | 정경하",
+  "description": "KPI와 진단 이벤트를 나누고 기기 고정 표본을 적용한 과정, 그리고 리텐션 표의 빈칸·0을 돌아보며 생산자와 소비자가 같은 데이터를 읽는 조건을 살핀다.",
+  "url": "https://justinjeong5.github.io/cases/playhub-diagnostic-sampling/",
+  "mainEntityOfPage": "https://justinjeong5.github.io/cases/playhub-diagnostic-sampling/",
+  "author": {
+    "@type": "Person",
+    "name": "정경하",
+    "url": "https://justinjeong5.github.io/",
+    "jobTitle": "Product-minded Frontend Engineer",
+    "sameAs": [
+      "https://github.com/justinjeong5"
+    ]
+  },
+  "dateModified": "2026-10-09"
+}
+</script>
+    <script>
+      // 테마 사전 설정 — prerender된 HTML에 data-theme를 즉시 적용해 CSS flash를 막는다.
+      // (다른 스크립트보다 먼저 실행되어야 한다.)
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages — restore deep-link path written by 404.html
+      // https://github.com/rafgraph/spa-github-pages
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
+    </script>
+    <script type="module" crossorigin src="/assets/index-Bq1YKRQq.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-QTnfLwEv.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-cases-DA1JH-dA.js">
+    <link rel="modulepreload" crossorigin href="/assets/router-L8iQeCo_.js">
+    <link rel="modulepreload" crossorigin href="/assets/search-CiN4C8Nu.js">
+    <link rel="modulepreload" crossorigin href="/assets/icons-ChI-k7Gg.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-BlgMkQ8L.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-essays-CzunsGRO.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-logs-Bjn2cJ-R.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-notes-DH8h_0Z_.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-CwzYrqL3.css">
+    <link rel="stylesheet" crossorigin href="/assets/pretendard-NPFyShNs.css">
+  </head>
+  <body>
+    <div id="root"><a href="#main-content" class="skip-link">본문 바로가기</a><header class="site-nav" aria-label="주메뉴"><div class="site-nav-inner"><a class="brand" aria-label="정경하 홈" href="/" data-discover="true">JKH</a><nav class="primary-nav"><a class="nav-link" href="/cases" data-discover="true">개발 경험</a><a class="nav-link" href="/cases?view=support" data-discover="true">기술 노트</a><a class="nav-link" href="/about" data-discover="true">소개</a></nav><div class="nav-actions"><button type="button" class="search-trigger" aria-label="검색" title="검색 (⌘K 또는 /)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg><span>검색</span><kbd>⌘K</kbd></button><button type="button" class="icon-button" aria-label="테마: 라이트. 클릭하여 변경" title="테마: 라이트 · T 키로도 전환"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg></button><button type="button" class="icon-button desktop-only" aria-label="키보드 단축키" aria-expanded="false" aria-haspopup="dialog" title="키보드 단축키 (? 키)"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-keyboard" aria-hidden="true"><path d="M10 8h.01"></path><path d="M12 12h.01"></path><path d="M14 8h.01"></path><path d="M16 12h.01"></path><path d="M18 8h.01"></path><path d="M6 8h.01"></path><path d="M7 16h10"></path><path d="M8 12h.01"></path><rect width="20" height="16" x="2" y="4" rx="2"></rect></svg></button><button type="button" class="icon-button menu-trigger" aria-label="메뉴 열기" aria-expanded="false" aria-haspopup="dialog" title="메뉴"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button></div></div></header><main id="main-content" tabindex="-1"><article class="page essay-detail"><header class="page-header"><p class="eyebrow">통합한 이전 글<!-- --> · <!-- -->2026.09</p><h1>데이터의 의미를 지키는 수집·변환 설계</h1><p class="page-lead">KPI와 진단 이벤트를 나누고 기기 고정 표본을 적용한 과정, 그리고 리텐션 표의 빈칸·0을 돌아보며 생산자와 소비자가 같은 데이터를 읽는 조건을 살핀다.</p></header><div class="prose"><aside class="consolidation-notice"><p>이 글의 주요 개발 사례를 하나의 글로 다시 정리했습니다. 아래 원문도 계속 읽을 수 있습니다.</p><a href="/cases/playhub-diagnostic-sampling" data-discover="true">통합한 글 읽기 →</a></aside><p>외부 콘텐츠를 읽고 돌아온 사용자의 보상 안내가 사라졌는데 예외가 발생하지 않는 문제가 있었다. 에러 로그 하나로는 무엇이 일어났는지 설명하기 어려웠다. 클릭, 외부 이동, API 결과, 복귀, 화면 표시를 한 시계열로 이어 읽을 상세 진단이 필요했다.</p>
+<p>진단을 늘리자 상태와 버튼 값이 자주 기록되며 수집량도 커졌다. 이벤트를 일정 비율로 보내지 않으면 양은 줄어든다. 그러나 시작은 남고 완료는 빠지는 로그로는 한 사람의 행동을 재구성하기 어렵다. 같은 정책을 제품 분석 이벤트에도 적용하면 퍼널의 분모가 달라진다.</p>
+<p>내가 맡은 수집 변경에서 먼저 정해야 했던 것은 몇 퍼센트를 남길지가 아니었다. <strong>이 이벤트를 읽는 사람은 어떤 질문에 답하고 있으며, 줄인 뒤에도 그 질문이 성립하는가?</strong> 자동 수령 성공의 분류를 고친 일은 이 질문이 이벤트를 만드는 코드 밖에도 있다는 것을 보여줬다.</p>
+<h2>진단 시계열과 제품 퍼널은 같은 표본을 요구하지 않았다</h2>
+<p><a href="/cases/playhub-diagnostic-sampling/">PlayHub 진단 수집</a>에서는 KPI용 analytics와 상세 diagnostic을 이벤트별로 나눴다. 제품 참여 집계에 필요한 이벤트는 표본 정책 밖에 두고, 상세 상태 진단에는 기기 고정 표본을 적용했다.</p>
+<p>그중 자동 수령 success는 처음에는 diagnostic으로 분류됐다. 소비 KPI의 전수 집계 계약을 확인한 뒤 analytics로 교정했다. 개발자가 이름이나 발생 위치만 보고 “상세 로그”라고 판단해도, 다른 소비자는 그 이벤트를 참여 결과의 분모와 분자로 사용하고 있었다.</p>
+<p>예를 들어 성공 이벤트만 줄이고 비교할 시작 이벤트는 그대로 남기면, 실제 실패가 늘지 않았는데도 비율이 바뀔 수 있다. 이번에는 소비 계약에 맞춰 분류를 고쳐 KPI를 샘플링에서 제외했다. 전송·적재의 실패까지 없앤 것은 아니지만, 최소한 수집 정책이 분모와 분자를 다르게 버리지는 않도록 한 선택이었다.</p>
+<h2>고정한 것은 이벤트가 아니라 기기였다</h2>
+<p>상세 진단의 2%는 매 이벤트를 무작위로 뽑는 확률이 아니었다. 유효한 서버 기기 ID를 기준으로 고정 bucket을 계산했다. 선택된 기기는 다음 진단 이벤트마다 다시 뽑지 않고 관련 흐름을 이어 수집했다.</p>
+<p>설명용으로 줄인 정책이며 실제 회사 코드는 아니다.</p>
+<pre><code class="language-text">KPI 이벤트 → 표본 정책에서 제외
+상세 진단 + 선택된 기기 → 흐름을 이어서 수집
+상세 진단 + 표본 밖 기기 → 기본 수집에서 제외
+</code></pre>
+<p>이 선택은 한 기기의 시계열을 의도적으로 조각내지 않기 위한 것이었다. 모든 문제 기기를 포함하는 방법은 아니었다. 임의의 사용자가 문의하면 표본 밖일 수 있다는 한계가 남았고, 이후 조사·내부 검증 대상을 추가 수집하는 별도 경로로 이어졌다.</p>
+<p>기기 ID에 의존한다는 조건도 의미가 있었다. 사람이나 세션을 2%로 골랐다고 설명하면 조사 가능한 범위가 달라진다. 표본의 단위는 설정 숫자만큼 중요한 계약이었다.</p>
+<h2>양을 줄인 뒤에도 같은 질문을 할 수 있어야 했다</h2>
+<p>고빈도 raw 상태는 전환 요약과 같은 전환 ID·발생 시각·계약 버전으로 연결했다. 두 표현으로 같은 전환을 대조할 수 있어야 raw를 줄여도 해석이 이어졌다. 표본 밖 조사에서는 판정 대기 구간만 제한적으로 보관하고 초과 유실도 남겼다. 이후 소비자가 로그의 침묵을 정상 동작으로 오해하지 않게 하는 정보였다.</p>
+<p>적재 위치를 분리할 때도 데이터 플랫폼팀의 적재·뷰·백필·정합성 작업과 내가 관리하던 조회의 이관이 함께 필요했다. 생산자가 덜 보내는 것만으로 소비자의 질문이 보존되지는 않았다. 구체적인 버퍼와 이관 과정은 <a href="/cases/playhub-diagnostic-sampling/">진단 수집 설계</a>에 남겼다.</p>
+<h2>빈칸과 0도 소비 계약의 문제였다</h2>
+<p><a href="/cases/retention-report-boundaries/">리텐션 표와 CSV</a>를 만든 이전 작업을 돌아보면 같은 질문이 더 작은 데이터 단위에서 나타난다. 당시 빠진 일자를 0으로 채웠고 그래프는 0을 빈 셀로 표시했다. 화면과 CSV는 같은 응답에서 만들어졌지만 사람이 읽는 의미는 달라질 수 있었다.</p>
+<p>값이 없는 셀은 아직 관측하지 못했거나 제공하지 않은 상태로 읽을 수 있다. 0은 관측 결과가 0이었다는 의미로 계산에 들어갈 수 있다. 변환 단계에서 둘을 합친 뒤 안내 문구만 붙여서는 개별 셀을 다시 구분할 수 없었다.</p>
+<p>당시에는 표와 내보내기를 전달했고, 이 구분을 보존하는 재설계를 완료한 것은 아니다. 현재 다시 만든다면 원응답을 읽는 단계에서 값의 존재와 수치를 따로 두고, 화면과 파일이 각각 그 상태를 전달하도록 정하고 싶다. 진단 이벤트를 생성 코드의 이름만으로 분류하면 안 됐던 것처럼, CSV를 같은 배열에서 만들었다는 사실도 동일한 해석을 보장하지 않는다.</p>
+<h2>줄이거나 변환한 뒤에도 질문이 남아 있어야 한다</h2>
+<p>진단 변경은 한 기기의 흐름과 KPI 소비를 다른 수집 정책으로 나누고, 추가 조사와 적재 이관까지 연결했다. 리텐션 작업은 자료를 표와 파일로 전달했지만, 현재 돌아보면 빈칸의 의미를 변환에서 잃은 지점이 남아 있다. 두 작업을 같은 성공담으로 묶기보다 차이를 남겨야 개발 판단의 변화가 보인다.</p>
+<p>지금 데이터가 지나가는 프론트엔드를 다시 설계한다면 생산하는 이름, 전송하는 양, 화면에 보이는 숫자 중 하나만 확인하지 않을 것이다. 어느 소비자가 어떤 분모와 시간 단위로 읽는지, 그 질문에 필요한 상태를 변환이 지우지 않는지가 먼저다. 자동 수령 success를 다시 분류한 작은 변경이, 이 관점을 가장 구체적으로 남겼다.</p></div><footer class="page-footer"><a class="see-all-link" href="/essays" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg> <!-- -->에세이 목록</a></footer></article></main><footer class="site-footer"><div class="site-footer-inner"><div class="footer-brand"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg>정경하</span><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open-text" aria-hidden="true"><path d="M12 7v14"></path><path d="M16 12h2"></path><path d="M16 8h2"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path><path d="M6 12h2"></path><path d="M6 8h2"></path></svg>기술과 제품을 만드는 과정</span></div><nav class="footer-nav" aria-label="더 보기"><a href="/uses" data-discover="true">도구</a><a href="/now" data-discover="true">요즘</a><a href="/reading" data-discover="true">읽은 책</a></nav><span class="footer-meta"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-clock" aria-hidden="true"><path d="M16 14v2.2l1.6 1"></path><path d="M16 2v4"></path><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"></path><path d="M3 10h5"></path><path d="M8 2v4"></path><circle cx="16" cy="16" r="6"></circle></svg>최근 수정 <!-- -->2026-10-09</span></div></footer></div>
+  </body>
+</html>
