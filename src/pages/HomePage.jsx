@@ -18,7 +18,7 @@ function HomePage() {
       </header>
       {featured ? (
         <section className="featured-story" aria-labelledby="featured-story-title">
-          <p className="eyebrow">대표 글</p>
+          <p className="eyebrow">개발 경험</p>
           <h2 id="featured-story-title"><Link to={ROUTES.caseDetail(featured.slug)}>{featured.title}</Link></h2>
           <p>{featured.summary}</p>
           <Link to={ROUTES.caseDetail(featured.slug)}>글 읽기 →</Link>
@@ -29,8 +29,8 @@ function HomePage() {
         <CompactArticleList entries={rest} view="all" />
       </section>
       <nav className="story-footer-links" aria-label="더 읽기">
-        <Link to={ROUTES.cases}>대표 글 모두 보기</Link>
-        <Link to={ROUTES.cases + '?view=support'}>짧은 기술 기록</Link>
+        <Link to={ROUTES.cases}>개발 경험 모두 보기</Link>
+        <Link to={ROUTES.cases + '?view=support'}>기술 노트</Link>
       </nav>
     </div>
   );

@@ -45,7 +45,7 @@ function EssayDetailPage() {
 
       <footer className="page-footer">
         <Link to={returnTo} className="see-all-link">
-          <ArrowLeft size={16} aria-hidden="true" /> {returnTo === ROUTES.essays ? '에세이 목록' : view === 'all' ? '대표 글' : view === 'support' ? '기술 기록' : '주제 목록'}
+          <ArrowLeft size={16} aria-hidden="true" /> {returnTo === ROUTES.essays ? '에세이 목록' : view === 'all' ? '개발 경험' : view === 'support' ? '기술 노트' : '주제 목록'}
         </Link>
       </footer>
     </article>

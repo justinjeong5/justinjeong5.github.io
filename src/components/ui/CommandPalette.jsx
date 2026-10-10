@@ -111,7 +111,7 @@ function CommandPalette() {
             type="text"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="글과 기술 기록의 제목·주제 검색…"
+            placeholder="개발 경험과 기술 노트의 제목·주제 검색…"
             aria-label="검색어"
             spellCheck="false"
             autoComplete="off"

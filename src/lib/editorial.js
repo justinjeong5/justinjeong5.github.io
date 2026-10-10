@@ -17,8 +17,8 @@ export const PRIMARY_ARTICLES = [
 ];
 
 export const ARTICLE_COLLECTIONS = [
-  { id: 'stories', label: '대표 글', url: '/cases' },
-  { id: 'records', label: '기술 기록', url: '/cases?view=support' },
+  { id: 'stories', label: '개발 경험', url: '/cases' },
+  { id: 'records', label: '기술 노트', url: '/cases?view=support' },
 ];
 
 export function articleCollection(entry) {

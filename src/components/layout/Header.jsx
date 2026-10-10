@@ -1,11 +1,18 @@
-import { Link, NavLink } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Keyboard, Menu, Search } from 'lucide-react';
 
-import { PRIMARY_NAV, ROUTES } from '../../lib/routes';
+import { PRIMARY_NAV, ROUTES, isPrimaryNavActive } from '../../lib/routes';
+import { getCase, getEssay } from '../../lib/content';
+import { useReadingView } from '../../lib/use-reading-view';
 import { useUI } from '../../lib/ui-context';
 import ThemeToggle from '../ui/ThemeToggle';
 
 function Header() {
+  const { pathname } = useLocation();
+  const view = useReadingView();
+  const search = view ? '?view=' + encodeURIComponent(view) : '';
+  const detail = pathname.match(/^\/(cases|essays)\/([^/]+)\/?$/);
+  const entry = detail ? (detail[1] === 'cases' ? getCase(detail[2]) : getEssay(detail[2])) : undefined;
   const { openPalette, toggleHelp, helpOpen, toggleMenu, menuOpen } = useUI();
 
   return (
@@ -16,13 +23,14 @@ function Header() {
       </Link>
       <nav className="primary-nav">
         {PRIMARY_NAV.map((item) => (
-          <NavLink
+          <Link
             key={item.to}
             to={item.to}
-            className={({ isActive }) => (isActive ? 'nav-link is-active' : 'nav-link')}
+            className={isPrimaryNavActive(item, pathname, search, entry?.collection) ? 'nav-link is-active' : 'nav-link'}
+            aria-current={isPrimaryNavActive(item, pathname, search, entry?.collection) ? 'page' : undefined}
           >
             {item.label}
-          </NavLink>
+          </Link>
         ))}
       </nav>
       <div className="nav-actions">
