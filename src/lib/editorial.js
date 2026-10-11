@@ -2,7 +2,15 @@ import { compareContextDates } from './article-dates.js';
 import { selectAllWorkArticles } from './work-paths.js';
 
 export const PRIMARY_ARTICLES = [
+  ['case', 'ai-product-analysis'],
+  ['case', 'experiment-routing-context'],
+  ['case', 'shared-ad-execution-delivery'],
+  ['case', 'report-data-user-workflow'],
   ['case', 'playhub-product-architecture'],
+  ['case', 'playhub-bonus-session'],
+  ['case', 'advertiser-integration-workflow'],
+  ['case', 'selectable-mission-product'],
+  ['case', 'inapp-content-participation'],
   ['case', 'playhub-diagnostic-sampling'],
   ['case', 'cs-workflow-product'],
   ['case', 'ai-cross-functional-delivery'],
@@ -11,8 +19,6 @@ export const PRIMARY_ARTICLES = [
   ['case', 'article-content-integration'],
   ['case', 'playhub-reward-reveal'],
   ['case', 'ad-preload-lifecycle'],
-  ['case', 'latest-request-boundaries'],
-  ['case', 'external-entry-viewport'],
   ['essay', 'automation-doesnt-reduce-work'],
 ];
 

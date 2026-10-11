@@ -11,19 +11,19 @@ export const RECOMMENDED_READS = [
 
 export const WORK_TOPICS = [
   { id: 'product', label: '제품 구축·상태 설계', description: '새 제품의 핵심 FE와 운영 흐름을 만들고 출시하기',
-    caseSlugs: ['playhub-product-architecture', 'playhub-product-flow', 'cs-workflow-product', 'article-content-integration', 'bulk-partial-results', 'budget-rule-compatibility', 'automation-unknown-state', 'date-filter-preset-state', 'experiment-routing-context', 'operator-next-inquiry'],
+    caseSlugs: ['report-data-user-workflow', 'playhub-bonus-session', 'advertiser-integration-workflow', 'selectable-mission-product', 'inapp-content-participation', 'campaign-hub-supply', 'playhub-product-architecture', 'playhub-product-flow', 'cs-workflow-product', 'article-content-integration', 'bulk-partial-results', 'budget-rule-compatibility', 'automation-unknown-state', 'date-filter-preset-state', 'experiment-routing-context', 'operator-next-inquiry'],
     essaySlugs: ['two-sided-market-decisions', 'why-not-traditional-resume'] },
   { id: 'runtime', label: '비동기·SDK·브라우저', description: '외부 실행과 복귀, 입력·요청의 수명을 다루기',
-    caseSlugs: ['latest-request-boundaries', 'ad-preload-lifecycle', 'canvas-input-lifecycle', 'playhub-reward-reveal', 'ad-response-recovery', 'external-entry-viewport', 'shared-popup-locale'],
+    caseSlugs: ['shared-ad-execution-delivery', 'gateway-rendering-context', 'latest-request-boundaries', 'ad-preload-lifecycle', 'canvas-input-lifecycle', 'playhub-reward-reveal', 'ad-response-recovery', 'external-entry-viewport', 'shared-popup-locale'],
     essaySlugs: ['context-before-preference', 'same-defect-class-across-repos', 'silent-truncation-recurrence'] },
   { id: 'observability', label: '관측·데이터', description: '조사에 필요한 정보와 제품 지표의 의미를 지키기',
-    caseSlugs: ['playhub-diagnostic-sampling', 'bridge-observation-contract', 'diagnostic-error-information', 'retention-report-boundaries'],
+    caseSlugs: ['journey-analytics-contract', 'playhub-diagnostic-sampling', 'bridge-observation-contract', 'diagnostic-error-information', 'retention-report-boundaries'],
     essaySlugs: ['data-trust-two-sided'] },
   { id: 'tooling', label: '개발환경·검증·배포', description: '개발 구조의 전환과 기존 동작을 보존하는 검증',
     caseSlugs: ['frontend-delivery-boundary', 'deployment-config-contracts', 'build-cache-compatibility', 'http-test-boundary', 'grouped-response-positions'],
     essaySlugs: ['automation-doesnt-reduce-work', 'deterministic-design-loop'] },
   { id: 'collaboration', label: 'AI·협업', description: '팀의 병목을 맡고 동료의 판단을 구현에 연결하기',
-    caseSlugs: ['ai-cross-functional-delivery'],
+    caseSlugs: ['ai-product-analysis', 'ai-cross-functional-delivery'],
     essaySlugs: ['ai-coding-tools-six-months', 'self-persona-blocking', 'delegation-autonomy-calibration', 'ai-workflow-chains'] },
 ];
 
@@ -50,6 +50,16 @@ export function selectAllWorkArticles(cases, essays) {
 }
 
 export const WORK_CASE_SLUGS = [
+  'ai-product-analysis',
+  'journey-analytics-contract',
+  'shared-ad-execution-delivery',
+  'report-data-user-workflow',
+  'gateway-rendering-context',
+  'playhub-bonus-session',
+  'advertiser-integration-workflow',
+  'selectable-mission-product',
+  'inapp-content-participation',
+  'campaign-hub-supply',
   'playhub-product-architecture',
   'playhub-product-flow',
   'playhub-diagnostic-sampling',
@@ -85,7 +95,7 @@ export const WORK_PATHS = [
     label: '제품과 운영자',
     question: '사용자가 상태를 이해하고 행동할 수 있게 했는가?',
     description: '제품의 참여 규칙, 운영자의 판단, 실제 출시와 후속 개선을 연결한 기록.',
-    caseSlugs: ['playhub-product-flow', 'article-content-integration', 'cs-workflow-product', 'playhub-reward-reveal', 'ai-cross-functional-delivery', 'canvas-input-lifecycle', 'bulk-partial-results', 'automation-unknown-state', 'budget-rule-compatibility', 'retention-report-boundaries', 'experiment-routing-context', 'ad-response-recovery', 'date-filter-preset-state', 'operator-next-inquiry', 'shared-popup-locale'],
+    caseSlugs: ['playhub-bonus-session', 'advertiser-integration-workflow', 'selectable-mission-product', 'inapp-content-participation', 'campaign-hub-supply', 'playhub-product-flow', 'article-content-integration', 'cs-workflow-product', 'playhub-reward-reveal', 'ai-cross-functional-delivery', 'canvas-input-lifecycle', 'bulk-partial-results', 'automation-unknown-state', 'budget-rule-compatibility', 'retention-report-boundaries', 'experiment-routing-context', 'ad-response-recovery', 'date-filter-preset-state', 'operator-next-inquiry', 'shared-popup-locale'],
   },
   {
     id: 'contracts',
@@ -101,7 +111,7 @@ export const WORK_PATHS = [
     description: '배포 도구의 설정 계약, FE 전환, 입력 경로, AI 위임 뒤 실제 전달까지 다룬 기록.',
     caseSlugs: ['deployment-config-contracts', 'ai-cross-functional-delivery', 'canvas-input-lifecycle', 'playhub-product-flow', 'ad-preload-lifecycle', 'article-content-integration', 'build-cache-compatibility', 'frontend-delivery-boundary', 'experiment-routing-context', 'bridge-observation-contract', 'external-entry-viewport', 'shared-popup-locale', 'http-test-boundary', 'diagnostic-error-information'],
   },
-].map((path) => ({ ...path, caseSlugs: ['playhub-product-architecture', ...path.caseSlugs] }));
+].map((path) => ({ ...path, caseSlugs: ['playhub-product-architecture', 'ai-product-analysis', 'journey-analytics-contract', 'shared-ad-execution-delivery', 'report-data-user-workflow', 'gateway-rendering-context', ...path.caseSlugs] }));
 
 export function resolveWorkPath(id) {
   return WORK_PATHS.find((path) => path.id === id);

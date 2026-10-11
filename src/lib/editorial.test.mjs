@@ -18,8 +18,9 @@ test('representative articles and supplementary records partition the live work 
   const primary = selectEditorialArticles(cases, essays);
   const support = selectEditorialArticles(cases, essays, true);
   assert.equal(primary.length, PRIMARY_ARTICLES.length);
-  assert.equal(primary.length, 12);
-  assert.equal(support.length, 16);
+  assert.equal(primary.length, 18);
+  assert.equal(support.length, 20);
+  assert.deepEqual(new Set(primary.map((entry) => entry.kind + ':' + entry.slug)), new Set(PRIMARY_ARTICLES.map(([kind, slug]) => kind + ':' + slug)));
   const keys = (items) => items.map((entry) => entry.kind + ':' + entry.slug);
   assert.equal(new Set(keys([...primary, ...support])).size, primary.length + support.length);
   assert.ok(primary.every((entry) => !entry.archived));
@@ -34,6 +35,22 @@ test('classification belongs to each article, not its technical detail or file t
   assert.deepEqual(selectEditorialArticles(cases, essays).map((entry) => entry.slug), ['reflection']);
   assert.deepEqual(selectEditorialArticles(cases, essays, true).map((entry) => entry.slug), ['playhub-product-architecture']);
   assert.equal(articleCollection({ collection: 'unknown' }), undefined);
+});
+
+test('product experiment and AI analysis are discoverable stories while journey instrumentation remains a record', () => {
+  const cases = entries('cases');
+  const essays = entries('essays');
+  const stories = selectEditorialArticles(cases, essays).map((entry) => entry.slug);
+  const records = selectEditorialArticles(cases, essays, true).map((entry) => entry.slug);
+  for (const slug of ['experiment-routing-context', 'ai-product-analysis']) {
+    assert.ok(stories.includes(slug));
+    assert.ok(!records.includes(slug));
+  }
+  assert.ok(records.includes('journey-analytics-contract'));
+  assert.ok(!stories.includes('journey-analytics-contract'));
+  const oldNote = readFileSync(new URL('../content/notes/ad-metric-traps.mdx', import.meta.url), 'utf8');
+  assert.match(oldNote, /^archived: true$/m);
+  assert.match(oldNote, /supersededBy: "\/cases\/journey-analytics-contract"/);
 });
 
 test('consolidated originals remain readable and point directly to an active article', () => {
