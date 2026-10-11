@@ -18,7 +18,7 @@ test('representative articles and supplementary records partition the live work 
   const primary = selectEditorialArticles(cases, essays);
   const support = selectEditorialArticles(cases, essays, true);
   assert.equal(primary.length, PRIMARY_ARTICLES.length);
-  assert.equal(primary.length, 18);
+  assert.equal(primary.length, 20);
   assert.equal(support.length, 20);
   assert.deepEqual(new Set(primary.map((entry) => entry.kind + ':' + entry.slug)), new Set(PRIMARY_ARTICLES.map(([kind, slug]) => kind + ':' + slug)));
   const keys = (items) => items.map((entry) => entry.kind + ':' + entry.slug);
@@ -35,6 +35,19 @@ test('classification belongs to each article, not its technical detail or file t
   assert.deepEqual(selectEditorialArticles(cases, essays).map((entry) => entry.slug), ['reflection']);
   assert.deepEqual(selectEditorialArticles(cases, essays, true).map((entry) => entry.slug), ['playhub-product-architecture']);
   assert.equal(articleCollection({ collection: 'unknown' }), undefined);
+});
+
+test('personal project stories join the main chronological list without reviving old or archived content', () => {
+  const cases = [
+    { slug: 'personal', series: 'personal-projects', collection: 'stories', dateBasis: 'context', date: '2026-10-11' },
+    { slug: 'old', category: 'builder-log', date: '2026-10-12' },
+    { slug: 'retired', series: 'personal-projects', collection: 'stories', archived: true, date: '2026-10-12' },
+    { slug: 'personal-note', series: 'personal-projects', collection: 'records', dateBasis: 'context', date: '2026-09' },
+    { slug: 'playhub-product-architecture', series: 'work-evidence-2026', collection: 'stories', dateBasis: 'context', date: '2026-08' },
+  ];
+  assert.deepEqual(selectEditorialArticles(cases, []).map((entry) => [entry.slug, entry.kind]), [['personal', 'case'], ['playhub-product-architecture', 'case']]);
+  assert.deepEqual(selectEditorialArticles(cases, [], true).map((entry) => entry.slug), ['personal-note']);
+  assert.equal(cases[0].kind, undefined);
 });
 
 test('product experiment and AI analysis are discoverable stories while journey instrumentation remains a record', () => {

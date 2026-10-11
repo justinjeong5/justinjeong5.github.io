@@ -6,7 +6,7 @@ function CompactArticleList({ entries, view }) {
   return (
     <div className="compact-index">
       <div className="compact-controls">
-        <span>{entries.length}편 · 최신 업무 시점순</span>
+        <span>{entries.length}편 · 최신 작업 시점순</span>
       </div>
       <ul className="compact-article-list">
         {entries.map((entry) => {

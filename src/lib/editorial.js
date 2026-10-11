@@ -1,7 +1,9 @@
 import { compareContextDates } from './article-dates.js';
-import { selectAllWorkArticles } from './work-paths.js';
+import { selectAllWorkArticles, visibleEntries } from './work-paths.js';
 
 export const PRIMARY_ARTICLES = [
+  ['case', 'pullup-record-driven-coach'],
+  ['case', 'poketokenbar-account-cache'],
   ['case', 'ai-product-analysis'],
   ['case', 'experiment-routing-context'],
   ['case', 'shared-ad-execution-delivery'],
@@ -32,7 +34,10 @@ export function articleCollection(entry) {
 }
 
 export function selectEditorialArticles(cases, essays, supplementary = false) {
-  return selectAllWorkArticles(cases, essays)
+  const personal = visibleEntries(cases)
+    .filter((entry) => entry.series === 'personal-projects')
+    .map((entry) => ({ ...entry, kind: 'case' }));
+  return [...selectAllWorkArticles(cases, essays), ...personal]
     .filter((entry) => entry.collection === (supplementary ? 'records' : 'stories'))
     .sort(compareContextDates);
 }
