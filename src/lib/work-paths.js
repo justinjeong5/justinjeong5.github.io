@@ -4,9 +4,9 @@ import { compareContextDates } from './article-dates.js';
 export const WORK_SERIES = 'work-evidence-2026';
 
 export const RECOMMENDED_READS = [
-  { label: '제품을 만든 과정', title: '리워드 제품의 참여 흐름을 앱과 웹에 연결하기', description: '초기 구축에서 참여 흐름, QA와 매체 출시까지.', to: ROUTES.caseDetail('playhub-product-architecture') },
-  { label: '기술적으로 파고든 문제', title: '진단 로그를 줄이면서도 조사할 수 있는 흐름을 남기기', description: '제품 지표와 진단을 나누고 필요한 흐름을 남기기.', to: ROUTES.caseDetail('playhub-diagnostic-sampling') },
-  { label: '운영자의 작업을 연결하기', title: '적립 문의 관리 제품을 만들고, 실사용의 시간차를 해결하기', description: '판단 근거와 상태 반영, 다음 처리의 흐름.', to: ROUTES.caseDetail('cs-workflow-product') },
+  { label: '제품을 만든 과정', title: '앱과 웹에서 이어지는 리워드 제품 만들기', description: '초기 구축에서 참여 흐름, QA와 매체 출시까지.', to: ROUTES.caseDetail('playhub-product-architecture') },
+  { label: '기술적으로 파고든 문제', title: '운영에 필요한 관측은 남기고 로그 처리량 줄이기', description: '제품 지표와 진단을 나누고 필요한 흐름을 남기기.', to: ROUTES.caseDetail('playhub-diagnostic-sampling') },
+  { label: '운영자의 작업을 연결하기', title: '문의 조회를 처리와 판단으로 이어 주는 운영 제품 만들기', description: '판단 근거와 상태 반영, 다음 처리의 흐름.', to: ROUTES.caseDetail('cs-workflow-product') },
 ];
 
 export const WORK_TOPICS = [
