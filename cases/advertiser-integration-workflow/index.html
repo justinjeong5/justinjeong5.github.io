@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+    <meta name="author" content="정경하" />
+    <meta property="og:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="description" content="유형별 입력과 테스트 링크, 광고주의 실제 행동, 서버의 전환 조회를 한 도구로 연결했다. 실제 고객 검증이 집행 판단에 쓰인 뒤, 첫 테스트를 막던 과거 기록 조건을 다시 다룬 경험." />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="광고주가 연동을 검증하고 집행을 결정하는 도구 만들기 | 정경하" />
+    <meta property="og:description" content="유형별 입력과 테스트 링크, 광고주의 실제 행동, 서버의 전환 조회를 한 도구로 연결했다. 실제 고객 검증이 집행 판단에 쓰인 뒤, 첫 테스트를 막던 과거 기록 조건을 다시 다룬 경험." />
+    <meta property="og:url" content="https://justinjeong5.github.io/cases/advertiser-integration-workflow/" />
+    <meta name="twitter:title" content="광고주가 연동을 검증하고 집행을 결정하는 도구 만들기 | 정경하" />
+    <meta name="twitter:description" content="유형별 입력과 테스트 링크, 광고주의 실제 행동, 서버의 전환 조회를 한 도구로 연결했다. 실제 고객 검증이 집행 판단에 쓰인 뒤, 첫 테스트를 막던 과거 기록 조건을 다시 다룬 경험." />
+    <link rel="canonical" href="https://justinjeong5.github.io/cases/advertiser-integration-workflow/" />
+    <title>광고주가 연동을 검증하고 집행을 결정하는 도구 만들기 | 정경하</title>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "광고주가 연동을 검증하고 집행을 결정하는 도구 만들기 | 정경하",
+  "description": "유형별 입력과 테스트 링크, 광고주의 실제 행동, 서버의 전환 조회를 한 도구로 연결했다. 실제 고객 검증이 집행 판단에 쓰인 뒤, 첫 테스트를 막던 과거 기록 조건을 다시 다룬 경험.",
+  "url": "https://justinjeong5.github.io/cases/advertiser-integration-workflow/",
+  "mainEntityOfPage": "https://justinjeong5.github.io/cases/advertiser-integration-workflow/",
+  "author": {
+    "@type": "Person",
+    "name": "정경하",
+    "url": "https://justinjeong5.github.io/",
+    "jobTitle": "Product-minded Frontend Engineer",
+    "sameAs": [
+      "https://github.com/justinjeong5"
+    ]
+  },
+  "dateModified": "2026-10-10"
+}
+</script>
+    <script>
+      // 테마 사전 설정 — prerender된 HTML에 data-theme를 즉시 적용해 CSS flash를 막는다.
+      // (다른 스크립트보다 먼저 실행되어야 한다.)
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages — restore deep-link path written by 404.html
+      // https://github.com/rafgraph/spa-github-pages
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
+    </script>
+    <script type="module" crossorigin src="/assets/index-onBRISDy.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-QTnfLwEv.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-cases-CUqh0Nlm.js">
+    <link rel="modulepreload" crossorigin href="/assets/router-BbQbkWys.js">
+    <link rel="modulepreload" crossorigin href="/assets/search-CiN4C8Nu.js">
+    <link rel="modulepreload" crossorigin href="/assets/icons-D_VNsbtP.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-xj0-nEta.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-essays-CFwNmnS3.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-logs-BbhMfH0O.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-notes-Cu0TCHNK.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-CwzYrqL3.css">
+    <link rel="stylesheet" crossorigin href="/assets/pretendard-NPFyShNs.css">
+  </head>
+  <body>
+    <div id="root"><a href="#main-content" class="skip-link">본문 바로가기</a><header class="site-nav" aria-label="주메뉴"><div class="site-nav-inner"><a class="brand" aria-label="정경하 홈" href="/" data-discover="true">JKH</a><nav class="primary-nav"><a class="nav-link is-active" aria-current="page" href="/cases" data-discover="true">개발 경험</a><a class="nav-link" href="/cases?view=support" data-discover="true">기술 노트</a><a class="nav-link" href="/about" data-discover="true">소개</a></nav><div class="nav-actions"><button type="button" class="search-trigger" aria-label="검색" title="검색 (⌘K 또는 /)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg><span>검색</span><kbd>⌘K</kbd></button><button type="button" class="icon-button" aria-label="테마: 라이트. 클릭하여 변경" title="테마: 라이트 · T 키로도 전환"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg></button><button type="button" class="icon-button desktop-only" aria-label="키보드 단축키" aria-expanded="false" aria-haspopup="dialog" title="키보드 단축키 (? 키)"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-keyboard" aria-hidden="true"><path d="M10 8h.01"></path><path d="M12 12h.01"></path><path d="M14 8h.01"></path><path d="M16 12h.01"></path><path d="M18 8h.01"></path><path d="M6 8h.01"></path><path d="M7 16h10"></path><path d="M8 12h.01"></path><rect width="20" height="16" x="2" y="4" rx="2"></rect></svg></button><button type="button" class="icon-button menu-trigger" aria-label="메뉴 열기" aria-expanded="false" aria-haspopup="dialog" title="메뉴"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button></div></div></header><main id="main-content" tabindex="-1"><article class="page case-detail"><header class="page-header case-detail-header"><p class="eyebrow"><a href="/cases" data-discover="true">개발 경험</a></p><h1>광고주가 연동을 검증하고 집행을 결정하는 도구 만들기</h1><p class="page-lead">유형별 입력과 테스트 링크, 광고주의 실제 행동, 서버의 전환 조회를 한 도구로 연결했다. 실제 고객 검증이 집행 판단에 쓰인 뒤, 첫 테스트를 막던 과거 기록 조건을 다시 다룬 경험.</p><dl class="case-meta"><div><dt>담당</dt><dd>단계별 FE·ViewModel·API client·BFF 구현, QA와 고객 피드백 후속</dd></div><div><dt>시기</dt><dd>2022.11–2023.01</dd></div><div><dt>주제</dt><dd>#광고주 도구 #FE·BFF #제품 규칙</dd></div></dl></header><div class="prose"><p>광고를 집행하기 전에 광고주 쪽의 행동이 제대로 전환으로 들어오는지 확인해야 합니다. 테스트 링크를 만들었다는 사실만으로는 부족합니다. 광고주가 실제 행동을 하고, 그 행동에 해당하는 기록을 서버에서 찾을 수 있어야 다음 집행을 판단할 수 있습니다.</p>
+<p>2022년 12월, 제품 담당자가 제가 개발한 도구로 실제 고객의 전환을 확인했습니다. 운영 담당자는 그 결과를 보고 추가 테스트 없이 예정된 집행을 진행할 수 있다고 판단했습니다. 이 판단을 하려면 <strong>유형에 맞는 입력을 받고, 광고주가 실제 행동을 한 뒤, 서버에서 그 전환을 확인하는 과정</strong>이 하나의 작업으로 이어져야 했습니다. 이후 첫 테스트를 시작하지 못한다는 고객 피드백이 돌아와 1월에는 진행 조건을 다시 바꿨습니다.</p>
+<h2>연동 유형이 다르면 입력과 성공의 근거도 달랐다</h2>
+<p>문서로 설명하던 절차를 광고 운영 대시보드 안에서 수행할 수 있도록 만들었습니다. WEB·SDK·MMP는 같은 광고 연동처럼 보여도 필요한 값과 조회할 기록의 의미가 달랐습니다. MMP는 앱 전환을 전달하는 모바일 측정 파트너입니다.</p>
+<table><thead><tr><th>유형</th><th>입력·확인에서 다른 점</th></tr></thead><tbody><tr><td>WEB</td><td>URL과 추적 식별자</td></tr><tr><td>SDK</td><td>광고 식별자</td></tr><tr><td>MMP</td><td>tracker·플랫폼·이벤트 이름과 발생 시각</td></tr></tbody></table>
+<p>저는 Vue 단계 화면, ViewModel과 상태, API 소비, Node.js BFF의 조회·권한·요청 조건 전달을 맡았습니다. 실제 전환의 수집과 판정은 서버가 담당했습니다.</p>
+<p>기획이 모두 확정될 때까지 기다리기보다 API를 먼저 논의해 실제 응답과 필요한 조건을 확인하자고 제안했습니다. 화면의 순서만 정하고 나중에 응답을 붙이면, 진행할 수 있는 조건과 성공을 확인하는 조건이 달라질 수 있기 때문이었습니다.</p>
+<h2>단계 완료와 연동 성공을 같은 값으로 만들지 않았다</h2>
+<p>도구의 흐름은 연동 대상 조회, 유형별 입력, 테스트 링크 생성, 광고주의 행동, 전환 기록 재조회로 나뉘었습니다. 입력 완료와 요청 중 상태, 화면 단계, 서버의 전환 판정을 따로 읽었습니다.</p>
+<p>테스트 링크에는 QR과 복사, 유형별 안내를 연결했습니다. 링크 생성은 사용자가 테스트를 시작할 재료가 준비됐다는 뜻이지 실제 전환 성공은 아니었습니다. 결과 조회를 끝냈더라도 전환이 없으면 아직 성공으로 보여줄 수 없었습니다.</p>
+<p>링크 생성과 전환 성공을 안내 문구로만 구분해서는 화면이 잘못된 성공 상태를 보여줄 수 있었습니다. 화면의 상태와 서버 응답도 같은 기준으로 읽어야 했습니다. ViewModel에는 유형별 필드와 값 변환을 모으고, store가 서버 조회에 전달할 입력도 함께 확인했습니다.</p>
+<h2>입력한 값이 서버 판정까지 도착하는지 봤다</h2>
+<p>BFF에는 기존 인증과 프록시를 재사용해 조회 경로를 연결했습니다. 전환 조회에서는 화면 입력의 query가 상위 요청까지 전달돼야 했습니다. 화면이 값을 받고 API를 호출했다는 사실만으로 충분하지 않았고, 빠진 query 전달을 수정했습니다. 기존 관리 경로의 구·신 권한 이름 호환도 보완했습니다.</p>
+<p>QA 뒤에는 광고 식별자를 SDK에서만 입력하게 하고, MMP가 아니면 이벤트 이름을 비웠습니다. 해당 유형에서 보이지 않는 값이 이전 입력으로 남아 서버 조회에 영향을 주면 안 됐습니다.</p>
+<p>모델의 표시 조건·기본값·변환과 store의 요청 인자도 테스트에 남겼습니다. 어떤 필드가 화면에 보이는지와 그 값이 특정 전환을 찾는 요청에 실제로 쓰이는지를 함께 검증했습니다.</p>
+<h2>실제 사용 뒤 첫 테스트의 모순이 드러났다</h2>
+<p>12월에는 도구가 실제 고객의 전환 확인과 예정 집행 판단에 사용됐습니다. 그러나 출시 뒤 다른 피드백에서는 올바른 연동 대상도 과거 포스트백이 없으면 첫 단계에서 막혔습니다. 아직 첫 이벤트를 만들려고 들어왔는데, 이전 이벤트가 있어야 시작할 수 있었던 셈입니다.</p>
+<p>고객은 이 안내를 식별자 오입력으로 받아들였습니다. 제품 담당자가 피드백을 전달했고 팀은 기록이 없어도 다음 테스트로 진행하도록 규칙을 바꿨습니다. 저는 그 조건을 두 화면에 반영했습니다.</p>
+<p>이벤트 소스 조회에서 빈 목록을 이유로 반환하던 분기를 없앴습니다. 동시에 다음 화면의 로그 조회 영역도 목록이 없다는 이유로 숨기지 않도록 바꿨습니다. 첫 화면만 통과시켜도 다음 화면의 재조회 버튼이 사라져 있다면 실제 테스트는 끝나지 않기 때문입니다.</p>
+<pre><code class="language-text">과거 이벤트 없음
+  → 첫 테스트 링크 생성은 허용
+  → 광고주가 실제 행동
+  → 서버의 해당 전환을 재조회
+  → 조회된 판정으로 성공 여부 표시
+</code></pre>
+<p>응답 형태와 연동 유형 확인은 유지했습니다. 시작 조건을 완화했다고 최종 성공의 기준까지 바꾼 것은 아니었습니다.</p>
+<h2>도구가 끝내야 하는 일</h2>
+<p>초기 도구로 광고주가 실제 테스트를 하고 서버 기록을 확인할 수 있게 됐고, 그 결과가 집행 판단에 사용됐습니다. 1월에는 과거 기록이 없는 대상도 첫 테스트를 시작하고 결과를 재조회할 수 있도록 바꿨습니다. 12월의 고객 사용과 이후 진행 조건 수정은 각각 이 과정의 다른 부분을 확인해 주었습니다.</p>
+<p>이전 기록이 없는 고객도 첫 이벤트를 만들 수 있어야 하지만, 테스트의 성공을 표시하려면 이번 전환을 확인해야 했습니다. 이 경험 이후에는 온보딩 도구의 단계뿐 아니라 사용자가 처음 들어왔을 때 무엇을 알고 있는지, 마지막에는 무엇을 확인해야 작업을 끝낼 수 있는지도 함께 봐야 한다고 생각합니다.</p></div><section class="related-block"><h2>다른 관점에서 함께 읽기</h2><div class="reading-tabs"><a href="/cases?view=operator" data-discover="true">제품과 운영자</a></div></section><footer class="page-footer"><a class="see-all-link" href="/cases" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg> 개발 경험 목록</a></footer></article></main><footer class="site-footer"><div class="site-footer-inner"><div class="footer-brand"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg>정경하</span><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open-text" aria-hidden="true"><path d="M12 7v14"></path><path d="M16 12h2"></path><path d="M16 8h2"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path><path d="M6 12h2"></path><path d="M6 8h2"></path></svg>기술과 제품을 만드는 과정</span></div><nav class="footer-nav" aria-label="더 보기"><a href="/uses" data-discover="true">도구</a><a href="/now" data-discover="true">요즘</a><a href="/reading" data-discover="true">읽은 책</a></nav><span class="footer-meta"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-clock" aria-hidden="true"><path d="M16 14v2.2l1.6 1"></path><path d="M16 2v4"></path><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"></path><path d="M3 10h5"></path><path d="M8 2v4"></path><circle cx="16" cy="16" r="6"></circle></svg>최근 수정 <!-- -->2026-10-11</span></div></footer></div>
+  </body>
+</html>

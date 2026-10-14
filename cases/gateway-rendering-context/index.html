@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+    <meta name="author" content="정경하" />
+    <meta property="og:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="description" content="앱 안과 외부 웹 중 실행할 화면을 고르는 중간 페이지의 전환을 없앴다. URL 갱신과 앱의 지원 기능 조회를 기다린 뒤 같은 경로에서 렌더링하고, 기존 레이아웃의 테마·광고 설정도 유지한 과정." />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="WebView 진입에서 페이지 이동 대신 실행 환경을 선택하기 | 정경하" />
+    <meta property="og:description" content="앱 안과 외부 웹 중 실행할 화면을 고르는 중간 페이지의 전환을 없앴다. URL 갱신과 앱의 지원 기능 조회를 기다린 뒤 같은 경로에서 렌더링하고, 기존 레이아웃의 테마·광고 설정도 유지한 과정." />
+    <meta property="og:url" content="https://justinjeong5.github.io/cases/gateway-rendering-context/" />
+    <meta name="twitter:title" content="WebView 진입에서 페이지 이동 대신 실행 환경을 선택하기 | 정경하" />
+    <meta name="twitter:description" content="앱 안과 외부 웹 중 실행할 화면을 고르는 중간 페이지의 전환을 없앴다. URL 갱신과 앱의 지원 기능 조회를 기다린 뒤 같은 경로에서 렌더링하고, 기존 레이아웃의 테마·광고 설정도 유지한 과정." />
+    <link rel="canonical" href="https://justinjeong5.github.io/cases/gateway-rendering-context/" />
+    <title>WebView 진입에서 페이지 이동 대신 실행 환경을 선택하기 | 정경하</title>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "WebView 진입에서 페이지 이동 대신 실행 환경을 선택하기 | 정경하",
+  "description": "앱 안과 외부 웹 중 실행할 화면을 고르는 중간 페이지의 전환을 없앴다. URL 갱신과 앱의 지원 기능 조회를 기다린 뒤 같은 경로에서 렌더링하고, 기존 레이아웃의 테마·광고 설정도 유지한 과정.",
+  "url": "https://justinjeong5.github.io/cases/gateway-rendering-context/",
+  "mainEntityOfPage": "https://justinjeong5.github.io/cases/gateway-rendering-context/",
+  "author": {
+    "@type": "Person",
+    "name": "정경하",
+    "url": "https://justinjeong5.github.io/",
+    "jobTitle": "Product-minded Frontend Engineer",
+    "sameAs": [
+      "https://github.com/justinjeong5"
+    ]
+  },
+  "dateModified": "2026-10-11"
+}
+</script>
+    <script>
+      // 테마 사전 설정 — prerender된 HTML에 data-theme를 즉시 적용해 CSS flash를 막는다.
+      // (다른 스크립트보다 먼저 실행되어야 한다.)
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages — restore deep-link path written by 404.html
+      // https://github.com/rafgraph/spa-github-pages
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
+    </script>
+    <script type="module" crossorigin src="/assets/index-onBRISDy.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-QTnfLwEv.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-cases-CUqh0Nlm.js">
+    <link rel="modulepreload" crossorigin href="/assets/router-BbQbkWys.js">
+    <link rel="modulepreload" crossorigin href="/assets/search-CiN4C8Nu.js">
+    <link rel="modulepreload" crossorigin href="/assets/icons-D_VNsbtP.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-xj0-nEta.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-essays-CFwNmnS3.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-logs-BbhMfH0O.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-notes-Cu0TCHNK.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-CwzYrqL3.css">
+    <link rel="stylesheet" crossorigin href="/assets/pretendard-NPFyShNs.css">
+  </head>
+  <body>
+    <div id="root"><a href="#main-content" class="skip-link">본문 바로가기</a><header class="site-nav" aria-label="주메뉴"><div class="site-nav-inner"><a class="brand" aria-label="정경하 홈" href="/" data-discover="true">JKH</a><nav class="primary-nav"><a class="nav-link" href="/cases" data-discover="true">개발 경험</a><a class="nav-link is-active" aria-current="page" href="/cases?view=support" data-discover="true">기술 노트</a><a class="nav-link" href="/about" data-discover="true">소개</a></nav><div class="nav-actions"><button type="button" class="search-trigger" aria-label="검색" title="검색 (⌘K 또는 /)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg><span>검색</span><kbd>⌘K</kbd></button><button type="button" class="icon-button" aria-label="테마: 라이트. 클릭하여 변경" title="테마: 라이트 · T 키로도 전환"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg></button><button type="button" class="icon-button desktop-only" aria-label="키보드 단축키" aria-expanded="false" aria-haspopup="dialog" title="키보드 단축키 (? 키)"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-keyboard" aria-hidden="true"><path d="M10 8h.01"></path><path d="M12 12h.01"></path><path d="M14 8h.01"></path><path d="M16 12h.01"></path><path d="M18 8h.01"></path><path d="M6 8h.01"></path><path d="M7 16h10"></path><path d="M8 12h.01"></path><rect width="20" height="16" x="2" y="4" rx="2"></rect></svg></button><button type="button" class="icon-button menu-trigger" aria-label="메뉴 열기" aria-expanded="false" aria-haspopup="dialog" title="메뉴"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button></div></div></header><main id="main-content" tabindex="-1"><article class="page case-detail"><header class="page-header case-detail-header"><p class="eyebrow"><a href="/cases?view=support" data-discover="true">기술 노트</a></p><h1>WebView 진입에서 페이지 이동 대신 실행 환경을 선택하기</h1><p class="page-lead">앱 안과 외부 웹 중 실행할 화면을 고르는 중간 페이지의 전환을 없앴다. URL 갱신과 앱의 지원 기능 조회를 기다린 뒤 같은 경로에서 렌더링하고, 기존 레이아웃의 테마·광고 설정도 유지한 과정.</p><dl class="case-meta"><div><dt>담당</dt><dd>앱 연동 모듈·지원 기능 조회·URL 동기화·목적 화면 렌더링·공통 레이아웃 구현</dd></div><div><dt>시기</dt><dd>2026.06</dd></div><div><dt>주제</dt><dd>#WebView #상태 동기화 #렌더링 구조</dd></div></dl></header><div class="prose"><p>참여 링크를 열면 중간 단계에서 앱 안의 화면과 외부 웹 화면 중 목적지를 골랐습니다. 앱 연동 모듈(<code>publisher</code>)의 초기화를 기다리고, 앱이 제공하는 기능(<code>capability</code>)을 조회한 뒤 실행할 화면을 결정하는 흐름이었습니다.</p>
+<p>중간 단계에서 클라이언트 사이드 라우팅으로 페이지를 전환하면 목적지 컴포넌트를 마운트하는 과정이 추가됩니다. 특정 Android WebView에서 빈 화면을 재현한 동료와 조건을 살펴본 뒤, 저는 같은 경로에서 목적지 컴포넌트를 렌더링하는 PoC와 후속 구현을 진행했습니다. 이동을 생략하려면 <strong>페이지를 이동하지 않는 대신 무엇을 더 동기화해야 하는가</strong>도 확인해야 했습니다.</p>
+<h2>목적지보다 먼저 준비될 입력을 구별했다</h2>
+<p>publisher가 아직 준비되지 않았는데 capability를 읽거나, target이 URL에 반영되기 전에 외부 웹 모드를 렌더하면 다른 실행 환경으로 시작할 수 있었습니다. 기다릴 조건을 나누고 준비된 결과로 목적지를 선택했습니다.</p>
+<p>capability 조회가 실패한 경우는 외부 웹으로 연결하는 fallback을 사용했습니다. 성공·실패의 경로가 모두 같은 화면 진입을 설명해야 했습니다.</p>
+<h2>query는 바꾸되 pathname은 유지했다</h2>
+<p>다음 페이지로 이동하는 대신 같은 경로에서 목적지 컴포넌트를 렌더링했습니다. 목적 화면을 고르는 <code>target</code> 값을 바꿀 때는 URL의 쿼리 문자열(<code>search</code>)만 <code>history.replaceState</code>로 갱신해 <code>pathname</code>과 <code>basePath</code>를 유지했고, 갱신된 값을 읽은 뒤 올바른 화면을 렌더링했습니다.</p>
+<p>target을 URL에 반영하기 전에 모드를 결정하면 이전 입력으로 다른 화면이 시작될 수 있었습니다. 그래서 URL을 바꾸고 반영된 target을 읽은 뒤에 목적지를 렌더하도록 순서를 연결했습니다.</p>
+<p>target을 주입한 변화 때문에 capability effect가 다시 실행되지 않도록, 그 입력에서는 target을 제외했습니다. 실행 환경을 알아내기 위한 입력과 알아낸 환경을 URL에 남기는 출력을 구별한 것입니다.</p>
+<h2>목적지만 렌더하면 원래 layout의 책임이 빠진다</h2>
+<p>페이지 이동을 생략하면 원래 목적지 layout을 통과하지 않습니다. 목적지 컴포넌트만 넣는 것으로는 theme과 외부 웹의 광고 설정이 따라오지 않았습니다.</p>
+<p>공통 레이아웃을 재사용해 직접 렌더링할 때도 기존 구성을 유지했습니다. 목적지 페이지로 이동할 때와 같은 설정으로 실행하려면, 컴포넌트 내용뿐 아니라 기존 레이아웃이 적용하던 테마와 광고 설정도 함께 적용해야 했습니다.</p>
+<h2>기다림과 늦은 결과를 다른 입력으로 검증했다</h2>
+<p>publisher 대기, capability 실패의 fallback, target 반영 전의 대기와 언마운트 조건을 구분했습니다. 타이머가 늦어지는 조건과 중복 BI 발행도 테스트 사례에 남겼습니다.</p>
+<table><thead><tr><th>조건</th><th>지켜야 할 결과</th></tr></thead><tbody><tr><td>publisher가 준비되지 않음</td><td>목적지 판단을 앞당기지 않음</td></tr><tr><td>capability 조회 실패</td><td>외부 웹 fallback</td></tr><tr><td>URL target이 아직 반영되지 않음</td><td>잘못된 모드로 먼저 시작하지 않음</td></tr><tr><td>컴포넌트 종료</td><td>이후 결과가 종료한 흐름을 이어가지 않음</td></tr><tr><td>같은 진입을 다시 읽음</td><td>계측을 중복 발행하지 않음</td></tr></tbody></table>
+<p>이 구현은 6월에 main으로 통합됐습니다. 당시 기기의 모든 흰 화면이 없어졌거나 브라우저 엔진의 원인을 확정했다는 결과와는 구별합니다. 제가 바꾼 것은 중간 이동과 목적지 실행을 연결하는 FE 구조였습니다.</p>
+<h2>이동을 줄이려면 없어지는 책임도 찾아야 했다</h2>
+<p>같은 경로에서 목적지를 렌더하면서 중간 이동의 hop은 없어졌습니다. 그 대신 URL이 반영될 때까지 기다리고, 원래 목적지 layout이 준비하던 theme과 광고 설정을 직접 렌더에도 연결해야 했습니다. 기다림과 준비를 어디에서 처리할지가 바뀐 구현이었습니다.</p>
+<p>이 작업을 돌아보면, 목적지 컴포넌트를 넣는 것만으로는 이동을 생략할 수 없었다고 생각합니다. 다음에 진입 흐름을 줄일 때도 생략할 화면이 준비하던 상태와 설정을 먼저 확인하고, 늦은 결과가 종료한 흐름을 다시 이어가지 않는 조건까지 살펴보려고 합니다.</p></div><section class="related-block"><h2>다른 관점에서 함께 읽기</h2><div class="reading-tabs"><a href="/cases?view=operator" data-discover="true">제품과 운영자</a><a href="/cases?view=contracts" data-discover="true">외부 응답과 상태</a><a href="/cases?view=delivery" data-discover="true">기술 선택과 변경</a></div></section><footer class="page-footer"><a class="see-all-link" href="/cases" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg> 개발 경험 목록</a></footer></article></main><footer class="site-footer"><div class="site-footer-inner"><div class="footer-brand"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg>정경하</span><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open-text" aria-hidden="true"><path d="M12 7v14"></path><path d="M16 12h2"></path><path d="M16 8h2"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path><path d="M6 12h2"></path><path d="M6 8h2"></path></svg>기술과 제품을 만드는 과정</span></div><nav class="footer-nav" aria-label="더 보기"><a href="/uses" data-discover="true">도구</a><a href="/now" data-discover="true">요즘</a><a href="/reading" data-discover="true">읽은 책</a></nav><span class="footer-meta"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-clock" aria-hidden="true"><path d="M16 14v2.2l1.6 1"></path><path d="M16 2v4"></path><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"></path><path d="M3 10h5"></path><path d="M8 2v4"></path><circle cx="16" cy="16" r="6"></circle></svg>최근 수정 <!-- -->2026-10-11</span></div></footer></div>
+  </body>
+</html>

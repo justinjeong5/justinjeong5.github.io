@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+    <meta name="author" content="정경하" />
+    <meta property="og:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="description" content="제품의 광고 후보 순회와 공급사의 실행을 나누어 공통 흐름을 만들었다. 내부 노출 집계와 실제 SDK 실행이 다른 조건을 추적하고, 다른 팀 제품의 호출 경로에 연결해 QA·배포까지 마친 과정." />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="다른 제품에서도 사용할 수 있는 공용 광고 실행 구조 만들기 | 정경하" />
+    <meta property="og:description" content="제품의 광고 후보 순회와 공급사의 실행을 나누어 공통 흐름을 만들었다. 내부 노출 집계와 실제 SDK 실행이 다른 조건을 추적하고, 다른 팀 제품의 호출 경로에 연결해 QA·배포까지 마친 과정." />
+    <meta property="og:url" content="https://justinjeong5.github.io/cases/shared-ad-execution-delivery/" />
+    <meta name="twitter:title" content="다른 제품에서도 사용할 수 있는 공용 광고 실행 구조 만들기 | 정경하" />
+    <meta name="twitter:description" content="제품의 광고 후보 순회와 공급사의 실행을 나누어 공통 흐름을 만들었다. 내부 노출 집계와 실제 SDK 실행이 다른 조건을 추적하고, 다른 팀 제품의 호출 경로에 연결해 QA·배포까지 마친 과정." />
+    <link rel="canonical" href="https://justinjeong5.github.io/cases/shared-ad-execution-delivery/" />
+    <title>다른 제품에서도 사용할 수 있는 공용 광고 실행 구조 만들기 | 정경하</title>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "다른 제품에서도 사용할 수 있는 공용 광고 실행 구조 만들기 | 정경하",
+  "description": "제품의 광고 후보 순회와 공급사의 실행을 나누어 공통 흐름을 만들었다. 내부 노출 집계와 실제 SDK 실행이 다른 조건을 추적하고, 다른 팀 제품의 호출 경로에 연결해 QA·배포까지 마친 과정.",
+  "url": "https://justinjeong5.github.io/cases/shared-ad-execution-delivery/",
+  "mainEntityOfPage": "https://justinjeong5.github.io/cases/shared-ad-execution-delivery/",
+  "author": {
+    "@type": "Person",
+    "name": "정경하",
+    "url": "https://justinjeong5.github.io/",
+    "jobTitle": "Product-minded Frontend Engineer",
+    "sameAs": [
+      "https://github.com/justinjeong5"
+    ]
+  },
+  "dateModified": "2026-10-11"
+}
+</script>
+    <script>
+      // 테마 사전 설정 — prerender된 HTML에 data-theme를 즉시 적용해 CSS flash를 막는다.
+      // (다른 스크립트보다 먼저 실행되어야 한다.)
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages — restore deep-link path written by 404.html
+      // https://github.com/rafgraph/spa-github-pages
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
+    </script>
+    <script type="module" crossorigin src="/assets/index-onBRISDy.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-QTnfLwEv.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-cases-CUqh0Nlm.js">
+    <link rel="modulepreload" crossorigin href="/assets/router-BbQbkWys.js">
+    <link rel="modulepreload" crossorigin href="/assets/search-CiN4C8Nu.js">
+    <link rel="modulepreload" crossorigin href="/assets/icons-D_VNsbtP.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-xj0-nEta.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-essays-CFwNmnS3.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-logs-BbhMfH0O.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-notes-Cu0TCHNK.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-CwzYrqL3.css">
+    <link rel="stylesheet" crossorigin href="/assets/pretendard-NPFyShNs.css">
+  </head>
+  <body>
+    <div id="root"><a href="#main-content" class="skip-link">본문 바로가기</a><header class="site-nav" aria-label="주메뉴"><div class="site-nav-inner"><a class="brand" aria-label="정경하 홈" href="/" data-discover="true">JKH</a><nav class="primary-nav"><a class="nav-link is-active" aria-current="page" href="/cases" data-discover="true">개발 경험</a><a class="nav-link" href="/cases?view=support" data-discover="true">기술 노트</a><a class="nav-link" href="/about" data-discover="true">소개</a></nav><div class="nav-actions"><button type="button" class="search-trigger" aria-label="검색" title="검색 (⌘K 또는 /)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg><span>검색</span><kbd>⌘K</kbd></button><button type="button" class="icon-button" aria-label="테마: 라이트. 클릭하여 변경" title="테마: 라이트 · T 키로도 전환"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg></button><button type="button" class="icon-button desktop-only" aria-label="키보드 단축키" aria-expanded="false" aria-haspopup="dialog" title="키보드 단축키 (? 키)"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-keyboard" aria-hidden="true"><path d="M10 8h.01"></path><path d="M12 12h.01"></path><path d="M14 8h.01"></path><path d="M16 12h.01"></path><path d="M18 8h.01"></path><path d="M6 8h.01"></path><path d="M7 16h10"></path><path d="M8 12h.01"></path><rect width="20" height="16" x="2" y="4" rx="2"></rect></svg></button><button type="button" class="icon-button menu-trigger" aria-label="메뉴 열기" aria-expanded="false" aria-haspopup="dialog" title="메뉴"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button></div></div></header><main id="main-content" tabindex="-1"><article class="page case-detail"><header class="page-header case-detail-header"><p class="eyebrow"><a href="/cases" data-discover="true">개발 경험</a></p><h1>다른 제품에서도 사용할 수 있는 공용 광고 실행 구조 만들기</h1><p class="page-lead">제품의 광고 후보 순회와 공급사의 실행을 나누어 공통 흐름을 만들었다. 내부 노출 집계와 실제 SDK 실행이 다른 조건을 추적하고, 다른 팀 제품의 호출 경로에 연결해 QA·배포까지 마친 과정.</p><dl class="case-meta"><div><dt>담당</dt><dd>광고 실행·공급사 adapter·입력 검증·다른 제품의 호출 코드 연결, 타팀 QA·배포</dd></div><div><dt>시기</dt><dd>2026.01–2026.04</dd></div><div><dt>주제</dt><dd>#광고 연동 #공용 인터페이스 #팀 간 전달</dd></div></dl></header><div class="prose"><p>제품에 여러 종류의 광고가 들어오면 서버가 고른 후보를 실행하고 그 결과를 다음 미션이나 리워드 안내로 연결해야 합니다. 그런데 공급사마다 실행과 완료를 알려주는 방식이 다릅니다. 화면에서 모든 SDK를 직접 다루면 새 공급사를 붙일 때마다 화면의 판단도 바꿔야 했습니다.</p>
+<p>저는 1월에 광고 후보를 순회하는 제품 흐름과 공급사별 표시·완료를 처리하는 adapter를 나눴습니다. 이후 4월에 다른 팀의 제품을 지원하면서, 그 제품에서도 광고 실행 코드가 제대로 연결됐는지 확인해야 했습니다. 내부에는 노출이 집계되는데 공급사 로그에는 실행 흔적이 없는 문제가 있었습니다.</p>
+<p>같은 서버에서 광고 데이터를 받더라도 SDK를 실행하는 코드까지 같다고 볼 수는 없었습니다. 그래서 <strong>다른 팀의 FE에도 해당 SDK를 실행하는 코드가 연결돼 있는지</strong> 확인하며, 입력 데이터와 광고 종류에 따른 실행 분기를 살폈습니다.</p>
+<h2>제품이 원하는 결과와 공급사가 보내는 사건</h2>
+<p>공통 흐름은 후보를 고르고 실행 결과에 따라 다음 행동을 정했습니다. 공급사 adapter는 SDK 호출과 시작·완료·닫힘 신호를 제품이 읽을 결과로 바꿨습니다.</p>
+<p>1월의 handler에서는 공급사 완료 신호가 왔는지를 기록하고 닫힘 때 Promise를 끝냈습니다. 이 광고의 완료 조건은 클릭이었으므로, 사용자가 닫았다는 사건만으로 완료를 만들어서는 안 됐습니다. 완료 뒤 닫힘과 완료 없는 닫힘은 다른 결과였습니다. 영상의 시청 완료와도 같은 이름으로 묶지 않았습니다.</p>
+<table><thead><tr><th>실행 순서</th><th>제품이 읽을 의미</th></tr></thead><tbody><tr><td>공급사 완료 신호 → 닫힘</td><td>해당 광고의 완료 조건을 충족하고 종료</td></tr><tr><td>완료 신호 없이 닫힘</td><td>미완료로 종료</td></tr><tr><td>tracker·BI의 동기 호출 오류</td><td>실제 광고 실행의 결과와 분리</td></tr></tbody></table>
+<p>두 완료 순서는 별도 테스트 조건으로 남겼습니다. 관측 호출의 동기 예외를 잡는 코드도 있었습니다. 관측 호출의 동기 예외가 광고 실행에 영향을 주지 않도록 한 처리입니다.</p>
+<p>영상 코어를 나눈 작업도 비슷했습니다. 재생·source·가시성·음소거는 앱 내부 코어에 두고, 광고 추적과 외부 클릭 정책은 제품 wrapper에 남겼습니다. wrapper에서 새 코어를 사용하도록 연결했습니다. 재사용할 재생 기능과 상품이 정하는 다음 행동을 같은 모듈에 넣지 않았습니다.</p>
+<h2>같은 서버를 쓰는 다른 화면에는 실행 코드가 없었다</h2>
+<p>4월의 문제를 조사해 보니 타팀 FE에는 해당 광고 source를 처리할 handler가 없었습니다. 공용 데이터에 SDK 정보가 들어와도, 그 제품에서는 기본 fallback이 실행되고 있었습니다. 내부 tracker가 호출된 것은 공급사 SDK가 시작됐다는 증거가 아니었습니다.</p>
+<p>저는 서버가 내려준 입력값뿐 아니라 제품 코드의 실행 분기와 공급사 SDK 호출 경로까지 이어서 확인했습니다. source·provider와 필수 SDK parameter를 읽고 실제 호출에 전달할 조건을 정했습니다. 서버 parameter가 nested 또는 root 형태로 들어오는 경로도 구별했습니다.</p>
+<p>SDK 정보가 없거나 다른 provider인 조건, 필수값 누락과 유효한 입력을 나눈 테스트를 보강했습니다. 잘못된 입력을 실제 실행 가능한 후보처럼 읽지 않게 하는 준비 단계였습니다.</p>
+<h2>adapter 하나와 제품의 loop는 함께 연결돼야 했다</h2>
+<p>입력 검증 뒤 SDK 호출·callback·timeout을 Promise 결과로 연결하고, 그 결과를 처리하는 제품의 광고 후보 순회 로직에도 연결했습니다. 실행 함수만 추가하고 해당 source 분기에 연결하지 않으면 SDK 대신 기존 fallback이 계속 실행될 수 있습니다.</p>
+<p>4월에 연결한 제품의 boolean 결과와 1월 handler의 완료 판정도 이름만 보고 같은 것으로 취급하지 않았습니다. 공급사가 보내는 신호를 각 제품이 정한 성공 조건에 맞춰 해석해야 했습니다.</p>
+<pre><code class="language-text">서버의 광고 후보
+  → 실행 가능한 source·입력 확인
+  → 공급사 adapter
+  → 해당 제품이 읽을 완료 결과
+  → 다음 후보 또는 다음 참여
+</code></pre>
+<p>실행 함수를 공용으로 두는 작업과 함께, 실제 호출자가 어떤 입력으로 그 함수를 부르고 결과에 따라 다음 후보를 고르는지도 확인했습니다. 함수가 있어도 source 분기에 연결되지 않으면 이전 fallback이 계속 실행될 수 있었기 때문입니다.</p>
+<h2>낯선 제품의 전달은 소유 팀과 함께 확인했다</h2>
+<p>제품을 소유한 팀에는 로컬 실행·진입·전체 QA의 도움이 필요하다고 설명했습니다. 제가 구현을 준비할 수 있다는 사실과 그 제품의 모든 동작을 혼자 확인할 수 있다는 것은 달랐습니다.</p>
+<p>4월 17일에는 누락된 실행 경로와 검증 환경을 공유했습니다. 이후 SDK QA를 진행하고, 21일에는 소유 제품의 담당자들과 광고뿐 아니라 기존 콘텐츠의 동작도 확인한 뒤 배포했습니다. 확인과 배포 뒤 감사의 반응이 이어졌습니다.</p>
+<p>다른 팀 제품이 서버에서 받은 광고 정보로 실제 SDK를 실행하도록 연결했습니다. 공급사 SDK 자체를 개발한 것은 아니지만, 해당 제품이 기대하는 입력과 완료 결과에 맞춰 연동하고 소유 팀과 QA·배포까지 함께 진행했습니다.</p>
+<h2>공용 코드가 실제 제품에서도 실행되도록</h2>
+<p>처음에는 공급사의 사건을 제품 결과로 바꾸는 흐름을 만들었습니다. 다른 팀을 지원하면서는 그 인터페이스가 실제로 사용되는지까지 확인해야 했습니다. 내부 집계와 공급사 실행이 달랐던 장면이 이 차이를 선명하게 보여줬습니다.</p>
+<p>공용 모듈에 추가한 실행이 제품에서 사용되려면 입력 검증과 완료 결과의 의미를 맞추고, 실제 source 분기에 연결한 뒤 소유 팀과 QA·배포까지 확인해야 했습니다. 다음에 공용 기능을 만들 때도 API를 정하면서, 어느 코드가 호출하는지와 해당 제품에서 어디까지 확인해야 하는지를 함께 살펴보려고 합니다.</p></div><section class="related-block"><h2>다른 관점에서 함께 읽기</h2><div class="reading-tabs"><a href="/cases?view=operator" data-discover="true">제품과 운영자</a><a href="/cases?view=contracts" data-discover="true">외부 응답과 상태</a><a href="/cases?view=delivery" data-discover="true">기술 선택과 변경</a></div></section><footer class="page-footer"><a class="see-all-link" href="/cases" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg> 개발 경험 목록</a></footer></article></main><footer class="site-footer"><div class="site-footer-inner"><div class="footer-brand"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg>정경하</span><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open-text" aria-hidden="true"><path d="M12 7v14"></path><path d="M16 12h2"></path><path d="M16 8h2"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path><path d="M6 12h2"></path><path d="M6 8h2"></path></svg>기술과 제품을 만드는 과정</span></div><nav class="footer-nav" aria-label="더 보기"><a href="/uses" data-discover="true">도구</a><a href="/now" data-discover="true">요즘</a><a href="/reading" data-discover="true">읽은 책</a></nav><span class="footer-meta"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-clock" aria-hidden="true"><path d="M16 14v2.2l1.6 1"></path><path d="M16 2v4"></path><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"></path><path d="M3 10h5"></path><path d="M8 2v4"></path><circle cx="16" cy="16" r="6"></circle></svg>최근 수정 <!-- -->2026-10-11</span></div></footer></div>
+  </body>
+</html>

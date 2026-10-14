@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+    <meta name="author" content="정경하" />
+    <meta property="og:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="description" content="버전과 태그를 만드는 도구를 다른 팀이 쓰기 시작한 뒤, 사용 지원·수동 복구·담당자 이관까지 이어진 경험." />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="다른 팀도 직접 릴리스를 준비하는 자동화 만들기 | 정경하" />
+    <meta property="og:description" content="버전과 태그를 만드는 도구를 다른 팀이 쓰기 시작한 뒤, 사용 지원·수동 복구·담당자 이관까지 이어진 경험." />
+    <meta property="og:url" content="https://justinjeong5.github.io/essays/automation-doesnt-reduce-work/" />
+    <meta name="twitter:title" content="다른 팀도 직접 릴리스를 준비하는 자동화 만들기 | 정경하" />
+    <meta name="twitter:description" content="버전과 태그를 만드는 도구를 다른 팀이 쓰기 시작한 뒤, 사용 지원·수동 복구·담당자 이관까지 이어진 경험." />
+    <link rel="canonical" href="https://justinjeong5.github.io/essays/automation-doesnt-reduce-work/" />
+    <title>다른 팀도 직접 릴리스를 준비하는 자동화 만들기 | 정경하</title>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "다른 팀도 직접 릴리스를 준비하는 자동화 만들기 | 정경하",
+  "description": "버전과 태그를 만드는 도구를 다른 팀이 쓰기 시작한 뒤, 사용 지원·수동 복구·담당자 이관까지 이어진 경험.",
+  "url": "https://justinjeong5.github.io/essays/automation-doesnt-reduce-work/",
+  "mainEntityOfPage": "https://justinjeong5.github.io/essays/automation-doesnt-reduce-work/",
+  "author": {
+    "@type": "Person",
+    "name": "정경하",
+    "url": "https://justinjeong5.github.io/",
+    "jobTitle": "Product-minded Frontend Engineer",
+    "sameAs": [
+      "https://github.com/justinjeong5"
+    ]
+  },
+  "dateModified": "2026-10-09"
+}
+</script>
+    <script>
+      // 테마 사전 설정 — prerender된 HTML에 data-theme를 즉시 적용해 CSS flash를 막는다.
+      // (다른 스크립트보다 먼저 실행되어야 한다.)
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages — restore deep-link path written by 404.html
+      // https://github.com/rafgraph/spa-github-pages
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
+    </script>
+    <script type="module" crossorigin src="/assets/index-onBRISDy.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-QTnfLwEv.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-cases-CUqh0Nlm.js">
+    <link rel="modulepreload" crossorigin href="/assets/router-BbQbkWys.js">
+    <link rel="modulepreload" crossorigin href="/assets/search-CiN4C8Nu.js">
+    <link rel="modulepreload" crossorigin href="/assets/icons-D_VNsbtP.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-xj0-nEta.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-essays-CFwNmnS3.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-logs-BbhMfH0O.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-notes-Cu0TCHNK.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-CwzYrqL3.css">
+    <link rel="stylesheet" crossorigin href="/assets/pretendard-NPFyShNs.css">
+  </head>
+  <body>
+    <div id="root"><a href="#main-content" class="skip-link">본문 바로가기</a><header class="site-nav" aria-label="주메뉴"><div class="site-nav-inner"><a class="brand" aria-label="정경하 홈" href="/" data-discover="true">JKH</a><nav class="primary-nav"><a class="nav-link is-active" aria-current="page" href="/cases" data-discover="true">개발 경험</a><a class="nav-link" href="/cases?view=support" data-discover="true">기술 노트</a><a class="nav-link" href="/about" data-discover="true">소개</a></nav><div class="nav-actions"><button type="button" class="search-trigger" aria-label="검색" title="검색 (⌘K 또는 /)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg><span>검색</span><kbd>⌘K</kbd></button><button type="button" class="icon-button" aria-label="테마: 라이트. 클릭하여 변경" title="테마: 라이트 · T 키로도 전환"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg></button><button type="button" class="icon-button desktop-only" aria-label="키보드 단축키" aria-expanded="false" aria-haspopup="dialog" title="키보드 단축키 (? 키)"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-keyboard" aria-hidden="true"><path d="M10 8h.01"></path><path d="M12 12h.01"></path><path d="M14 8h.01"></path><path d="M16 12h.01"></path><path d="M18 8h.01"></path><path d="M6 8h.01"></path><path d="M7 16h10"></path><path d="M8 12h.01"></path><rect width="20" height="16" x="2" y="4" rx="2"></rect></svg></button><button type="button" class="icon-button menu-trigger" aria-label="메뉴 열기" aria-expanded="false" aria-haspopup="dialog" title="메뉴"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button></div></div></header><main id="main-content" tabindex="-1"><article class="page essay-detail"><header class="page-header"><p class="eyebrow"><a href="/cases" data-discover="true">개발 경험</a> · <!-- -->2025.06.24</p><h1>다른 팀도 직접 릴리스를 준비하는 자동화 만들기</h1><p class="page-lead">버전과 태그를 만드는 도구를 다른 팀이 쓰기 시작한 뒤, 사용 지원·수동 복구·담당자 이관까지 이어진 경험.</p></header><div class="prose"><p>여러 팀이 같은 광고 운영 대시보드에 기능을 넣을 때는 버전만 올린다고 릴리스 준비가 끝나지 않았습니다. 어느 커밋을 어떤 릴리스 브랜치에 반영할지, beta 검증 중인 변경과 hotfix를 어떻게 나눌지, 태그가 어떤 코드를 가리키는지 확인해야 했습니다. 메뉴별 QA와 배포 시점을 맞추는 협의도 필요했습니다.</p>
+<p>2022년부터 이 반복 절차를 Vump라는 도구로 구현했습니다. 초기화, 버전 확인과 변경, 선택한 커밋 반영, 태그 준비를 스크립트로 연결했고 이후 hotfix와 버전 업데이트 PR 생성도 추가했습니다. 다른 팀 개발자가 직접 태그를 준비할 수 있는 경로가 생겼습니다. 그러나 자동화가 자리 잡는 과정은 스크립트가 한 번 성공하는 순간으로 설명하기 어려웠습니다.</p>
+<p>이 도구는 과거에 운영하고 이관한 경험이며 이후 대시보드에서 제거됐습니다. 현재의 배포 체계를 설명하려는 글은 아닙니다. 반복 작업을 다른 사람이 실행하기 시작한 뒤 제가 맡았던 후속 작업을 돌아보려 합니다.</p>
+<h2>실행 절차를 넘겨도 릴리스의 판단은 남는다</h2>
+<p>초기 스크립트는 다음 버전만 계산하지 않았습니다. Git 상태를 검사하고 반영할 커밋의 메시지를 보여주고 확인을 받은 뒤 버전과 태그를 만드는 흐름이었습니다. 릴리스의 입력은 커밋이고 버전은 그 결과를 가리킵니다. 둘을 따로 다루면 숫자는 맞아도 의도한 변경이 들어 있지 않을 수 있습니다.</p>
+<p>후속 workflow는 버전용 브랜치의 push를 받아 업데이트 PR을 만들고 담당자를 reviewer로 지정했습니다. 자동화한 것은 반복적인 준비와 PR 생성이었습니다. PR의 승인과 병합, 메뉴별 QA, 태그를 실제로 배포하는 단계는 담당자들이 이어서 수행했습니다.</p>
+<p>여러 팀의 배포 정책과 사용 가이드는 동료들이 함께 정리했습니다. 제가 구현한 스크립트는 그 정책 안에서 릴리스 준비를 담당했습니다. 도구를 사용할 수 있다는 것과 지금 이 변경을 내보내도 된다는 것은 서로 다른 판단이었습니다. 자동화의 범위를 설명하려면 그 사이에 남는 사람의 작업도 드러나야 했습니다.</p>
+<h2>사용자의 성공과 실패가 도구의 실제 범위를 보여줬다</h2>
+<p>다른 팀 개발자는 beta에 자신의 변경을 포함하려고 실행 방법과 커밋 반영 여부를 물었습니다. 동료와 함께 안내한 뒤 beta 태그 생성 성공을 확인했고 편리하다는 반응도 받았습니다. 이때 결과는 다른 사람이 자신의 릴리스 준비에 도구를 실제로 사용했다는 것이었습니다.</p>
+<p>한편 초기에는 여러 커밋을 반영하는 제약을 안내했고 구버전 hotfix 오류에는 수동 우회가 필요했습니다. 이후 hotfix 기능을 추가했어도 모든 제약이 사라진 것은 아니었습니다. 중복된 브랜치 초기화와 커밋 반영 실패 같은 사용 문제도 이어졌습니다.</p>
+<p>다른 개발자가 태그를 만들 수 있게 된 뒤에는 실패한 입력을 설명하고 기존 작업을 이어가도록 지원할 일이 생겼습니다. 저는 사용 불편을 모았고, 동료들은 상황별 가이드와 지원을 나눠 맡았습니다. 성공한 실행만 보면 빠지는 비용이었고, 명령 목록과 함께 이 사용 지식도 필요했습니다.</p>
+<h2>자동화가 실패했을 때 확인한 것은 전달할 코드였다</h2>
+<p>2023년 11월, beta 검증과 다른 팀의 hotfix가 겹치는 상황에서 도구의 커밋 반영이 실패했습니다. 먼저 팀 간 릴리스 정책의 위험을 논의했습니다. beta 검증 중인 코드가 다른 hotfix와 함께 운영으로 나갈 수 있는지, beta를 어느 수준으로 다룰지는 태그 생성만으로 풀리지 않는 문제였습니다.</p>
+<p>저는 beta도 상용처럼 다루자는 의견을 냈고 동료는 그렇게 하면 beta의 의미가 약해진다고 반론했습니다. 이 정책 논의와 도구의 실행 오류는 별도로 남아 있었습니다. 태그 생성에 실패한 문제를 고치더라도 공유 브랜치에 어떤 변경을 포함할지는 다시 판단해야 했습니다.</p>
+<p>실패한 작업에서는 커밋 순서, 기준 브랜치에 포함된 변경, 태그 내용부터 확인했습니다. 수동으로 태그를 준비하고 beta 동기화를 지원했습니다. 담당자는 운영 배포 완료와 잠금 인계를 보고했습니다. 자동 실행은 실패했지만 협업으로 해당 릴리스는 전달됐습니다. 실행 오류의 원인은 그때 파악하지 못한 상태였지만 전달해야 할 코드와 환경을 맞추는 복구는 이어졌습니다.</p>
+<h2>운영을 이관하는 일도 구현의 후속이었다</h2>
+<p>팀을 옮길 때는 버전 PR의 reviewer를 새 담당자로 바꿨습니다. 사용법을 설명하는 것과 실제로 다음 승인 요청이 누구에게 가는지 바꾸는 것이 함께 필요했습니다. 이관 뒤에는 다른 담당자의 개선과 버전 PR 운영이 이어졌습니다.</p>
+<p>지금 이 과정을 보면, 인계할 때는 도구의 사용법뿐 아니라 실행 결과를 판단하고 사용을 지원할 담당자도 정해야 했습니다. 코드가 그대로 남아 있어도 reviewer가 이전 담당자를 가리키면 책임은 옮겨지지 않습니다. 동료가 정리한 가이드와 배포 정책도 새 담당자가 운영할 수 있는 기반의 일부였습니다.</p>
+<p>이후 도구가 제거된 사실도 경험의 끝에 포함됩니다. 한때 다른 사람이 사용했고 지원과 이관이 이어졌다는 결과가 도구를 영구적인 플랫폼으로 만들지는 않습니다. 공유 도구의 기여는 현재까지 살아 있는지로만 평가할 수 없지만 과거 사용을 현행 체계처럼 설명해서도 안 됩니다.</p>
+<h2>다른 자동화에서도 남은 전달 책임</h2>
+<p>서버 템플릿의 화면을 별도 FE 앱으로 옮길 때는 검사·정적 빌드·산출물 동기화·CDN 갱신을 workflow로 연결했습니다. 일부 상품이 새 경로로 전환됐지만, 파일 업로드 뒤 CDN 갱신의 실패와 아직 이전 경로에 남은 상품을 설명할 일은 사라지지 않았습니다. Vump가 다음 릴리스의 입력과 담당자를 연결했다면, 이 자동화는 검사한 산출물이 전달 단계 끝까지 이어지는지를 다뤘습니다. <a href="/cases/frontend-delivery-boundary/">정적 FE 앱의 전달 구조</a>에서 이 다른 형태의 책임을 설명합니다.</p>
+<h2>다른 사람이 계속 사용할 수 있는 결과</h2>
+<p>Vump는 다른 팀의 태그 준비 성공과 편리하다는 반응을 얻었습니다. 실행이 실패한 릴리스에서는 수동 지원으로 배포와 인계가 이어졌고, reviewer를 바꾼 뒤에는 다음 담당자가 운영했습니다. 도구는 이후 제거됐지만, 한때 다른 사람이 자신의 작업에 쓸 수 있는 경로를 만들고 넘겼다는 경험은 남았습니다.</p>
+<p>스크립트 실행이 끝난 뒤에도 사용자의 입력을 확인하고 실패를 복구하며 다음 담당자의 승인 요청까지 연결할 일이 남았습니다. 다른 사람이 도구를 실행할 수 있게 하려면, 실패했을 때 어디서 다시 시작할지도 함께 설명해야 했습니다. Vump를 운영하고 넘기면서 자동화의 범위를 그 후속 작업까지 보게 됐습니다.</p></div><footer class="page-footer"><a class="see-all-link" href="/essays" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg> <!-- -->에세이 목록</a></footer></article></main><footer class="site-footer"><div class="site-footer-inner"><div class="footer-brand"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg>정경하</span><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open-text" aria-hidden="true"><path d="M12 7v14"></path><path d="M16 12h2"></path><path d="M16 8h2"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path><path d="M6 12h2"></path><path d="M6 8h2"></path></svg>기술과 제품을 만드는 과정</span></div><nav class="footer-nav" aria-label="더 보기"><a href="/uses" data-discover="true">도구</a><a href="/now" data-discover="true">요즘</a><a href="/reading" data-discover="true">읽은 책</a></nav><span class="footer-meta"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-clock" aria-hidden="true"><path d="M16 14v2.2l1.6 1"></path><path d="M16 2v4"></path><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"></path><path d="M3 10h5"></path><path d="M8 2v4"></path><circle cx="16" cy="16" r="6"></circle></svg>최근 수정 <!-- -->2026-10-11</span></div></footer></div>
+  </body>
+</html>

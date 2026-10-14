@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+    <meta name="author" content="정경하" />
+    <meta property="og:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="description" content="기존 미션 목록의 규칙을 세트별 설정으로 옮기고, 사용자 선택과 기존 참여 화면을 연결했다. 복제된 식별자와 FE·서버·Gateway의 전달 순서를 다루며 새 상품을 기존 제품에 넣은 과정." />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="운영자의 구성과 사용자의 선택을 연결하는 미션 상품 만들기 | 정경하" />
+    <meta property="og:description" content="기존 미션 목록의 규칙을 세트별 설정으로 옮기고, 사용자 선택과 기존 참여 화면을 연결했다. 복제된 식별자와 FE·서버·Gateway의 전달 순서를 다루며 새 상품을 기존 제품에 넣은 과정." />
+    <meta property="og:url" content="https://justinjeong5.github.io/cases/selectable-mission-product/" />
+    <meta name="twitter:title" content="운영자의 구성과 사용자의 선택을 연결하는 미션 상품 만들기 | 정경하" />
+    <meta name="twitter:description" content="기존 미션 목록의 규칙을 세트별 설정으로 옮기고, 사용자 선택과 기존 참여 화면을 연결했다. 복제된 식별자와 FE·서버·Gateway의 전달 순서를 다루며 새 상품을 기존 제품에 넣은 과정." />
+    <link rel="canonical" href="https://justinjeong5.github.io/cases/selectable-mission-product/" />
+    <title>운영자의 구성과 사용자의 선택을 연결하는 미션 상품 만들기 | 정경하</title>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "운영자의 구성과 사용자의 선택을 연결하는 미션 상품 만들기 | 정경하",
+  "description": "기존 미션 목록의 규칙을 세트별 설정으로 옮기고, 사용자 선택과 기존 참여 화면을 연결했다. 복제된 식별자와 FE·서버·Gateway의 전달 순서를 다루며 새 상품을 기존 제품에 넣은 과정.",
+  "url": "https://justinjeong5.github.io/cases/selectable-mission-product/",
+  "mainEntityOfPage": "https://justinjeong5.github.io/cases/selectable-mission-product/",
+  "author": {
+    "@type": "Person",
+    "name": "정경하",
+    "url": "https://justinjeong5.github.io/",
+    "jobTitle": "Product-minded Frontend Engineer",
+    "sameAs": [
+      "https://github.com/justinjeong5"
+    ]
+  },
+  "dateModified": "2026-10-10"
+}
+</script>
+    <script>
+      // 테마 사전 설정 — prerender된 HTML에 data-theme를 즉시 적용해 CSS flash를 막는다.
+      // (다른 스크립트보다 먼저 실행되어야 한다.)
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages — restore deep-link path written by 404.html
+      // https://github.com/rafgraph/spa-github-pages
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
+    </script>
+    <script type="module" crossorigin src="/assets/index-onBRISDy.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-QTnfLwEv.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-cases-CUqh0Nlm.js">
+    <link rel="modulepreload" crossorigin href="/assets/router-BbQbkWys.js">
+    <link rel="modulepreload" crossorigin href="/assets/search-CiN4C8Nu.js">
+    <link rel="modulepreload" crossorigin href="/assets/icons-D_VNsbtP.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-xj0-nEta.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-essays-CFwNmnS3.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-logs-BbhMfH0O.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-notes-Cu0TCHNK.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-CwzYrqL3.css">
+    <link rel="stylesheet" crossorigin href="/assets/pretendard-NPFyShNs.css">
+  </head>
+  <body>
+    <div id="root"><a href="#main-content" class="skip-link">본문 바로가기</a><header class="site-nav" aria-label="주메뉴"><div class="site-nav-inner"><a class="brand" aria-label="정경하 홈" href="/" data-discover="true">JKH</a><nav class="primary-nav"><a class="nav-link is-active" aria-current="page" href="/cases" data-discover="true">개발 경험</a><a class="nav-link" href="/cases?view=support" data-discover="true">기술 노트</a><a class="nav-link" href="/about" data-discover="true">소개</a></nav><div class="nav-actions"><button type="button" class="search-trigger" aria-label="검색" title="검색 (⌘K 또는 /)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg><span>검색</span><kbd>⌘K</kbd></button><button type="button" class="icon-button" aria-label="테마: 라이트. 클릭하여 변경" title="테마: 라이트 · T 키로도 전환"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg></button><button type="button" class="icon-button desktop-only" aria-label="키보드 단축키" aria-expanded="false" aria-haspopup="dialog" title="키보드 단축키 (? 키)"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-keyboard" aria-hidden="true"><path d="M10 8h.01"></path><path d="M12 12h.01"></path><path d="M14 8h.01"></path><path d="M16 12h.01"></path><path d="M18 8h.01"></path><path d="M6 8h.01"></path><path d="M7 16h10"></path><path d="M8 12h.01"></path><rect width="20" height="16" x="2" y="4" rx="2"></rect></svg></button><button type="button" class="icon-button menu-trigger" aria-label="메뉴 열기" aria-expanded="false" aria-haspopup="dialog" title="메뉴"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button></div></div></header><main id="main-content" tabindex="-1"><article class="page case-detail"><header class="page-header case-detail-header"><p class="eyebrow"><a href="/cases" data-discover="true">개발 경험</a></p><h1>운영자의 구성과 사용자의 선택을 연결하는 미션 상품 만들기</h1><p class="page-lead">기존 미션 목록의 규칙을 세트별 설정으로 옮기고, 사용자 선택과 기존 참여 화면을 연결했다. 복제된 식별자와 FE·서버·Gateway의 전달 순서를 다루며 새 상품을 기존 제품에 넣은 과정.</p><dl class="case-meta"><div><dt>담당</dt><dd>운영 검증·복제 입력·Gateway 연결, 참여 FE 공동 통합·QA·전달</dd></div><div><dt>시기</dt><dd>2025.04</dd></div><div><dt>주제</dt><dd>#상품 개발 #운영 도구 #기존 제품 통합</dd></div></dl></header><div class="prose"><p>운영자가 여러 미션을 세트로 구성하고 사용자는 그중 하나를 골라 참여하는 상품을 만들었습니다. 사용자에게는 선택 화면이 하나 추가되지만, 운영자는 기존 미션을 복사하고 그룹과 옵션을 바꾸며 새로운 구성을 저장합니다. 두 화면이 같은 상품의 규칙을 읽어야 했습니다.</p>
+<p>기존 목록 기준으로만 검증하면 새 상품의 세트별 제한을 확인할 수 없었습니다. 모든 미션을 새 규칙으로 바꾸면 기존 상품의 설정이 달라집니다. 새 상품에는 세트별 검증을 적용하면서 기존 상품의 목록 기준은 유지해야 했습니다.</p>
+<p>저는 Gateway의 조회·쓰기 연결과 운영 화면의 검증·복제 입력을 수정했고, 동료들과 사용자 참여 FE를 통합했습니다. 서버는 상품의 저장·선택·참여 정책을 제공했습니다.</p>
+<h2>선택한 화면과 제출한 선택은 달랐다</h2>
+<p>참여 화면은 세트 목록과 이미 제출했는지를 조회했습니다. 기존 선택이 있다면 다시 고르게 하지 않고 기존 참여 화면으로 연결했습니다. 아직 제출하지 않았다면 세트를 살펴보고 하나를 선택해 제출할 수 있게 했습니다.</p>
+<p>화면에서 미리 고른 상태만으로는 서버에 선택이 제출된 것이 아닙니다. 제출에 성공하면 기존 query를 유지해 참여 화면으로 이어 가고, 실패하면 안내하면서 제출 중 상태를 풀었습니다. 선택 화면에서 들어갈 미션을 확정한 뒤 기존 참여 경로를 사용하도록 했습니다.</p>
+<h2>검증할 단위를 상품에 맞췄다</h2>
+<p>운영 QA에서는 기존 목록을 검사하는 범위와 세트마다 검사할 범위를 구별했습니다. 새 상품은 기여 확인(eligibility) 유형의 미션이 세트마다 최대 하나인지 검사하고, 기존 상품은 원래 목록 기준을 유지했습니다.</p>
+<p>전체 목록에 검증기를 한 번 적용하면 서로 다른 세트의 미션이 같은 제한을 적용받을 수 있었습니다. UI를 세트별로 나누는 것과 함께, 실제 저장·참여 단위에 맞춰 검증 범위도 나눴습니다.</p>
+<p>기존 단가 값과 새 설정의 저장 관계도 QA에서 확인했습니다. 한 화면이 정상적으로 저장되는지만 보는 대신, 다른 상품의 입력이 남아 있는 조건을 함께 읽었습니다.</p>
+<h2>복제는 같은 내용을 새 대상으로 만드는 일이다</h2>
+<p>처음에는 복제 문제를 재현하지 못했습니다. 동료가 캠페인을 복사하고 그룹과 옵션을 바꾼 뒤, 기존 미션을 복사하고 다시 세트를 복제하는 순서를 전달했습니다. 같은 순서를 따라가자 단순히 새 세트 하나를 만드는 테스트에서는 보이지 않던 문제가 드러났습니다.</p>
+<p>기존 미션 ID를 그대로 넘기면 새 구성을 만들려던 동작이 기존 대상을 가리킬 수 있었습니다. 전체 세트 객체를 복사하기보다 <strong>새 template 선택과 복사할 missions 입력을 분리</strong>하고, 기존 미션 식별자를 제거했습니다. 세트의 제목·설명도 실제 대상을 표시하도록 보완했습니다.</p>
+<pre><code class="language-text">복사할 미션의 내용
+  + 새 세트를 만들 template
+  - 기존 미션의 식별자
+  → 새로운 구성의 입력
+</code></pre>
+<p>기존 미션의 내용은 재사용하되 기존 대상을 가리키는 식별자는 빼야 했습니다. 객체 전체를 복사하면 새로 만드는 입력에도 기존 관계가 남을 수 있어, 서버로 보낼 값을 나눠 구성했습니다.</p>
+<h2>코드 통합 뒤에도 전달할 경로가 남았다</h2>
+<p>서버 반영 뒤 FE를 전달했지만 Gateway 연결이 빠진 조건이 다시 발견됐습니다. 화면·서버·Gateway가 함께 연결돼야 운영 설정과 실제 참여가 이어질 수 있었습니다.</p>
+<p>수정과 배포 보고 뒤 동료의 특정 동작 확인을 받았습니다. 이미 잘못 저장된 데이터가 자동으로 고쳐진 것은 아니어서 그 데이터를 재사용하지 않도록 안내했습니다. 코드를 고친 결과와 이전 데이터가 유지하는 결과는 별개였습니다.</p>
+<p>재현 순서를 맞춘 QA와 동료의 동작 확인으로 수정 결과를 확인했습니다. 신규 설정을 저장하거나 기존 미션을 반복해서 복사하는 등 운영자가 실제로 만드는 입력 순서를 따라갔습니다.</p>
+<h2>두 사용자가 같은 상품을 다루게 하기</h2>
+<p>새 상품은 운영자의 세트 구성에서 사용자 선택과 기존 참여까지 연결됐습니다. 검증 단위를 나누고 복제 입력을 정리하며, 기존 상품의 규칙을 그대로 유지할 범위도 남겼습니다.</p>
+<p>이 작업에서는 동료가 재현 순서를 공유해 준 과정이 기억에 남습니다. 처음 확인한 단순 입력에서는 재현되지 않았지만, 운영자는 기존 캠페인과 미션을 계속 재사용하고 있었습니다. 전달받은 복사 순서를 따라가면서 어떤 식별자를 새 입력에서 제거해야 하는지 확인할 수 있었습니다. 운영 도구를 만들 때는 새 기능에 처음 값을 넣는 경우와 함께, 이전 작업의 값을 가져와 다음 구성을 만드는 경우도 확인해야 한다고 생각합니다.</p></div><section class="related-block"><h2>다른 관점에서 함께 읽기</h2><div class="reading-tabs"><a href="/cases?view=operator" data-discover="true">제품과 운영자</a></div></section><footer class="page-footer"><a class="see-all-link" href="/cases" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg> 개발 경험 목록</a></footer></article></main><footer class="site-footer"><div class="site-footer-inner"><div class="footer-brand"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg>정경하</span><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open-text" aria-hidden="true"><path d="M12 7v14"></path><path d="M16 12h2"></path><path d="M16 8h2"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path><path d="M6 12h2"></path><path d="M6 8h2"></path></svg>기술과 제품을 만드는 과정</span></div><nav class="footer-nav" aria-label="더 보기"><a href="/uses" data-discover="true">도구</a><a href="/now" data-discover="true">요즘</a><a href="/reading" data-discover="true">읽은 책</a></nav><span class="footer-meta"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-clock" aria-hidden="true"><path d="M16 14v2.2l1.6 1"></path><path d="M16 2v4"></path><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"></path><path d="M3 10h5"></path><path d="M8 2v4"></path><circle cx="16" cy="16" r="6"></circle></svg>최근 수정 <!-- -->2026-10-11</span></div></footer></div>
+  </body>
+</html>
