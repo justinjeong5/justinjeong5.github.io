@@ -80,6 +80,6 @@ return try await resolveTokenFromFile()
 
 새 한도 기능은 [#210](https://github.com/chattymin/PokeTokenBar/pull/210), 파일 형식과 갱신·계정 전환 보완은 [#274](https://github.com/chattymin/PokeTokenBar/pull/274)로 병합됐습니다. 각각 [v2.5.2](https://github.com/chattymin/PokeTokenBar/releases/tag/v2.5.2)와 [v2.5.4](https://github.com/chattymin/PokeTokenBar/releases/tag/v2.5.4)의 공개 버전에 포함됐습니다. 기존 앱에서 새 도구의 한도를 확인할 수 있게 했고, 같은 계정의 갱신과 다른 계정으로의 전환을 서로 다른 조건으로 다루게 됐습니다.
 
-이번 기여에서 가장 기억에 남는 것은 유지보수자의 재현이 캐시의 조건을 바꾼 장면입니다. AI와 구현을 준비한 뒤에도, 다른 사람이 만든 입력 순서를 받아 조건과 테스트를 고치는 과정이 필요했습니다.
+이번 기여에서 가장 기억에 남는 것은 유지보수자의 재현이 캐시의 조건을 바꾼 장면입니다. AI를 활용해 구현을 준비한 뒤에도, 다른 사람이 만든 입력 순서를 받아 조건과 테스트를 고치는 과정이 필요했습니다.
 
 돌아보면 캐시를 재사용할 때는 아직 쓸 수 있는지와 함께, **지금 읽으려는 대상의 값인지**도 확인해야 했습니다. 새 provider를 붙이는 작업이 그 두 가지를 나누어 생각하는 경험으로 남았습니다.
