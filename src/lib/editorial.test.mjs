@@ -15,7 +15,9 @@ function entries(type) {
         series: field('series'),
         collection: field('collection'),
         date: field('date'),
+        dateBasis: field('dateBasis'),
         period: field('period'),
+        summary: field('summary'),
         archived: /^archived: true$/m.test(source),
         supersededBy: field('supersededBy'),
         source,
@@ -49,14 +51,27 @@ test('writing home lists exactly the direct article links in submitted PDFs', ()
 
   assert.equal(slugs.length, 11);
   assert.equal(new Set(slugs).size, slugs.length);
-  assert.deepEqual(slugs, SUBMITTED_ARTICLE_SLUGS);
+  assert.deepEqual(new Set(slugs), new Set(SUBMITTED_ARTICLE_SLUGS));
   assert.deepEqual(new Set(slugs), new Set(expected));
+  assert.deepEqual(slugs, [
+    'pullup-record-driven-coach',
+    'playhub-product-architecture',
+    'playhub-diagnostic-sampling',
+    'article-content-integration',
+    'poketokenbar-account-cache',
+    'ai-cross-functional-delivery',
+    'gateway-rendering-context',
+    'shared-ad-execution-delivery',
+    'experiment-routing-context',
+    'cs-workflow-product',
+    'frontend-delivery-boundary',
+  ]);
   assert.ok(articles.every((entry) => !entry.archived && entry.kind === 'case'));
   assert.ok(articles.every((entry) => entry.label.trim() && entry.period.trim()));
-  assert.ok(articles.every((entry) => entry.situation.endsWith('습니다.') && entry.situation.length <= 70));
-  assert.ok(articles.every((entry) => entry.teaser.endsWith('습니다.') && entry.teaser.length <= 70));
+  assert.ok(articles.every((entry) => entry.summary?.trim()));
   assert.ok(articles.some((entry) => entry.slug === 'pullup-record-driven-coach' && entry.series === 'personal-projects'));
   assert.throws(() => selectWritingIndex(entries('cases').filter((entry) => entry.slug !== 'cs-workflow-product')), /cs-workflow-product/);
+  assert.throws(() => selectWritingIndex(entries('cases').map((entry) => entry.slug === 'cs-workflow-product' ? { ...entry, summary: '' } : entry)), /요약.*cs-workflow-product/);
 });
 
 test('classification follows article metadata for independent inputs', () => {

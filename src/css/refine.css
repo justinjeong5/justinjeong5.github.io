@@ -610,7 +610,6 @@ main {
 }
 .about-page { max-width: 1060px; }
 .about-intro { max-width: 840px; padding-bottom: 48px; }
-.about-intro h1 { margin: 8px 0 18px; font-size: clamp(2.6rem, 5vw, 4rem); line-height: 1.2; }
 .about-headline { margin: 0 0 20px; font-size: clamp(1.28rem, 2.3vw, 1.75rem); font-weight: 650; line-height: 1.55; word-break: keep-all; }
 .about-bio { max-width: 780px; margin: 0; color: var(--text-soft); line-height: 1.85; word-break: keep-all; }
 .about-work-link, .about-footer a { color: var(--accent-blue); }
@@ -694,8 +693,6 @@ main {
 }
 .story-home { max-width: 1080px; margin: 0 auto; padding: 40px 24px 72px; }
 .career-intro { padding: 28px 0 52px; }
-.career-intro h1 { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 18px; margin: 12px 0 20px; font-size: clamp(2.5rem, 5vw, 4rem); line-height: 1.2; }
-.career-intro h1 span { color: var(--text-muted); font-size: .4em; font-weight: 500; }
 .career-lead { max-width: 760px; color: var(--text-soft); font-size: clamp(1.05rem, 1.8vw, 1.2rem); line-height: 1.8; }
 .career-section { padding: 44px 0; border-top: 1px solid var(--border); }
 #selected-work { scroll-margin-top: 96px; }
@@ -731,7 +728,6 @@ main {
 @media (max-width: 700px) {
   .story-home { padding: 28px 16px; }
   .career-intro { padding: 18px 0 34px; }
-  .career-intro h1 { gap: 2px 12px; }
   .career-section { padding: 32px 0; }
   .career-section-heading { display: block; }
   .career-section-heading > a { display: inline-block; margin-top: 12px; }
@@ -744,7 +740,6 @@ main {
 .writing-guide { max-width: 1040px; }
 .writing-intro { max-width: 720px; margin-bottom: 42px; }
 .writing-intro h1 { margin: 8px 0 18px; font-size: clamp(2.4rem, 4vw, 3.5rem); line-height: 1.2; }
-.writing-intro h1 span { color: var(--text-muted); font-size: .4em; font-weight: 500; }
 .writing-intro > p:not(.eyebrow) { color: var(--text-soft); line-height: 1.8; }
 .writing-all-list { margin: 0; padding: 0; list-style: none; scroll-margin-top: 84px; }
 .writing-all-list li { border-top: 1px solid var(--border); }
@@ -753,8 +748,7 @@ main {
 .writing-entry-label { font-size: .8rem; font-weight: 650; line-height: 1.5; }
 .writing-entry-period { color: var(--text-muted); font-size: .75rem; line-height: 1.55; }
 .writing-entry-content h2 { margin: 0 0 10px; font-size: clamp(1.08rem, 1.8vw, 1.25rem); line-height: 1.5; word-break: keep-all; }
-.writing-entry-content p { margin: 0; color: var(--text-soft); font-size: .9rem; line-height: 1.65; word-break: keep-all; }
-.writing-entry-content p + p { margin-top: 4px; color: var(--text); }
+.writing-entry-summary { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; margin: 0; color: var(--text-soft); font-size: .9rem; line-height: 1.65; word-break: keep-all; }
 .writing-entry-arrow { padding-top: 3px; color: var(--text-muted); font-size: 1rem; }
 .writing-entry:hover h2, .writing-entry:hover .writing-entry-arrow { color: var(--accent-blue); }
 .case-detail .page-footer, .essay-detail .page-footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px; }
@@ -764,4 +758,15 @@ main {
   .writing-entry-meta { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
   .writing-entry-content { grid-column: 1; }
   .writing-entry-arrow { grid-column: 2; grid-row: 2; }
+}
+.portfolio-page { width: 100%; max-width: 1080px; margin-inline: auto; padding: 68px 24px 96px; }
+.portfolio-page > header { max-width: 840px; min-height: 320px; margin: 0; padding: 0; }
+.portfolio-page > header h1 { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 18px; margin: 8px 0 18px; font-size: clamp(2.5rem, 5vw, 4rem); line-height: 1.2; letter-spacing: -.02em; }
+.portfolio-page > header h1 span { color: var(--text-muted); font-size: .4em; font-weight: 500; letter-spacing: -.01em; }
+.portfolio-page > .career-intro { padding-top: 28px; }
+.portfolio-page > .career-intro h1 { margin-top: 0; }
+@media (max-width: 700px) {
+  .portfolio-page { padding: 46px 16px 80px; }
+  .portfolio-page > header { min-height: 0; padding-bottom: 34px; }
+  .portfolio-page > header h1 { gap: 2px 12px; }
 }

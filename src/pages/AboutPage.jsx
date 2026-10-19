@@ -5,10 +5,10 @@ import { ROUTES } from '../lib/routes';
 
 function AboutPage() {
   return (
-    <div className="page about-page">
+    <div className="page about-page portfolio-page">
       <header className="about-intro">
         <p className="eyebrow">{siteData.role} · {siteData.careerLine}</p>
-        <h1>{siteData.name}</h1>
+        <h1>{siteData.name} <span>Justin Jeong</span></h1>
         <p className="about-headline">{aboutData.headline}</p>
         <p className="about-bio">{aboutData.bio}</p>
       </header>
