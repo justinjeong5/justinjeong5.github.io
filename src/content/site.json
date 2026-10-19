@@ -1,6 +1,7 @@
 {
   "name": "정경하",
   "role": "Frontend Engineer",
+  "careerLine": "버즈빌 2021.04–현재",
   "headline": "제품 구축부터 비동기·관측 설계까지",
   "summary": "콘텐츠·리워드 제품의 핵심 FE를 만들고, 앱·웹 참여와 광고 실행을 연결해 왔습니다. 실제 개발에서 정한 상태, 검증과 협업의 기준을 기록합니다.",
   "location": "Seoul, Korea",
@@ -12,10 +13,44 @@
     "행동과 오류를 연결하는 관측 설계",
     "AI로 범위를 넓히고 검증으로 마무리"
   ],
-  "featuredCaseSlugs": [
-    "playhub-product-architecture",
-    "playhub-diagnostic-sampling",
-    "cs-workflow-product"
+  "homeFeaturedCases": [
+    {
+      "slug": "playhub-product-architecture",
+      "label": "제품 구축",
+      "problem": "참여·광고·리워드가 앱과 웹에서 서로 다른 시점에 완료됐습니다.",
+      "decision": "초기 허브의 핵심 FE를 만들고 공통 참여 규칙과 환경별 광고 실행·복귀를 분리했습니다.",
+      "result": "QA와 매체 출시까지 연결했습니다."
+    },
+    {
+      "slug": "playhub-diagnostic-sampling",
+      "label": "관측 설계",
+      "problem": "상세 진단이 늘었지만 이벤트를 무작위로 줄이면 조사 흐름이 끊겼습니다.",
+      "decision": "KPI 수집은 유지하고 상세 진단을 기기 고정 표본과 별도 조사 경로로 나눴습니다.",
+      "result": "데이터 플랫폼팀과 적재·조회 이관을 마쳤습니다."
+    },
+    {
+      "slug": "cs-workflow-product",
+      "label": "운영 제품",
+      "problem": "운영자가 이번 문의에 맞는 참여·적립 근거를 한 화면에서 판단하기 어려웠습니다.",
+      "decision": "Vue 화면과 TypeScript API client·BFF로 근거 조회와 처리 흐름을 구축했습니다.",
+      "result": "첫 운영 출시 뒤 상태 반영 확인과 다음 문의 이동까지 개선했습니다."
+    }
+  ],
+  "homePersonalCases": [
+    { "slug": "pullup-record-driven-coach", "name": "풀업 30" },
+    { "slug": "poketokenbar-account-cache", "name": "PokeTokenBar" }
+  ],
+  "homeWriting": [
+    {
+      "title": "영상 최적화의 대상은 영상만이 아니었다",
+      "url": "https://tech.buzzvil.com/blog/playhub-webview-video-optimization",
+      "description": "PlayHub의 WebView 영상 재생과 대체 경로"
+    },
+    {
+      "title": "프리로드 API 없는 광고 SDK에 프리로딩을 적용하며 배운 것",
+      "url": "https://tech.buzzvil.com/blog/playhub-ad-preloading",
+      "description": "PlayHub의 광고 준비와 실제 노출 사이의 경계"
+    }
   ],
   "featuredEssaySlugs": [
     "automation-doesnt-reduce-work"

@@ -74,9 +74,24 @@ test('recommended reading stays separate from chronology and matches actual arti
 
 test('site featured work never directs readers to consolidated originals', () => {
   const site = JSON.parse(readFileSync(new URL('../content/site.json', import.meta.url), 'utf8'));
-  for (const slug of site.featuredCaseSlugs) {
+  assert.equal(site.homeFeaturedCases.length, 3);
+  assert.equal(new Set(site.homeFeaturedCases.map((item) => item.slug)).size, 3);
+  for (const { slug } of site.homeFeaturedCases) {
     assert.ok(WORK_CASE_SLUGS.includes(slug));
     const source = readFileSync(new URL(`../content/cases/${slug}.mdx`, import.meta.url), 'utf8');
+    assert.doesNotMatch(source, /^archived: true$/m);
+  }
+});
+
+test('home presents Pull-up 30 and PokeTokenBar as equal personal reads', () => {
+  const site = JSON.parse(readFileSync(new URL('../content/site.json', import.meta.url), 'utf8'));
+  assert.deepEqual(site.homePersonalCases, [
+    { slug: 'pullup-record-driven-coach', name: '풀업 30' },
+    { slug: 'poketokenbar-account-cache', name: 'PokeTokenBar' },
+  ]);
+  for (const { slug } of site.homePersonalCases) {
+    const source = readFileSync(new URL(`../content/cases/${slug}.mdx`, import.meta.url), 'utf8');
+    assert.match(source, /^series: personal-projects$/m);
     assert.doesNotMatch(source, /^archived: true$/m);
   }
 });

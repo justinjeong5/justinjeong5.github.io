@@ -51,13 +51,15 @@ async function makeFixture(files) {
   return dir;
 }
 
+const homeCard = (slug) => ({ slug, label: '업무', problem: '문제', decision: '선택', result: '결과' });
+
 test('findDeadContentLinks: 모든 참조가 유효하면 dead link 0', async () => {
   const dir = await makeFixture({
     'cases/good-case.mdx': '본문 [노트로](/notes/live-note) 그리고 [로그](/logs#2026-01-01-ok)',
     'notes/live-note.mdx': '노트',
     'logs/2026-01-01-ok.mdx': '로그',
     'essays/live-essay.mdx': '에세이',
-    'site.json': JSON.stringify({ featuredCaseSlugs: ['good-case'], featuredEssaySlugs: ['live-essay'] }),
+    'site.json': JSON.stringify({ featuredEssaySlugs: ['live-essay'] }),
     'about.json': JSON.stringify({ highlights: [{ to: '/cases/good-case' }] }),
   });
   try {
@@ -83,12 +85,13 @@ test('findDeadContentLinks: mdx 내부 링크의 삭제된 slug와 로그 앵커
   }
 });
 
-test('findDeadContentLinks: site.json featured 케이스·에세이 삭제 참조를 모두 검출', async () => {
+test('findDeadContentLinks: 홈 대표 사례·에세이 삭제 참조를 모두 검출', async () => {
   const dir = await makeFixture({
-    'cases/exists.mdx': '케이스',
+    'cases/exists.mdx': 'series: work-evidence-2026\n케이스',
+    'cases/also-exists.mdx': 'series: work-evidence-2026\n케이스',
     'essays/exists-essay.mdx': '에세이',
     'site.json': JSON.stringify({
-      featuredCaseSlugs: ['exists', 'curated-out'],
+      homeFeaturedCases: [homeCard('exists'), homeCard('also-exists'), homeCard('curated-out')],
       featuredEssaySlugs: ['exists-essay', 'curated-out-essay'],
     }),
     'about.json': JSON.stringify({}),
@@ -97,8 +100,91 @@ test('findDeadContentLinks: site.json featured 케이스·에세이 삭제 참�
     const dead = await findDeadContentLinks(dir);
     const bySource = Object.fromEntries(dead.map((d) => [d.source, d.ref]));
     assert.equal(dead.length, 2);
-    assert.equal(bySource['site.json:featuredCaseSlugs'], '/cases/curated-out');
+    assert.equal(bySource['site.json:homeFeaturedCases[2]'], '/cases/curated-out');
     assert.equal(bySource['site.json:featuredEssaySlugs'], '/essays/curated-out-essay');
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
+test('findDeadContentLinks: 대표 카드의 중복·필수 문구·비공개 사례를 거부', async () => {
+  const dir = await makeFixture({
+    'cases/work.mdx': 'series: work-evidence-2026\n',
+    'cases/retired.mdx': 'series: work-evidence-2026\narchived: true # retired\n',
+    'cases/personal.mdx': 'series: personal-projects\n',
+    'site.json': JSON.stringify({
+      homeFeaturedCases: [homeCard('work'), { ...homeCard('work'), result: '' }, homeCard('retired')],
+      homePersonalCases: [{ slug: 'personal', name: '프로젝트' }, { slug: 'personal', name: '프로젝트' }],
+      homeWriting: [
+        { title: '글', description: '설명', url: 'https://example.com/article' },
+        { title: '글2', description: '설명2', url: 'https://tech.buzzvil.com@evil.test/blog/article' },
+      ],
+    }),
+  });
+  try {
+    const dead = await findDeadContentLinks(dir);
+    assert.ok(dead.some((item) => item.ref === '중복 slug: work'));
+    assert.ok(dead.some((item) => item.ref === '필수 문구 누락: result'));
+    assert.ok(dead.some((item) => item.ref === '공개 업무 사례가 아님: retired'));
+    assert.ok(dead.some((item) => item.ref === '중복 slug: personal'));
+    assert.ok(dead.some((item) => item.source === 'site.json:homeWriting[0]'));
+    assert.ok(dead.some((item) => item.source === 'site.json:homeWriting[1]'));
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
+test('findDeadContentLinks: 개인 작업 글의 누락·비공개·다른 시리즈를 거부', async () => {
+  const dir = await makeFixture({
+    'cases/work.mdx': 'series: work-evidence-2026\n',
+    'cases/retired.mdx': 'series: personal-projects\narchived: true\n',
+    'site.json': JSON.stringify({ homePersonalCases: [
+      { slug: 'work', name: '업무' },
+      { slug: 'retired', name: '비공개' },
+      { slug: 'missing', name: '누락' },
+    ] }),
+  });
+  try {
+    const dead = await findDeadContentLinks(dir);
+    assert.ok(dead.some((item) => item.ref === '개인 작업 글은 2개여야 합니다'));
+    assert.ok(dead.some((item) => item.ref === '공개 개인 작업 글이 아님: work'));
+    assert.ok(dead.some((item) => item.ref === '공개 개인 작업 글이 아님: retired'));
+    assert.ok(dead.some((item) => item.ref === '/cases/missing'));
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
+test('findDeadContentLinks: 읽기 안내의 누락·비공개·컬렉션 오류를 거부', async () => {
+  const dir = await makeFixture({
+    'cases/story.mdx': '---\ncollection: stories\n---\n',
+    'cases/retired.mdx': '---\ncollection: records\narchived: true\n---\n',
+    'site.json': '{}',
+  });
+  const guide = {
+    stories: [
+      { slug: 'story', situation: '상황', question: '질문', related: [{ slug: 'retired', reason: '함께 읽기' }] },
+      { slug: 'missing', situation: '상황', question: '질문' },
+    ],
+    records: [{ slug: 'retired', situation: '상황', question: '질문' }],
+  };
+  try {
+    const dead = await findDeadContentLinks(dir, guide);
+    assert.ok(dead.some((item) => item.ref === '/cases/missing'));
+    assert.ok(dead.some((item) => item.ref === '공개 records 글이 아님: retired'));
+    assert.ok(dead.some((item) => item.ref === '공개 stories 글이 아님: retired'));
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
+test('findDeadContentLinks: 본문의 collection 문구를 frontmatter로 오인하지 않는다', async () => {
+  const dir = await makeFixture({
+    'cases/misclassified.mdx': '---\ncollection: stories\n---\n본문 예시\ncollection: records\n',
+  });
+  try {
+    const dead = await findDeadContentLinks(dir, { records: [{ slug: 'misclassified', situation: '상황', question: '질문' }] });
+    assert.ok(dead.some((item) => item.ref === '공개 records 글이 아님: misclassified'));
   } finally {
     await rm(dir, { recursive: true, force: true });
   }

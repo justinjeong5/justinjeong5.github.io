@@ -1,13 +1,16 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { X } from 'lucide-react';
 
 import { useUI } from '../../lib/ui-context';
-import { PRIMARY_NAV, SECONDARY_NAV } from '../../lib/routes';
+import { PRIMARY_NAV, isPrimaryNavActive } from '../../lib/routes';
+import { hasContentAt } from '../../lib/content';
 
 function MobileMenu() {
   const { menuOpen, closeMenu } = useUI();
   const { pathname } = useLocation();
+  const hasContent = hasContentAt(pathname);
+  const closeButton = useRef(null);
 
   useEffect(() => {
     if (menuOpen) closeMenu();
@@ -22,6 +25,7 @@ function MobileMenu() {
       document.querySelectorAll('body > #root > *:not(.mobile-menu-overlay)'),
     );
     bg.forEach((el) => el.setAttribute('inert', ''));
+    closeButton.current?.focus();
     function handler(event) {
       if (event.key === 'Escape') closeMenu();
     }
@@ -41,7 +45,7 @@ function MobileMenu() {
       <nav className="mobile-menu" onClick={(event) => event.stopPropagation()} aria-label="모바일 네비게이션">
         <header className="mobile-menu-header">
           <p className="mobile-menu-eyebrow">메뉴</p>
-          <button type="button" className="icon-button" onClick={closeMenu} aria-label="닫기">
+          <button ref={closeButton} type="button" className="icon-button" onClick={closeMenu} aria-label="닫기">
             <X size={18} aria-hidden="true" />
           </button>
         </header>
@@ -51,20 +55,11 @@ function MobileMenu() {
           <ul>
             {PRIMARY_NAV.map((item) => (
               <li key={item.to}>
-                <Link to={item.to} onClick={closeMenu}>
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        <section className="mobile-menu-section">
-          <p className="mobile-menu-eyebrow">더 보기</p>
-          <ul>
-            {SECONDARY_NAV.map((item) => (
-              <li key={item.to}>
-                <Link to={item.to} onClick={closeMenu}>
+                <Link
+                  to={item.to}
+                  onClick={closeMenu}
+                  aria-current={isPrimaryNavActive(item, pathname, hasContent) ? 'page' : undefined}
+                >
                   {item.label}
                 </Link>
               </li>

@@ -9,9 +9,6 @@ const GOTO_MAP = {
   c: ROUTES.cases,
   e: ROUTES.essays,
   a: ROUTES.about,
-  u: ROUTES.uses,
-  w: ROUTES.now,
-  r: ROUTES.reading,
   v: ROUTES.cv,
 };
 

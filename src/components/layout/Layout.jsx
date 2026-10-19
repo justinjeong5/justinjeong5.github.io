@@ -17,13 +17,13 @@ function Layout() {
     // SPA 이동 시 prerender된 정적 head 메타가 갱신되지 않던 회귀를 막는다.
     // 빌드와 동일한 resolveMeta로 title·canonical·og·description을 동기화한다(SSOT: seo.js).
     applyMetaToDom(document, resolveMetaSafe(pathname, DETAIL_GETTERS));
-    window.scrollTo({ top: 0, behavior: 'instant' });
 
     // 최초 하이드레이션에서는 포커스를 옮기지 않는다(딥링크·해시 앵커·자동 포커스 보존).
     if (firstRender.current) {
       firstRender.current = false;
       return;
     }
+    window.scrollTo({ top: 0, behavior: 'instant' });
     // 라우트 변경 시 본문으로 포커스를 옮겨 스크린리더가 새 페이지를 인지하게 한다.
     // preventScroll로 포커스의 스크롤 부작용을 막아 위 scrollTo(및 페이지별 해시 스크롤)와 분리한다.
     document.getElementById('main-content')?.focus({ preventScroll: true });

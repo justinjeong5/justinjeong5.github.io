@@ -8,6 +8,7 @@ import { ROUTES } from '../lib/routes';
 import { readingPathsFor, workPathUrl, caseListUrl } from '../lib/work-paths';
 import ConsolidationNotice from '../components/ui/ConsolidationNotice';
 import { articleCollection } from '../lib/editorial';
+import { findGuideLens } from '../lib/reading-guide';
 
 function CaseDetailPage() {
   const { slug } = useParams();
@@ -28,6 +29,7 @@ function CaseDetailPage() {
 
   const { Component } = study;
   const collection = articleCollection(study);
+  const guideLens = findGuideLens(slug);
 
   return (
     <article className="page case-detail">
@@ -35,6 +37,7 @@ function CaseDetailPage() {
         <p className="eyebrow">{collection ? <Link to={collection.url}>{collection.label}</Link> : study.statusLabel || study.status}</p>
         <h1>{study.title}</h1>
         <p className="page-lead">{study.summary}</p>
+        {guideLens ? <p className="case-guide-lens"><span>읽을 관점</span>{guideLens}</p> : null}
         <dl className="case-meta">
           <div>
             <dt>담당</dt>
@@ -71,6 +74,7 @@ function CaseDetailPage() {
         <Link to={caseListUrl(study, view)} className="see-all-link">
           <ArrowLeft size={16} aria-hidden="true" /> 개발 경험 목록
         </Link>
+        <Link to={ROUTES.writing} className="see-all-link">글 안내판으로 돌아가기</Link>
       </footer>
     </article>
   );

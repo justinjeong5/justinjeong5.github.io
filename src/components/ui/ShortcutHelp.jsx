@@ -18,9 +18,6 @@ const SHORTCUTS = [
     { keys: ['g', 'c'], desc: '개발 경험' },
     { keys: ['g', 'e'], desc: '기술 에세이' },
     { keys: ['g', 'a'], desc: '소개' },
-    { keys: ['g', 'u'], desc: '도구' },
-    { keys: ['g', 'w'], desc: '요즘' },
-    { keys: ['g', 'r'], desc: '읽은 책' },
     { keys: ['g', 'v'], desc: '경력 안내' },
   ]},
 ];

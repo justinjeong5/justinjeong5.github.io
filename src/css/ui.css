@@ -162,6 +162,15 @@
   background: var(--bg-cool);
   outline: none;
 }
+.mobile-menu a[aria-current='page'] {
+  background: var(--bg-cool);
+  color: var(--accent-blue);
+  font-weight: 700;
+}
+.mobile-menu a:focus-visible {
+  outline: 2px solid var(--accent-red);
+  outline-offset: 2px;
+}
 
 /* ---------- Modal overlay shared ---------- */
 .modal-overlay {

@@ -1,6 +1,6 @@
 // 내부 콘텐츠 링크 무결성 가드 — 빌드 전에 삭제된 콘텐츠를 가리키는 dead link를 잡는다.
 //
-// 콘텐츠 큐레이션(mdx 삭제)으로 site.json/about.json의 featured 슬러그나 다른 글의
+// 콘텐츠 큐레이션(mdx 삭제)으로 site.json/about.json의 대표 슬러그나 다른 글의
 // 내부 링크가 존재하지 않는 slug를 가리키게 되는 회귀를 막는다. 런타임까지 미뤄지던
 // dead link를 빌드 타임(및 npm test)에 결정론적으로 표면화한다.
 //
@@ -9,11 +9,15 @@
 import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { STORY_STARTS, STORY_QUICK_READS, TECH_STARTS } from '../src/lib/reading-guide.js';
 
 const rootDir = path.resolve(fileURLToPath(new URL('..', import.meta.url)));
 const DEFAULT_CONTENT_DIR = path.join(rootDir, 'src', 'content');
+const DEFAULT_GUIDE = { stories: [...STORY_STARTS, ...STORY_QUICK_READS], records: TECH_STARTS };
+const frontmatterOf = (source) => /^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/.exec(source)?.[1] || '';
 
 const DETAIL_TYPES = ['cases', 'notes', 'essays'];
+const isArchived = (source) => /^archived:\s*true(?:\s*#.*)?\s*$/m.test(source);
 
 // 콘텐츠 디렉터리에서 타입별 slug 집합과 로그 앵커(파일명) 집합을 수집한다.
 async function collectSlugs(contentDir) {
@@ -57,9 +61,9 @@ export function extractMarkdownTargets(text) {
   return [...withoutCode.matchAll(/\]\(\s*([^\s)]+)(?:\s+[^)]*)?\)/g)].map((m) => m[1]);
 }
 
-// 콘텐츠 전체(mdx 내부 링크 + site.json/about.json featured 참조)에서 dead link를 찾는다.
+// 콘텐츠 전체(mdx 내부 링크 + site.json/about.json 대표 참조)에서 dead link를 찾는다.
 // 반환: [{ source, ref }] — source는 참조 위치, ref는 존재하지 않는 대상.
-export async function findDeadContentLinks(contentDir = DEFAULT_CONTENT_DIR) {
+export async function findDeadContentLinks(contentDir = DEFAULT_CONTENT_DIR, guide = contentDir === DEFAULT_CONTENT_DIR ? DEFAULT_GUIDE : null) {
   const { slugs, logs } = await collectSlugs(contentDir);
   const dead = [];
 
@@ -89,7 +93,7 @@ export async function findDeadContentLinks(contentDir = DEFAULT_CONTENT_DIR) {
     }
   }
 
-  // 2) site.json featured 슬러그 (bare slug)
+  // 2) 홈 큐레이션과 site.json 대표 글
   const readJson = async (name) => {
     try {
       return JSON.parse(await readFile(path.join(contentDir, name), 'utf8'));
@@ -99,11 +103,108 @@ export async function findDeadContentLinks(contentDir = DEFAULT_CONTENT_DIR) {
   };
   const site = await readJson('site.json');
   if (site) {
-    for (const slug of site.featuredCaseSlugs || []) {
-      check('site.json:featuredCaseSlugs', { kind: 'detail', type: 'cases', slug });
+    const cards = site.homeFeaturedCases;
+    if ((cards !== undefined || contentDir === DEFAULT_CONTENT_DIR) && (!Array.isArray(cards) || cards.length !== 3)) {
+      dead.push({ source: 'site.json:homeFeaturedCases', ref: '대표 업무 사례는 3개여야 합니다' });
+    }
+    const seen = new Set();
+    for (const [index, card] of (Array.isArray(cards) ? cards : []).entries()) {
+      const source = `site.json:homeFeaturedCases[${index}]`;
+      const slug = card?.slug;
+      if (typeof slug !== 'string' || !/^[a-z0-9-]+$/.test(slug)) {
+        dead.push({ source, ref: '유효한 slug가 필요합니다' });
+        continue;
+      }
+      check(source, { kind: 'detail', type: 'cases', slug });
+      if (seen.has(slug)) dead.push({ source, ref: `중복 slug: ${slug}` });
+      seen.add(slug);
+      for (const field of ['label', 'problem', 'decision', 'result']) {
+        if (typeof card[field] !== 'string' || !card[field].trim()) {
+          dead.push({ source, ref: `필수 문구 누락: ${field}` });
+        }
+      }
+      if (slugs.cases.has(slug)) {
+        const text = await readFile(path.join(contentDir, 'cases', `${slug}.mdx`), 'utf8');
+        if (!/^series: work-evidence-2026$/m.test(text) || isArchived(text)) {
+          dead.push({ source, ref: `공개 업무 사례가 아님: ${slug}` });
+        }
+      }
+    }
+    const personalCases = site.homePersonalCases;
+    if ((personalCases !== undefined || contentDir === DEFAULT_CONTENT_DIR) && (!Array.isArray(personalCases) || personalCases.length !== 2)) {
+      dead.push({ source: 'site.json:homePersonalCases', ref: '개인 작업 글은 2개여야 합니다' });
+    }
+    const personalSeen = new Set();
+    for (const [index, card] of (Array.isArray(personalCases) ? personalCases : []).entries()) {
+      const source = `site.json:homePersonalCases[${index}]`;
+      const slug = card?.slug;
+      if (typeof slug !== 'string' || !/^[a-z0-9-]+$/.test(slug) || typeof card.name !== 'string' || !card.name.trim()) {
+        dead.push({ source, ref: '유효한 개인 작업 slug와 이름이 필요합니다' });
+        continue;
+      }
+      check(source, { kind: 'detail', type: 'cases', slug });
+      if (personalSeen.has(slug)) dead.push({ source, ref: `중복 slug: ${slug}` });
+      personalSeen.add(slug);
+      if (slugs.cases.has(slug)) {
+        const text = await readFile(path.join(contentDir, 'cases', `${slug}.mdx`), 'utf8');
+        if (!/^series: personal-projects$/m.test(text) || isArchived(text)) {
+          dead.push({ source, ref: `공개 개인 작업 글이 아님: ${slug}` });
+        }
+      }
     }
     for (const slug of site.featuredEssaySlugs || []) {
       check('site.json:featuredEssaySlugs', { kind: 'detail', type: 'essays', slug });
+    }
+    const writing = site.homeWriting;
+    if ((writing !== undefined || contentDir === DEFAULT_CONTENT_DIR) && (!Array.isArray(writing) || writing.length !== 2)) {
+      dead.push({ source: 'site.json:homeWriting', ref: '회사 기고는 2개여야 합니다' });
+    }
+    for (const [index, article] of (Array.isArray(writing) ? writing : []).entries()) {
+      const url = typeof article?.url === 'string' && URL.canParse(article.url) ? new URL(article.url) : null;
+      if (typeof article?.title !== 'string' || !article.title.trim() || typeof article?.description !== 'string' || !article.description.trim() || !url || url.protocol !== 'https:' || url.hostname !== 'tech.buzzvil.com' || !url.pathname.startsWith('/blog/') || url.username || url.password) {
+        dead.push({ source: `site.json:homeWriting[${index}]`, ref: '기고 제목·설명·공식 HTTPS 블로그 URL이 필요합니다' });
+      }
+    }
+  }
+
+  if (guide) {
+    const guideSeen = new Set();
+    for (const [collection, items] of Object.entries(guide)) {
+      for (const [index, item] of items.entries()) {
+        const source = `reading-guide:${collection}[${index}]`;
+        const slug = item?.slug;
+        if (typeof slug !== 'string' || !/^[a-z0-9-]+$/.test(slug)) {
+          dead.push({ source, ref: '유효한 읽기 안내 slug가 필요합니다' });
+          continue;
+        }
+        check(source, { kind: 'detail', type: 'cases', slug });
+        if (guideSeen.has(slug)) dead.push({ source, ref: `중복 읽기 안내: ${slug}` });
+        guideSeen.add(slug);
+        if (typeof item.situation !== 'string' || !item.situation.trim() || typeof item.question !== 'string' || !item.question.trim()) {
+          dead.push({ source, ref: '상황과 읽을 질문이 필요합니다' });
+        }
+        if (slugs.cases.has(slug)) {
+          const text = await readFile(path.join(contentDir, 'cases', `${slug}.mdx`), 'utf8');
+          const metadata = frontmatterOf(text);
+          if (!new RegExp(`^collection: ${collection}$`, 'm').test(metadata) || isArchived(metadata)) {
+            dead.push({ source, ref: `공개 ${collection} 글이 아님: ${slug}` });
+          }
+        }
+        for (const related of item.related || []) {
+          const relatedSource = `${source}:related`;
+          check(relatedSource, { kind: 'detail', type: 'cases', slug: related.slug });
+          if (related.slug === slug || typeof related.reason !== 'string' || !related.reason.trim()) {
+            dead.push({ source: relatedSource, ref: '다른 글과 함께 읽을 이유가 필요합니다' });
+          }
+          if (slugs.cases.has(related.slug)) {
+            const text = await readFile(path.join(contentDir, 'cases', `${related.slug}.mdx`), 'utf8');
+            const metadata = frontmatterOf(text);
+            if (!/^collection: stories$/m.test(metadata) || isArchived(metadata)) {
+              dead.push({ source: relatedSource, ref: `공개 stories 글이 아님: ${related.slug}` });
+            }
+          }
+        }
+      }
     }
   }
 
@@ -121,11 +222,11 @@ export async function findDeadContentLinks(contentDir = DEFAULT_CONTENT_DIR) {
 async function main() {
   const dead = await findDeadContentLinks();
   if (dead.length > 0) {
-    console.error(`내부 콘텐츠 링크 검증 실패 — dead link ${dead.length}건:`);
-    for (const d of dead) console.error(`- ${d.source} → ${d.ref} (존재하지 않음)`);
+    console.error(`콘텐츠 무결성 검증 실패 — ${dead.length}건:`);
+    for (const d of dead) console.error(`- ${d.source} → ${d.ref}`);
     process.exit(1);
   }
-  console.log('내부 콘텐츠 링크 검증 통과 — dead link 없음.');
+  console.log('콘텐츠 무결성 검증 통과 — 잘못된 참조 없음.');
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1]).href) {

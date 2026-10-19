@@ -47,6 +47,7 @@ function EssayDetailPage() {
         <Link to={returnTo} className="see-all-link">
           <ArrowLeft size={16} aria-hidden="true" /> {returnTo === ROUTES.essays ? '에세이 목록' : view === 'all' ? '개발 경험' : view === 'support' ? '기술 노트' : '주제 목록'}
         </Link>
+        <Link to={ROUTES.writing} className="see-all-link">글 안내판으로 돌아가기</Link>
       </footer>
     </article>
   );

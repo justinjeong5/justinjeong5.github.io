@@ -3,6 +3,7 @@ import { MDXProvider } from '@mdx-js/react';
 
 import Layout from './layout/Layout';
 import HomePage from '../pages/HomePage';
+import WritingGuidePage from '../pages/WritingGuidePage';
 import CasesPage from '../pages/CasesPage';
 import CaseDetailPage from '../pages/CaseDetailPage';
 import NotesPage from '../pages/NotesPage';
@@ -33,6 +34,7 @@ export function AppRoutes() {
         <Routes>
           <Route element={<Layout />}>
             <Route path="/" element={<HomePage />} />
+            <Route path="/writing" element={<WritingGuidePage />} />
             <Route path="/cases" element={<CasesPage />} />
             <Route path="/cases/:slug" element={<CaseDetailPage />} />
             <Route path="/notes" element={<NotesPage />} />

@@ -26,6 +26,10 @@ export function toCanonical(path) {
 // description이 없으면 DEFAULT_META.description으로 폴백한다.
 export const STATIC_META = {
   '/': DEFAULT_META,
+  '/writing': {
+    title: '일의 장면에서 글을 고르기 | 정경하',
+    description: '구체적인 제품·운영 문제에서 먼저 읽을 글과 그 글에서 확인할 판단을 찾는 안내판입니다.',
+  },
   '/cases': {
     title: '개발 경험 | 정경하',
     description: '제품 개발과 깊이 있는 기술 문제를 시작부터 판단·구현·검증·결과까지 연결한 글입니다.',

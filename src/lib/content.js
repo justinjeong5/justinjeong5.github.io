@@ -41,12 +41,11 @@ export const getEssay = (slug) => getAllEssays().find((entry) => entry.slug === 
 
 export const getAllLogs = () => toEntries(logModules);
 
-export function getLastUpdated() {
-  const dates = [...getAllCases(), ...getAllNotes(), ...getAllEssays(), ...getAllLogs()]
-    .map(pickDate)
-    .filter(Boolean)
-    .sort();
-  return dates.at(-1) || '';
+export function hasContentAt(pathname) {
+  const detail = pathname.match(/^\/(cases|notes|essays)\/([^/]+)\/?$/);
+  if (!detail) return true;
+  const getters = { cases: getCase, notes: getNote, essays: getEssay };
+  return Boolean(getters[detail[1]](detail[2]));
 }
 
 export { usesData, nowData, readingData, cvData, aboutData, siteData };

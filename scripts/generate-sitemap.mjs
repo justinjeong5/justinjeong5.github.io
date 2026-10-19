@@ -27,6 +27,7 @@ const OUTPUT_PATH = join(PUBLIC_DIR, 'sitemap.xml');
 // 정적 라우트 (src/lib/routes.js의 ROUTES와 정렬). 콘텐츠 상세는 동적으로 추가.
 export const STATIC_PATHS = [
   '/',
+  '/writing',
   '/cases',
   '/notes',
   '/essays',

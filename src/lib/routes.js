@@ -1,5 +1,6 @@
 export const ROUTES = {
   home: '/',
+  writing: '/writing',
   cases: '/cases',
   caseDetail: (slug) => `/cases/${slug}`,
   notes: '/notes',
@@ -15,22 +16,16 @@ export const ROUTES = {
 };
 
 export const PRIMARY_NAV = [
-  { label: '개발 경험', to: ROUTES.cases },
-  { label: '기술 노트', to: ROUTES.cases + '?view=support' },
-  { label: '소개', to: ROUTES.about },
+  { label: '대표 작업', to: ROUTES.home },
+  { label: '경력·소개', to: ROUTES.about },
+  { label: '글', to: ROUTES.writing },
 ];
 
-export function isPrimaryNavActive(item, pathname, search = '', collection) {
+export function isPrimaryNavActive(item, pathname, hasContent = true) {
   const path = pathname.replace(/\/+$/, '') || '/';
-  if (!item.to.startsWith(ROUTES.cases)) return path === item.to;
-  const detail = /^\/(cases|essays)\/[^/]+$/.test(path);
-  if (path !== ROUTES.cases && !detail) return false;
-  const selected = detail ? collection : new URLSearchParams(search).get('view') === 'support' ? 'records' : 'stories';
-  return selected === (item.to.includes('view=support') ? 'records' : 'stories');
+  if (item.to === ROUTES.writing) {
+    return [ROUTES.writing, ROUTES.cases, ROUTES.notes, ROUTES.essays, ROUTES.logs].includes(path)
+      || (hasContent && /^\/(cases|notes|essays)\/[^/]+$/.test(path));
+  }
+  return path === item.to;
 }
-
-export const SECONDARY_NAV = [
-  { label: '도구', to: ROUTES.uses },
-  { label: '요즘', to: ROUTES.now },
-  { label: '읽은 책', to: ROUTES.reading },
-];
