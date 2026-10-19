@@ -130,6 +130,184 @@ test('verifyDist: 정상 dist(마커·sitemap·parity·하한 충족)는 ok', as
   });
 });
 
+test('verifyDist: 채용 자료가 가리키는 정적 경로가 사라지면 배포를 막는다', async () => {
+  await withDist({ routes: 12, locs: 12 }, async (dir) => {
+    const result = await verifyDist(dir, {
+      protectedManifest: PROTECTED_MANIFEST,
+      careerPaths: ['/', '/cases/missing/'],
+    });
+    assert.equal(result.ok, false);
+    assert.ok(result.errors.includes('채용 링크 정적 페이지 누락: /cases/missing/'));
+  });
+});
+
+test('verifyDist: 채용 사례 URL이 빈 대체 페이지가 되면 배포를 막는다', async () => {
+  await withDist({ routes: 11, locs: 12 }, async (dir) => {
+    const caseDir = path.join(dir, 'cases', 'example');
+    await mkdir(caseDir, { recursive: true });
+    await writeFile(path.join(caseDir, 'index.html'), OK_HTML);
+    const result = await verifyDist(dir, {
+      protectedManifest: PROTECTED_MANIFEST,
+      careerPaths: ['/cases/example/'],
+    });
+    assert.equal(result.ok, false);
+    assert.ok(result.errors.includes('채용 링크가 현재 사례 글을 열지 않음: /cases/example/'));
+  });
+});
+
+test('verifyDist: 채용 URL에 다른 사례가 렌더되면 배포를 막는다', async () => {
+  await withDist({ routes: 11, locs: 12 }, async (dir) => {
+    const caseDir = path.join(dir, 'cases', 'example');
+    await mkdir(caseDir, { recursive: true });
+    await writeFile(path.join(caseDir, 'index.html'), '<main id="main-content"><article class="page case-detail"><h1>다른 글</h1></article></main><link rel="canonical" href="https://justinjeong5.github.io/cases/example/" />');
+    const result = await verifyDist(dir, {
+      protectedManifest: PROTECTED_MANIFEST,
+      careerPaths: ['/cases/example/'],
+      careerTitles: { '/cases/example/': '기대하던 글' },
+    });
+    assert.ok(result.errors.includes('채용 링크의 글 정체성 불일치: /cases/example/'));
+  });
+});
+
+test('verifyDist: 채용 사례가 보관 상태로 바뀌면 기존 URL을 보호한다', async () => {
+  await withDist({ routes: 11, locs: 12 }, async (dir) => {
+    const caseDir = path.join(dir, 'cases', 'example');
+    await mkdir(caseDir, { recursive: true });
+    await writeFile(path.join(caseDir, 'index.html'), '<main id="main-content"><article class="page case-detail"><h1>기대한 글</h1></article></main><meta name="robots" content="noindex, follow" /><link rel="canonical" href="https://justinjeong5.github.io/cases/example/" />');
+    const result = await verifyDist(dir, {
+      protectedManifest: PROTECTED_MANIFEST,
+      careerPaths: ['/cases/example/'],
+      careerTitles: { '/cases/example/': '기대한 글' },
+    });
+    assert.ok(result.errors.includes('채용 링크가 현재 사례 글을 열지 않음: /cases/example/'));
+  });
+});
+
+test('verifyDist: 채용 사례 제목 목록에서 경로 하나가 빠지면 거부한다', async () => {
+  await withDist({ routes: 12, locs: 12 }, async (dir) => {
+    const result = await verifyDist(dir, {
+      protectedManifest: PROTECTED_MANIFEST,
+      careerPaths: ['/cases/example/'],
+      careerTitles: {},
+    });
+    assert.ok(result.errors.includes('채용 사례 제목 목록과 경로가 일치하지 않음'));
+  });
+});
+
+test('verifyDist: 채용 사례 제목 목록을 빼면 정본 검증을 건너뛸 수 없다', async () => {
+  await withDist({ routes: 12, locs: 12 }, async (dir) => {
+    const result = await verifyDist(dir, {
+      protectedManifest: PROTECTED_MANIFEST,
+      careerPaths: ['/cases/example/'],
+      requireCareerTitles: true,
+    });
+    assert.ok(result.errors.includes('채용 사례 제목 목록 누락'));
+  });
+});
+
+test('verifyDist: 채용 경로 목록 자체를 빼면 보호 검사를 건너뛸 수 없다', async () => {
+  await withDist({ routes: 12, locs: 12 }, async (dir) => {
+    const result = await verifyDist(dir, {
+      protectedManifest: PROTECTED_MANIFEST,
+      requireCareerPaths: true,
+    });
+    assert.ok(result.errors.includes('채용 링크 목록 누락'));
+  });
+});
+
+test('verifyDist: 채용 경로 목록이 비거나 중복되면 거부한다', async () => {
+  await withDist({ routes: 12, locs: 12 }, async (dir) => {
+    for (const careerPaths of [[], ['/', '/']]) {
+      const result = await verifyDist(dir, { protectedManifest: PROTECTED_MANIFEST, careerPaths });
+      assert.ok(result.errors.includes('채용 링크 목록 형식이 올바르지 않음'));
+    }
+  });
+});
+
+test('verifyDist: 두 글 목록이 제출본에 있는 글만 보여준다', async () => {
+  await withDist({ routes: 12, locs: 14 }, async (dir) => {
+    for (const route of ['writing', 'cases']) {
+      const routeDir = path.join(dir, route);
+      await mkdir(routeDir, { recursive: true });
+      await writeFile(path.join(routeDir, 'index.html'), '<main id="main-content"><a href="/cases/one">글</a></main>');
+    }
+    const result = await verifyDist(dir, {
+      protectedManifest: PROTECTED_MANIFEST,
+      submittedPaths: ['/cases/one/'],
+    });
+    assert.equal(result.ok, true, result.errors.join('; '));
+  });
+});
+
+test('verifyDist: 목록에 제출하지 않은 글이나 이전 기록 링크가 보이면 막는다', async () => {
+  await withDist({ routes: 12, locs: 12 }, async (dir) => {
+    for (const route of ['writing', 'cases']) {
+      const routeDir = path.join(dir, route);
+      await mkdir(routeDir, { recursive: true });
+      await writeFile(path.join(routeDir, 'index.html'), '<main id="main-content"><a href="/cases/one">글</a><a href="/cases/other">다른 글</a><a href="/notes">메모</a></main>');
+    }
+    const result = await verifyDist(dir, {
+      protectedManifest: PROTECTED_MANIFEST,
+      submittedPaths: ['/cases/one/'],
+    });
+    assert.ok(result.errors.includes('writing 글 목록이 제출본 링크와 다름'));
+    assert.ok(result.errors.includes('cases 글 목록이 제출본 링크와 다름'));
+    assert.ok(result.errors.includes('writing 글 목록에 이전 기록 링크가 남음'));
+  });
+});
+
+test('verifyDist: 제출본 목록이 누락되거나 잘못되면 글 목록 검증을 건너뛰지 않는다', async () => {
+  await withDist({ routes: 12, locs: 12 }, async (dir) => {
+    const missing = await verifyDist(dir, { protectedManifest: PROTECTED_MANIFEST, requireSubmittedPaths: true });
+    assert.ok(missing.errors.includes('제출본 글 목록 누락'));
+
+    const malformed = await verifyDist(dir, { protectedManifest: PROTECTED_MANIFEST, submittedPaths: ['/cases/one/', '/cases/one/'] });
+    assert.ok(malformed.errors.includes('제출본 글 목록 형식이 올바르지 않음'));
+  });
+});
+
+test('verifyDist: 제출본 목록의 정적 페이지가 없으면 배포를 막는다', async () => {
+  await withDist({ routes: 12, locs: 12 }, async (dir) => {
+    const result = await verifyDist(dir, { protectedManifest: PROTECTED_MANIFEST, submittedPaths: ['/cases/one/'] });
+    assert.ok(result.errors.includes('writing 글 목록 정적 페이지 누락'));
+    assert.ok(result.errors.includes('cases 글 목록 정적 페이지 누락'));
+  });
+});
+
+test('verifyDist: sitemap에 실렸지만 HTML이 없는 글을 거부한다', async () => {
+  await withDist({ routes: 12, locs: 1 }, async (dir) => {
+    const result = await verifyDist(dir, {
+      protectedManifest: PROTECTED_MANIFEST,
+      sitemapUrls: ['https://x/0/'],
+    });
+    assert.ok(result.errors.includes('sitemap 경로 정적 페이지 누락: /0/'));
+  });
+});
+
+test('verifyDist: sitemap 글이 빈 셸이면 공개하지 않는다', async () => {
+  await withDist({ routes: 11, locs: 1 }, async (dir) => {
+    const pageDir = path.join(dir, '0');
+    await mkdir(pageDir, { recursive: true });
+    await writeFile(path.join(pageDir, 'index.html'), '<div id="root"></div>');
+    const result = await verifyDist(dir, {
+      protectedManifest: PROTECTED_MANIFEST,
+      sitemapUrls: ['https://x/0/'],
+    });
+    assert.ok(result.errors.includes('sitemap 경로 본문 누락: /0/'));
+  });
+});
+
+test('verifyDist: sitemap이 현재 경로 목록과 다르거나 경로 형식이 틀리면 거부한다', async () => {
+  await withDist({ routes: 12, locs: 1 }, async (dir) => {
+    const unexpected = await verifyDist(dir, { protectedManifest: PROTECTED_MANIFEST, sitemapUrls: ['https://x/other/'] });
+    assert.ok(unexpected.errors.includes('sitemap 현재 글 경로 불일치'));
+
+    await writeFile(path.join(dir, 'sitemap.xml'), '<urlset><url><loc>https://x/Invalid/</loc></url></urlset>');
+    const malformed = await verifyDist(dir, { protectedManifest: PROTECTED_MANIFEST, sitemapUrls: ['https://x/Invalid/'] });
+    assert.ok(malformed.errors.includes('sitemap 경로 형식 불일치: /Invalid/'));
+  });
+});
+
 test('verifyDist: index.html 누락 시 실패', async () => {
   await withDist({ routes: 12, locs: 12, rootHtml: null }, async (dir) => {
     const r = await verifyFixture(dir);

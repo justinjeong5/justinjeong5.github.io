@@ -1,4 +1,6 @@
 ---
+archived: true
+supersededBy: "/writing"
 title: "아직 모르는 설정이 잘못된 변경으로 이어지지 않도록"
 status: Documented
 statusLabel: 과정 기록
@@ -6,13 +8,13 @@ category: product
 series: work-evidence-2026
 role: "문제 제안·디자인 협의·도메인 컴포넌트 구현"
 period: "2022"
-summary: "같은 토글인데 페이지가 열리자마자 누르면 확인 없이 바뀔 수 있었다. '규칙이 없음'과 '아직 읽지 못함'을 구분해야 했던 이유."
+summary: "운영 화면을 열자마자 토글을 누르면 자동화 규칙을 아직 읽지 못해 확인 절차 없이 값이 바뀔 수 있었습니다. 규칙이 없을 때와 아직 모를 때를 다르게 처리했습니다."
 date: "2022"
 dateBasis: context
 collection: records
 tags: ["비동기 상태","확인 흐름","컴포넌트 책임"]
-updated: 2026-10-02
-lastTendedAt: 2026-10-02
+updated: 2026-10-19
+lastTendedAt: 2026-10-19
 ---
 
 광고 소재 목록에는 소재를 켜고 끄는 토글이 있었습니다. 단순한 On/Off처럼 보이지만, 그 소재의 실행 상태에 자동화 규칙이 연결돼 있으면 수동 변경 전에 확인 모달을 거쳐야 했습니다. 같은 버튼이어도 연결된 규칙에 따라 필요한 절차가 달랐습니다.

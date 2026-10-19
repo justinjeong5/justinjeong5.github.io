@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "source": "2026-10-19 career PDF and document link audit",
+  "paths": [
+    "/",
+    "/cases/",
+    "/cases/advertiser-integration-workflow/",
+    "/cases/ai-cross-functional-delivery/",
+    "/cases/article-content-integration/",
+    "/cases/cs-workflow-product/",
+    "/cases/deployment-config-contracts/",
+    "/cases/experiment-routing-context/",
+    "/cases/frontend-delivery-boundary/",
+    "/cases/gateway-rendering-context/",
+    "/cases/inapp-content-participation/",
+    "/cases/playhub-diagnostic-sampling/",
+    "/cases/playhub-product-architecture/",
+    "/cases/poketokenbar-account-cache/",
+    "/cases/pullup-record-driven-coach/",
+    "/cases/selectable-mission-product/",
+    "/cases/shared-ad-execution-delivery/"
+  ],
+  "caseTitles": {
+    "/cases/advertiser-integration-workflow/": "광고주가 연동을 검증하고 집행을 결정하는 도구 만들기",
+    "/cases/ai-cross-functional-delivery/": "AI와 문의 분류 서버를 고치며 DB 반영 순서 맞추기",
+    "/cases/article-content-integration/": "디자인 시안을 사용자가 참여하는 콘텐츠 기능으로 만들기",
+    "/cases/cs-workflow-product/": "운영자가 적립 문의를 확인하고 처리하는 화면 만들기",
+    "/cases/deployment-config-contracts/": "여러 팀이 쓰는 배포 도구를 제품에 묶이지 않게 개선하기",
+    "/cases/experiment-routing-context/": "다음 캠페인 참여를 만드는 추천·보너스 흐름 개발",
+    "/cases/frontend-delivery-boundary/": "일부 참여 화면부터 시작한 프론트엔드 개발·배포 분리",
+    "/cases/gateway-rendering-context/": "WebView 진입에서 페이지 이동 대신 실행 환경을 선택하기",
+    "/cases/inapp-content-participation/": "외부 웹에서 앱 안으로 콘텐츠 참여 경험 확장하기",
+    "/cases/playhub-diagnostic-sampling/": "운영에 필요한 관측은 남기고 로그 처리량 줄이기",
+    "/cases/playhub-product-architecture/": "앱과 웹에서 이어지는 리워드 제품 만들기",
+    "/cases/poketokenbar-account-cache/": "AI 코딩 도구의 사용 한도를 믿고 확인할 수 있도록",
+    "/cases/pullup-record-driven-coach/": "운동 기록이 다음 운동으로 이어지기까지 — 풀업 30을 만든 과정",
+    "/cases/selectable-mission-product/": "운영자의 구성과 사용자의 선택을 연결하는 미션 상품 만들기",
+    "/cases/shared-ad-execution-delivery/": "다른 제품에서도 사용할 수 있는 공용 광고 실행 구조 만들기"
+  }
+}

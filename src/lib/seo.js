@@ -9,7 +9,7 @@ export const SITE_URL = 'https://justinjeong5.github.io';
 export const DEFAULT_META = {
   title: '정경하 | Frontend Engineer',
   description:
-    '제품과 운영 도구를 개발하며 만난 문제, 설계 선택과 바뀐 판단을 하나의 개발 이야기로 기록합니다.',
+    '광고·리워드 제품과 운영 도구를 만들며 겪은 문제와 실제로 바꾼 부분을 기록합니다.',
 };
 
 // 경로를 정본 URL로 정규화한다. 홈('/')은 루트, 나머지는 trailing slash를 붙인다.
@@ -27,44 +27,56 @@ export function toCanonical(path) {
 export const STATIC_META = {
   '/': DEFAULT_META,
   '/writing': {
-    title: '일의 장면에서 글을 고르기 | 정경하',
-    description: '구체적인 제품·운영 문제에서 먼저 읽을 글과 그 글에서 확인할 판단을 찾는 안내판입니다.',
+    title: '글 | 정경하',
+    description: '제품을 만들고 고치면서 직접 겪은 일을 적었습니다.',
   },
   '/cases': {
-    title: '개발 경험 | 정경하',
-    description: '제품 개발과 깊이 있는 기술 문제를 시작부터 판단·구현·검증·결과까지 연결한 글입니다.',
+    title: '글 | 정경하',
+    description: '제품을 만들고 고치면서 직접 겪은 일을 적었습니다.',
+    robots: 'noindex, follow',
+    canonical: toCanonical('/writing'),
   },
   '/notes': {
-    title: '짧은 기록 아카이브 | 정경하',
-    description: '이전에 남긴 설계 메모를 보관합니다. 최근의 개발 과정은 경험 기록에서 읽을 수 있습니다.',
+    title: '글 | 정경하',
+    description: '제품을 만들고 고치면서 직접 겪은 일을 적었습니다.',
+    robots: 'noindex, follow',
+    canonical: toCanonical('/writing'),
   },
   '/essays': {
-    title: '기술 에세이 | 정경하',
-    description: '설계와 검증, 동료와의 협업, AI 위임과 제품 전달의 판단을 실제 개발 경험으로 풀어 쓴 글입니다.',
+    title: '글 | 정경하',
+    description: '제품을 만들고 고치면서 직접 겪은 일을 적었습니다.',
+    robots: 'noindex, follow',
+    canonical: toCanonical('/writing'),
   },
   '/logs': {
     title: '지난 작업 기록 | 정경하',
-    description: '이전의 시간순 작업 기록을 보관합니다. 현재는 문제와 설계 판단을 묶은 경험 기록을 중심으로 글을 씁니다.',
+    description: '예전에 남긴 짧은 작업 기록입니다. 최근 글은 개발 경험에서 볼 수 있습니다.',
+    robots: 'noindex, follow',
   },
   '/uses': {
-    title: '지금 쓰는 도구 | 정경하',
-    description: '지금 일과 개발에 쓰는 하드웨어·소프트웨어·서비스 목록.',
+    title: '2026년 5월의 도구 기록 | 정경하',
+    description: '2026년 5월에 적어 둔 도구 목록입니다. 현재 사용 여부는 확인하지 않았습니다.',
+    robots: 'noindex, follow',
   },
   '/now': {
-    title: '지금 무엇에 집중하고 있는지 | 정경하',
-    description: '요즘 무엇에 집중하고 있는지 기록하는 now 페이지.',
+    title: '2026년 5월에 남긴 기록 | 정경하',
+    description: '2026년 5월에 적어 둔 관심사입니다. 지금 하는 일을 뜻하지 않습니다.',
+    robots: 'noindex, follow',
   },
   '/reading': {
-    title: '읽은 책 · Antilibrary | 정경하',
-    description: '읽은 책과 아직 읽지 않은 책(antilibrary) 기록.',
+    title: '2026년 5월의 독서 메모 | 정경하',
+    description: '2026년 5월에 적어 둔 독서 기록입니다. 현재 목록은 아닙니다.',
+    robots: 'noindex, follow',
   },
   '/about': {
-    title: 'About | 정경하',
-    description: '정경하가 일하는 방식과 운영 원칙, 그리고 이 사이트에 대하여.',
+    title: '경력·소개 | 정경하',
+    description: '버즈빌에서 광고 운영 도구부터 앱·웹 리워드 제품까지 맡아 온 경력과 대표 작업을 소개합니다.',
   },
   '/cv': {
-    title: '실제 기록을 먼저 읽기 | 정경하',
-    description: '이전 이력 페이지 대신 판단과 구현의 기록을 읽는 안내입니다.',
+    title: '경력·소개 | 정경하',
+    description: '버즈빌에서 광고 운영 도구부터 앱·웹 리워드 제품까지 맡아 온 경력과 대표 작업을 소개합니다.',
+    robots: 'noindex, follow',
+    canonical: toCanonical('/about'),
   },
 };
 
@@ -100,9 +112,9 @@ export function resolveMeta(url, getters) {
     return {
       title: `${entry.title} | 정경하`,
       description: entry.summary || DEFAULT_META.description,
-      canonical: entry.archived === true && /^\/(cases|notes|essays)\/[^/?#]+$/.test(entry.supersededBy || '') ? toCanonical(entry.supersededBy) : canonical,
+      canonical: entry.archived === true && (entry.supersededBy === '/writing' || /^\/(cases|notes|essays)\/[^/?#]+$/.test(entry.supersededBy || '')) ? toCanonical(entry.supersededBy) : canonical,
       robots: entry.archived === true ? 'noindex, follow' : 'index, follow',
-      ogType: 'article',
+      ogType: entry.archived === true ? 'website' : 'article',
       datePublished: entry.dateBasis === 'context' ? undefined : entry.date || undefined,
       dateModified: entry.updated || entry.lastTendedAt || (entry.dateBasis === 'context' ? undefined : entry.date) || undefined,
     };
@@ -112,7 +124,8 @@ export function resolveMeta(url, getters) {
   return {
     title: meta.title,
     description: meta.description || DEFAULT_META.description,
-    canonical,
+    canonical: meta.canonical || canonical,
+    robots: meta.robots || 'index, follow',
     ogType: 'website',
   };
 }

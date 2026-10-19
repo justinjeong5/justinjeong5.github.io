@@ -5,7 +5,7 @@ function UsesPage() {
     <div className="page page-list">
       <header className="page-header">
         <p className="eyebrow">/uses</p>
-        <h1>지금 쓰는 도구</h1>
+        <h1>2026년 5월의 도구 기록</h1>
         <p>{usesData.intro}</p>
       </header>
 

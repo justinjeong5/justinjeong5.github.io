@@ -1,10 +1,12 @@
 ---
+archived: true
+supersededBy: "/writing"
 title: "외부 API의 성공과 결과의 완전성을 나누기"
 growth: Budding
 topics: ["외부 API·SDK 연동","데이터","실패"]
-summary: "공급자별 정책·오류 의미·페이지네이션·부분 결과를 구분하는 통합 메모."
+summary: "API가 성공해도 다음 페이지나 실패한 공급자가 남아 있다면 자료 수집은 끝나지 않았다."
 plantedAt: 2026-05-18
-lastTendedAt: 2026-10-01
+lastTendedAt: 2026-10-19
 ---
 
 외부 API가 성공 응답을 보냈는데 자료 수집은 끝나지 않았을 수 있다. 응답 본문에 별도 오류가 있거나 다음 페이지가 남을 수 있고, 여러 소스 중 일부만 성공했을 수도 있다.
@@ -17,4 +19,4 @@ lastTendedAt: 2026-10-01
 
 로그를 더 남긴다고 이 문제가 저절로 설명되는 것은 아니다. 상태·오류 종류·시점·처리 수처럼 필요한 정보를 고르고 비밀값과 식별자는 보호해야 한다.
 
-통합의 완료는 호출이 끝났다는 말보다 어떤 결과를 얻었고 무엇이 빠졌는지 설명할 수 있을 때 가까워진다. [기사 콘텐츠의 실패 단위 처리](/cases/article-content-integration)와 [재시도의 시간 상한](/notes/dead-retry-bounded-executor)이 각각 그 질문을 이어간다.
+다음 페이지가 남았거나 한 공급자가 실패했다면 받은 자료만으로 '수집 완료'라고 표시할 수 없다. [기사 콘텐츠의 실패 단위 처리](/cases/article-content-integration/)와 [재시도의 시간 상한](/notes/dead-retry-bounded-executor/)에서 각각 비슷한 문제를 다뤘다.

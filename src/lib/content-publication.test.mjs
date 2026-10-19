@@ -10,7 +10,7 @@ test('public writing excludes private source locations and identifiers', () => {
       assert.doesNotMatch(source, /buzzvil\.slack\.com|github\.com\/Buzzvil|\/Users\/|\b(?:puid|userId|app_id|unit_id)\s*[:=]|ghp_[A-Za-z0-9]+/, `${type}/${file}`);
       if (type === 'logs') {
         assert.match(source, /^type: Reviewed$/m);
-        assert.match(source, /^updated: 2026-10-01$/m);
+        assert.match(source, /^updated: 2026-10-19$/m);
         assert.doesNotMatch(source, /\d+(?:\.\d+)?\s*%|\d+(?:\.\d+)?\/5/);
       }
     }

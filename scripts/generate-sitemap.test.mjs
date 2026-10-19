@@ -12,7 +12,7 @@ import {
   buildXml,
 } from './generate-sitemap.mjs';
 import { ROUTES } from '../src/lib/routes.js';
-import { toCanonical } from '../src/lib/seo.js';
+import { STATIC_META, toCanonical } from '../src/lib/seo.js';
 
 // 임시 content 디렉토리에 fixture mdx 파일을 만든다.
 function makeFixtureContent() {
@@ -23,6 +23,7 @@ function makeFixtureContent() {
     writeFileSync(join(dir, name), body);
   };
   write('cases', 'my-case.mdx', '---\ntitle: C\ndate: 2026-05-19\n---\nbody');
+  write('cases', 'old-case.mdx', '---\ntitle: Old\narchived: true\nsupersededBy: "/cases/my-case"\n---\nbody');
   write('notes', 'b-note.mdx', '---\ntitle: N\nplantedAt: 2026-05-01\nlastTendedAt: 2026-05-28\n---\nbody');
   write('notes', 'a-note.mdx', '---\ntitle: N2\nplantedAt: 2026-05-02\n---\nbody');
   write('essays', 'my-essay.mdx', "---\ntitle: E\ndate: '2026-05-29'\n---\nbody");
@@ -69,8 +70,11 @@ test('collectUrls는 정적 라우트를 모두 포함하고 BASE prefix를 붙�
   try {
     const urls = collectUrls({ contentDir: root });
     const locs = urls.map((u) => u.loc);
-    for (const path of STATIC_PATHS) {
+    for (const path of STATIC_PATHS.filter((path) => STATIC_META[path]?.robots !== 'noindex, follow')) {
       assert.ok(locs.includes(toCanonical(path)), `정적 URL 누락: ${path}`);
+    }
+    for (const archived of ['/cases', '/notes', '/essays', '/logs', '/uses', '/now', '/reading', '/cv']) {
+      assert.ok(!locs.includes(toCanonical(archived)));
     }
     for (const loc of locs) {
       assert.ok(loc.startsWith(BASE), `BASE prefix 없음: ${loc}`);
@@ -89,16 +93,17 @@ test('collectUrls는 cases/notes/essays 상세 URL을 포함한다', () => {
     assert.ok(locs.includes(`${BASE}/notes/a-note/`));
     assert.ok(locs.includes(`${BASE}/notes/b-note/`));
     assert.ok(locs.includes(`${BASE}/essays/my-essay/`));
+    assert.ok(!locs.includes(`${BASE}/cases/old-case/`));
   } finally {
     rmSync(root, { recursive: true, force: true });
   }
 });
 
-test('로그는 개별 URL을 생성하지 않는다 (/logs 단일 페이지만)', () => {
+test('로그 아카이브는 사이트맵에 싣지 않는다', () => {
   const root = makeFixtureContent();
   try {
     const locs = collectUrls({ contentDir: root }).map((u) => u.loc);
-    assert.ok(locs.includes(`${BASE}/logs/`), '/logs 정적 페이지는 있어야 함');
+    assert.ok(!locs.includes(`${BASE}/logs/`), '/logs는 직접 경로만 유지');
     assert.ok(
       // /logs/ 정본은 허용하되, /logs/{slug}/ 같은 개별 로그 URL은 없어야 한다.
       !locs.some((l) => l.startsWith(`${BASE}/logs/`) && l !== `${BASE}/logs/`),

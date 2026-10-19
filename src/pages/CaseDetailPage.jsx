@@ -3,16 +3,12 @@ import { ArrowLeft } from 'lucide-react';
 
 import { getCase } from '../lib/content';
 import { displayWorkPeriod } from '../lib/article-dates.js';
-import { useReadingView } from '../lib/use-reading-view';
 import { ROUTES } from '../lib/routes';
-import { readingPathsFor, workPathUrl, caseListUrl } from '../lib/work-paths';
 import ConsolidationNotice from '../components/ui/ConsolidationNotice';
 import { articleCollection } from '../lib/editorial';
-import { findGuideLens } from '../lib/reading-guide';
 
 function CaseDetailPage() {
   const { slug } = useParams();
-  const view = useReadingView();
   const study = getCase(slug);
 
   if (!study) {
@@ -20,8 +16,8 @@ function CaseDetailPage() {
       <div className="page page-empty">
         <p className="eyebrow">404</p>
         <h1>찾을 수 없는 케이스</h1>
-        <Link to={ROUTES.cases} className="see-all-link">
-          <ArrowLeft size={16} aria-hidden="true" /> 개발 경험 목록
+        <Link to={ROUTES.writing} className="see-all-link">
+          <ArrowLeft size={16} aria-hidden="true" /> 글 목록
         </Link>
       </div>
     );
@@ -29,15 +25,13 @@ function CaseDetailPage() {
 
   const { Component } = study;
   const collection = articleCollection(study);
-  const guideLens = findGuideLens(slug);
 
   return (
     <article className="page case-detail">
       <header className="page-header case-detail-header">
-        <p className="eyebrow">{collection ? <Link to={collection.url}>{collection.label}</Link> : study.statusLabel || study.status}</p>
+        <p className="eyebrow">{study.archived ? '이전 글' : collection ? <Link to={collection.url}>{collection.label}</Link> : study.statusLabel || study.status}</p>
         <h1>{study.title}</h1>
         <p className="page-lead">{study.summary}</p>
-        {guideLens ? <p className="case-guide-lens"><span>읽을 관점</span>{guideLens}</p> : null}
         <dl className="case-meta">
           <div>
             <dt>담당</dt>
@@ -58,23 +52,18 @@ function CaseDetailPage() {
 
       <div className="prose">
         <ConsolidationNotice entry={study} />
-        <Component />
+        {study.archived ? (
+          <details className="archive-source">
+            <summary>남겨둔 내용 보기</summary>
+            <Component />
+          </details>
+        ) : <Component />}
       </div>
 
-      {!study.archived && readingPathsFor(slug).length > 0 ? (
-        <section className="related-block">
-          <h2>다른 관점에서 함께 읽기</h2>
-          <div className="reading-tabs">
-            {readingPathsFor(slug).map((path) => <Link key={path.id} to={workPathUrl(path.id)}>{path.label}</Link>)}
-          </div>
-        </section>
-      ) : null}
-
       <footer className="page-footer">
-        <Link to={caseListUrl(study, view)} className="see-all-link">
-          <ArrowLeft size={16} aria-hidden="true" /> 개발 경험 목록
+        <Link to={ROUTES.writing} className="see-all-link">
+          <ArrowLeft size={16} aria-hidden="true" /> 글 목록으로
         </Link>
-        <Link to={ROUTES.writing} className="see-all-link">글 안내판으로 돌아가기</Link>
       </footer>
     </article>
   );

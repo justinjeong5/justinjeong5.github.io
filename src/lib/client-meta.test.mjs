@@ -13,7 +13,7 @@ const stubGetters = {
 
 test('resolveMetaSafe: 유효 정적 경로는 resolveMeta 결과를 그대로 반환', () => {
   const m = resolveMetaSafe('/cases', stubGetters);
-  assert.equal(m.canonical, `${SITE_URL}/cases/`);
+  assert.equal(m.canonical, `${SITE_URL}/writing/`);
   assert.equal(m.ogType, 'website');
 });
 

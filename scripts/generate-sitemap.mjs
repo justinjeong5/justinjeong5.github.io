@@ -14,7 +14,7 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { SITE_URL, toCanonical } from '../src/lib/seo.js';
+import { SITE_URL, STATIC_META, toCanonical } from '../src/lib/seo.js';
 
 // 하위 호환: 기존 import 경로 유지. URL 정본 규칙은 seo.js(toCanonical)가 단일 소스다.
 export const BASE = SITE_URL;
@@ -73,8 +73,10 @@ export function collectSlugs(type, { contentDir = CONTENT_DIR } = {}) {
     .sort()
     .map((f) => {
       const slug = f.replace(/\.mdx$/, '');
-      const lastmod = parseLastmod(frontmatter(readFileSync(join(dir, f), 'utf8')));
-      return { slug, lastmod };
+      const metadata = frontmatter(readFileSync(join(dir, f), 'utf8'));
+      const lastmod = parseLastmod(metadata);
+      const archived = /^archived:\s*true\s*$/m.test(metadata);
+      return { slug, lastmod, archived };
     });
 }
 
@@ -82,9 +84,12 @@ export function collectSlugs(type, { contentDir = CONTENT_DIR } = {}) {
 // loc은 toCanonical로 정본 URL(trailing-slash)을 생성해 canonical과 일치시킨다
 // (GitHub Pages의 /path → /path/ 301 1홉 제거).
 export function collectUrls({ contentDir = CONTENT_DIR } = {}) {
-  const urls = STATIC_PATHS.map((path) => ({ loc: toCanonical(path), lastmod: null }));
+  const urls = STATIC_PATHS
+    .filter((path) => STATIC_META[path]?.robots !== 'noindex, follow')
+    .map((path) => ({ loc: toCanonical(path), lastmod: null }));
   for (const type of DETAIL_TYPES) {
-    for (const { slug, lastmod } of collectSlugs(type, { contentDir })) {
+    for (const { slug, lastmod, archived } of collectSlugs(type, { contentDir })) {
+      if (archived) continue;
       urls.push({ loc: toCanonical(`/${type}/${slug}`), lastmod });
     }
   }

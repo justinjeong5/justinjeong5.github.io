@@ -7,7 +7,14 @@ test('merged archives preserve an accessible URL without inviting indexing', () 
   const meta = resolveMeta('/notes/old', getters);
   assert.equal(meta.canonical, toCanonical('/notes/new'));
   assert.equal(meta.robots, 'noindex, follow');
+  assert.equal(meta.ogType, 'website');
   assert.match(buildHeadMeta(meta), /name="robots" content="noindex, follow"/);
+  assert.doesNotMatch(buildHeadMeta(meta), /"@type": "Article"/);
+  const retiredGuide = resolveMeta('/cases/old', { cases: () => ({ archived: true, supersededBy: '/writing' }) });
+  assert.equal(retiredGuide.canonical, toCanonical('/writing'));
+  assert.equal(retiredGuide.robots, 'noindex, follow');
+  assert.equal(retiredGuide.ogType, 'website');
+  assert.doesNotMatch(buildHeadMeta(retiredGuide), /"@type": "Article"/);
   const invalid = resolveMeta('/notes/old', { notes: () => ({ archived: true, supersededBy: 'https://example.com' }) });
   assert.equal(invalid.canonical, toCanonical('/notes/old'));
 });
@@ -51,6 +58,30 @@ test('STATIC_META: 홈은 DEFAULT_META를 재사용한다', () => {
   assert.equal(STATIC_META['/'], DEFAULT_META);
 });
 
+test('이전 정적 페이지는 직접 URL을 유지하되 검색 색인에서 제외한다', () => {
+  for (const path of ['/logs', '/uses', '/now', '/reading']) {
+    const meta = resolveMeta(path, {});
+    assert.equal(meta.robots, 'noindex, follow');
+    assert.equal(meta.canonical, `${SITE_URL}${path}/`);
+  }
+});
+
+test('이전 목록 주소는 현재 글 목록을 보여주고 같은 정본을 가리킨다', () => {
+  for (const path of ['/cases', '/notes', '/essays']) {
+    const meta = resolveMeta(path, {});
+    assert.equal(meta.title, STATIC_META['/writing'].title);
+    assert.equal(meta.robots, 'noindex, follow');
+    assert.equal(meta.canonical, toCanonical('/writing'));
+  }
+});
+
+test('이전 CV 주소는 경력 소개의 정본을 가리킨다', () => {
+  const meta = resolveMeta('/cv', {});
+  assert.equal(meta.title, STATIC_META['/about'].title);
+  assert.equal(meta.robots, 'noindex, follow');
+  assert.equal(meta.canonical, toCanonical('/about'));
+});
+
 test('STATIC_META: 모든 정적 라우트가 title과 description을 가진다', () => {
   for (const [path, meta] of Object.entries(STATIC_META)) {
     assert.ok(meta.title, `${path} title 누락`);
@@ -84,7 +115,7 @@ const stubGetters = {
 test('resolveMeta: 정적 라우트는 STATIC_META + 정본 canonical', () => {
   const m = resolveMeta('/cases', stubGetters);
   assert.equal(m.title, STATIC_META['/cases'].title);
-  assert.equal(m.canonical, `${SITE_URL}/cases/`);
+  assert.equal(m.canonical, `${SITE_URL}/writing/`);
 });
 
 test('resolveMeta: 홈은 DEFAULT_META', () => {
@@ -109,14 +140,14 @@ test('resolveMeta: 존재하지 않는 slug는 throw (silent 홈 폴백 방지)'
   assert.throws(() => resolveMeta('/essays/missing', stubGetters), /알 수 없는 콘텐츠/);
 });
 
-test('resolveMeta: 서로 다른 경로는 서로 다른 canonical (홈 복제 회귀 가드)', () => {
+test('resolveMeta: 실제 다른 콘텐츠는 다른 canonical을 쓴다', () => {
   const canons = [
     resolveMeta('/', stubGetters).canonical,
-    resolveMeta('/cases', stubGetters).canonical,
-    resolveMeta('/notes', stubGetters).canonical,
+    resolveMeta('/writing', stubGetters).canonical,
     resolveMeta('/cases/known', stubGetters).canonical,
+    resolveMeta('/notes/n1', stubGetters).canonical,
   ];
-  assert.equal(new Set(canons).size, 4, '경로별 canonical이 고유해야 함');
+  assert.equal(new Set(canons).size, 4, '다른 콘텐츠의 canonical이 고유해야 함');
 });
 
 // ---- ogType 분기 테스트 ----

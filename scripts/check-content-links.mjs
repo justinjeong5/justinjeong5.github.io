@@ -9,11 +9,9 @@
 import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { STORY_STARTS, STORY_QUICK_READS, TECH_STARTS } from '../src/lib/reading-guide.js';
 
 const rootDir = path.resolve(fileURLToPath(new URL('..', import.meta.url)));
 const DEFAULT_CONTENT_DIR = path.join(rootDir, 'src', 'content');
-const DEFAULT_GUIDE = { stories: [...STORY_STARTS, ...STORY_QUICK_READS], records: TECH_STARTS };
 const frontmatterOf = (source) => /^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/.exec(source)?.[1] || '';
 
 const DETAIL_TYPES = ['cases', 'notes', 'essays'];
@@ -63,9 +61,11 @@ export function extractMarkdownTargets(text) {
 
 // 콘텐츠 전체(mdx 내부 링크 + site.json/about.json 대표 참조)에서 dead link를 찾는다.
 // 반환: [{ source, ref }] — source는 참조 위치, ref는 존재하지 않는 대상.
-export async function findDeadContentLinks(contentDir = DEFAULT_CONTENT_DIR, guide = contentDir === DEFAULT_CONTENT_DIR ? DEFAULT_GUIDE : null) {
+export async function findDeadContentLinks(contentDir = DEFAULT_CONTENT_DIR) {
   const { slugs, logs } = await collectSlugs(contentDir);
   const dead = [];
+  const sourceByPath = new Map();
+  const refsByPath = new Map();
 
   const check = (source, ref) => {
     if (!ref) return;
@@ -87,9 +87,38 @@ export async function findDeadContentLinks(contentDir = DEFAULT_CONTENT_DIR, gui
     for (const f of entries) {
       if (!f.endsWith('.mdx')) continue;
       const text = await readFile(path.join(contentDir, type, f), 'utf8');
-      for (const target of extractMarkdownTargets(text)) {
+      const sourcePath = `/${type}/${f.slice(0, -4)}`;
+      const targets = extractMarkdownTargets(text);
+      if (type !== 'logs') {
+        sourceByPath.set(sourcePath, frontmatterOf(text));
+        refsByPath.set(sourcePath, targets);
+      }
+      for (const target of targets) {
         check(`${type}/${f}`, classifyRef(target));
       }
+    }
+  }
+
+  for (const [source, targets] of refsByPath) {
+    if (isArchived(sourceByPath.get(source))) continue;
+    for (const target of targets) {
+      const ref = classifyRef(target);
+      if (ref?.kind !== 'detail') continue;
+      const targetPath = `/${ref.type}/${ref.slug}`;
+      if (sourceByPath.has(targetPath) && isArchived(sourceByPath.get(targetPath))) {
+        dead.push({ source, ref: `공개 글에서 보관 글로 연결: ${targetPath}` });
+      }
+    }
+  }
+
+  for (const [source, metadata] of sourceByPath) {
+    if (!isArchived(metadata)) continue;
+    const target = metadata.match(/^supersededBy:\s*["']?(\/[a-z0-9/-]+)["']?\s*$/m)?.[1];
+    if (target === '/writing') continue;
+    if (!target || !classifyRef(target) || !sourceByPath.has(target)) {
+      dead.push({ source, ref: '통합 글의 직접 경로가 필요합니다' });
+    } else if (isArchived(sourceByPath.get(target))) {
+      dead.push({ source, ref: `다른 보관 글을 거치는 통합 경로: ${target}` });
     }
   }
 
@@ -163,47 +192,6 @@ export async function findDeadContentLinks(contentDir = DEFAULT_CONTENT_DIR, gui
       const url = typeof article?.url === 'string' && URL.canParse(article.url) ? new URL(article.url) : null;
       if (typeof article?.title !== 'string' || !article.title.trim() || typeof article?.description !== 'string' || !article.description.trim() || !url || url.protocol !== 'https:' || url.hostname !== 'tech.buzzvil.com' || !url.pathname.startsWith('/blog/') || url.username || url.password) {
         dead.push({ source: `site.json:homeWriting[${index}]`, ref: '기고 제목·설명·공식 HTTPS 블로그 URL이 필요합니다' });
-      }
-    }
-  }
-
-  if (guide) {
-    const guideSeen = new Set();
-    for (const [collection, items] of Object.entries(guide)) {
-      for (const [index, item] of items.entries()) {
-        const source = `reading-guide:${collection}[${index}]`;
-        const slug = item?.slug;
-        if (typeof slug !== 'string' || !/^[a-z0-9-]+$/.test(slug)) {
-          dead.push({ source, ref: '유효한 읽기 안내 slug가 필요합니다' });
-          continue;
-        }
-        check(source, { kind: 'detail', type: 'cases', slug });
-        if (guideSeen.has(slug)) dead.push({ source, ref: `중복 읽기 안내: ${slug}` });
-        guideSeen.add(slug);
-        if (typeof item.situation !== 'string' || !item.situation.trim() || typeof item.question !== 'string' || !item.question.trim()) {
-          dead.push({ source, ref: '상황과 읽을 질문이 필요합니다' });
-        }
-        if (slugs.cases.has(slug)) {
-          const text = await readFile(path.join(contentDir, 'cases', `${slug}.mdx`), 'utf8');
-          const metadata = frontmatterOf(text);
-          if (!new RegExp(`^collection: ${collection}$`, 'm').test(metadata) || isArchived(metadata)) {
-            dead.push({ source, ref: `공개 ${collection} 글이 아님: ${slug}` });
-          }
-        }
-        for (const related of item.related || []) {
-          const relatedSource = `${source}:related`;
-          check(relatedSource, { kind: 'detail', type: 'cases', slug: related.slug });
-          if (related.slug === slug || typeof related.reason !== 'string' || !related.reason.trim()) {
-            dead.push({ source: relatedSource, ref: '다른 글과 함께 읽을 이유가 필요합니다' });
-          }
-          if (slugs.cases.has(related.slug)) {
-            const text = await readFile(path.join(contentDir, 'cases', `${related.slug}.mdx`), 'utf8');
-            const metadata = frontmatterOf(text);
-            if (!/^collection: stories$/m.test(metadata) || isArchived(metadata)) {
-              dead.push({ source: relatedSource, ref: `공개 stories 글이 아님: ${related.slug}` });
-            }
-          }
-        }
       }
     }
   }

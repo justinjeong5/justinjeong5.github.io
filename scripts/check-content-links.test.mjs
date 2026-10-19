@@ -85,6 +85,19 @@ test('findDeadContentLinks: mdx 내부 링크의 삭제된 slug와 로그 앵커
   }
 });
 
+test('findDeadContentLinks: 공개 글에서 보관 글로 이어지는 링크를 검출', async () => {
+  const dir = await makeFixture({
+    'cases/live.mdx': '---\ntitle: Live\n---\n[이전 글](/cases/old)',
+    'cases/old.mdx': '---\narchived: true\nsupersededBy: "/writing"\n---\n이전 내용',
+  });
+  try {
+    const dead = await findDeadContentLinks(dir);
+    assert.ok(dead.some((item) => item.ref === '공개 글에서 보관 글로 연결: /cases/old'));
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
 test('findDeadContentLinks: 홈 대표 사례·에세이 삭제 참조를 모두 검출', async () => {
   const dir = await makeFixture({
     'cases/exists.mdx': 'series: work-evidence-2026\n케이스',
@@ -155,36 +168,30 @@ test('findDeadContentLinks: 개인 작업 글의 누락·비공개·다른 시�
   }
 });
 
-test('findDeadContentLinks: 읽기 안내의 누락·비공개·컬렉션 오류를 거부', async () => {
+test('findDeadContentLinks: 보관 글은 살아 있는 최종 글을 직접 가리켜야 한다', async () => {
   const dir = await makeFixture({
-    'cases/story.mdx': '---\ncollection: stories\n---\n',
-    'cases/retired.mdx': '---\ncollection: records\narchived: true\n---\n',
-    'site.json': '{}',
+    'notes/old.mdx': '---\narchived: true\nsupersededBy: "/notes/older"\n---\n',
+    'notes/older.mdx': '---\narchived: true\nsupersededBy: "/cases/live"\n---\n',
+    'cases/live.mdx': '---\ntitle: Live\n---\n',
   });
-  const guide = {
-    stories: [
-      { slug: 'story', situation: '상황', question: '질문', related: [{ slug: 'retired', reason: '함께 읽기' }] },
-      { slug: 'missing', situation: '상황', question: '질문' },
-    ],
-    records: [{ slug: 'retired', situation: '상황', question: '질문' }],
-  };
   try {
-    const dead = await findDeadContentLinks(dir, guide);
-    assert.ok(dead.some((item) => item.ref === '/cases/missing'));
-    assert.ok(dead.some((item) => item.ref === '공개 records 글이 아님: retired'));
-    assert.ok(dead.some((item) => item.ref === '공개 stories 글이 아님: retired'));
+    const dead = await findDeadContentLinks(dir);
+    assert.ok(dead.some((item) => item.source === '/notes/old' && item.ref.includes('다른 보관 글')));
+    assert.ok(!dead.some((item) => item.source === '/notes/older'));
   } finally {
     await rm(dir, { recursive: true, force: true });
   }
 });
 
-test('findDeadContentLinks: 본문의 collection 문구를 frontmatter로 오인하지 않는다', async () => {
+test('findDeadContentLinks: 이전 글은 글 안내판으로 직접 안내할 수 있으나 임의 정적 경로는 거부한다', async () => {
   const dir = await makeFixture({
-    'cases/misclassified.mdx': '---\ncollection: stories\n---\n본문 예시\ncollection: records\n',
+    'cases/old.mdx': '---\narchived: true\nsupersededBy: "/writing"\n---\n',
+    'cases/bad.mdx': '---\narchived: true\nsupersededBy: "/about"\n---\n',
   });
   try {
-    const dead = await findDeadContentLinks(dir, { records: [{ slug: 'misclassified', situation: '상황', question: '질문' }] });
-    assert.ok(dead.some((item) => item.ref === '공개 records 글이 아님: misclassified'));
+    const dead = await findDeadContentLinks(dir);
+    assert.ok(!dead.some((item) => item.source === '/cases/old'));
+    assert.ok(dead.some((item) => item.source === '/cases/bad'));
   } finally {
     await rm(dir, { recursive: true, force: true });
   }

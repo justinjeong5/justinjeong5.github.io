@@ -15,10 +15,9 @@ const SHORTCUTS = [
   ]},
   { group: '페이지 이동 (g 누르고 다음 키)', items: [
     { keys: ['g', 'h'], desc: '홈' },
-    { keys: ['g', 'c'], desc: '개발 경험' },
-    { keys: ['g', 'e'], desc: '기술 에세이' },
+    { keys: ['g', 'c'], desc: '글' },
     { keys: ['g', 'a'], desc: '소개' },
-    { keys: ['g', 'v'], desc: '경력 안내' },
+    { keys: ['g', 'v'], desc: '경력·소개' },
   ]},
 ];
 

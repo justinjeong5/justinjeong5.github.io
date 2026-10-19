@@ -4,6 +4,7 @@ import { ArrowLeft } from 'lucide-react';
 import { getNote, getAllNotes } from '../lib/content';
 import { ROUTES } from '../lib/routes';
 import { visibleEntries } from '../lib/work-paths';
+import ConsolidationNotice from '../components/ui/ConsolidationNotice';
 
 const growthIcon = {
   Seedling: '🌱',
@@ -29,8 +30,8 @@ function NoteDetailPage() {
       <div className="page page-empty">
         <p className="eyebrow">404</p>
         <h1>찾을 수 없는 노트</h1>
-        <Link to={ROUTES.notes} className="see-all-link">
-          <ArrowLeft size={16} aria-hidden="true" /> 노트 목록
+        <Link to={ROUTES.writing} className="see-all-link">
+          <ArrowLeft size={16} aria-hidden="true" /> 글 목록
         </Link>
       </div>
     );
@@ -44,11 +45,11 @@ function NoteDetailPage() {
       <header className="page-header note-detail-header">
         <p className="eyebrow growth-eyebrow">
           <span aria-hidden="true">{growthIcon[note.growth] || '🌱'}</span>
-          {note.archived ? '통합한 이전 노트' : '보관한 설계 메모'}
+          {note.archived ? (note.supersededBy === ROUTES.writing ? '이전 노트' : '통합한 이전 노트') : '보관한 설계 메모'}
         </p>
         <h1>{note.title}</h1>
         {note.summary ? <p className="page-lead">{note.summary}</p> : null}
-        <Link className="see-all-link" to={ROUTES.cases}>최근 개발 경험 읽기</Link>
+        <Link className="see-all-link" to={ROUTES.writing}>글 목록으로</Link>
         {note.topics && note.topics.length > 0 ? (
           <ul className="topic-list" aria-label="topics">
             {note.topics.map((topic) => (
@@ -59,7 +60,13 @@ function NoteDetailPage() {
       </header>
 
       <div className="prose">
-        <Component />
+        <ConsolidationNotice entry={note} />
+        {note.archived ? (
+          <details className="archive-source">
+            <summary>남겨둔 내용 보기</summary>
+            <Component />
+          </details>
+        ) : <Component />}
       </div>
 
       {related.length > 0 ? (
@@ -81,8 +88,8 @@ function NoteDetailPage() {
       ) : null}
 
       <footer className="page-footer">
-        <Link to={ROUTES.notes} className="see-all-link">
-          <ArrowLeft size={16} aria-hidden="true" /> 노트 목록
+        <Link to={ROUTES.writing} className="see-all-link">
+          <ArrowLeft size={16} aria-hidden="true" /> 글 목록
         </Link>
       </footer>
     </article>

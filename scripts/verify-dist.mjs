@@ -12,10 +12,14 @@ import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { buildProtectedHtml, PROTECTED_PAGE_KEY_PATTERN } from './encrypt-private-page.mjs';
+import { collectUrls } from './generate-sitemap.mjs';
+import { SITE_URL } from '../src/lib/seo.js';
 
 const rootDir = path.resolve(fileURLToPath(new URL('..', import.meta.url)));
 const DEFAULT_DIST_DIR = path.join(rootDir, 'dist');
 const DEFAULT_PROTECTED_MANIFEST_PATH = path.join(rootDir, 'scripts/private-pages.manifest.json');
+const DEFAULT_CAREER_LINKS_PATH = path.join(rootDir, 'scripts/career-linked-paths.json');
+const DEFAULT_SUBMITTED_LINKS_PATH = path.join(rootDir, 'scripts/submitted-blog-paths.json');
 const PROTECTED_ROOT = 'shared';
 const GOOGLE_AUTH_MODE = 'google-supabase-whitelist';
 
@@ -245,7 +249,7 @@ async function verifyProtectedPages(distDir, providedManifest) {
 }
 
 // dist/ 산출물의 온전성을 검증한다. 반환: { ok, errors, routes, locs }.
-export async function verifyDist(distDir = DEFAULT_DIST_DIR, { protectedManifest } = {}) {
+export async function verifyDist(distDir = DEFAULT_DIST_DIR, { protectedManifest, careerPaths, careerTitles, submittedPaths, sitemapUrls, requireCareerPaths = distDir === DEFAULT_DIST_DIR, requireCareerTitles = distDir === DEFAULT_DIST_DIR, requireSubmittedPaths = distDir === DEFAULT_DIST_DIR } = {}) {
   const errors = [];
 
   let rootHtml = null;
@@ -271,12 +275,113 @@ export async function verifyDist(distDir = DEFAULT_DIST_DIR, { protectedManifest
   if (routes < MIN_ROUTES) {
     errors.push(`prerender 라우트 ${routes}개 < 하한 ${MIN_ROUTES}개 — 콘텐츠/빌드 붕괴 의심`);
   }
-  if (sitemap !== null && locs > 0 && routes !== locs) {
-    errors.push(`route 수(${routes}) ≠ sitemap <loc> 수(${locs}) — 부분 손상/드리프트`);
+  if (sitemap !== null && locs > 0) {
+    const expectedUrls = sitemapUrls ?? (distDir === DEFAULT_DIST_DIR ? collectUrls().map((item) => item.loc) : null);
+    if (expectedUrls) {
+      const expected = [...expectedUrls].sort();
+      const actual = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]).sort();
+      if (JSON.stringify(actual) !== JSON.stringify(expected)) errors.push('sitemap 현재 글 경로 불일치');
+      if (routes < locs) errors.push(`정적 페이지 ${routes}개 < sitemap ${locs}개`);
+      for (const url of actual) {
+        if (!expected.includes(url)) continue;
+        const pathname = new URL(url).pathname;
+        if (!/^\/(?:[a-z0-9-]+\/)*$/.test(pathname)) {
+          errors.push(`sitemap 경로 형식 불일치: ${pathname}`);
+          continue;
+        }
+        const relative = pathname === '/' ? 'index.html' : `${pathname.slice(1)}index.html`;
+        try {
+          const html = await readFile(path.join(distDir, relative), 'utf8');
+          if (!html.includes(CONTENT_MARKER)) errors.push(`sitemap 경로 본문 누락: ${pathname}`);
+        } catch {
+          errors.push(`sitemap 경로 정적 페이지 누락: ${pathname}`);
+        }
+      }
+    } else if (routes !== locs) {
+      errors.push(`route 수(${routes}) ≠ sitemap <loc> 수(${locs}) — 부분 손상/드리프트`);
+    }
   }
 
   const protectedResult = await verifyProtectedPages(distDir, protectedManifest);
   errors.push(...protectedResult.errors);
+
+  let requiredPaths = careerPaths;
+  let expectedTitles = careerTitles;
+  if (requiredPaths === undefined && distDir === DEFAULT_DIST_DIR) {
+    try {
+      const manifest = JSON.parse(await readFile(DEFAULT_CAREER_LINKS_PATH, 'utf8'));
+      requiredPaths = manifest.paths;
+      expectedTitles = manifest.caseTitles;
+    } catch (error) {
+      errors.push(`채용 링크 목록 읽기 실패: ${error.code ?? error.message}`);
+    }
+  }
+  if (requireCareerPaths && requiredPaths === undefined) errors.push('채용 링크 목록 누락');
+  if (requiredPaths !== undefined) {
+    if (!Array.isArray(requiredPaths) || requiredPaths.length === 0 || new Set(requiredPaths).size !== requiredPaths.length || requiredPaths.some((item) => typeof item !== 'string' || !/^\/(?:cases\/(?:[a-z0-9-]+\/)?)?$/.test(item))) {
+      errors.push('채용 링크 목록 형식이 올바르지 않음');
+    } else {
+      const casePaths = requiredPaths.filter((item) => /^\/cases\/[a-z0-9-]+\/$/.test(item));
+      if (requireCareerTitles && casePaths.length > 0 && !expectedTitles) errors.push('채용 사례 제목 목록 누락');
+      if (expectedTitles && (typeof expectedTitles !== 'object' || Array.isArray(expectedTitles) || JSON.stringify(Object.keys(expectedTitles).sort()) !== JSON.stringify([...casePaths].sort()))) {
+        errors.push('채용 사례 제목 목록과 경로가 일치하지 않음');
+      }
+      for (const urlPath of requiredPaths) {
+        const relative = urlPath === '/' ? 'index.html' : `${urlPath.slice(1)}index.html`;
+        let html;
+        try {
+          html = await readFile(path.join(distDir, relative), 'utf8');
+        } catch {
+          errors.push(`채용 링크 정적 페이지 누락: ${urlPath}`);
+          continue;
+        }
+        if (!html.includes(CONTENT_MARKER)) errors.push(`채용 링크 본문 누락: ${urlPath}`);
+        if (/^\/cases\/[a-z0-9-]+\/$/.test(urlPath) && (!html.includes('class="page case-detail"') || /name="robots" content="noindex, follow"/.test(html))) {
+          errors.push(`채용 링크가 현재 사례 글을 열지 않음: ${urlPath}`);
+        }
+        if (/^\/cases\/[a-z0-9-]+\/$/.test(urlPath) && expectedTitles) {
+          const title = expectedTitles[urlPath];
+          const escaped = typeof title === 'string' ? title.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') : '';
+          if (!escaped || !html.includes(`<h1>${escaped}</h1>`) || !html.includes(`<link rel="canonical" href="${SITE_URL}${urlPath}"`)) {
+            errors.push(`채용 링크의 글 정체성 불일치: ${urlPath}`);
+          }
+        }
+      }
+    }
+  }
+
+  let writingPaths = submittedPaths;
+  if (writingPaths === undefined && distDir === DEFAULT_DIST_DIR) {
+    try {
+      writingPaths = JSON.parse(await readFile(DEFAULT_SUBMITTED_LINKS_PATH, 'utf8')).paths;
+    } catch (error) {
+      errors.push(`제출본 글 목록 읽기 실패: ${error.code ?? error.message}`);
+    }
+  }
+  if (requireSubmittedPaths && writingPaths === undefined) errors.push('제출본 글 목록 누락');
+  if (writingPaths !== undefined) {
+    if (!Array.isArray(writingPaths) || writingPaths.length === 0 || new Set(writingPaths).size !== writingPaths.length || writingPaths.some((item) => typeof item !== 'string' || !/^\/cases\/[a-z0-9-]+\/$/.test(item))) {
+      errors.push('제출본 글 목록 형식이 올바르지 않음');
+    } else {
+      const expected = [...writingPaths].sort();
+      for (const route of ['writing', 'cases']) {
+        let html;
+        try {
+          html = await readFile(path.join(distDir, route, 'index.html'), 'utf8');
+        } catch {
+          errors.push(`${route} 글 목록 정적 페이지 누락`);
+          continue;
+        }
+        const links = [...html.matchAll(/<a\b[^>]*href="(\/cases\/[a-z0-9-]+)"/g)].map((match) => `${match[1]}/`);
+        if (JSON.stringify([...links].sort()) !== JSON.stringify(expected)) {
+          errors.push(`${route} 글 목록이 제출본 링크와 다름`);
+        }
+        if (/href="\/(?:notes|logs)(?:\/|#|")/.test(html)) {
+          errors.push(`${route} 글 목록에 이전 기록 링크가 남음`);
+        }
+      }
+    }
+  }
 
   return { ok: errors.length === 0, errors, routes, locs, protectedPages: protectedResult.protectedPages };
 }

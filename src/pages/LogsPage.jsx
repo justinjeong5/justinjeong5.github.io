@@ -38,8 +38,8 @@ function LogsPage() {
       <header className="page-header">
         <p className="eyebrow">Archive</p>
         <h1>지난 작업 기록</h1>
-        <p>시간순으로 남긴 짧은 기록을 보관합니다. 지금은 문제와 설계 판단을 묶은 경험 기록을 중심으로 글을 씁니다.</p>
-        <Link className="see-all-link" to={ROUTES.cases}>최근 개발 경험 읽기</Link>
+        <p>표시된 날짜는 원래 기록 시점이고, 본문은 나중에 다시 정리했습니다. 최근에 쓴 글은 개발 경험에서 볼 수 있습니다.</p>
+        <Link className="see-all-link" to={ROUTES.writing}>글 목록으로</Link>
       </header>
 
       {logs.length === 0 ? (

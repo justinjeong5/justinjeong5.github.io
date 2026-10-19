@@ -19,12 +19,7 @@ function HomePage() {
       <header className="career-intro">
         <p className="eyebrow">{siteData.role} · {siteData.careerLine}</p>
         <h1>{siteData.name} <span>Justin Jeong</span></h1>
-        <p className="career-lead">버즈빌에서 광고·리워드 제품의 핵심 프론트엔드를 구축했습니다. 서버가 제공한 참여 상태를 화면 행동으로 해석하고, 광고 SDK의 실행·완료 신호와 앱·웹 복귀를 구별하며 QA와 출시 후 관측까지 이어 왔습니다.</p>
-        <nav className="career-actions" aria-label="빠른 이동">
-          <a className="career-primary-link" href="#selected-work">대표 작업 보기</a>
-          <Link to={ROUTES.about}>경력 보기</Link>
-          <Link to={ROUTES.writing}>글에서 찾아보기</Link>
-        </nav>
+        <p className="career-lead">버즈빌에서 광고·리워드 제품의 주요 화면을 만들었습니다. 앱과 웹에서 참여하고 보상을 확인하는 과정에는 서버의 참여 상태, 광고 SDK의 완료 신호, 앱으로 돌아오는 시점이 맞물립니다. 이 과정에서 사용자가 무엇을 보고 다음에 무엇을 할 수 있는지 정하고, QA와 출시 뒤 문제 확인까지 맡아 왔습니다.</p>
       </header>
 
       <section id="selected-work" className="career-section" aria-labelledby="selected-work-title">
@@ -33,7 +28,7 @@ function HomePage() {
             <p className="eyebrow">버즈빌에서 맡은 일</p>
             <h2 id="selected-work-title">대표 작업</h2>
           </div>
-          <Link to={ROUTES.cases}>개발 경험 모두 보기 →</Link>
+          <Link to={ROUTES.writing}>다른 글 보기 →</Link>
         </div>
         <div className="career-work-grid">
           {featured.map((card) => (

@@ -1,4 +1,6 @@
 ---
+archived: true
+supersededBy: "/writing"
 title: "묶음 응답의 순서와 부분 실패 계약 테스트"
 status: Documented
 statusLabel: 과정 기록
@@ -6,13 +8,13 @@ category: product
 series: work-evidence-2026
 role: "AI와 묶음 응답의 위치·식별 계약 테스트 보강"
 period: "2026"
-summary: "둘째 결과가 없다고 셋째 결과를 둘째 칸에 넣으면 다른 요청의 결과가 된다. 빈 자리까지 지켜야 하는 묶음 응답의 약속을 테스트한 이야기."
+summary: "묶음 응답에서 둘째 결과가 없다고 셋째 결과를 앞당겨 놓으면 다른 요청의 결과가 됩니다. 실패한 자리도 그대로 남기는지 테스트했습니다."
 date: "2026-10-01"
 dateBasis: context
 collection: records
 tags: ["외부 연동","부분 응답","계약 테스트"]
-updated: 2026-10-02
-lastTendedAt: 2026-10-02
+updated: 2026-10-19
+lastTendedAt: 2026-10-19
 ---
 
 A·B·C 세 요청을 묶어 보내고 각 결과를 같은 번호의 칸에 받는 경우를 생각해 보겠습니다. B의 결과가 없다고 그 칸을 지우면 C의 결과가 둘째 칸으로 당겨집니다. 사용하는 쪽이 둘째 칸을 B의 결과로 읽으면, 누락된 결과뿐 아니라 남아 있는 결과도 다른 대상에 잘못 연결됩니다.

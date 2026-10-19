@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "source": "2026-10-19 resume/제출본 PDF link-annotation audit",
+  "paths": [
+    "/cases/ai-cross-functional-delivery/",
+    "/cases/article-content-integration/",
+    "/cases/cs-workflow-product/",
+    "/cases/experiment-routing-context/",
+    "/cases/frontend-delivery-boundary/",
+    "/cases/gateway-rendering-context/",
+    "/cases/playhub-diagnostic-sampling/",
+    "/cases/playhub-product-architecture/",
+    "/cases/poketokenbar-account-cache/",
+    "/cases/pullup-record-driven-coach/",
+    "/cases/shared-ad-execution-delivery/"
+  ]
+}
