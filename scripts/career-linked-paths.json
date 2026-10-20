@@ -21,20 +21,20 @@
     "/cases/shared-ad-execution-delivery/"
   ],
   "caseTitles": {
-    "/cases/advertiser-integration-workflow/": "광고주가 연동을 검증하고 집행을 결정하는 도구 만들기",
-    "/cases/ai-cross-functional-delivery/": "미지원 문의를 저장 전에 막고 DB 반영 뒤 서버 코드를 병합하기",
-    "/cases/article-content-integration/": "같은 기사 카드에 새 광고가 배정돼도 노출을 놓치지 않기",
-    "/cases/cs-workflow-product/": "적립 요청 수락과 상태 반영을 구분한 운영 화면",
-    "/cases/deployment-config-contracts/": "여러 팀이 쓰는 배포 도구를 제품에 묶이지 않게 개선하기",
-    "/cases/experiment-routing-context/": "추천 배너의 보너스를 참여 화면까지 이어 주기",
-    "/cases/frontend-delivery-boundary/": "화면 변경을 서버 배포에서 분리하기까지",
-    "/cases/gateway-rendering-context/": "Quest 진입의 빈 화면을 추적하고 화면 전환 방식을 바꾸다",
-    "/cases/inapp-content-participation/": "외부 웹에서 앱 안으로 콘텐츠 참여 경험 확장하기",
-    "/cases/playhub-diagnostic-sampling/": "진단 로그를 줄이면서 한 기기의 흐름은 남기기",
-    "/cases/playhub-product-architecture/": "앱과 웹에서 이어지는 리워드 참여 흐름 만들기",
-    "/cases/poketokenbar-account-cache/": "계정을 바꿔도 이전 사용 한도가 보일 수 있었다 — PokeTokenBar 기여",
-    "/cases/pullup-record-driven-coach/": "운동을 기록했는데 다음 계획이 바뀌지 않았다 — 풀업 30을 만든 과정",
-    "/cases/selectable-mission-product/": "운영자의 구성과 사용자의 선택을 연결하는 미션 상품 만들기",
-    "/cases/shared-ad-execution-delivery/": "광고 후보는 왔는데 공급사 SDK가 실행되지 않았다"
+    "/cases/advertiser-integration-workflow/": "광고주 전환 테스트의 시작과 성공을 분리하다",
+    "/cases/ai-cross-functional-delivery/": "화면에서 숨긴 문의를 서버에서도 막기까지",
+    "/cases/article-content-integration/": "같은 기사에 새 광고가 붙었을 때, 무엇을 다시 측정할까",
+    "/cases/cs-workflow-product/": "적립 요청이 성공해도 문의가 끝나지 않았을 때",
+    "/cases/deployment-config-contracts/": "배포 환경을 묶어 보여주되, 존재하지 않는 대상을 만들지 않기",
+    "/cases/experiment-routing-context/": "추천 배너에서 약속한 보너스가 다음 화면에서 사라지지 않게",
+    "/cases/frontend-delivery-boundary/": "서버에 묶인 광고 화면을 프론트엔드 배포로 옮기기",
+    "/cases/gateway-rendering-context/": "Quest 링크가 빈 화면에 머문 지점을 찾고, 페이지 이동을 없애다",
+    "/cases/inapp-content-participation/": "앱 열기에 실패해도 참여 정보는 실제 경로를 가리켜야 한다",
+    "/cases/playhub-diagnostic-sampling/": "참여 지표는 지키고 진단 로그만 줄이기",
+    "/cases/playhub-product-architecture/": "PlayHub 초기 구축부터 앱·웹 참여 확장까지",
+    "/cases/poketokenbar-account-cache/": "계정을 바꿨는데 이전 한도가 보였다: PokeTokenBar 캐시 수정",
+    "/cases/pullup-record-driven-coach/": "운동 기록이 다음 계획을 바꾸게 만들기 — 풀업 30",
+    "/cases/selectable-mission-product/": "새 미션 세트를 복제했는데 이전 미션을 가리켰다",
+    "/cases/shared-ad-execution-delivery/": "광고 노출은 기록됐는데 SDK는 왜 실행되지 않았을까"
   }
 }

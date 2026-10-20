@@ -4,9 +4,9 @@ import { compareContextDates } from './article-dates.js';
 export const WORK_SERIES = 'work-evidence-2026';
 
 export const RECOMMENDED_READS = [
-  { label: '제품을 만든 과정', title: '앱과 웹에서 이어지는 리워드 참여 흐름 만들기', description: '초기 구축에서 앱·웹 참여 규칙과 후속 출시까지.', to: ROUTES.caseDetail('playhub-product-architecture') },
-  { label: '기술적으로 파고든 문제', title: '진단 로그를 줄이면서 한 기기의 흐름은 남기기', description: '제품 지표는 유지하고 기기별 진단 흐름을 남기기.', to: ROUTES.caseDetail('playhub-diagnostic-sampling') },
-  { label: '적립 문의 처리', title: '적립 요청 수락과 상태 반영을 구분한 운영 화면', description: '요청 수락과 상태 반영을 나눠 운영자에게 알리기.', to: ROUTES.caseDetail('cs-workflow-product') },
+  { label: '제품을 만든 과정', title: 'PlayHub 초기 구축부터 앱·웹 참여 확장까지', description: '초기 구축에서 앱·웹 참여 규칙과 후속 출시까지.', to: ROUTES.caseDetail('playhub-product-architecture') },
+  { label: '기술적으로 파고든 문제', title: '참여 지표는 지키고 진단 로그만 줄이기', description: '제품 지표는 유지하고 기기별 진단 흐름을 남기기.', to: ROUTES.caseDetail('playhub-diagnostic-sampling') },
+  { label: '적립 문의 처리', title: '적립 요청이 성공해도 문의가 끝나지 않았을 때', description: '요청 수락과 상태 반영을 나눠 운영자에게 알리기.', to: ROUTES.caseDetail('cs-workflow-product') },
 ];
 
 export const WORK_TOPICS = [

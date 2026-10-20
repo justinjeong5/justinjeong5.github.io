@@ -38,7 +38,7 @@ function LogsPage() {
       <header className="page-header">
         <p className="eyebrow">Archive</p>
         <h1>지난 작업 기록</h1>
-        <p>표시된 날짜는 원래 기록 시점이고, 본문은 나중에 다시 정리했습니다. 최근에 쓴 글은 개발 경험에서 볼 수 있습니다.</p>
+        <p>당시의 질문을 짧게 남긴 아카이브입니다. 날짜는 처음 기록한 시점이고, 본문은 이후 다시 정리했습니다. 자세히 보기의 링크는 보관된 이전 노트로 이어질 수 있습니다. 현재의 경험 사례는 글 목록에서 읽을 수 있습니다.</p>
         <Link className="see-all-link" to={ROUTES.writing}>글 목록으로</Link>
       </header>
 
@@ -61,6 +61,7 @@ function LogsPage() {
                     <Sprout size={14} aria-hidden="true" />
                     {log.type === 'Reviewed' ? '재정리' : log.type}
                   </span>
+                  {log.updated ? <span className="log-updated">본문 갱신 {log.updated}</span> : null}
                 </header>
                 <h2>{log.title}</h2>
                 <p>{log.summary}</p>

@@ -1,7 +1,7 @@
 ---
-title: "참여를 마쳤는데 화면은 그대로였다 — TanStack Query로 다시 읽을 상태 고르기"
+title: "참여를 마쳤는데 화면은 그대로였다 — TanStack Query에서 나눈 세 가지 판단"
 status: Documented
-summary: "광고·리워드 화면의 실제 사례로 TanStack Query의 캐시 키, 첫 조회와 반복 조회, 재조회와 재시도 차이를 설명합니다. 제가 고친 경로와 동료의 기여를 구분했습니다."
+summary: "참여 뒤에도 낡은 화면이 남는 문제를 여러 제품에서 겪었습니다. 같은 데이터의 기준, 다시 읽을 시점, 실패 뒤 안전하게 반복할 일을 TanStack Query의 기능과 실제 수정 사례로 설명합니다."
 date: "2026-10-20"
 dateBasis: context
 collection: records
@@ -10,42 +10,37 @@ updated: 2026-10-20
 lastTendedAt: 2026-10-20
 ---
 
-사용자가 광고나 콘텐츠 참여를 마치고 화면에 돌아왔는데, 참여 상태는 이전 그대로였습니다. 하나의 버그가 아니라 여러 화면에서 반복해 만난 문제였습니다. 서버 응답을 읽는 코드가 있어도 **어느 결과를 같은 데이터로 보고, 돌아온 순간 무엇을 다시 확인할지** 잘못 정하면 화면은 사용자의 행동을 따라가지 못합니다.
+사용자가 광고나 콘텐츠 참여를 마치고 화면에 돌아왔는데 참여 상태는 이전 그대로였습니다. 처음에는 재조회를 더 자주 하면 될 것 같았습니다. 하지만 한 화면에서는 **조회와 캐시 갱신이 서로 다른 데이터를 가리켰고**, 다른 화면에서는 **돌아온 뒤 무엇을 다시 읽을지** 정하지 않았습니다. 완료 요청의 결과가 불명확할 때는 같은 요청을 다시 보내도 되는지도 판단해야 했습니다.
 
-이 글은 그 장면을 따라 `queryKey`, `enabled`, 신선도 설정, 재조회, 재시도를 각각 언제 쓰는지 설명합니다. 저는 참여 상태의 캐시 키를 고치고 콘텐츠 복귀 시 조회를 연결했으며, 완료 결과가 불명확할 때 상태를 다시 확인하는 경로를 구현했습니다. 조회 범위를 세밀하게 나누는 일과 초기 Quest 데이터 레이어에는 동료들의 기여도 있습니다.
+저는 참여 상태의 캐시 키를 맞추고 콘텐츠 복귀 시 재조회를 연결했으며, 완료 결과가 불명확할 때 상태를 확인하는 경로를 구현했습니다. 조회 범위를 더 세밀하게 나눈 작업과 초기 Quest 데이터 레이어에는 동료들의 기여도 있습니다. 아래의 사례는 하나의 장애가 아니라, **참여 전후에 서버 상태를 화면에 맞추며 세 번 답해야 했던 질문**입니다.
 
-먼저 기본형은 짧습니다. `queryFn`에 서버 요청을 적고, `queryKey`로 결과의 식별자를 정합니다. Query는 그 키로 결과를 저장하고, 화면이 데이터를 관찰하는 동안 요청 중·성공·실패 상태를 알려줍니다.
+| 먼저 정할 질문 | TanStack Query에서 구별할 기능 | 잘못 정하면 |
+| --- | --- | --- |
+| 같은 데이터는 무엇인가? | `queryKey`, `setQueryData` | 참여 뒤 다른 캐시를 고쳐 화면이 그대로 남음 |
+| 언제 다시 읽어야 하는가? | `enabled`, 폴링·신선도·재조회 | 첫 목록을 못 읽거나 복귀 뒤 낡은 상태를 봄 |
+| 실패 뒤 무엇을 반복해도 되는가? | `retry`, `useMutation`, 직접 요청 | 이미 처리됐을 수 있는 참여를 다시 보냄 |
 
-```tsx
-useQuery({
-  queryKey: ["participation-status", viewerId],
-  queryFn: () => fetchParticipationStatus(viewerId),
-});
-```
-
-뒤에 나올 사례의 공통 흐름은 **목록에서 참여 대상을 고르고 → 콘텐츠나 광고를 열고 → 화면에 돌아와 참여·보상 상태를 확인하는 것**입니다. 이 글에서 ‘참여 문맥’은 현재 사용자·앱·참여 회차처럼 요청 결과를 바꾸는 입력을 뜻합니다. 실제 인앱·외부 진입의 차이는 [인앱 콘텐츠 참여 기록](/cases/inapp-content-participation/)에서 더 자세히 다뤘습니다.
+여기서 ‘참여 문맥’은 현재 사용자·앱·참여 회차처럼 요청 결과를 바꾸는 입력입니다. 공통 흐름은 **참여 대상을 고르고 → 콘텐츠나 광고를 열고 → 돌아와 상태와 보상을 확인하는 것**입니다. 인앱·외부 진입 차이는 [인앱 콘텐츠 참여 기록](/cases/inapp-content-participation/)에서 더 다뤘습니다.
 
 <nav className="article-toc" aria-label="이 글의 목차">
-  <p>필요한 기능부터 읽기</p>
+  <p>세 질문을 기능별로 읽기</p>
   <ol>
-    <li><a href="#query-key">같은 데이터를 가리키는 키</a></li>
-    <li><a href="#query-conditions">첫 조회와 반복 조회</a></li>
-    <li><a href="#freshness-and-refetch">캐시 신선도와 재조회</a></li>
-    <li><a href="#mutation-and-retry">변경 요청과 재시도</a></li>
-    <li><a href="#direct-request">직접 요청이 나았던 경우</a></li>
+    <li><a href="#query-key">같은 데이터의 기준: queryKey</a></li>
+    <li><a href="#query-conditions">첫 조회와 반복 조회: enabled와 폴링</a></li>
+    <li><a href="#freshness-and-refetch">복귀 뒤 다시 읽기: 신선도와 재조회</a></li>
+    <li><a href="#mutation-and-retry">실패 뒤 안전한 행동: mutation과 retry</a></li>
+    <li><a href="#direct-request">세 번째 질문의 예외: 직접 요청이 나았던 때</a></li>
   </ol>
 </nav>
 
-<h2 id="query-key"><code>queryKey</code>: 서버 응답에 붙이는 데이터 식별자</h2>
+<h2 id="query-key"><code>queryKey</code>: 조회와 갱신이 같은 데이터를 말하는가</h2>
 
-TanStack Query는 `queryKey`로 캐시를 구분합니다. 키가 같으면 같은 데이터를 관찰하고 있다고 봅니다. 따라서 `queryFn`의 결과를 바꾸는 값이 있다면 키에도 그 값이 들어가야 합니다. 공식 [Query Keys 문서](https://tanstack.com/query/latest/docs/framework/react/guides/query-keys)도 이 원칙을 설명합니다.
+TanStack Query는 `queryKey`로 결과를 구분합니다. [Query Keys 문서](https://tanstack.com/query/latest/docs/framework/react/guides/query-keys)가 설명하듯 요청 결과를 바꾸는 값은 키에도 있어야 합니다. 키가 비슷해 보여도 배열의 한 값이 다르면 다른 캐시입니다.
 
-키는 최초 조회에만 쓰는 이름이 아닙니다. `queryClient`는 Query가 저장한 결과를 다루는 객체입니다. 이 객체의 `getQueryData`로 읽을 때, `setQueryData`로 수정할 때, `invalidateQueries`로 무효화할 때도 키가 어느 데이터를 가리키는지 결정합니다. 예를 들어 같은 상태 API라도 사용자나 앱이 달라지면 서로 다른 상태를 캐시해야 합니다.
-
-이 원칙을 늦게 확인한 사례가 있었습니다. 참여형 콘텐츠에서 상태를 조회할 때는 사용자 식별자를 키에 포함했지만, 참여 뒤 캐시를 고치는 호출에는 그 값이 빠져 있었습니다. 서버가 새 값을 돌려줘도 화면의 한 부분이 이전 캐시를 보거나 갱신 코드가 조회 코드와 다른 항목을 수정할 수 있었습니다.
+참여형 콘텐츠에서는 조회 키에 사용자 식별자가 있었지만, 참여 뒤 캐시를 고치는 호출에는 그 값이 빠진 사례가 있었습니다. 서버에서 새 결과가 와도 화면이 보고 있는 항목과 수정한 항목이 달랐습니다.
 
 ```tsx
-// 당시 문제를 설명하기 위한 축약 예시
+// 당시 불일치를 보여 주는 축약 예시
 useQuery({
   queryKey: ["status", deviceId, appId, viewerId],
   queryFn: () => fetchStatus({ deviceId, appId, viewerId }),
@@ -57,9 +52,7 @@ queryClient.setQueryData(
 );
 ```
 
-두 배열은 다른 키입니다. `setQueryData`는 비슷한 이름의 캐시를 찾아 주지 않습니다. 전달한 키의 항목을 수정하거나 새 항목을 만들 수 있습니다. 이런 상태에서 재조회를 더 자주 하는 것만으로는 서로 다른 키를 가리키는 문제가 해결되지 않습니다.
-
-수정에서는 조회·읽기·수정·무효화가 하나의 키 생성 함수를 쓰도록 맞췄습니다. 이후 팀에서 인앱 여부도 요청과 키에 반영했습니다.
+`setQueryData`는 비슷한 키를 찾아 수정하지 않습니다. 전달한 키의 항목을 수정하거나 새 항목을 만들 수 있습니다. 재조회 주기를 줄여도 **서로 다른 항목을 가리키는 문제**는 해결되지 않습니다. 저는 조회·읽기·수정·무효화가 같은 키 생성 함수를 쓰도록 맞췄습니다. 이후 팀에서 인앱 여부도 요청과 키에 반영했습니다.
 
 ```tsx
 const statusKey = (context: {
@@ -69,74 +62,41 @@ const statusKey = (context: {
   surface: "in-app" | "external";
 }) => ["participation-status", context] as const;
 
-useQuery({
-  queryKey: statusKey(context),
-  queryFn: () => fetchStatus(context),
-  enabled: isContextReady(context),
-});
-
-queryClient.getQueryData(statusKey(context));
+useQuery({ queryKey: statusKey(context), queryFn: () => fetchStatus(context) });
 queryClient.setQueryData(statusKey(context), updateAfterParticipation);
 queryClient.invalidateQueries({ queryKey: statusKey(context), exact: true });
 ```
 
-`invalidateQueries`는 일치하는 캐시를 낡은 것으로 표시하고 활성 조회의 재확인으로 이어질 수 있습니다. `exact: true`는 이 키와 정확히 일치하는 항목만 대상으로 삼으려는 예시의 선택입니다. 하위 키를 포함한 범위를 갱신하려면 다르게 설정해야 합니다. **키는 데이터의 정체성을 설명하고, 캐시에 손대는 모든 호출은 같은 정체성을 말해야 합니다.** 일부 상태를 오래 fresh로 보던 화면에서는 키가 틀린 결과도 오래 재사용될 수 있었습니다. 캐시 시간을 줄이기 전에 식별자를 확인해야 했던 이유입니다.
+`invalidateQueries`는 일치하는 캐시를 낡은 것으로 표시하고 활성 조회의 재확인으로 이어질 수 있습니다. 예시의 `exact: true`는 한 키만 대상으로 삼으려는 선택입니다. **키는 데이터의 정체성이고, 캐시에 손대는 호출은 같은 정체성을 말해야 합니다.**
 
-<h2 id="query-conditions"><code>enabled</code>와 <code>refetchInterval</code>: 조회 가능 여부와 반복 주기</h2>
+<h2 id="query-conditions"><code>enabled</code>와 <code>refetchInterval</code>: 처음 읽을 수 있는가, 계속 읽을 필요가 있는가</h2>
 
-`enabled`는 Query가 자동 조회를 시작할 조건입니다. `refetchInterval`은 관찰 중인 데이터를 일정한 간격으로 다시 가져올지 정합니다. 둘은 같은 스위치가 아닙니다. [폴링 문서](https://tanstack.com/query/latest/docs/framework/react/guides/polling)에 따르면 주기적 재조회는 데이터가 fresh인지와도 별도로 동작합니다.
+`enabled`는 자동 첫 조회를 시작할 조건이고, `refetchInterval`은 관찰 중인 데이터를 다시 가져올 간격입니다. [폴링 문서](https://tanstack.com/query/latest/docs/framework/react/guides/polling)에 따르면 폴링은 fresh 여부와도 별도로 동작합니다. 두 설정을 같은 잠금 스위치로 쓰면 필요한 첫 데이터까지 사라질 수 있습니다.
 
-한 미션 화면에서 “잠김” 상태를 처음에는 조회 자체를 막는 조건으로 썼습니다. 그러나 잠겨 있어도 사용자는 현재 미션 목록을 봐야 했습니다. 목록의 최초 조회에 필요한 것은 참여 문맥이고, 잠금이 결정하는 것은 계속 확인할 필요가 있는지였습니다.
+미션 화면에서 잠김 상태를 처음에는 조회 자체를 막는 조건으로 사용했습니다. 하지만 사용자는 잠겨 있어도 현재 미션 목록을 봐야 했습니다. 첫 조회에는 사용자·앱 문맥이 필요하고, 잠금은 **그 뒤에도 주기적으로 확인할지**를 결정했습니다.
 
-```tsx
-useQuery({
-  queryKey: ["missions", participationContext],
-  queryFn: () => fetchMissions(participationContext),
-  enabled: hasParticipationContext,
-  refetchInterval: missionLocked ? false : 30_000,
-});
-```
+| 화면 상태 | `enabled` | 반복 조회 | 사용자가 보는 결과 |
+| --- | --- | --- | --- |
+| 참여 문맥이 없음 | `false` | 없음 | 준비되지 않은 요청을 보내지 않음 |
+| 문맥은 있고 미션은 잠김 | `true` | 중지 | 현재 목록은 볼 수 있음 |
+| 문맥이 있고 참여 가능 | `true` | 실행 | 목록을 읽고 정한 간격으로 다시 확인 |
 
-같은 화면에서도 두 설정을 다르게 조합해야 했습니다.
+다른 제휴 앱의 콘텐츠 진입에서도 `enabled`를 사용했지만 이유는 달랐습니다. 그 화면은 기기 문맥과 세션이 모이기 전에는 광고 목록을 요청할 수 없었습니다. **첫 조회를 기다리는 경우**와 **이미 읽은 목록의 폴링을 멈추는 경우**를 구별한 것입니다.
 
-| 화면 상태 | `enabled` | `refetchInterval` | 실제로 달라지는 것 |
-|---|---|---|---|
-| 참여 문맥이 아직 없음 | `false` | 의미 없음 | 자동 첫 조회를 시작하지 않음 |
-| 문맥은 있고 미션은 잠김 | `true` | `false` | 현재 목록은 읽되 주기적 재조회는 멈춤 |
-| 문맥이 있고 참여 가능 | `true` | 30초 | 목록을 읽고 주기적으로 다시 확인 |
+<h2 id="freshness-and-refetch">신선도와 재조회: 화면에 돌아온 순간 무엇을 확인할까</h2>
 
-제휴 앱의 콘텐츠 진입 화면에서는 다른 이유로 `enabled`가 필요했습니다. 기기 문맥과 세션이 준비되기 전에는 광고 목록을 요청하지 않아야 했습니다. 선행 정보가 갖춰졌을 때 조회를 시작하고, 참여 주기와 요청 문맥에 따라 캐시를 나눴습니다. 미션 잠금 사례는 이미 읽을 수 있는 상태에서 **다음 조회 주기**를 바꿨고, 이 사례는 요청에 필요한 정보가 모일 때까지 **첫 조회**를 기다렸습니다.
+캐시를 오래 둔다는 말에는 신선도, 보관 기간, 다시 요청할 시점이 섞입니다. [기본값 문서](https://tanstack.com/query/latest/docs/framework/react/guides/important-defaults)를 읽을 때도 이 셋을 나눠야 합니다.
 
-<h2 id="freshness-and-refetch"><code>staleTime</code>과 재조회: fresh와 최신은 같은 말일까</h2>
+| 설정·동작 | 답하는 질문 |
+| --- | --- |
+| `staleTime` | 캐시를 언제까지 fresh로 취급할까? |
+| `gcTime` | 아무 화면도 관찰하지 않는 캐시를 얼마나 보관할까? |
+| `refetchOnMount` | 조회를 쓰는 화면이 다시 마운트될 때 요청할까? |
+| 명시적 재조회 | 화면이 그대로인 채 외부에서 복귀했을 때 지금 다시 읽을까? |
 
-### fresh로 볼 시간과 재진입할 때의 재조회
+**fresh는 라이브러리가 캐시를 신선하게 취급한다는 뜻이고, 최신은 서버의 현재 상태와 실제로 같다는 뜻입니다.** 한 콘텐츠 목록에는 긴 `staleTime`을 두면서 포커스 변화로 값이 흔들리지 않게 했습니다. 재진입으로 컴포넌트가 다시 마운트될 때는 `refetchOnMount: "always"`로 확인했습니다. 반면 화면이 마운트된 채 외부 콘텐츠에서 돌아오는 경우는 별도 복귀 처리에서 재조회했습니다. `gcTime`을 짧게 한다고 현재 화면을 더 자주 조회하는 것은 아닙니다.
 
-캐시를 “오래 쓴다”는 말에는 신선도, 보관 기간, 다시 요청할 시점이 섞이기 쉽습니다. [TanStack Query의 기본값 문서](https://tanstack.com/query/latest/docs/framework/react/guides/important-defaults)도 이 조건을 나누어 설명합니다. 어느 설정도 “서버 상태가 지금도 맞다”는 제품 보증은 아닙니다.
-
-**fresh는 `staleTime`을 기준으로 캐시를 신선하게 취급한다는 뜻이고, 최신은 실제 서버의 현재 상태와 일치한다는 뜻입니다.** 제휴 앱 콘텐츠 목록에는 긴 `staleTime`을 두면서 포커스 변화로 목록이 바뀌지 않게 했습니다. `useQuery`를 쓰는 컴포넌트가 다시 마운트되는 재진입에서는 `refetchOnMount: "always"`로 서버를 다시 확인했습니다. 기존 화면이 마운트된 채 외부 화면에서 돌아오는 경우는 다릅니다. 이때는 아래에서 설명할 복귀 처리로 재조회했습니다.
-
-세 설정은 모두 캐시와 관련 있지만 서로 다른 질문에 답합니다.
-
-| 설정 | 답하는 질문 |
-|---|---|
-| `staleTime` | 지금 있는 데이터를 언제까지 fresh로 볼까? |
-| `gcTime` | 어느 화면에서도 관찰하지 않게 된 캐시를 얼마나 보관할까? |
-| `refetchOnMount` | `useQuery`를 쓰는 컴포넌트가 마운트될 때 서버에 요청할까? |
-
-그래서 `staleTime: Infinity`여도 `refetchOnMount: "always"`를 두면 컴포넌트 재마운트 시 다시 요청할 수 있습니다. `gcTime`을 짧게 한다고 현재 화면에서 더 자주 조회되는 것은 아닙니다. 재조회도 새 광고 할당을 보장하지는 않고, 서버가 돌려준 결과를 다시 확인합니다.
-
-### 화면 복귀 때 어느 Query를 다시 읽을까
-
-화면에서 나갔다 돌아오는 경우에는 무엇을 재조회할지도 골라야 했습니다. 콘텐츠를 열고 외부 화면에서 돌아오면 출발 전 목록의 참여 상태가 바뀌었을 수 있습니다. 복귀 처리에서는 실제 이탈이 있었는지와 경과 시간을 확인한 뒤 활성 콘텐츠 Query를 다시 읽고, 실패는 별도로 기록했습니다. 화면 첫 진입의 포커스 이벤트를 복귀로 오인하지 않기 위해서였습니다.
-
-처음에는 관련 콘텐츠를 하나의 접두 키 아래에서 재조회했습니다. 섹션이 늘어나자 “관련된 활성 조회 모두”와 “현재 섹션 하나”가 다른 선택이 됐습니다. 아래 두 캐시 항목을 예로 들어 보겠습니다.
-
-```tsx
-["contents", { section: "recommendations", viewerId }]
-["contents", { section: "magazine", viewerId }]
-```
-
-`queryKey: ["contents"]`로 활성 Query를 다시 읽으면 두 섹션이 모두 대상이 될 수 있습니다. 매거진만 확인해야 한다면 완전한 키와 `exact: true`를 전달합니다. 저희는 공통 복귀 경로에 재조회를 연결한 뒤, 섹션을 나누는 작업에서 동료와 함께 필요한 곳의 키를 정확히 전달하도록 조정했습니다. 제품에서 이 분리가 필요했던 장면은 [기사 콘텐츠 통합 기록](/cases/article-content-integration/)에도 남겼습니다.
+복귀 처리에서는 실제 이탈과 경과 시간을 확인한 뒤 활성 콘텐츠 Query를 다시 읽었습니다. 처음에는 관련 콘텐츠 전체를 접두 키로 재조회했지만, 섹션이 늘어나자 현재 돌아온 섹션과 다른 섹션을 구별해야 했습니다. 동료와 함께 필요한 화면에는 완전한 키와 `exact: true`를 전달하도록 조정했습니다.
 
 ```tsx
 await queryClient.refetchQueries(
@@ -145,89 +105,47 @@ await queryClient.refetchQueries(
 );
 ```
 
-`type: "active"`는 지금 관찰 중인 항목을 대상으로 삼습니다. `throwOnError: true`는 재조회 실패를 호출자가 처리할 수 있게 합니다. 어느 범위를 다시 읽을지는 API 이름만으로 정해지지 않습니다. 사용자가 보고 있는 다른 섹션까지 바뀌어야 하는지, 돌아온 섹션만 확인해야 하는지에 따라 키 범위를 정했습니다.
+여기서 `type: "active"`는 관찰 중인 항목을 대상으로 삼고, `throwOnError: true`는 실패를 복귀 처리에서 받을 수 있게 합니다. 비슷한 세 호출도 서로 다른 증거를 전제합니다.
 
-캐시를 손대는 세 함수도 비슷해 보이지만 이 화면에서는 맡은 일이 달랐습니다.
+| 호출 | 이 화면에서 알 수 있던 것 |
+| --- | --- |
+| `setQueryData` | 새 값이 이미 확인됐으므로 캐시에 반영함. 서버 요청은 하지 않음 |
+| `invalidateQueries` | 값은 모르지만 캐시가 낡았음을 알림. 활성·사용 가능한 조회는 기본적으로 재확인될 수 있음 |
+| `refetchQueries` | 새 값이 필요하므로 지정한 조회를 지금 실행함 |
 
-| 기능 | 이 화면에서 선택한 이유 |
-|---|---|
-| `setQueryData` | 이미 확인한 값이 있어 캐시에 즉시 반영함. 이 호출 자체는 서버에 묻지 않음 |
-| `invalidateQueries` | 최신 값은 몰라도 관련 캐시가 낡았음은 앎. 활성 상태이고 `enabled`인 조회는 기본적으로 다시 가져옴 |
-| `refetchQueries` | 최신 값을 모르므로 조건에 맞는 조회를 지금 다시 실행함. 이 복귀 처리에서는 활성 조회만 지정함 |
+두 재조회 함수 모두 Promise를 기다릴 수 있습니다. 차이는 기다림의 유무가 아니라 **언제, 어느 범위를 다시 읽을지에 대한 결정**입니다. 키 필터는 기본적으로 부분 일치하므로 한 섹션만 대상이면 `exact: true`가 필요합니다. `enabled: false`인 Query는 두 클라이언트 호출만으로 자동 재요청되지 않습니다. 자세한 조건은 [QueryClient](https://tanstack.com/query/latest/docs/framework/react/reference/classes/QueryClient)와 [비활성화](https://tanstack.com/query/latest/docs/framework/react/guides/disabling-queries) 문서에서 확인할 수 있습니다.
 
-참여 직후 이미 확인한 값만 화면에 반영할 때는 `setQueryData`를 쓸 수 있습니다. 값은 모르지만 관련 캐시가 낡았다는 사실을 알 때는 `invalidateQueries`를 쓰고, 복귀 이벤트에서 현재 활성 조회를 **지금 다시 실행**할 때는 `refetchQueries`를 썼습니다. 두 재조회 함수 모두 반환한 Promise를 기다릴 수 있으므로 차이는 “기다릴 수 있느냐”가 아닙니다.
+<h2 id="mutation-and-retry">변경 요청과 재시도: 실패 뒤 무엇을 다시 해도 안전한가</h2>
 
-조회 범위도 다릅니다. `setQueryData`는 전달한 정확한 키를 대상으로 하지만, `invalidateQueries`와 `refetchQueries`의 키 필터는 기본적으로 부분 일치합니다. 한 섹션만 다시 읽으려면 완전한 키와 `exact: true`로 좁힙니다.
-
-마지막으로 `enabled: false`인 Query는 이 두 클라이언트 호출만으로 자동 재요청되지 않습니다. [QueryClient 문서](https://tanstack.com/query/latest/docs/framework/react/reference/classes/QueryClient)와 [비활성화 문서](https://tanstack.com/query/latest/docs/framework/react/guides/disabling-queries)를 함께 봐야 하는 이유입니다.
-
-<h2 id="mutation-and-retry">변경 요청과 재시도: 실패 뒤 무엇을 다시 해도 되는가</h2>
-
-### 완료 POST와 상태 GET은 실패 뒤의 위험이 다르다
-
-`useMutation`은 참여나 수령처럼 서버 상태를 바꾸는 요청을 다룰 때 사용합니다. 이런 요청과 조회는 실패 뒤의 위험이 다릅니다. 같은 GET을 다시 읽는 일과 완료 POST를 한 번 더 보내는 일은 결과가 같지 않을 수 있습니다. POST가 시간초과돼도 서버는 이미 처리했을 수 있기 때문입니다.
-
-광고를 본 뒤 다음 보상 단계로 진행하는 Quest 미션에서 POST의 결과를 알 수 없을 때는 POST를 자동으로 반복하지 않고 상태 GET으로 다시 확인하는 복구 경로를 추가했습니다.
+참여 완료 POST가 시간초과되면 화면은 결과를 모르지만 서버는 이미 처리했을 수 있습니다. 같은 POST를 곧바로 다시 보내는 것과 상태 GET으로 현재 결과를 확인하는 것은 다릅니다. 광고 뒤 보상 단계로 가는 Quest 미션에서는 **완료 요청의 결과가 불명확하면 POST를 자동 반복하지 않고 상태를 다시 조회하는 경로**를 넣었습니다.
 
 ```text
 완료 POST의 결과를 알 수 없음
   ├─ 같은 POST를 자동 반복하지 않음
-  └─ 상태 GET으로 서버 상태를 다시 확인
-       ├─ 이미 처리됨 → 최신 상태에 맞는 다음 화면
-       ├─ 이전 상태가 보임 → 반영 지연 가능성이 있어 결과는 아직 미확정
-       └─ 확인도 실패함 → 결과를 확정하지 않고 실패 상태를 기록
+  └─ 상태 GET으로 다시 확인
+       ├─ 처리된 상태 → 최신 상태에 맞게 다음 화면 결정
+       ├─ 이전 상태 → 반영 지연일 수도 있어 여전히 미확정
+       └─ 확인 실패 → 완료로 단정하지 않음
 ```
 
-한 번의 상태 GET에서 이전 값이 보인다고 POST가 미처리됐다고 확정할 수도 없습니다. 서버에서 처리된 결과가 조회에 반영되기까지 시간이 걸릴 수 있습니다. 재참여를 허용할지는 상태 전파와 중복 처리에 관한 서버 계약을 함께 확인해야 합니다. 제가 상태 조회에 추가한 `retry`는 요청 시간초과에 한해 한 번만 재시도하고, 취소된 요청은 실패와 구분합니다.
+한 번의 상태 GET에서 이전 값이 보인다고 POST가 미처리됐다고 확정할 수도 없습니다. 서버의 상태 전파와 중복 처리 계약이 필요합니다. 제가 상태 GET에 둔 `retry`는 **그 GET 자체가 시간초과됐을 때** 한 번 더 조회하는 규칙입니다. 완료 POST 뒤 상태를 새로 확인하려고 `refetch`를 호출하는 결정과 다릅니다. 시간초과 판정은 당시 HTTP 클라이언트 `ky`의 `TimeoutError`를 사용했고, 취소된 요청은 실패와 구분했습니다.
 
-### `retry`와 `refetch`는 언제 다시 읽을지를 다르게 정한다
+`useMutation`의 `onSuccess`도 제품의 완료와 같지 않습니다. mutation 함수의 Promise가 정상 반환했다는 뜻이므로, 서버 충돌을 `{ ok: false }`로 반환하는 계약이라면 호출될 수 있습니다. 충돌 뒤 캐시를 무효화해 서버 상태를 다시 확인하는 것과 사용자에게 완료를 보여주는 판단은 분리해야 합니다. **정상 반환, 참여 인정, 실제 지급은 서로 다른 결과**입니다. 상태 조회만으로 최종 정산까지 증명하지는 않습니다.
 
-여기서 `retry`와 `refetch`도 다릅니다. `retry`는 **시도한 상태 GET 자체가 실패했을 때** 같은 조회를 한 번 더 시도하는 규칙입니다. 완료 POST의 응답이 불명확해진 뒤 상태를 **새로 확인하기로 결정하고 상태 Query의 `refetch`를 호출하는 일**은 별개입니다. 전자는 Query의 실패 처리 옵션이고, 후자는 제품 흐름에서 정한 재확인 시점입니다.
+같은 안전성 질문은 **요청을 공유 캐시에 맡길지**를 정할 때도 필요했습니다.
 
-```tsx
-import { TimeoutError } from "ky";
+<h3 id="direct-request">세 번째 판단의 예외: 공유 캐시보다 한 번의 시도가 중요했던 요청</h3>
 
-useQuery({
-  queryKey: ["quest-status", context],
-  queryFn: ({ signal }) => fetchQuestStatus(context, signal),
-  enabled: isContextReady(context),
-  retry: (failureCount, error) =>
-    failureCount < 1 && error instanceof TimeoutError,
-});
-```
+보너스 광고 준비에서는 이번 시도의 최신 할당 응답과 이전 시도의 취소 경계가 중요했습니다. 자동 실행을 끈 Query의 수동 `refetch`로 시작했지만, A의 광고 요청 뒤 참여 문맥이 B로 바뀌면 A의 응답이 늦게 올 수 있었습니다. 그 결과를 B의 버튼에 적용하면 화면과 준비된 광고가 어긋납니다.
 
-이 사례의 `TimeoutError`는 HTTP 클라이언트인 `ky`의 오류 타입입니다. 다른 요청 도구를 쓴다면 그 도구의 시간초과 판정으로 바꿔야 합니다. 상태 재조회는 클라이언트가 다음 화면을 결정하는 근거입니다. 실제 보상 지급이나 정산까지 입증하지는 않습니다.
+이 경로는 직접 요청으로 바꿨습니다. 문맥이 바뀌면 이전 요청을 취소하고, 시작 당시의 시도 번호와 여전히 일치할 때만 결과를 적용했습니다. `staleTime: 0`이나 `gcTime: 0`은 **어느 시도의 결과인가**를 정하지 않습니다. TanStack Query로 명령형 요청을 처리할 수 없다는 뜻은 아닙니다. 이 화면에서는 공유 캐시보다 한 번의 시도에 속한 요청·취소·결과를 한곳에서 관리하는 편이 명확했습니다.
 
-### `onSuccess`와 실제 참여 성공은 다르다
+<h2 id="takeaways">참여 뒤 화면을 맞추기 위해 남긴 기준</h2>
 
-`useMutation`의 `onSuccess`도 이름만 보고 비즈니스 성공과 동일시하면 안 됩니다. 이는 mutation 함수의 Promise가 정상 반환됐다는 뜻입니다. 충돌 응답을 예외 대신 `{ ok: false }` 같은 결과로 반환하는 계약이라면 `onSuccess`가 호출될 수 있습니다. 실제 제품 코드에도 충돌 결과 뒤 상태를 무효화하는 흐름이 있습니다. 무효화는 서버 상태를 다시 확인하게 할 수 있지만, 그것만으로 수령 성공을 뜻하지는 않습니다. **정상 반환, 참여 인정, 실제 지급**은 서로 다른 결과입니다.
+| 먼저 결정한 것 | 제품 코드에서 바꾼 경계 |
+| --- | --- |
+| 어느 결과가 같은 데이터인가? | 조회와 캐시 갱신이 같은 참여 문맥의 키를 사용 |
+| 언제 다시 읽어야 하는가? | 준비 전 첫 조회와 복귀한 활성 섹션의 재조회를 구분 |
+| 실패 뒤 무엇을 반복해도 되는가? | 불명확한 완료 POST는 상태 GET으로 확인하고, 보너스 준비는 현재 시도의 요청만 적용 |
 
-```tsx
-// 충돌 응답을 예외가 아닌 결과로 돌려주는 계약을 단순화한 예시
-const completion = useMutation({
-  mutationFn: submitCompletion,
-  onSuccess: () => {
-    void queryClient.invalidateQueries({ queryKey: ["quest-status"] });
-  },
-});
-
-const result = await completion.mutateAsync();
-handleDomainResult(result); // 화면의 완료 여부는 별도로 판정
-```
-
-`submitCompletion`이 `{ ok: false }`를 정상 반환하면 `onSuccess`도 실행됩니다. 관련 상태를 다시 확인하도록 무효화하는 것과 사용자에게 완료를 보여줄지는 별도로 판단해야 합니다.
-
-<h2 id="direct-request">Query를 사용하지 않는 편이 명확했던 요청</h2>
-
-보너스 광고 준비에는 이번 시도의 최신 할당 응답과 이전 시도의 취소 경계가 중요했습니다. 초기에는 자동 실행을 끈 Query의 수동 `refetch`를 사용했습니다. 그런데 A 시도의 광고를 요청한 직후 참여 문맥이 B로 바뀌면, A의 응답이 뒤늦게 도착할 수 있습니다. 이 결과를 B에 적용하면 현재 버튼과 준비된 광고가 어긋납니다.
-
-이 경로는 직접 요청으로 바꿨습니다. 문맥이 바뀌면 이전 요청을 취소하고, 응답이 시작 당시의 시도 번호(새 요청마다 바뀌는 식별자)와 여전히 일치할 때만 결과를 적용합니다. `staleTime: 0`이나 `gcTime: 0`만으로는 시도 번호와 결과의 관계가 정해지 않았습니다. TanStack Query가 명령형 요청을 처리할 수 없다는 뜻은 아닙니다. 이 화면에서는 공유 캐시보다 **한 번의 시도에 속한 요청·취소·결과**를 한곳에서 관리하는 편이 명확했습니다.
-
-<h2 id="takeaways">기능을 고르기 전에 남는 질문</h2>
-
-- `queryKey`: 요청 결과를 바꾸는 문맥이 키와 캐시 갱신 범위에도 들어 있는가?
-- `enabled`와 갱신 옵션: 최초 조회, 폴링, 재진입, 화면 복귀를 구별했는가?
-- `retry`와 `useMutation`: 실패한 조회와 결과가 불명확한 참여 요청을 같은 방식으로 반복하지 않는가?
-- 직접 요청: 캐시를 공유할 상태인가, 한 번의 시도와 함께 취소해야 할 요청인가?
-
-TanStack Query는 로딩과 캐시 처리를 덜어 줍니다. 하지만 제품이 기대하는 “같은 데이터”와 “다시 확인할 순간”은 라이브러리가 스스로 결정할 수 없습니다. 저는 캐시 키를 고치고, 동료와 복귀 뒤 조회 범위를 조정하고, 불명확한 완료 결과를 조회로 확인하면서 각 기능에 맡길 조건을 더 분명히 할 수 있었습니다.
+이 변경들이 화면의 모든 참여 오류나 최종 지급 결과를 증명하지는 않습니다. 제가 고친 캐시 키·복귀 조회·불명확한 완료 결과 확인은 **무엇을 같은 상태로 볼지, 어느 순간 다시 읽을지, 무엇을 반복해도 안전한지**를 코드에 나누어 적은 사례입니다. 비슷한 이름의 기능을 외우기보다 먼저 제품이 답할 질문을 정해야 했습니다.

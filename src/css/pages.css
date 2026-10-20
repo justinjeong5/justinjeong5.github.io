@@ -503,8 +503,13 @@
 .log-item-header {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 14px;
   margin-bottom: 12px;
+}
+.log-updated {
+  color: var(--text-muted);
+  font-size: 0.76rem;
 }
 .log-date {
   color: var(--accent-blue);
