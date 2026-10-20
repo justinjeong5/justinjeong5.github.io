@@ -1,0 +1,4716 @@
+<!doctype html>
+<!-- BUILD: google-auth-only-production-v10 | Google login only + embedded public Supabase config -->
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet" />
+  <meta name="referrer" content="no-referrer" />
+  <meta name="color-scheme" content="light" />
+  <title>우리 부부 월급 관리판</title>
+  <style>
+    :root {
+      --bg: #f4f6fb;
+      --surface: #ffffff;
+      --surface-soft: #f8f9fd;
+      --text: #171a23;
+      --muted: #6b7180;
+      --line: #e4e7ef;
+      --accent: #6557e8;
+      --accent-soft: #eeecff;
+      --accent-strong: #4f42ca;
+      --teal: #18a58b;
+      --teal-soft: #e7f8f4;
+      --amber: #b77a12;
+      --amber-soft: #fff5dd;
+      --danger: #c43d52;
+      --danger-soft: #fff0f2;
+      --shadow: 0 18px 50px rgba(27, 31, 50, 0.08);
+      --radius-xl: 24px;
+      --radius-lg: 18px;
+      --radius-md: 12px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 12% 0%, rgba(101, 87, 232, 0.12), transparent 28rem),
+        radial-gradient(circle at 100% 12%, rgba(24, 165, 139, 0.10), transparent 24rem),
+        var(--bg);
+      font-family: Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
+      line-height: 1.5;
+    }
+
+    button, input, select { font: inherit; }
+
+    button { cursor: pointer; }
+
+    .page {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 48px 0 72px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      gap: 24px;
+      align-items: stretch;
+      margin-bottom: 24px;
+    }
+
+    .hero-main,
+    .hero-aside,
+    .panel {
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid rgba(228, 231, 239, 0.9);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+
+    .hero-main {
+      border-radius: var(--radius-xl);
+      padding: 34px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      color: var(--accent-strong);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 0 5px var(--accent-soft);
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      margin-bottom: 12px;
+      font-size: clamp(30px, 4vw, 48px);
+      line-height: 1.12;
+      letter-spacing: -0.045em;
+    }
+
+    .hero-copy {
+      max-width: 660px;
+      margin-bottom: 24px;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .btn {
+      min-height: 44px;
+      padding: 0 16px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      color: var(--text);
+      background: var(--surface);
+      font-weight: 750;
+      transition: transform 0.16s ease, border-color 0.16s ease, background 0.16s ease;
+    }
+
+    .btn:hover { transform: translateY(-1px); border-color: #cbd0dc; }
+    .btn:active { transform: translateY(0); }
+
+    .btn-primary {
+      border-color: var(--accent);
+      color: #fff;
+      background: var(--accent);
+    }
+
+    .btn-primary:hover { background: var(--accent-strong); border-color: var(--accent-strong); }
+
+    .btn-ghost { background: transparent; }
+
+    .hero-aside {
+      display: grid;
+      align-content: space-between;
+      border-radius: var(--radius-xl);
+      padding: 28px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hero-aside::after {
+      content: "";
+      position: absolute;
+      right: -50px;
+      bottom: -70px;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, rgba(101,87,232,.18), rgba(24,165,139,.15));
+      filter: blur(2px);
+    }
+
+    .aside-label {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 750;
+    }
+
+    .aside-value {
+      margin: 8px 0 4px;
+      font-size: clamp(31px, 4vw, 45px);
+      font-weight: 900;
+      letter-spacing: -0.045em;
+    }
+
+    .aside-note {
+      position: relative;
+      z-index: 1;
+      margin: 24px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .metric {
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+      box-shadow: 0 10px 28px rgba(27, 31, 50, 0.045);
+    }
+
+    .metric-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 750;
+    }
+
+    .metric-value {
+      font-size: clamp(22px, 2.7vw, 30px);
+      font-weight: 900;
+      letter-spacing: -0.035em;
+      white-space: nowrap;
+    }
+
+    .metric-sub {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 44px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      color: var(--accent-strong);
+      background: var(--accent-soft);
+      font-size: 11px;
+      font-weight: 850;
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .stack { display: grid; gap: 24px; }
+
+    .panel {
+      border-radius: var(--radius-xl);
+      padding: 26px;
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 20px;
+    }
+
+    .panel h2 {
+      margin-bottom: 5px;
+      font-size: 21px;
+      letter-spacing: -0.025em;
+    }
+
+    .panel-desc {
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .status {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      color: #167b68;
+      background: var(--teal-soft);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .status::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--teal);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .field { min-width: 0; }
+
+    .field-wide { grid-column: 1 / -1; }
+
+    .spouse-saving-field {
+      grid-column: 1 / -1;
+      padding: 16px;
+      border: 1px solid rgba(24, 165, 139, 0.28);
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(24, 165, 139, 0.09), rgba(101, 87, 232, 0.055));
+    }
+
+    .spouse-saving-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .field-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 7px;
+      border-radius: 999px;
+      color: #167b68;
+      background: rgba(24, 165, 139, 0.12);
+      font-size: 10px;
+      font-weight: 850;
+    }
+
+    .spouse-saving-field input {
+      border-color: rgba(24, 165, 139, 0.36);
+      background: #fff;
+    }
+
+    .spouse-saving-field .helper {
+      margin-top: 8px;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      color: #4e5361;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .control {
+      position: relative;
+    }
+
+    input[type="number"],
+    input[type="text"],
+    input[type="url"],
+    input[type="password"],
+    select {
+      width: 100%;
+      min-height: 46px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      color: var(--text);
+      background: var(--surface-soft);
+      outline: none;
+      transition: border-color 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+    }
+
+    input[type="number"], input[type="text"], input[type="url"], input[type="password"] { padding: 0 14px; }
+    select { padding: 0 40px 0 14px; }
+
+    input:focus, select:focus {
+      border-color: rgba(101, 87, 232, 0.65);
+      background: #fff;
+      box-shadow: 0 0 0 4px rgba(101, 87, 232, 0.11);
+    }
+
+    .input-unit {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      pointer-events: none;
+      font-size: 12px;
+      font-weight: 750;
+    }
+
+    .has-unit input { padding-right: 45px; }
+
+    .helper {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .distribution {
+      margin-top: 22px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+    }
+
+    .distribution-bar {
+      display: flex;
+      width: 100%;
+      height: 18px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #edf0f5;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, .05);
+    }
+
+    .bar-personal,
+    .bar-wife {
+      min-width: 0;
+      transition: width 0.25s ease;
+    }
+
+    .bar-personal { background: linear-gradient(90deg, var(--accent), #887df0); }
+    .bar-wife { background: linear-gradient(90deg, var(--teal), #49bea9); }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .dot.teal { background: var(--teal); }
+
+    .table-block + .table-block {
+      margin-top: 22px;
+      padding-top: 22px;
+      border-top: 1px solid var(--line);
+    }
+
+    .table-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 10px;
+    }
+
+    .table-title {
+      margin: 0;
+      font-size: 15px;
+      letter-spacing: -0.015em;
+    }
+
+    .table-total {
+      color: var(--accent-strong);
+      font-size: 13px;
+      font-weight: 850;
+    }
+
+    .items {
+      display: grid;
+      gap: 8px;
+    }
+
+    .item-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(132px, 0.7fr) auto;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .item-row.saving-row {
+      grid-template-columns: minmax(0, 1fr) minmax(132px, 0.7fr) auto auto;
+    }
+
+    .item-row input {
+      min-height: 40px;
+      border-radius: 10px;
+      font-size: 13px;
+    }
+
+    .row-amount { text-align: right; }
+
+    .icon-btn {
+      width: 38px;
+      height: 38px;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      color: #8b91a0;
+      background: transparent;
+      font-size: 19px;
+      line-height: 1;
+    }
+
+    .icon-btn:hover {
+      border-color: #ffd5dc;
+      color: var(--danger);
+      background: var(--danger-soft);
+    }
+
+    .saving-toggle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      margin: 0;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--surface-soft);
+    }
+
+    .saving-toggle input {
+      width: 17px;
+      height: 17px;
+      min-height: 0;
+      accent-color: var(--teal);
+    }
+
+    .add-row {
+      width: 100%;
+      min-height: 40px;
+      margin-top: 8px;
+      border: 1px dashed #cfd3df;
+      border-radius: 11px;
+      color: var(--muted);
+      background: transparent;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .add-row:hover {
+      border-color: var(--accent);
+      color: var(--accent-strong);
+      background: var(--accent-soft);
+    }
+
+    .note-box {
+      padding: 14px 16px;
+      border-radius: 14px;
+      color: #5a4413;
+      background: var(--amber-soft);
+      font-size: 12px;
+    }
+
+    .note-box.danger {
+      color: #8d2638;
+      background: var(--danger-soft);
+    }
+
+    .result-list {
+      display: grid;
+      gap: 11px;
+    }
+
+    .result-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 18px;
+      padding-bottom: 11px;
+      border-bottom: 1px dashed #dfe2e9;
+    }
+
+    .result-row:last-child { border-bottom: 0; padding-bottom: 0; }
+
+    .result-label {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .result-value {
+      text-align: right;
+      font-size: 15px;
+      font-weight: 850;
+    }
+
+    .result-row.emphasis {
+      margin: 4px -10px 0;
+      padding: 14px 10px;
+      border: 0;
+      border-radius: 12px;
+      background: var(--accent-soft);
+    }
+
+    .result-row.emphasis .result-label,
+    .result-row.emphasis .result-value { color: var(--accent-strong); }
+
+    .summary-text {
+      width: 100%;
+      min-height: 420px;
+      resize: vertical;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      color: #313542;
+      background: #f9fafc;
+      font: 13px/1.65 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      outline: none;
+    }
+
+    .summary-text:focus {
+      border-color: rgba(101, 87, 232, 0.65);
+      box-shadow: 0 0 0 4px rgba(101, 87, 232, 0.10);
+    }
+
+    .coach-panel {
+      position: relative;
+      margin-bottom: 24px;
+      overflow: hidden;
+    }
+
+    .coach-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent), var(--teal));
+    }
+
+    .coach-panel .panel-head { align-items: center; }
+
+    .btn-small {
+      min-height: 38px;
+      padding: 0 13px;
+      font-size: 12px;
+    }
+
+    .coach-summary {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: 16px;
+      align-items: center;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 17px;
+      background: linear-gradient(135deg, #fbfbff, #f7fbfa);
+    }
+
+    .coach-signal {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 52px;
+      height: 52px;
+      border-radius: 17px;
+      font-size: 22px;
+      font-weight: 900;
+      transition: color .2s ease, background .2s ease, transform .2s ease;
+    }
+
+    .coach-signal.good { color: #167b68; background: var(--teal-soft); }
+    .coach-signal.watch { color: #8f5d08; background: var(--amber-soft); }
+    .coach-signal.danger { color: #9b2e42; background: var(--danger-soft); }
+    .coach-signal.neutral { color: var(--accent-strong); background: var(--accent-soft); }
+
+    .coach-kicker {
+      margin-bottom: 3px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .coach-headline {
+      margin: 0 0 4px;
+      font-size: clamp(18px, 2.2vw, 24px);
+      letter-spacing: -0.025em;
+    }
+
+    .coach-message {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .coach-trend {
+      min-width: 196px;
+      padding: 12px 14px;
+      border-radius: 13px;
+      background: #fff;
+      box-shadow: 0 8px 22px rgba(27, 31, 50, .06);
+      text-align: right;
+    }
+
+    .coach-trend-label {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 750;
+    }
+
+    .coach-trend-value {
+      margin-top: 3px;
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .coach-trend-value.positive { color: #167b68; }
+    .coach-trend-value.negative { color: var(--danger); }
+    .coach-trend-value.neutral { color: var(--text); }
+
+    .coach-metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .coach-card {
+      min-width: 0;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      background: var(--surface);
+      transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+    }
+
+    .coach-card:hover {
+      transform: translateY(-1px);
+      border-color: #d6d9e4;
+      box-shadow: 0 10px 24px rgba(27, 31, 50, .055);
+    }
+
+    .coach-card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 9px;
+    }
+
+    .coach-card-label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .coach-card-value {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: clamp(19px, 2vw, 25px);
+      font-weight: 900;
+      letter-spacing: -0.035em;
+      white-space: nowrap;
+    }
+
+    .coach-card-note {
+      min-height: 36px;
+      margin: 7px 0 0;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .coach-status {
+      flex: 0 0 auto;
+      padding: 4px 7px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 850;
+    }
+
+    .coach-status.good { color: #167b68; background: var(--teal-soft); }
+    .coach-status.watch { color: #8f5d08; background: var(--amber-soft); }
+    .coach-status.danger { color: #9b2e42; background: var(--danger-soft); }
+    .coach-status.neutral { color: var(--accent-strong); background: var(--accent-soft); }
+
+    .progress-track {
+      width: 100%;
+      height: 7px;
+      margin-top: 10px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #edf0f5;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0;
+      border-radius: inherit;
+      transition: width .28s ease, background .2s ease;
+    }
+
+    .progress-fill.good { background: var(--teal); }
+    .progress-fill.watch { background: #d69a2d; }
+    .progress-fill.danger { background: var(--danger); }
+    .progress-fill.neutral { background: var(--accent); }
+
+    .coach-lower {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(280px, .8fr);
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .coach-box {
+      padding: 17px;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      background: var(--surface-soft);
+    }
+
+    .coach-box-title {
+      margin: 0 0 11px;
+      font-size: 14px;
+      letter-spacing: -0.015em;
+    }
+
+    .insight-list { display: grid; gap: 9px; }
+
+    .insight-item {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 10px;
+      align-items: start;
+      padding: 10px 11px;
+      border-radius: 12px;
+      background: #fff;
+    }
+
+    .insight-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px;
+      height: 26px;
+      border-radius: 9px;
+      color: var(--accent-strong);
+      background: var(--accent-soft);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .insight-icon.good { color: #167b68; background: var(--teal-soft); }
+    .insight-icon.watch { color: #8f5d08; background: var(--amber-soft); }
+    .insight-icon.danger { color: #9b2e42; background: var(--danger-soft); }
+
+    .insight-title {
+      margin-bottom: 2px;
+      font-size: 12px;
+      font-weight: 850;
+    }
+
+    .insight-text {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .baseline-meta {
+      margin: -5px 0 12px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .delta-grid { display: grid; gap: 8px; }
+
+    .delta-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 9px 10px;
+      border-radius: 11px;
+      background: #fff;
+      font-size: 11px;
+    }
+
+    .delta-label { color: var(--muted); }
+    .delta-value { font-weight: 850; text-align: right; }
+    .delta-value.positive { color: #167b68; }
+    .delta-value.negative { color: var(--danger); }
+    .delta-value.neutral { color: var(--text); }
+
+    .guide-details {
+      margin-top: 16px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+    }
+
+    .guide-details summary {
+      padding: 13px 15px;
+      cursor: pointer;
+      color: #4e5361;
+      font-size: 12px;
+      font-weight: 850;
+      user-select: none;
+    }
+
+    .guide-content {
+      padding: 0 15px 15px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .guide-content p { margin-bottom: 8px; }
+    .guide-content p:last-child { margin-bottom: 0; }
+
+    .guide-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .guide-links a {
+      padding: 6px 9px;
+      border-radius: 9px;
+      color: var(--accent-strong);
+      background: var(--accent-soft);
+      text-decoration: none;
+      font-weight: 800;
+    }
+
+    .guide-links a:hover { text-decoration: underline; }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 26px;
+      z-index: 30;
+      transform: translate(-50%, 20px);
+      padding: 11px 15px;
+      border-radius: 999px;
+      color: #fff;
+      background: rgba(23, 26, 35, 0.92);
+      box-shadow: 0 12px 34px rgba(0, 0, 0, .18);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s ease, transform .2s ease;
+      font-size: 13px;
+      font-weight: 750;
+    }
+
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+    .footer {
+      margin-top: 24px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    @media (max-width: 930px) {
+      .hero, .dashboard { grid-template-columns: 1fr; }
+      .coach-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .coach-lower { grid-template-columns: 1fr; }
+      .summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .hero-aside { min-height: 210px; }
+    }
+
+    @media (max-width: 580px) {
+      .page { width: min(100% - 20px, 1180px); padding-top: 18px; }
+      .hero-main, .hero-aside, .panel { padding: 20px; border-radius: 19px; }
+      .hero { gap: 14px; }
+      .summary-grid { grid-template-columns: 1fr; gap: 10px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .field-wide { grid-column: auto; }
+      .item-row,
+      .item-row.saving-row {
+        grid-template-columns: minmax(0, 1fr) 112px auto;
+      }
+      .item-row.saving-row .saving-toggle {
+        grid-column: 1 / 3;
+        width: auto;
+        justify-content: flex-start;
+        gap: 7px;
+        padding: 0 10px;
+      }
+      .item-row.saving-row .saving-toggle::after {
+        content: "저축으로 계산";
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 750;
+      }
+      .hero-actions .btn { flex: 1 1 auto; }
+      .coach-summary { grid-template-columns: auto minmax(0, 1fr); }
+      .coach-trend { grid-column: 1 / -1; min-width: 0; text-align: left; }
+      .coach-metrics { grid-template-columns: 1fr; }
+      .coach-panel .panel-head { flex-direction: column; align-items: stretch; }
+      .coach-panel .panel-head .btn { width: 100%; }
+    }
+
+    @media print {
+      body { background: #fff; }
+      .page { width: 100%; padding: 0; }
+      .hero-actions, .add-row, .icon-btn, .status, .summary-editor-panel, .sync-panel, #setBaselineButton { display: none !important; }
+      .hero-main, .hero-aside, .panel, .metric { box-shadow: none; break-inside: avoid; }
+      input, select { border: 0 !important; background: transparent !important; box-shadow: none !important; }
+      .dashboard { grid-template-columns: 1fr 1fr; }
+    }
+
+
+    /* ===== Couple budget v5 additions ===== */
+    .page { width: min(1280px, calc(100% - 32px)); }
+
+    .hero-actions { align-items: center; }
+
+    .btn-secondary {
+      border-color: rgba(24, 165, 139, .34);
+      color: #167b68;
+      background: var(--teal-soft);
+    }
+
+    .btn-danger-ghost {
+      color: #9b2e42;
+      background: transparent;
+    }
+
+    .save-strip {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px 12px;
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .save-strip .status { padding: 6px 9px; }
+
+    .save-strip strong { color: var(--text); }
+
+    .quick-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: -8px 0 24px;
+    }
+
+    .quick-nav a {
+      padding: 8px 11px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: #4e5361;
+      background: rgba(255,255,255,.78);
+      text-decoration: none;
+      font-size: 11px;
+      font-weight: 800;
+      box-shadow: 0 7px 20px rgba(27,31,50,.035);
+    }
+
+    .quick-nav a:hover {
+      border-color: rgba(101,87,232,.35);
+      color: var(--accent-strong);
+      background: var(--accent-soft);
+    }
+
+    .summary-grid.household-summary {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+
+    .metric-value.is-negative,
+    .result-value.is-negative { color: var(--danger); }
+
+    .metric-value.is-positive,
+    .result-value.is-positive { color: #167b68; }
+
+    .section-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .section-badge,
+    .person-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5px 9px;
+      border-radius: 999px;
+      color: var(--accent-strong);
+      background: var(--accent-soft);
+      font-size: 10px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .person-badge.wife {
+      color: #167b68;
+      background: var(--teal-soft);
+    }
+
+    .couple-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+      align-items: start;
+      margin-bottom: 24px;
+    }
+
+    .person-panel {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .person-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent), #9389f2);
+    }
+
+    .person-panel.wife::before {
+      background: linear-gradient(90deg, var(--teal), #73d1bf);
+    }
+
+    .person-panel .panel-head { align-items: center; }
+
+    .person-tools {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .person-form {
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--surface-soft);
+    }
+
+    .person-help {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .person-result-card {
+      margin-top: 16px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: #fff;
+    }
+
+    .person-result-card h3 {
+      margin-bottom: 12px;
+      font-size: 15px;
+      letter-spacing: -.015em;
+    }
+
+    .person-mini-flow {
+      margin: 14px 0 2px;
+    }
+
+    .person-mini-bar {
+      display: flex;
+      width: 100%;
+      height: 12px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #edf0f5;
+    }
+
+    .person-mini-use,
+    .person-mini-contribution {
+      transition: width .25s ease;
+    }
+
+    .person-mini-use { background: linear-gradient(90deg, var(--accent), #8c81ef); }
+    .person-panel.wife .person-mini-use { background: linear-gradient(90deg, #d1922a, #e4b154); }
+    .person-mini-contribution { background: linear-gradient(90deg, var(--teal), #56c2ad); }
+
+    .person-mini-legend {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .person-warning {
+      margin-top: 12px;
+      padding: 12px 13px;
+      border-radius: 12px;
+      color: #5a4413;
+      background: var(--amber-soft);
+      font-size: 11px;
+    }
+
+    .person-warning.good {
+      color: #166d5d;
+      background: var(--teal-soft);
+    }
+
+    .person-warning.danger {
+      color: #8d2638;
+      background: var(--danger-soft);
+    }
+
+    .expense-editor {
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+    }
+
+    .expense-editor-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .expense-editor-head h3 {
+      margin: 0 0 3px;
+      font-size: 16px;
+    }
+
+    .expense-editor-head p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .item-row {
+      grid-template-columns: minmax(0, 1.2fr) minmax(122px, .65fr) auto auto;
+    }
+
+    .item-row.no-saving {
+      grid-template-columns: minmax(0, 1.2fr) minmax(122px, .65fr) auto;
+    }
+
+    .empty-items {
+      padding: 13px;
+      border: 1px dashed #d5d9e4;
+      border-radius: 11px;
+      color: var(--muted);
+      background: #fbfcfe;
+      text-align: center;
+      font-size: 11px;
+    }
+
+    .joint-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.16fr) minmax(340px, .84fr);
+      gap: 20px;
+      align-items: start;
+      margin-bottom: 24px;
+    }
+
+    .joint-contribution-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .mini-stat {
+      min-width: 0;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--surface-soft);
+    }
+
+    .mini-stat-label {
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .mini-stat-value {
+      margin-top: 5px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 17px;
+      font-weight: 900;
+      letter-spacing: -.025em;
+      white-space: nowrap;
+    }
+
+    .savings-stack {
+      display: grid;
+      gap: 10px;
+    }
+
+    .savings-highlight {
+      padding: 18px;
+      border: 1px solid rgba(24,165,139,.26);
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--teal-soft), rgba(101,87,232,.065));
+    }
+
+    .savings-highlight-label {
+      color: #167b68;
+      font-size: 11px;
+      font-weight: 850;
+    }
+
+    .savings-highlight-value {
+      margin: 4px 0 2px;
+      font-size: clamp(27px, 3.4vw, 38px);
+      font-weight: 950;
+      letter-spacing: -.045em;
+    }
+
+    .savings-highlight-sub {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .goal-box {
+      margin-top: 14px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+    }
+
+    .goal-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .goal-row strong { color: var(--text); }
+
+    .cashflow-panel { margin-bottom: 24px; }
+
+    .cashflow-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(310px, .75fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .cashflow-box {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--surface-soft);
+    }
+
+    .cashflow-bar {
+      display: flex;
+      width: 100%;
+      height: 24px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #e9edf3;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,.05);
+    }
+
+    .flow-segment {
+      width: 0;
+      min-width: 0;
+      transition: width .28s ease;
+    }
+
+    .flow-fixed { background: linear-gradient(90deg, #6557e8, #7e72eb); }
+    .flow-living { background: linear-gradient(90deg, #18a58b, #49baa5); }
+    .flow-special { background: linear-gradient(90deg, #d19126, #e3ad4b); }
+    .flow-buffer { background: linear-gradient(90deg, #9aa1af, #bbc0ca); }
+    .flow-saving { background: linear-gradient(90deg, #2a7bce, #5d9cdb); }
+
+    .cashflow-legend {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 13px;
+    }
+
+    .flow-legend-item {
+      min-width: 0;
+      padding: 10px;
+      border-radius: 11px;
+      background: #fff;
+    }
+
+    .flow-legend-name {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .flow-swatch {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex: 0 0 auto;
+    }
+
+    .flow-legend-value {
+      margin-top: 4px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 12px;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    .flow-legend-rate {
+      color: var(--muted);
+      font-size: 9px;
+    }
+
+    .cashflow-side {
+      display: grid;
+      align-content: center;
+      gap: 10px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: #fff;
+    }
+
+    .cashflow-side-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 9px;
+      border-bottom: 1px dashed #e0e3ea;
+      font-size: 12px;
+    }
+
+    .cashflow-side-row:last-child { border-bottom: 0; padding-bottom: 0; }
+    .cashflow-side-row span { color: var(--muted); }
+    .cashflow-side-row strong { text-align: right; }
+
+    .comparison-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+    }
+
+    .comparison-table {
+      width: 100%;
+      min-width: 720px;
+      border-collapse: collapse;
+      background: #fff;
+      font-size: 12px;
+    }
+
+    .comparison-table th,
+    .comparison-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .comparison-table th:first-child,
+    .comparison-table td:first-child { text-align: left; }
+
+    .comparison-table thead th {
+      color: #4e5361;
+      background: var(--surface-soft);
+      font-weight: 850;
+    }
+
+    .comparison-table tbody tr:last-child td { border-bottom: 0; }
+
+    .comparison-table .emphasis-cell {
+      color: var(--accent-strong);
+      background: rgba(101,87,232,.05);
+      font-weight: 850;
+    }
+
+    .comparison-note {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .advisor-source {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .advisor-source a {
+      color: var(--accent-strong);
+      font-weight: 750;
+      text-decoration: none;
+    }
+
+    .advisor-source a:hover { text-decoration: underline; }
+
+    .storage-card {
+      padding: 14px 16px;
+      border: 1px solid rgba(24,165,139,.25);
+      border-radius: 14px;
+      color: #3e625b;
+      background: linear-gradient(135deg, rgba(24,165,139,.08), rgba(101,87,232,.05));
+      font-size: 11px;
+    }
+
+    .storage-card strong { color: #166d5d; }
+
+    /* ===== Supabase shared sync ===== */
+    .sync-panel {
+      position: relative;
+      margin-bottom: 24px;
+      overflow: hidden;
+      border-color: rgba(101, 87, 232, .18);
+      background:
+        radial-gradient(circle at 100% 0, rgba(101,87,232,.09), transparent 30%),
+        var(--surface);
+    }
+
+    .sync-panel::after {
+      content: "";
+      position: absolute;
+      right: -95px;
+      top: -110px;
+      width: 240px;
+      height: 240px;
+      border-radius: 50%;
+      background: rgba(24,165,139,.055);
+      pointer-events: none;
+    }
+
+    .sync-panel > * { position: relative; z-index: 1; }
+
+    .sync-title-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .sync-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      color: #5c6270;
+      background: #eef0f5;
+      font-size: 10px;
+      font-weight: 900;
+    }
+
+    .sync-badge::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #9ba1ae;
+    }
+
+    .sync-badge.good { color: #167b68; background: var(--teal-soft); }
+    .sync-badge.good::before { background: var(--teal); }
+    .sync-badge.wait { color: #8f5d08; background: var(--amber-soft); }
+    .sync-badge.wait::before { background: #d69a2d; }
+    .sync-badge.busy { color: var(--accent-strong); background: var(--accent-soft); }
+    .sync-badge.busy::before { background: var(--accent); animation: syncPulse 1s ease-in-out infinite; }
+    .sync-badge.danger { color: #9b2e42; background: var(--danger-soft); }
+    .sync-badge.danger::before { background: var(--danger); }
+
+    @keyframes syncPulse {
+      0%, 100% { opacity: .45; transform: scale(.8); }
+      50% { opacity: 1; transform: scale(1.15); }
+    }
+
+    .status.neutral { color: #5c6270; background: #eef0f5; }
+    .status.neutral::before { background: #9ba1ae; }
+    .status.wait { color: #8f5d08; background: var(--amber-soft); }
+    .status.wait::before { background: #d69a2d; }
+    .status.busy { color: var(--accent-strong); background: var(--accent-soft); }
+    .status.busy::before { background: var(--accent); animation: syncPulse 1s ease-in-out infinite; }
+    .status.danger { color: #9b2e42; background: var(--danger-soft); }
+    .status.danger::before { background: var(--danger); }
+
+    .sync-overview {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 15px 16px;
+      margin-bottom: 16px;
+      border: 1px solid rgba(101,87,232,.16);
+      border-radius: 15px;
+      background: linear-gradient(135deg, rgba(101,87,232,.055), rgba(24,165,139,.055));
+    }
+
+    .sync-overview-copy { min-width: 0; }
+    .sync-overview-title { display: block; margin-bottom: 3px; font-size: 13px; font-weight: 900; }
+    .sync-overview-text { color: var(--muted); font-size: 11px; }
+    .sync-countdown {
+      flex: 0 0 auto;
+      min-width: 128px;
+      padding: 8px 10px;
+      border-radius: 11px;
+      color: var(--accent-strong);
+      background: rgba(255,255,255,.86);
+      text-align: center;
+      font-size: 11px;
+      font-weight: 850;
+      box-shadow: 0 6px 18px rgba(27,31,50,.04);
+    }
+
+    .sync-form {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .sync-form .field-wide { grid-column: 1 / -1; }
+
+    .sync-input-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+    }
+
+    .sync-input-row .btn { min-height: 46px; white-space: nowrap; }
+
+    .sync-helper {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.45;
+    }
+
+    .sync-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 18px;
+      margin: 15px 0 2px;
+    }
+
+    .sync-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0;
+      color: #4e5361;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .sync-toggle input { accent-color: var(--accent); }
+
+    .sync-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-top: 14px;
+    }
+
+    .sync-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .sync-meta-card {
+      min-width: 0;
+      padding: 12px 13px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--surface-soft);
+    }
+
+    .sync-meta-label { color: var(--muted); font-size: 10px; font-weight: 800; }
+    .sync-meta-value {
+      display: block;
+      margin-top: 4px;
+      overflow: hidden;
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 900;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .sync-conflict {
+      margin-top: 16px;
+      padding: 15px 16px;
+      border: 1px solid rgba(196,61,82,.28);
+      border-radius: 14px;
+      color: #70313d;
+      background: var(--danger-soft);
+    }
+
+    .sync-conflict strong { display: block; margin-bottom: 4px; color: #9b2e42; font-size: 13px; }
+    .sync-conflict p { margin: 0; font-size: 11px; }
+    .sync-conflict-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+
+    .sync-setup-list {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .sync-setup-list li { margin-bottom: 7px; }
+
+    .sync-sql-wrap {
+      margin-top: 12px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #f7f8fb;
+    }
+
+    .sync-sql-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .sync-sql-head strong { color: var(--text); font-size: 11px; }
+
+    .sync-sql {
+      width: 100%;
+      min-height: 210px;
+      resize: vertical;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 12px;
+      color: #343947;
+      background: #fff;
+      font: 11px/1.55 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      outline: none;
+    }
+
+    .sync-sql:focus { border-color: rgba(101,87,232,.55); box-shadow: 0 0 0 4px rgba(101,87,232,.09); }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 1120px) {
+      .summary-grid.household-summary { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .couple-grid, .joint-grid { grid-template-columns: 1fr; }
+      .cashflow-layout { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 760px) {
+      .summary-grid.household-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .sync-meta-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .joint-contribution-grid { grid-template-columns: 1fr; }
+      .cashflow-legend { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .person-tools { width: 100%; }
+      .person-tools .btn { flex: 1 1 auto; }
+    }
+
+    @media (max-width: 580px) {
+      .page { width: min(100% - 20px, 1280px); }
+      .summary-grid.household-summary { grid-template-columns: 1fr; }
+      .sync-form, .sync-meta-grid { grid-template-columns: 1fr; }
+      .sync-overview { align-items: flex-start; flex-direction: column; }
+      .sync-countdown { min-width: 0; width: 100%; }
+      .sync-input-row { grid-template-columns: 1fr; }
+      .sync-input-row .btn { width: 100%; }
+      .sync-actions .btn { flex: 1 1 calc(50% - 6px); }
+      .save-strip { align-items: flex-start; }
+      .quick-nav { margin-top: -2px; }
+      .person-form { padding: 13px; }
+      .item-row,
+      .item-row.saving-row {
+        grid-template-columns: minmax(0, 1fr) 105px auto;
+      }
+      .item-row .saving-toggle {
+        grid-column: 1 / 3;
+        width: auto;
+        justify-content: flex-start;
+        gap: 7px;
+        padding: 0 10px;
+      }
+      .item-row .saving-toggle::after {
+        content: "저축으로 계산";
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 750;
+      }
+      .cashflow-legend { grid-template-columns: 1fr; }
+      .hero-actions .btn { flex: 1 1 calc(50% - 6px); }
+    }
+
+    @media print {
+      .quick-nav, .save-strip, .person-tools, .sync-panel, #saveNowButton, #syncNowButtonTop, #exportButton, #importButton,
+      #copyButton, #printButton, #resetButton, .storage-card { display: none !important; }
+      .couple-grid, .joint-grid { grid-template-columns: 1fr 1fr; }
+      .cashflow-layout { grid-template-columns: 1.25fr .75fr; }
+      .summary-grid.household-summary { grid-template-columns: repeat(5, 1fr); }
+    }
+
+
+
+    /* ===== Google Auth + whitelist ===== */
+    .auth-session-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-top: 16px;
+      padding: 16px 18px;
+      border: 1px solid rgba(101,87,232,.16);
+      border-radius: 18px;
+      background: rgba(255,255,255,.76);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.72);
+    }
+
+    .auth-session-main {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .auth-avatar {
+      display: grid;
+      place-items: center;
+      flex: 0 0 42px;
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(101,87,232,.14), rgba(25,168,142,.14));
+      color: var(--accent-strong);
+      font-size: 18px;
+      font-weight: 950;
+    }
+
+    .auth-session-copy { min-width: 0; }
+    .auth-session-label { display: block; margin-bottom: 3px; color: var(--muted); font-size: 10px; font-weight: 850; letter-spacing: .05em; text-transform: uppercase; }
+    .auth-session-identity { display: block; overflow: hidden; color: var(--text); font-size: 13px; font-weight: 900; text-overflow: ellipsis; white-space: nowrap; }
+    .auth-session-help { display: block; margin-top: 3px; color: var(--muted); font-size: 11px; line-height: 1.45; }
+    .auth-session-actions { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 8px; }
+
+    @media (max-width: 720px) {
+      .auth-session-card { align-items: stretch; flex-direction: column; }
+      .auth-session-actions { justify-content: stretch; }
+      .auth-session-actions .btn { flex: 1 1 auto; }
+    }
+
+
+
+    /* ===== Login-first production gate ===== */
+    [hidden] { display: none !important; }
+    .auth-gate {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 28px;
+      background:
+        radial-gradient(circle at 15% 0%, rgba(101,87,232,.18), transparent 30rem),
+        radial-gradient(circle at 90% 15%, rgba(41,189,158,.12), transparent 26rem),
+        var(--bg);
+    }
+    .auth-gate-card {
+      width: min(100%, 500px);
+      padding: 34px;
+      border: 1px solid rgba(101,87,232,.16);
+      border-radius: 28px;
+      background: rgba(255,255,255,.94);
+      box-shadow: 0 26px 80px rgba(28,31,50,.14);
+      text-align: center;
+      backdrop-filter: blur(18px);
+    }
+    .auth-gate-mark {
+      display: grid;
+      place-items: center;
+      width: 58px;
+      height: 58px;
+      margin: 0 auto 18px;
+      border-radius: 18px;
+      color: #fff;
+      background: linear-gradient(135deg, #6557e8, #4f42ca);
+      box-shadow: 0 14px 30px rgba(101,87,232,.28);
+      font-size: 26px;
+      font-weight: 900;
+    }
+    .auth-gate-eyebrow {
+      margin: 0 0 8px;
+      color: var(--primary);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: .11em;
+      text-transform: uppercase;
+    }
+    .auth-gate h1 {
+      margin: 0;
+      color: var(--text);
+      font-size: clamp(27px, 5vw, 35px);
+      letter-spacing: -.055em;
+    }
+    .auth-gate-description {
+      margin: 14px auto 0;
+      max-width: 360px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+    .auth-gate-account {
+      margin-top: 18px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--soft);
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 800;
+      overflow-wrap: anywhere;
+    }
+    .auth-gate-spinner {
+      width: 28px;
+      height: 28px;
+      margin: 22px auto 0;
+      border: 3px solid rgba(101,87,232,.16);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: auth-gate-spin .8s linear infinite;
+    }
+    @keyframes auth-gate-spin { to { transform: rotate(360deg); } }
+    .auth-gate-actions { display: grid; gap: 10px; margin-top: 22px; }
+    .auth-gate-actions .btn { width: 100%; min-height: 48px; }
+    .auth-gate-hint {
+      min-height: 18px;
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.55;
+    }
+    .auth-gate-hint.danger { color: var(--danger); font-weight: 750; }
+    @media (max-width: 560px) {
+      .auth-gate { padding: 16px; }
+      .auth-gate-card { padding: 28px 20px; border-radius: 22px; }
+    }
+
+  </style>
+</head>
+
+<body>
+  <section class="auth-gate" id="authGate" aria-live="polite">
+    <article class="auth-gate-card">
+      <div class="auth-gate-mark" aria-hidden="true">G</div>
+      <p class="auth-gate-eyebrow">Couple Money Map</p>
+      <h1 id="authGateTitle">로그인 상태를 확인하고 있어요</h1>
+      <p class="auth-gate-description" id="authGateDescription">허용된 Google 계정인지 확인한 뒤 부부 예산을 안전하게 불러옵니다.</p>
+      <div class="auth-gate-account" id="authGateAccount" hidden></div>
+      <div class="auth-gate-spinner" id="authGateSpinner"></div>
+      <div class="auth-gate-actions">
+        <button class="btn btn-secondary" id="authGateLoginButton" type="button" hidden>Google로 로그인</button>
+        <button class="btn btn-primary" id="authGateRetryButton" type="button" hidden>다시 확인</button>
+        <button class="btn" id="authGateLogoutButton" type="button" hidden>다른 계정으로 로그인</button>
+      </div>
+      <p class="auth-gate-hint" id="authGateHint">로그인 전에는 가계 숫자와 관리판을 표시하지 않습니다.</p>
+    </article>
+  </section>
+
+  <main class="page" id="appShell" hidden>
+    <section class="hero">
+      <div class="hero-main">
+        <div class="eyebrow">Couple money map</div>
+        <h1>우리 부부 월급 관리판</h1>
+        <p class="hero-copy">
+          각자의 생활비와 고정지출을 따로 정리하고, 공동비용과 저축은 한데 모아 보는 가계 대시보드입니다.
+          숫자를 바꾸면 부부 합산 현금흐름과 재무 코치의 안내가 즉시 갱신됩니다.
+        </p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" id="syncNowButtonTop" type="button">새로고침 · 동기화</button>
+          <button class="btn" id="saveNowButton" type="button">이 기기에 저장</button>
+          <button class="btn btn-secondary" id="exportButton" type="button">백업 파일 받기</button>
+          <button class="btn" id="importButton" type="button">백업 불러오기</button>
+          <button class="btn" id="copyButton" type="button">요약문 복사</button>
+          <button class="btn" id="printButton" type="button">인쇄 · PDF</button>
+          <button class="btn btn-ghost btn-danger-ghost" id="resetButton" type="button">초기화</button>
+          <input class="hidden" id="importFile" type="file" accept="application/json,.json" />
+        </div>
+        <div class="save-strip">
+          <span class="status" id="saveStatus">로컬 저장 확인 중</span>
+          <span id="lastSavedText">입력값은 이 브라우저에 자동 저장됩니다.</span>
+          <span class="status neutral" id="cloudStripStatus">클라우드 확인 중</span>
+          <span id="cloudStripText">Google 로그인 후 10초마다 부부 기기 사이의 변경을 확인합니다.</span>
+        </div>
+      </div>
+
+      <aside class="hero-aside" aria-label="부부 월 저축 합계">
+        <div>
+          <div class="aside-label">부부 월 저축</div>
+          <div class="aside-value" id="heroSavings">—</div>
+          <div class="aside-label" id="heroSavingsRate">합산 실수령액의 —</div>
+        </div>
+        <p class="aside-note" id="heroSavingsFormula">공동 잔액 + 각자의 직접 저축</p>
+      </aside>
+    </section>
+
+    <nav class="quick-nav" aria-label="화면 바로가기">
+      <a href="#sync">클라우드 동기화</a>
+      <a href="#advisor">가계 재무 코치</a>
+      <a href="#cashflow">부부 현금흐름</a>
+      <a href="#people">각자 예산</a>
+      <a href="#joint">공동 가계</a>
+      <a href="#comparison">부부 비교</a>
+      <a href="#summary">복사용 요약</a>
+    </nav>
+
+    <section class="panel sync-panel" id="sync" aria-labelledby="syncTitle">
+      <div class="panel-head">
+        <div>
+          <div class="sync-title-row">
+            <h2 id="syncTitle">부부 클라우드 동기화</h2>
+            <span class="sync-badge" id="cloudStatusBadge">연결 확인</span>
+          </div>
+          <p class="panel-desc">화이트리스트에 등록된 Google 계정은 모두 같은 예산을 보고, 변경 내용은 10초마다 자동으로 맞춥니다.</p>
+        </div>
+        <button class="btn btn-primary" id="syncNowButton" type="button">새로고침 · 동기화</button>
+      </div>
+
+      <div class="sync-overview" aria-live="polite">
+        <div class="sync-overview-copy">
+          <strong class="sync-overview-title" id="cloudStatusTitle">클라우드 상태를 확인하고 있어요.</strong>
+          <span class="sync-overview-text" id="cloudStatusText">로그인 세션과 최신 예산 버전을 확인합니다.</span>
+        </div>
+        <div class="sync-countdown" id="syncCountdown">확인 중</div>
+      </div>
+
+      <div class="auth-session-card" aria-live="polite">
+        <div class="auth-session-main">
+          <div class="auth-avatar" aria-hidden="true">G</div>
+          <div class="auth-session-copy">
+            <span class="auth-session-label">Google account</span>
+            <strong class="auth-session-identity" id="authUserIdentity">로그인 확인 중</strong>
+            <span class="auth-session-help" id="authAccessText">화이트리스트 접근 권한을 확인합니다.</span>
+          </div>
+        </div>
+        <div class="auth-session-actions">
+          <span class="sync-badge" id="authAccessBadge">확인 중</span>
+          <button class="btn" id="googleLogoutButton" type="button">로그아웃</button>
+        </div>
+      </div>
+
+      <div class="sync-actions">
+        <button class="btn btn-secondary" id="pullCloudButton" type="button">클라우드에서 다시 불러오기</button>
+      </div>
+
+      <div class="sync-meta-grid" aria-label="클라우드 동기화 정보">
+        <article class="sync-meta-card"><span class="sync-meta-label">최근 확인</span><strong class="sync-meta-value" id="cloudLastSynced">아직 없음</strong></article>
+        <article class="sync-meta-card"><span class="sync-meta-label">클라우드 버전</span><strong class="sync-meta-value" id="cloudVersion">—</strong></article>
+        <article class="sync-meta-card"><span class="sync-meta-label">마지막 수정자</span><strong class="sync-meta-value" id="cloudUpdatedBy">—</strong></article>
+        <article class="sync-meta-card"><span class="sync-meta-label">다음 자동 확인</span><strong class="sync-meta-value" id="cloudNextCheck">확인 중</strong></article>
+      </div>
+
+      <div class="sync-conflict" id="syncConflict" hidden>
+        <strong>두 기기에서 서로 다른 변경이 발견됐어요.</strong>
+        <p id="syncConflictText">클라우드 최신 내용과 이 기기의 수정 내용 중 어느 쪽을 유지할지 골라 주세요.</p>
+        <div class="sync-conflict-actions">
+          <button class="btn btn-secondary" id="useCloudVersionButton" type="button">클라우드 최신 내용 적용</button>
+          <button class="btn btn-primary" id="overwriteCloudButton" type="button">이 기기 내용으로 덮어쓰기</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="summary-grid household-summary" aria-label="가계 핵심 요약">
+      <article class="metric">
+        <div class="metric-label">부부 합산 실수령액 <span class="pill">100%</span></div>
+        <div class="metric-value" id="metricHouseholdIncome">—</div>
+        <div class="metric-sub" id="metricIncomeBreakdown">나 — + 아내 0원</div>
+      </article>
+      <article class="metric">
+        <div class="metric-label">내 개인 예산 <span class="pill" id="husbandBudgetPill">—</span></div>
+        <div class="metric-value" id="metricHusbandBudget">—</div>
+        <div class="metric-sub">생활비 + 특별비 + 개인 고정비</div>
+      </article>
+      <article class="metric">
+        <div class="metric-label">아내 개인 예산 <span class="pill" id="wifeBudgetPill">입력 전</span></div>
+        <div class="metric-value" id="metricWifeBudget">0원</div>
+        <div class="metric-sub">아내가 직접 관리할 월 예산</div>
+      </article>
+      <article class="metric">
+        <div class="metric-label">공동 고정비 <span class="pill" id="sharedFixedPill">—</span></div>
+        <div class="metric-value" id="metricSharedFixed">—</div>
+        <div class="metric-sub">주거비·관리비 등 공동 납부액</div>
+      </article>
+      <article class="metric">
+        <div class="metric-label">부부 월 저축 <span class="pill" id="householdSavingPill">—</span></div>
+        <div class="metric-value" id="metricHouseholdSavings">—</div>
+        <div class="metric-sub" id="metricSavingsBreakdown">공동 — + 직접 저축 —</div>
+      </article>
+    </section>
+
+    <section class="panel coach-panel" id="advisor" aria-labelledby="coachTitle">
+      <div class="panel-head">
+        <div>
+          <h2 id="coachTitle">가계 재무 코치</h2>
+          <p class="panel-desc">부부 합산 소득·고정비·저축·비상 대응력을 함께 보는 일반적인 현금흐름 안내입니다.</p>
+        </div>
+        <button class="btn btn-small" id="setBaselineButton" type="button">현재 상태를 비교 기준으로 저장</button>
+      </div>
+
+      <div class="coach-summary" aria-live="polite">
+        <div class="coach-signal good" id="coachSignal" aria-hidden="true">✓</div>
+        <div>
+          <div class="coach-kicker">현재 가계 진단</div>
+          <h3 class="coach-headline" id="coachHeadline">저축과 지출의 균형이 안정적이에요.</h3>
+          <p class="coach-message" id="coachMessage">아내의 실수령액과 세부 예산을 입력하면 부부 합산 분석이 완성됩니다.</p>
+        </div>
+        <div class="coach-trend">
+          <div class="coach-trend-label">비교 기준 대비</div>
+          <div class="coach-trend-value neutral" id="coachTrendValue">기준 설정 전</div>
+        </div>
+      </div>
+
+      <div class="coach-metrics">
+        <article class="coach-card">
+          <div class="coach-card-head">
+            <span class="coach-card-label">부부 합산 저축률</span>
+            <span class="coach-status good" id="coachSavingStatus">탄탄</span>
+          </div>
+          <div class="coach-card-value" id="coachSavingRate">—</div>
+          <div class="progress-track" aria-hidden="true"><div class="progress-fill good" id="coachSavingProgress"></div></div>
+          <p class="coach-card-note" id="coachSavingNote">20%는 흔히 쓰는 참고선이며, 현재는 그보다 높은 편입니다.</p>
+        </article>
+
+        <article class="coach-card">
+          <div class="coach-card-head">
+            <span class="coach-card-label">고정지출 부담</span>
+            <span class="coach-status watch" id="coachFixedStatus">관찰</span>
+          </div>
+          <div class="coach-card-value" id="coachFixedRate">—</div>
+          <div class="progress-track" aria-hidden="true"><div class="progress-fill watch" id="coachFixedProgress"></div></div>
+          <p class="coach-card-note" id="coachFixedNote">생활비를 제외하고 매달 먼저 빠져나가는 비저축성 고정비 비중입니다.</p>
+        </article>
+
+        <article class="coach-card">
+          <div class="coach-card-head">
+            <span class="coach-card-label">비상자금 참고 범위</span>
+            <span class="coach-status neutral">3~6개월</span>
+          </div>
+          <div class="coach-card-value" id="coachEmergencyTarget">920만~1,839만 원</div>
+          <p class="coach-card-note" id="coachEmergencyNote">부부 필수 유지비를 기준으로 계산합니다.</p>
+        </article>
+
+        <article class="coach-card">
+          <div class="coach-card-head">
+            <span class="coach-card-label">연간 자산형성 예상</span>
+            <span class="coach-status good" id="coachAnnualStatus">플러스</span>
+          </div>
+          <div class="coach-card-value" id="coachAnnualSavings">—</div>
+          <p class="coach-card-note" id="coachAnnualNote">현재 월 저축 구조가 12개월 유지된다고 가정합니다.</p>
+        </article>
+      </div>
+
+      <div class="coach-lower">
+        <div class="coach-box">
+          <h3 class="coach-box-title">이번 예산에서 보이는 점</h3>
+          <div class="insight-list" id="coachInsights"></div>
+        </div>
+        <div class="coach-box">
+          <h3 class="coach-box-title">비교 기준의 변화</h3>
+          <p class="baseline-meta" id="baselineMeta">아직 비교 기준을 저장하지 않았습니다.</p>
+          <div class="delta-grid">
+            <div class="delta-row">
+              <span class="delta-label">월 저축 여력</span>
+              <span class="delta-value neutral" id="deltaMonthlySavings">기준 없음</span>
+            </div>
+            <div class="delta-row">
+              <span class="delta-label">합산 저축률</span>
+              <span class="delta-value neutral" id="deltaSavingRate">기준 없음</span>
+            </div>
+            <div class="delta-row">
+              <span class="delta-label">고정지출 비율</span>
+              <span class="delta-value neutral" id="deltaFixedRate">기준 없음</span>
+            </div>
+            <div class="delta-row">
+              <span class="delta-label">연간 자산형성 속도</span>
+              <span class="delta-value neutral" id="deltaAnnualSavings">기준 없음</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <details class="guide-details">
+        <summary>이 조언은 어떤 기준으로 보나요?</summary>
+        <div class="guide-content">
+          <p><strong>예산은 소득·일상지출·고정비·저축을 한 화면에서 맞춰 보는 현금흐름 계획</strong>으로 다룹니다. 숫자가 0보다 작아지면 생활비를 더 잘게 쪼개기보다 구조적인 고정비와 저축 계획부터 조정하도록 안내합니다.</p>
+          <p><strong>저축률 20%</strong>는 널리 알려진 참고선일 뿐 모든 가정의 정답은 아닙니다. 이 화면에서는 20% 이상을 안정 구간, 30% 이상을 탄탄한 자산형성 구간으로 느슨하게 표시합니다.</p>
+          <p><strong>비상자금 3~6개월</strong>은 일반적인 참고 범위입니다. 맞벌이 여부, 고용 안정성, 보험 보장, 부양가족과 예정된 큰 지출에 따라 더 작거나 크게 잡을 수 있습니다.</p>
+          <p><strong>개인 예산의 균형</strong>은 절대 금액만으로 판정하지 않습니다. 각자의 소득 대비 비율과 실제 역할·필요가 합의된 구조인지 확인하는 신호로만 사용합니다.</p>
+          <div class="guide-links">
+            <a href="https://consumer.gov/your-money/making-budget" target="_blank" rel="noreferrer">예산 기본 원칙</a>
+            <a href="https://www.consumerfinance.gov/an-essential-guide-to-building-an-emergency-fund/" target="_blank" rel="noreferrer">CFPB 비상자금 안내</a>
+            <a href="https://www.fdic.gov/consumer-resource-center/2025-02/preparing-tax-season" target="_blank" rel="noreferrer">FDIC 3~6개월 참고</a>
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <section class="panel cashflow-panel" id="cashflow" aria-labelledby="cashflowTitle">
+      <div class="panel-head">
+        <div>
+          <h2 id="cashflowTitle">부부 합산 현금흐름</h2>
+          <p class="panel-desc">합산 실수령액 100%가 어디로 배분되는지 큰 항목만 보여줍니다.</p>
+        </div>
+        <span class="section-badge" id="cashflowBalanceBadge">수입과 배분 일치</span>
+      </div>
+
+      <div class="cashflow-layout">
+        <div class="cashflow-box">
+          <div class="cashflow-bar" aria-label="부부 월 현금흐름 배분 막대">
+            <div class="flow-segment flow-fixed" id="flowFixed"></div>
+            <div class="flow-segment flow-living" id="flowLiving"></div>
+            <div class="flow-segment flow-special" id="flowSpecial"></div>
+            <div class="flow-segment flow-buffer" id="flowBuffer"></div>
+            <div class="flow-segment flow-saving" id="flowSaving"></div>
+          </div>
+          <div class="cashflow-legend">
+            <div class="flow-legend-item">
+              <div class="flow-legend-name"><span class="flow-swatch flow-fixed"></span>고정지출</div>
+              <div class="flow-legend-value" id="flowFixedValue">—</div>
+              <div class="flow-legend-rate" id="flowFixedRate">—</div>
+            </div>
+            <div class="flow-legend-item">
+              <div class="flow-legend-name"><span class="flow-swatch flow-living"></span>생활비</div>
+              <div class="flow-legend-value" id="flowLivingValue">—</div>
+              <div class="flow-legend-rate" id="flowLivingRate">—</div>
+            </div>
+            <div class="flow-legend-item">
+              <div class="flow-legend-name"><span class="flow-swatch flow-special"></span>귀한일·특별비</div>
+              <div class="flow-legend-value" id="flowSpecialValue">—</div>
+              <div class="flow-legend-rate" id="flowSpecialRate">—</div>
+            </div>
+            <div class="flow-legend-item">
+              <div class="flow-legend-name"><span class="flow-swatch flow-buffer"></span>반올림 여유금</div>
+              <div class="flow-legend-value" id="flowBufferValue">—</div>
+              <div class="flow-legend-rate" id="flowBufferRate">—</div>
+            </div>
+            <div class="flow-legend-item">
+              <div class="flow-legend-name"><span class="flow-swatch flow-saving"></span>저축·투자</div>
+              <div class="flow-legend-value" id="flowSavingValue">—</div>
+              <div class="flow-legend-rate" id="flowSavingRate">—</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cashflow-side">
+          <div class="cashflow-side-row">
+            <span>부부 합산 실수령액</span>
+            <strong id="flowIncomeSide">—</strong>
+          </div>
+          <div class="cashflow-side-row">
+            <span>월 비저축성 지출</span>
+            <strong id="flowSpendingSide">—</strong>
+          </div>
+          <div class="cashflow-side-row">
+            <span>부부 월 저축</span>
+            <strong id="flowSavingsSide">—</strong>
+          </div>
+          <div class="cashflow-side-row">
+            <span>소득 10% 감소 시 저축</span>
+            <strong id="flowStressSide">—</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="couple-grid" id="people" aria-label="각자의 예산 상세">
+      <section class="panel person-panel husband" aria-labelledby="husbandTitle">
+        <div class="panel-head">
+          <div>
+            <div class="section-title-wrap">
+              <h2 id="husbandTitle">내 예산</h2>
+              <span class="person-badge">나</span>
+            </div>
+            <p class="panel-desc">내가 직접 쓸 돈과 직접 납부할 항목을 계산합니다.</p>
+          </div>
+        </div>
+
+        <div class="person-form">
+          <div class="form-grid">
+            <div class="field field-wide">
+              <label for="husbandNetPay">월 실수령액</label>
+              <div class="control has-unit">
+                <input id="husbandNetPay" type="number" min="0" step="10000" inputmode="numeric" />
+                <span class="input-unit">원</span>
+              </div>
+            </div>
+            <div class="field">
+              <label for="husbandDailyBudget">하루 생활비</label>
+              <div class="control has-unit">
+                <input id="husbandDailyBudget" type="number" min="0" step="1000" inputmode="numeric" />
+                <span class="input-unit">원</span>
+              </div>
+            </div>
+            <div class="field">
+              <label for="husbandDayMode">생활비 계산 기준</label>
+              <select id="husbandDayMode">
+                <option value="average">연평균 365일 ÷ 12개월</option>
+                <option value="28">28일</option>
+                <option value="29">29일</option>
+                <option value="30">30일</option>
+                <option value="31">31일</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="husbandSpecialBudget">귀한일·개인 특별비</label>
+              <div class="control has-unit">
+                <input id="husbandSpecialBudget" type="number" min="0" step="10000" inputmode="numeric" />
+                <span class="input-unit">원</span>
+              </div>
+            </div>
+            <div class="field">
+              <label for="husbandRoundUnit">받을 금액 반올림</label>
+              <select id="husbandRoundUnit">
+                <option value="1">반올림 없음</option>
+                <option value="1000">1천 원 단위 올림</option>
+                <option value="10000">1만 원 단위 올림</option>
+                <option value="50000">5만 원 단위 올림</option>
+                <option value="100000">10만 원 단위 올림</option>
+              </select>
+            </div>
+          </div>
+          <p class="person-help">개인 예산은 생활비·특별비·개인 고정비를 더한 뒤 선택한 단위로 올림합니다.</p>
+        </div>
+
+        <div class="person-result-card">
+          <h3>내가 관리할 금액</h3>
+          <div class="result-list">
+            <div class="result-row"><span class="result-label">월 생활비</span><span class="result-value" id="husbandLivingResult">—</span></div>
+            <div class="result-row"><span class="result-label">귀한일·특별비</span><span class="result-value" id="husbandSpecialResult">—</span></div>
+            <div class="result-row"><span class="result-label">개인 고정비</span><span class="result-value" id="husbandFixedResult">—</span></div>
+            <div class="result-row"><span class="result-label">그중 직접 저축</span><span class="result-value" id="husbandDirectSavingResult">—</span></div>
+            <div class="result-row"><span class="result-label">반올림 여유금</span><span class="result-value" id="husbandBufferResult">—</span></div>
+            <div class="result-row emphasis"><span class="result-label">내 개인 예산</span><span class="result-value" id="husbandBudgetResult">—</span></div>
+            <div class="result-row"><span class="result-label">공동가계로 보낼 돈</span><span class="result-value" id="husbandContributionResult">—</span></div>
+          </div>
+          <div class="person-mini-flow" aria-hidden="true">
+            <div class="person-mini-bar">
+              <div class="person-mini-use" id="husbandUseBar"></div>
+              <div class="person-mini-contribution" id="husbandContributionBar"></div>
+            </div>
+            <div class="person-mini-legend">
+              <span>개인 예산 <strong id="husbandUseRate">—</strong></span>
+              <span>공동가계 기여 <strong id="husbandContributionRate">—</strong></span>
+            </div>
+          </div>
+          <div class="person-warning good" id="husbandWarning">현재 계획으로 공동가계에 —을 보낼 수 있습니다.</div>
+        </div>
+
+        <div class="expense-editor">
+          <div class="expense-editor-head">
+            <div>
+              <h3>내 개인 지출 항목</h3>
+              <p>체크한 항목은 비용이 아니라 직접 저축으로 분류합니다.</p>
+            </div>
+          </div>
+          <div class="table-block">
+            <div class="table-title-row">
+              <h4 class="table-title">개인 고정비</h4>
+              <span class="table-total" id="husbandCoreTotal">—</span>
+            </div>
+            <div class="items" id="husbandCoreItems"></div>
+            <button class="add-row" type="button" data-person="husband" data-list="coreFixed">+ 개인 고정비 항목 추가</button>
+          </div>
+          <div class="table-block">
+            <div class="table-title-row">
+              <h4 class="table-title">구독료</h4>
+              <span class="table-total" id="husbandSubscriptionTotal">—</span>
+            </div>
+            <div class="items" id="husbandSubscriptionItems"></div>
+            <button class="add-row" type="button" data-person="husband" data-list="subscriptions">+ 구독 항목 추가</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel person-panel wife" aria-labelledby="wifeTitle">
+        <div class="panel-head">
+          <div>
+            <div class="section-title-wrap">
+              <h2 id="wifeTitle">아내 예산</h2>
+              <span class="person-badge wife">아내</span>
+            </div>
+            <p class="panel-desc">아내도 같은 기준으로 생활비·고정비·직접 저축을 정리합니다.</p>
+          </div>
+          <div class="person-tools">
+            <button class="btn btn-small" id="copyStructureButton" type="button">내 항목 이름만 복사</button>
+          </div>
+        </div>
+
+        <div class="person-form">
+          <div class="form-grid">
+            <div class="field field-wide">
+              <label for="wifeNetPay">월 실수령액</label>
+              <div class="control has-unit">
+                <input id="wifeNetPay" type="number" min="0" step="10000" inputmode="numeric" />
+                <span class="input-unit">원</span>
+              </div>
+              <span class="helper">실수령액을 입력하면 부부 합산 저축률과 전체 분석이 완성됩니다.</span>
+            </div>
+            <div class="field">
+              <label for="wifeDailyBudget">하루 생활비</label>
+              <div class="control has-unit">
+                <input id="wifeDailyBudget" type="number" min="0" step="1000" inputmode="numeric" />
+                <span class="input-unit">원</span>
+              </div>
+            </div>
+            <div class="field">
+              <label for="wifeDayMode">생활비 계산 기준</label>
+              <select id="wifeDayMode">
+                <option value="average">연평균 365일 ÷ 12개월</option>
+                <option value="28">28일</option>
+                <option value="29">29일</option>
+                <option value="30">30일</option>
+                <option value="31">31일</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="wifeSpecialBudget">귀한일·개인 특별비</label>
+              <div class="control has-unit">
+                <input id="wifeSpecialBudget" type="number" min="0" step="10000" inputmode="numeric" />
+                <span class="input-unit">원</span>
+              </div>
+            </div>
+            <div class="field">
+              <label for="wifeRoundUnit">받을 금액 반올림</label>
+              <select id="wifeRoundUnit">
+                <option value="1">반올림 없음</option>
+                <option value="1000">1천 원 단위 올림</option>
+                <option value="10000">1만 원 단위 올림</option>
+                <option value="50000">5만 원 단위 올림</option>
+                <option value="100000">10만 원 단위 올림</option>
+              </select>
+            </div>
+          </div>
+          <p class="person-help">아내의 개인 예산을 제외한 금액은 공동가계 기여금으로 계산합니다.</p>
+        </div>
+
+        <div class="person-result-card">
+          <h3>아내가 관리할 금액</h3>
+          <div class="result-list">
+            <div class="result-row"><span class="result-label">월 생활비</span><span class="result-value" id="wifeLivingResult">0원</span></div>
+            <div class="result-row"><span class="result-label">귀한일·특별비</span><span class="result-value" id="wifeSpecialResult">0원</span></div>
+            <div class="result-row"><span class="result-label">개인 고정비</span><span class="result-value" id="wifeFixedResult">0원</span></div>
+            <div class="result-row"><span class="result-label">그중 직접 저축</span><span class="result-value" id="wifeDirectSavingResult">0원</span></div>
+            <div class="result-row"><span class="result-label">반올림 여유금</span><span class="result-value" id="wifeBufferResult">0원</span></div>
+            <div class="result-row emphasis"><span class="result-label">아내 개인 예산</span><span class="result-value" id="wifeBudgetResult">0원</span></div>
+            <div class="result-row"><span class="result-label">공동가계에 남길 돈</span><span class="result-value" id="wifeContributionResult">0원</span></div>
+          </div>
+          <div class="person-mini-flow" aria-hidden="true">
+            <div class="person-mini-bar">
+              <div class="person-mini-use" id="wifeUseBar"></div>
+              <div class="person-mini-contribution" id="wifeContributionBar"></div>
+            </div>
+            <div class="person-mini-legend">
+              <span>개인 예산 <strong id="wifeUseRate">입력 전</strong></span>
+              <span>공동가계 기여 <strong id="wifeContributionRate">입력 전</strong></span>
+            </div>
+          </div>
+          <div class="person-warning" id="wifeWarning">아내의 월 실수령액과 지출 항목을 입력해 주세요.</div>
+        </div>
+
+        <div class="expense-editor">
+          <div class="expense-editor-head">
+            <div>
+              <h3>아내 개인 지출 항목</h3>
+              <p>교통·통신·보험·개인 적금 등 아내가 직접 납부하는 항목을 적습니다.</p>
+            </div>
+          </div>
+          <div class="table-block">
+            <div class="table-title-row">
+              <h4 class="table-title">개인 고정비</h4>
+              <span class="table-total" id="wifeCoreTotal">0원</span>
+            </div>
+            <div class="items" id="wifeCoreItems"></div>
+            <button class="add-row" type="button" data-person="wife" data-list="coreFixed">+ 개인 고정비 항목 추가</button>
+          </div>
+          <div class="table-block">
+            <div class="table-title-row">
+              <h4 class="table-title">구독료</h4>
+              <span class="table-total" id="wifeSubscriptionTotal">0원</span>
+            </div>
+            <div class="items" id="wifeSubscriptionItems"></div>
+            <button class="add-row" type="button" data-person="wife" data-list="subscriptions">+ 구독 항목 추가</button>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <section class="joint-grid" id="joint" aria-label="공동 가계 상세">
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>공동가계와 공동 고정비</h2>
+            <p class="panel-desc">각자의 개인 예산을 제외한 금액을 모아 공동비용을 납부합니다.</p>
+          </div>
+        </div>
+
+        <div class="joint-contribution-grid">
+          <article class="mini-stat">
+            <div class="mini-stat-label">내가 보내는 돈</div>
+            <div class="mini-stat-value" id="jointHusbandContribution">—</div>
+          </article>
+          <article class="mini-stat">
+            <div class="mini-stat-label">아내가 남기는 돈</div>
+            <div class="mini-stat-value" id="jointWifeContribution">0원</div>
+          </article>
+          <article class="mini-stat">
+            <div class="mini-stat-label">공동가계 총 유입</div>
+            <div class="mini-stat-value" id="jointPool">—</div>
+          </article>
+        </div>
+
+        <div class="table-block">
+          <div class="table-title-row">
+            <h3 class="table-title">공동 고정비</h3>
+            <span class="table-total" id="sharedFixedTotal">—</span>
+          </div>
+          <div class="items" id="sharedFixedItems"></div>
+          <button class="add-row" type="button" data-shared-list="sharedFixed">+ 공동 고정비 항목 추가</button>
+        </div>
+
+        <div class="result-list" style="margin-top:18px;">
+          <div class="result-row"><span class="result-label">공동가계 총 유입</span><span class="result-value" id="jointPoolResult">—</span></div>
+          <div class="result-row"><span class="result-label">공동 고정비</span><span class="result-value" id="jointFixedResult">—</span></div>
+          <div class="result-row emphasis"><span class="result-label">공동 저축·투자 가능액</span><span class="result-value" id="jointSavingResult">—</span></div>
+        </div>
+
+        <div class="note-box" id="jointWarning" style="margin-top:16px;">공동 고정비를 납부하고도 저축 여력이 남습니다.</div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>부부 저축 합계</h2>
+            <p class="panel-desc">공동 잔액과 각자의 직접 저축 항목을 합산합니다.</p>
+          </div>
+        </div>
+
+        <div class="savings-highlight">
+          <div class="savings-highlight-label">부부 월 저축</div>
+          <div class="savings-highlight-value" id="householdSavingsHighlight">—</div>
+          <div class="savings-highlight-sub" id="householdSavingsHighlightSub">합산 실수령액의 —</div>
+        </div>
+
+        <div class="savings-stack" style="margin-top:16px;">
+          <div class="result-row"><span class="result-label">내 직접 저축</span><span class="result-value" id="savingHusbandDirect">—</span></div>
+          <div class="result-row"><span class="result-label">아내 직접 저축</span><span class="result-value" id="savingWifeDirect">0원</span></div>
+          <div class="result-row"><span class="result-label">공동 저축·투자 가능액</span><span class="result-value" id="savingShared">—</span></div>
+          <div class="result-row"><span class="result-label">연간 자산형성 단순 환산</span><span class="result-value" id="savingAnnual">—</span></div>
+        </div>
+
+        <div class="goal-box">
+          <label for="householdSavingsGoal">월 저축 목표 <span class="field-badge">선택</span></label>
+          <div class="control has-unit">
+            <input id="householdSavingsGoal" type="number" min="0" step="10000" inputmode="numeric" />
+            <span class="input-unit">원</span>
+          </div>
+          <div class="progress-track" aria-hidden="true"><div class="progress-fill neutral" id="goalProgress"></div></div>
+          <div class="goal-row">
+            <span id="goalText">목표를 입력하면 달성률을 보여줍니다.</span>
+            <strong id="goalRate">—</strong>
+          </div>
+        </div>
+
+        <div class="storage-card" style="margin-top:14px;">
+          <strong>로컬 저장은 그대로 안전망으로 남아 있어요.</strong>
+          입력 즉시 이 브라우저에 저장되고, Google 로그인과 화이트리스트 확인이 끝나면 10초마다 상대방의 변경을 확인합니다. 인터넷이 끊기면 로컬에 계속 보관했다가 연결이 돌아온 뒤 동기화합니다.
+        </div>
+      </section>
+    </section>
+
+    <section class="panel" id="comparison" aria-labelledby="comparisonTitle" style="margin-bottom:24px;">
+      <div class="panel-head">
+        <div>
+          <h2 id="comparisonTitle">부부 예산 비교</h2>
+          <p class="panel-desc">절대 금액과 소득 대비 비율을 함께 보되, 누가 더 많이 쓰는지를 판정하는 표는 아닙니다.</p>
+        </div>
+      </div>
+      <div class="comparison-wrap">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>항목</th>
+              <th>나</th>
+              <th>아내</th>
+              <th>부부 합계</th>
+            </tr>
+          </thead>
+          <tbody id="comparisonBody"></tbody>
+        </table>
+      </div>
+      <p class="comparison-note" id="comparisonNote">아내 실수령액을 입력하면 각자의 개인 예산 비율과 공동가계 기여 비율을 비교할 수 있습니다.</p>
+    </section>
+
+    <section class="panel summary-editor-panel" id="summary">
+      <div class="panel-head">
+        <div>
+          <h2>복사용 요약문</h2>
+          <p class="panel-desc">현재 입력값과 가계 재무 인사이트를 자동으로 정리합니다.</p>
+        </div>
+        <button class="btn btn-primary" id="copyButtonInline" type="button">복사</button>
+      </div>
+      <textarea class="summary-text" id="summaryText" readonly aria-label="복사용 부부 예산 요약문"></textarea>
+    </section>
+
+    <p class="footer">허용된 Google 계정으로 로그인한 뒤 Supabase의 공용 예산을 불러오며, 입력값은 로컬 캐시와 클라우드에 함께 저장됩니다. 안내는 일반적인 가계 현금흐름 참고용이며 세무·투자·대출 상담을 대신하지 않습니다.</p>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">저장했습니다.</div>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.2" integrity="sha384-B2duOBIryCXbX4eDE4BdJwtNkQMRQde3o6IsjfPW28E6aH1CYE96hHeZRG3zY56O" crossorigin="anonymous"></script>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const STORAGE_KEY = "couple-budget-dashboard-google-auth-cache-v1";
+      const LEGACY_STORAGE_KEY = "couple-budget-dashboard-google-auth-unused-legacy";
+      const BASELINE_STORAGE_KEY = "couple-budget-dashboard-google-auth-baseline-v1";
+      const LEGACY_SYNC_CONFIG_STORAGE_KEY = "couple-budget-dashboard-google-auth-unused-config";
+      const SYNC_CONFIG_STORAGE_KEY = "couple-budget-dashboard-google-auth-fixed-config-v1";
+      const SYNC_META_STORAGE_KEY = "couple-budget-dashboard-google-auth-meta-v1";
+      const APP_VERSION = 4;
+      const SYNC_INTERVAL_MS = 10000;
+
+      // 브라우저 공개용 연결 설정입니다. 사용자 입력 없이 앱에서 고정해 사용합니다.
+      // Secret/service_role 키는 절대 프런트엔드에 넣지 않습니다.
+      const SUPABASE_URL = "https://vdtddbpxlfiqmdzvwdnz.supabase.co";
+      const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_zCeQWBlMQ__8xxSzUzlUAQ_KLGtOQRS";
+
+      const personDefaults = {
+        netPay: 0,
+        dailyBudget: 0,
+        dayMode: "average",
+        specialBudget: 0,
+        roundUnit: 10000,
+        coreFixed: [],
+        subscriptions: []
+      };
+
+      const defaults = {
+        version: APP_VERSION,
+        meta: { lastSavedAt: null },
+        householdSavingsGoal: 0,
+        husband: { ...personDefaults },
+        wife: { ...personDefaults },
+        sharedFixed: []
+      };
+
+      const $ = (selector) => document.querySelector(selector);
+      const $$ = (selector) => [...document.querySelectorAll(selector)];
+      const won = new Intl.NumberFormat("ko-KR");
+      const currency = (value) => `${won.format(Math.round(Number(value) || 0))}원`;
+      const percent = (value) => `${Number.isFinite(value) ? value.toFixed(1) : "0.0"}%`;
+      const positiveNumber = (value) => Math.max(0, Number(value) || 0);
+      const compactCurrency = (value) => {
+        const amount = Math.max(0, Math.round(Number(value) || 0));
+        if (amount >= 100000000) {
+          const n = amount / 100000000;
+          return `${Number.isInteger(n) ? n.toFixed(0) : n.toFixed(1)}억 원`;
+        }
+        if (amount >= 10000) return `${won.format(Math.round(amount / 10000))}만 원`;
+        return currency(amount);
+      };
+      const signedCurrency = (value) => {
+        const amount = Math.round(Number(value) || 0);
+        if (Math.abs(amount) < 1000) return "변화 없음";
+        return `${amount > 0 ? "+" : "−"}${currency(Math.abs(amount))}`;
+      };
+
+      let state = loadState();
+      let baseline = loadBaseline();
+      let syncConfig = loadSyncConfig();
+      let syncMeta = loadSyncMeta();
+      let saveTimer = null;
+      let toastTimer = null;
+      let syncIntervalTimer = null;
+      let syncCountdownTimer = null;
+      let syncInFlight = false;
+      let nextSyncAt = null;
+      let conflictSnapshot = null;
+      let supabaseClient = null;
+      let supabaseClientFingerprint = "";
+      let authSubscription = null;
+      let authSession = null;
+      let authUser = null;
+      let authAccess = { checked: false, allowed: false, email: "", displayName: "" };
+      let authCheckSequence = 0;
+      let authSessionGeneration = 0;
+      let appUnlocked = false;
+      let initialCloudLoaded = false;
+
+      function deepClone(value) {
+        return JSON.parse(JSON.stringify(value));
+      }
+
+      function escapeHtml(value) {
+        return String(value ?? "")
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
+
+      function normalizeItem(item, allowSaving = true) {
+        return {
+          name: typeof item?.name === "string" ? item.name : "이름 없는 항목",
+          amount: positiveNumber(item?.amount),
+          ...(allowSaving ? { saving: Boolean(item?.saving) } : {})
+        };
+      }
+
+      function normalizePerson(input, fallback) {
+        const source = input && typeof input === "object" ? input : {};
+        return {
+          ...deepClone(personDefaults),
+          ...deepClone(fallback),
+          ...source,
+          netPay: positiveNumber(source.netPay ?? fallback.netPay),
+          dailyBudget: positiveNumber(source.dailyBudget ?? fallback.dailyBudget),
+          specialBudget: positiveNumber(source.specialBudget ?? fallback.specialBudget),
+          roundUnit: Math.max(1, positiveNumber(source.roundUnit ?? fallback.roundUnit)),
+          dayMode: ["average", "28", "29", "30", "31"].includes(String(source.dayMode))
+            ? String(source.dayMode)
+            : fallback.dayMode,
+          coreFixed: Array.isArray(source.coreFixed)
+            ? source.coreFixed.map((item) => normalizeItem(item, true))
+            : deepClone(fallback.coreFixed),
+          subscriptions: Array.isArray(source.subscriptions)
+            ? source.subscriptions.map((item) => normalizeItem(item, true))
+            : deepClone(fallback.subscriptions)
+        };
+      }
+
+      function normalizeState(input) {
+        const source = input && typeof input === "object" ? input : {};
+        return {
+          version: APP_VERSION,
+          meta: {
+            lastSavedAt: typeof source.meta?.lastSavedAt === "string" ? source.meta.lastSavedAt : null
+          },
+          householdSavingsGoal: positiveNumber(source.householdSavingsGoal),
+          husband: normalizePerson(source.husband, defaults.husband),
+          wife: normalizePerson(source.wife, defaults.wife),
+          sharedFixed: Array.isArray(source.sharedFixed)
+            ? source.sharedFixed.map((item) => normalizeItem(item, false))
+            : deepClone(defaults.sharedFixed)
+        };
+      }
+
+      function migrateLegacy(legacy) {
+        const migrated = deepClone(defaults);
+        migrated.husband.netPay = positiveNumber(legacy.netPay);
+        migrated.husband.dailyBudget = positiveNumber(legacy.dailyBudget);
+        migrated.husband.dayMode = String(legacy.dayMode || "average");
+        migrated.husband.specialBudget = positiveNumber(legacy.specialBudget);
+        migrated.husband.roundUnit = Math.max(1, positiveNumber(legacy.roundUnit) || 10000);
+        migrated.husband.coreFixed = Array.isArray(legacy.coreFixed)
+          ? legacy.coreFixed.map((item) => normalizeItem(item, true))
+          : deepClone(defaults.husband.coreFixed);
+        migrated.husband.subscriptions = Array.isArray(legacy.subscriptions)
+          ? legacy.subscriptions.map((item) => normalizeItem(item, true))
+          : deepClone(defaults.husband.subscriptions);
+        migrated.sharedFixed = Array.isArray(legacy.wifeFixed)
+          ? legacy.wifeFixed.map((item) => normalizeItem(item, false))
+          : deepClone(defaults.sharedFixed);
+
+        const oldWifeSavings = positiveNumber(legacy.wifeSavings);
+        if (oldWifeSavings > 0) {
+          migrated.wife.netPay = oldWifeSavings;
+          migrated.wife.coreFixed = [
+            { name: "이전 버전에서 입력한 아내 저축액", amount: oldWifeSavings, saving: true }
+          ];
+        }
+        return migrated;
+      }
+
+      function loadState() {
+        try {
+          const current = JSON.parse(localStorage.getItem(STORAGE_KEY));
+          if (current) return normalizeState(current);
+        } catch {}
+        return deepClone(defaults);
+      }
+
+      function loadBaseline() {
+        try {
+          const saved = JSON.parse(localStorage.getItem(BASELINE_STORAGE_KEY));
+          return saved && typeof saved === "object" ? saved : null;
+        } catch {
+          return null;
+        }
+      }
+
+      function defaultSyncConfig() {
+        return { projectUrl: SUPABASE_URL, publishableKey: SUPABASE_PUBLISHABLE_KEY, autoSync: true };
+      }
+
+      function defaultSyncMeta() {
+        return {
+          remoteVersion: 0,
+          remoteUpdatedAt: null,
+          remoteUpdatedBy: null,
+          remoteUpdatedByEmail: null,
+          lastSyncedAt: null,
+          dirty: false,
+          connectionFingerprint: "",
+          lastError: null
+        };
+      }
+
+      function loadSyncConfig() {
+        return defaultSyncConfig();
+      }
+
+      function loadSyncMeta() {
+        try {
+          const parsed = JSON.parse(localStorage.getItem(SYNC_META_STORAGE_KEY));
+          return { ...defaultSyncMeta(), ...(parsed && typeof parsed === "object" ? parsed : {}) };
+        } catch {
+          return defaultSyncMeta();
+        }
+      }
+
+      function saveSyncConfig() {
+        // 연결값은 배포 파일에 고정됩니다.
+      }
+
+      function saveSyncMeta() {
+        try {
+          localStorage.setItem(SYNC_META_STORAGE_KEY, JSON.stringify(syncMeta));
+        } catch {}
+      }
+
+      function normalizedProjectUrl(value = syncConfig.projectUrl) {
+        return String(value || "").trim().replace(/\/+$/, "");
+      }
+
+      function clientConfigFingerprint(config = syncConfig) {
+        return [normalizedProjectUrl(config.projectUrl), String(config.publishableKey || "").trim()].join("|");
+      }
+
+      function connectionFingerprint(config = syncConfig) {
+        return [clientConfigFingerprint(config), String(authUser?.id || "")].join("|");
+      }
+
+      function legacyApiKeyRole(key) {
+        try {
+          const value = String(key || "").trim();
+          if (!value.startsWith("eyJ")) return "";
+          const payload = value.split(".")[1];
+          if (!payload) return "";
+          const normalized = payload.replaceAll("-", "+").replaceAll("_", "/");
+          const padded = normalized + "=".repeat((4 - normalized.length % 4) % 4);
+          return JSON.parse(atob(padded))?.role || "";
+        } catch {
+          return "";
+        }
+      }
+
+      function isUnsafeFrontendKey(key = syncConfig.publishableKey) {
+        const value = String(key || "").trim();
+        return value.startsWith("sb_secret_") || legacyApiKeyRole(value) === "service_role";
+      }
+
+      function isSyncConfigured() {
+        const url = normalizedProjectUrl();
+        const key = String(syncConfig.publishableKey || "").trim();
+        return /^https:\/\/[^/]+\.supabase\.co$/i.test(url)
+          && key.length >= 20
+          && !url.startsWith("__SUPABASE_")
+          && !key.startsWith("__SUPABASE_")
+          && !isUnsafeFrontendKey();
+      }
+
+      function isAuthenticated() {
+        return Boolean(authUser && authSession?.access_token);
+      }
+
+      function isCloudReady() {
+        return isSyncConfigured() && isAuthenticated() && authAccess.checked && authAccess.allowed;
+      }
+
+      function captureCloudSession() {
+        return {
+          generation: authSessionGeneration,
+          userId: authUser?.id || "",
+          fingerprint: connectionFingerprint()
+        };
+      }
+
+      function isCloudSessionCurrent(session) {
+        return Boolean(
+          session
+          && authSessionGeneration === session.generation
+          && authUser?.id === session.userId
+          && connectionFingerprint() === session.fingerprint
+          && isCloudReady()
+        );
+      }
+
+      function resetRemoteKnowledge({ keepDirty = true } = {}) {
+        const dirty = keepDirty ? syncMeta.dirty : false;
+        syncMeta = { ...defaultSyncMeta(), dirty, connectionFingerprint: connectionFingerprint() };
+        conflictSnapshot = null;
+        saveSyncMeta();
+        renderSyncStatus();
+      }
+
+      function markCloudDirty() {
+        if (!appUnlocked || !initialCloudLoaded) return;
+        syncMeta.dirty = true;
+        syncMeta.lastError = null;
+        saveSyncMeta();
+        renderSyncStatus();
+      }
+
+      function formatDateTime(value) {
+        const date = value ? new Date(value) : null;
+        if (!date || Number.isNaN(date.getTime())) return "아직 없음";
+        return date.toLocaleString("ko-KR", {
+          month: "numeric",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit"
+        });
+      }
+
+      function cloudPayload() {
+        return {
+          app: "우리 부부 월급 관리판",
+          schemaVersion: APP_VERSION,
+          state: normalizeState(state),
+          baseline: baseline && typeof baseline === "object" ? baseline : null
+        };
+      }
+
+      function normalizeCloudPayload(payload) {
+        const source = payload && typeof payload === "object" ? payload : {};
+        return {
+          state: normalizeState(source.state ?? source),
+          baseline: source.baseline && typeof source.baseline === "object" ? source.baseline : null
+        };
+      }
+
+      function parseRpcRow(data) {
+        if (Array.isArray(data)) return data[0] || null;
+        return data && typeof data === "object" ? data : null;
+      }
+
+      function friendlyCloudError(error) {
+        const pieces = [error?.message, error?.details, error?.hint, error?.code]
+          .filter(Boolean)
+          .map(String);
+        const raw = pieces.join(" · ") || String(error || "알 수 없는 오류");
+        if (/Failed to fetch|NetworkError|Load failed/i.test(raw)) return "인터넷 연결 또는 클라우드 서비스 상태를 확인해 주세요.";
+        if (/401|Invalid API key|No API key|JWT.*expired|invalid claim/i.test(raw)) return "로그인 세션이 만료되었거나 서비스 연결에 문제가 있어요. 다시 로그인해 주세요.";
+        if (/WHITELIST_DENIED|화이트리스트|42501/i.test(raw)) return "이 Google 계정은 화이트리스트에 등록되어 있지 않습니다.";
+        if (/LOGIN_REQUIRED/i.test(raw)) return "Google 로그인이 필요합니다.";
+        if (/INITIAL_DATA_MISSING/i.test(raw)) return "초기 예산 데이터 마이그레이션 SQL을 실행해 주세요.";
+        if (/404|PGRST202|function.*not found/i.test(raw)) return "가계관리판 서버 기능을 불러오지 못했어요.";
+        return raw.length > 180 ? `${raw.slice(0, 177)}…` : raw;
+      }
+
+      function teardownSupabaseClient() {
+        try { authSubscription?.unsubscribe(); } catch {}
+        authSubscription = null;
+        supabaseClient = null;
+        supabaseClientFingerprint = "";
+        authSessionGeneration += 1;
+      }
+
+      async function ensureSupabaseClient({ force = false } = {}) {
+        if (!isSyncConfigured()) return null;
+        if (!window.supabase?.createClient) {
+          throw new Error("Supabase JavaScript 라이브러리를 불러오지 못했습니다. 인터넷 연결을 확인해 주세요.");
+        }
+
+        const fingerprint = clientConfigFingerprint();
+        if (!force && supabaseClient && supabaseClientFingerprint === fingerprint) return supabaseClient;
+
+        teardownSupabaseClient();
+        authCheckSequence += 1;
+        authSession = null;
+        authUser = null;
+        authAccess = { checked: false, allowed: false, email: "", displayName: "" };
+
+        supabaseClient = window.supabase.createClient(
+          normalizedProjectUrl(),
+          String(syncConfig.publishableKey || "").trim(),
+          {
+            auth: {
+              persistSession: true,
+              autoRefreshToken: true,
+              detectSessionInUrl: true,
+              flowType: "pkce"
+            }
+          }
+        );
+        supabaseClientFingerprint = fingerprint;
+
+        const listener = supabaseClient.auth.onAuthStateChange((event, session) => {
+          setTimeout(() => handleAuthSession(session, { event }), 0);
+        });
+        authSubscription = listener?.data?.subscription || null;
+
+        const { data, error } = await supabaseClient.auth.getSession();
+        if (error) throw error;
+        await handleAuthSession(data?.session || null, { event: "INITIAL_SESSION" });
+        return supabaseClient;
+      }
+
+
+      function clearLocalBudgetCache() {
+        state = deepClone(defaults);
+        baseline = null;
+        syncMeta = defaultSyncMeta();
+        conflictSnapshot = null;
+        initialCloudLoaded = false;
+        const legacyKeys = [
+          STORAGE_KEY,
+          BASELINE_STORAGE_KEY,
+          SYNC_META_STORAGE_KEY,
+          "couple-budget-dashboard-v1",
+          "couple-budget-dashboard-v2",
+          "couple-budget-dashboard-advisor-baseline-v2",
+          "couple-budget-dashboard-supabase-config-v1",
+          "couple-budget-dashboard-supabase-auth-config-v2",
+          "couple-budget-dashboard-supabase-auth-meta-v2"
+        ];
+        try { legacyKeys.forEach((key) => localStorage.removeItem(key)); } catch {}
+      }
+
+      function lockApplication() {
+        appUnlocked = false;
+        $("#appShell").hidden = true;
+        $("#authGate").hidden = false;
+      }
+
+      function unlockApplication() {
+        appUnlocked = true;
+        $("#authGate").hidden = true;
+        $("#appShell").hidden = false;
+        window.scrollTo({ top: 0, behavior: "auto" });
+      }
+
+      function renderAccessGate(mode = "loading", detail = "") {
+        lockApplication();
+        const title = $("#authGateTitle");
+        const description = $("#authGateDescription");
+        const account = $("#authGateAccount");
+        const spinner = $("#authGateSpinner");
+        const login = $("#authGateLoginButton");
+        const retry = $("#authGateRetryButton");
+        const logout = $("#authGateLogoutButton");
+        const hint = $("#authGateHint");
+        account.hidden = true;
+        spinner.hidden = true;
+        login.hidden = true;
+        retry.hidden = true;
+        logout.hidden = true;
+        hint.className = "auth-gate-hint";
+
+        const email = authUser?.email || authAccess.email || "";
+        const views = {
+          loading: { title: "로그인 상태를 확인하고 있어요", description: "허용된 Google 계정인지 확인한 뒤 부부 예산을 불러옵니다.", spinner: true, hint: "로그인 전에는 가계 숫자와 관리판을 표시하지 않습니다." },
+          "signed-out": { title: "Google 로그인으로 시작해요", description: "화이트리스트에 등록된 두 계정만 같은 부부 예산을 열 수 있습니다.", login: true, hint: "로그인 세션은 브라우저에 유지되며 다음 접속부터 자동으로 확인합니다." },
+          checking: { title: "계정 접근 권한을 확인하고 있어요", description: "Google 로그인은 완료됐고 Supabase 화이트리스트와 이메일을 대조합니다.", spinner: true, account: email, hint: "잠시만 기다려 주세요." },
+          "loading-data": { title: "최신 부부 예산을 불러오고 있어요", description: "클라우드 원본을 먼저 적용한 뒤 관리판을 표시합니다.", spinner: true, account: email, hint: "오래된 로컬 캐시가 클라우드 원본을 덮어쓰지 않도록 먼저 내려받습니다." },
+          denied: { title: "이 Google 계정은 허용되지 않았어요", description: "로그인은 성공했지만 이메일이 가계관리판 화이트리스트에 없습니다.", logout: true, retry: true, account: email, hint: "couple_budget_allowed_users의 이메일과 enabled 값을 확인해 주세요.", danger: true },
+          "data-missing": { title: "초기 예산 데이터가 아직 없어요", description: "제공된 초기 데이터 마이그레이션 SQL을 실행한 뒤 다시 확인해 주세요.", retry: true, logout: true, account: email, hint: "빈 로컬 데이터로 클라우드를 자동 생성하지 않고 중단했습니다.", danger: true },
+          error: { title: "가계관리판을 불러오지 못했어요", description: detail || syncMeta.lastError || "잠시 후 다시 확인해 주세요.", retry: true, logout: Boolean(authUser), account: email, hint: "로그인 전 상태로 관리판과 가계 숫자를 숨겨두었습니다.", danger: true }
+        };
+        const view = views[mode] || views.loading;
+        title.textContent = view.title;
+        description.textContent = view.description;
+        spinner.hidden = !view.spinner;
+        login.hidden = !view.login;
+        retry.hidden = !view.retry;
+        logout.hidden = !view.logout;
+        if (view.account) { account.textContent = view.account; account.hidden = false; }
+        hint.textContent = view.hint || "";
+        if (view.danger) hint.classList.add("danger");
+      }
+
+      async function loadCloudAndUnlock() {
+        if (!isCloudReady() || syncInFlight) return false;
+        const loadSession = captureCloudSession();
+        let retryStaleLoad = false;
+        syncInFlight = true;
+        renderAccessGate("loading-data");
+        try {
+          const currentFingerprint = connectionFingerprint();
+          if (syncMeta.connectionFingerprint && syncMeta.connectionFingerprint !== currentFingerprint) {
+            clearLocalBudgetCache();
+            renderLists();
+            update(true, false);
+          }
+          if (!syncMeta.connectionFingerprint) {
+            syncMeta.connectionFingerprint = currentFingerprint;
+            saveSyncMeta();
+          }
+
+          const remote = await readCloudSnapshot();
+          if (!isCloudSessionCurrent(loadSession)) { retryStaleLoad = true; return false; }
+          if (!remote) { renderAccessGate("data-missing"); return false; }
+          appUnlocked = true;
+          initialCloudLoaded = true;
+
+          if (syncMeta.dirty) {
+            const remoteVersion = Number(remote.version || 0);
+            const knownVersion = Number(syncMeta.remoteVersion || 0);
+            unlockApplication();
+            if (knownVersion === 0 || remoteVersion !== knownVersion) {
+              showSyncConflict(remote);
+              scheduleNextSync();
+              return true;
+            }
+
+            const saved = await writeCloudSnapshot();
+            if (!isCloudSessionCurrent(loadSession)) { retryStaleLoad = true; return false; }
+            if (saved?.status === "conflict") {
+              showSyncConflict(saved);
+              scheduleNextSync();
+              return true;
+            }
+            rememberRemote(saved, { clearDirty: true });
+            conflictSnapshot = null;
+            renderSyncStatus("synced");
+            scheduleNextSync();
+            return true;
+          }
+
+          applyCloudSnapshot(remote, { toast: false });
+          unlockApplication();
+          renderSyncStatus("synced");
+          scheduleNextSync();
+          return true;
+        } catch (error) {
+          if (!isCloudSessionCurrent(loadSession)) { retryStaleLoad = true; return false; }
+          syncMeta.lastError = friendlyCloudError(error);
+          saveSyncMeta();
+          renderAccessGate("error", syncMeta.lastError);
+          return false;
+        } finally {
+          syncInFlight = false;
+          if (retryStaleLoad && isCloudReady() && !appUnlocked) {
+            setTimeout(() => loadCloudAndUnlock(), 0);
+          }
+        }
+      }
+
+      async function handleAuthSession(session, { event = "" } = {}) {
+        authSessionGeneration += 1;
+        const previousUserId = authUser?.id || "";
+        authSession = session || null;
+        authUser = session?.user || null;
+
+        if (!authUser) {
+          authAccess = { checked: false, allowed: false, email: "", displayName: "" };
+          clearLocalBudgetCache();
+          renderLists();
+          update(true, false);
+          renderAccessGate("signed-out");
+          scheduleNextSync();
+          return;
+        }
+
+        if (previousUserId && previousUserId !== authUser.id) clearLocalBudgetCache();
+        authAccess = { checked: false, allowed: false, email: String(authUser.email || "").toLowerCase(), displayName: "" };
+
+        renderAccessGate("checking");
+        await checkWhitelistAccess({ syncAfter: false });
+      }
+
+      async function checkWhitelistAccess({ syncAfter = false } = {}) {
+        if (!supabaseClient || !authUser) return false;
+        const sequence = ++authCheckSequence;
+        if (!appUnlocked) renderAccessGate("checking");
+        try {
+          const { data, error } = await supabaseClient.rpc("is_couple_budget_user_allowed");
+          if (error) throw error;
+          if (sequence !== authCheckSequence) return false;
+          const metadataName = authUser.user_metadata?.full_name || authUser.user_metadata?.name || "";
+          authAccess = { checked: true, allowed: Boolean(data), email: String(authUser.email || "").toLowerCase(), displayName: String(metadataName || "") };
+          syncMeta.lastError = null;
+          saveSyncMeta();
+          if (!authAccess.allowed) {
+            clearLocalBudgetCache();
+            renderLists();
+            update(true, false);
+            renderAccessGate("denied");
+            scheduleNextSync();
+            return false;
+          }
+          if (syncAfter || !initialCloudLoaded || !appUnlocked) await loadCloudAndUnlock();
+          else { renderSyncStatus("synced"); scheduleNextSync(); }
+          return appUnlocked;
+        } catch (error) {
+          if (sequence !== authCheckSequence) return false;
+          authAccess = { checked: true, allowed: false, email: String(authUser.email || "").toLowerCase(), displayName: "" };
+          syncMeta.lastError = friendlyCloudError(error);
+          saveSyncMeta();
+          renderAccessGate("error", syncMeta.lastError);
+          scheduleNextSync();
+          return false;
+        }
+      }
+
+      function currentRedirectUrl() {
+        try {
+          const url = new URL(window.location.href);
+          url.search = "";
+          url.hash = "";
+          return url.toString();
+        } catch {
+          return window.location.href.split(/[?#]/)[0];
+        }
+      }
+
+      function canUseOAuthHere() {
+        return window.location.protocol === "https:"
+          || (window.location.protocol === "http:" && ["localhost", "127.0.0.1"].includes(window.location.hostname));
+      }
+
+      async function signInWithGoogle() {
+        if (!isSyncConfigured()) { renderAccessGate("error", "가계관리판에 연결하지 못했어요. 잠시 후 다시 확인해 주세요."); return; }
+        if (!canUseOAuthHere()) { renderAccessGate("error", "Google 로그인은 고정된 HTTPS 주소 또는 localhost에서 사용할 수 있습니다."); return; }
+        try {
+          const client = await ensureSupabaseClient();
+          const { error } = await client.auth.signInWithOAuth({
+            provider: "google",
+            options: { redirectTo: currentRedirectUrl(), queryParams: { prompt: "select_account" } }
+          });
+          if (error) throw error;
+        } catch (error) {
+          syncMeta.lastError = friendlyCloudError(error);
+          saveSyncMeta();
+          renderAccessGate("error", syncMeta.lastError);
+        }
+      }
+
+      async function signOutGoogle() {
+        try {
+          if (supabaseClient) {
+            const { error } = await supabaseClient.auth.signOut({ scope: "local" });
+            if (error) throw error;
+          }
+        } catch (error) {
+          showToast(`로그아웃 실패: ${friendlyCloudError(error)}`);
+        } finally {
+          authSessionGeneration += 1;
+          authSession = null;
+          authUser = null;
+          authAccess = { checked: false, allowed: false, email: "", displayName: "" };
+          clearLocalBudgetCache();
+          renderLists();
+          update(true, false);
+          renderAccessGate("signed-out");
+          scheduleNextSync();
+        }
+      }
+
+      async function supabaseRpc(functionName, params = {}) {
+        const client = await ensureSupabaseClient();
+        if (!client) throw new Error("가계관리판 클라우드에 연결하지 못했습니다.");
+        const { data, error } = await client.rpc(functionName, params);
+        if (error) throw error;
+        return data;
+      }
+
+      async function readCloudSnapshot() {
+        const data = await supabaseRpc("read_couple_budget");
+        return parseRpcRow(data);
+      }
+
+      async function writeCloudSnapshot({ force = false } = {}) {
+        persistNow();
+        const data = await supabaseRpc("write_couple_budget", {
+          p_payload: cloudPayload(),
+          p_expected_version: Number(syncMeta.remoteVersion || 0),
+          p_force: Boolean(force)
+        });
+        return parseRpcRow(data);
+      }
+
+      function rememberRemote(row, { clearDirty = true } = {}) {
+        syncMeta.remoteVersion = Number(row?.version || 0);
+        syncMeta.remoteUpdatedAt = row?.updated_at || null;
+        syncMeta.remoteUpdatedBy = row?.updated_by || null;
+        syncMeta.remoteUpdatedByEmail = row?.updated_by_email || null;
+        syncMeta.lastSyncedAt = new Date().toISOString();
+        syncMeta.connectionFingerprint = connectionFingerprint();
+        syncMeta.lastError = null;
+        if (clearDirty) syncMeta.dirty = false;
+        saveSyncMeta();
+      }
+
+      function applyCloudSnapshot(row, { toast = true } = {}) {
+        const normalized = normalizeCloudPayload(row?.payload);
+        state = normalized.state;
+        baseline = normalized.baseline;
+        try {
+          if (baseline) localStorage.setItem(BASELINE_STORAGE_KEY, JSON.stringify(baseline));
+          else localStorage.removeItem(BASELINE_STORAGE_KEY);
+        } catch {}
+        rememberRemote(row, { clearDirty: true });
+        conflictSnapshot = null;
+        renderLists();
+        update(true, false);
+        persistNow();
+        renderSyncStatus();
+        if (toast) showToast(`${row?.updated_by || "상대방"}의 최신 예산을 불러왔습니다.`);
+      }
+
+      function showSyncConflict(row) {
+        conflictSnapshot = row;
+        syncMeta.lastError = null;
+        saveSyncMeta();
+        const who = row?.updated_by || "다른 사용자";
+        const when = formatDateTime(row?.updated_at);
+        $("#syncConflictText").textContent = `${who}가 ${when}에 저장한 버전 ${Number(row?.version || 0)}과 이 기기의 미저장 변경이 겹쳤습니다.`;
+        renderSyncStatus("conflict");
+      }
+
+      async function prepareCloudAccess({ manual = false } = {}) {
+        if (!isSyncConfigured()) { renderAccessGate("error", "가계관리판에 연결하지 못했어요. 잠시 후 다시 확인해 주세요."); return false; }
+        try { await ensureSupabaseClient(); }
+        catch (error) { syncMeta.lastError = friendlyCloudError(error); saveSyncMeta(); renderAccessGate("error", syncMeta.lastError); return false; }
+        if (!isAuthenticated()) { renderAccessGate("signed-out"); return false; }
+        if (!await checkWhitelistAccess({ syncAfter: false })) return false;
+        if (!appUnlocked || !initialCloudLoaded) return loadCloudAndUnlock();
+        return true;
+      }
+
+      async function syncNow({ manual = false } = {}) {
+        if (syncInFlight) {
+          if (manual) showToast("이미 동기화 중입니다.");
+          return;
+        }
+        if (!await prepareCloudAccess({ manual })) return;
+        const operationSession = captureCloudSession();
+
+        const currentFingerprint = connectionFingerprint();
+        if (syncMeta.connectionFingerprint && syncMeta.connectionFingerprint !== currentFingerprint) {
+          resetRemoteKnowledge({ keepDirty: true });
+        } else if (!syncMeta.connectionFingerprint) {
+          syncMeta.connectionFingerprint = currentFingerprint;
+          saveSyncMeta();
+        }
+
+        syncInFlight = true;
+        renderSyncStatus("syncing");
+        try {
+          const remote = await readCloudSnapshot();
+          if (!isCloudSessionCurrent(operationSession)) return;
+
+          if (!remote) {
+            throw new Error("INITIAL_DATA_MISSING");
+          }
+
+          const remoteVersion = Number(remote.version || 0);
+          const knownVersion = Number(syncMeta.remoteVersion || 0);
+
+          if (syncMeta.dirty) {
+            if (knownVersion === 0 || remoteVersion !== knownVersion) {
+              showSyncConflict(remote);
+              return;
+            }
+
+            const saved = await writeCloudSnapshot();
+            if (!isCloudSessionCurrent(operationSession)) return;
+            if (saved?.status === "conflict") {
+              showSyncConflict(saved);
+              return;
+            }
+            rememberRemote(saved, { clearDirty: true });
+            conflictSnapshot = null;
+            renderSyncStatus("synced");
+            if (manual) showToast("이 기기의 변경을 클라우드에 저장했습니다.");
+            return;
+          }
+
+          if (knownVersion === 0 || remoteVersion > knownVersion) {
+            applyCloudSnapshot(remote, { toast: manual });
+            return;
+          }
+
+          rememberRemote(remote, { clearDirty: true });
+          conflictSnapshot = null;
+          renderSyncStatus("synced");
+          if (manual) showToast("이미 최신 상태입니다.");
+        } catch (error) {
+          if (!isCloudSessionCurrent(operationSession)) return;
+          syncMeta.lastError = friendlyCloudError(error);
+          syncMeta.lastSyncedAt = new Date().toISOString();
+          saveSyncMeta();
+          renderSyncStatus("error");
+          if (manual) showToast(`동기화 실패: ${syncMeta.lastError}`);
+        } finally {
+          syncInFlight = false;
+          renderSyncStatus();
+          scheduleNextSync();
+        }
+      }
+
+      async function forcePullCloud() {
+        if (!await prepareCloudAccess({ manual: true })) return;
+        if (syncMeta.dirty) {
+          const approved = window.confirm("이 기기에서 아직 클라우드에 저장하지 않은 변경이 있습니다. 그래도 클라우드 최신 내용으로 바꿀까요?");
+          if (!approved) return;
+        }
+        if (syncInFlight) return;
+        const operationSession = captureCloudSession();
+        syncInFlight = true;
+        renderSyncStatus("syncing");
+        try {
+          const remote = await readCloudSnapshot();
+          if (!isCloudSessionCurrent(operationSession)) return;
+          if (!remote) {
+            showToast("아직 저장된 공용 클라우드 예산이 없습니다.");
+            renderSyncStatus();
+            return;
+          }
+          applyCloudSnapshot(remote, { toast: true });
+        } catch (error) {
+          if (!isCloudSessionCurrent(operationSession)) return;
+          syncMeta.lastError = friendlyCloudError(error);
+          saveSyncMeta();
+          renderSyncStatus("error");
+          showToast(`불러오기 실패: ${syncMeta.lastError}`);
+        } finally {
+          syncInFlight = false;
+          renderSyncStatus();
+          scheduleNextSync();
+        }
+      }
+
+      async function useCloudConflictVersion() {
+        if (!conflictSnapshot) return;
+        applyCloudSnapshot(conflictSnapshot, { toast: true });
+      }
+
+      async function overwriteCloudFromConflict() {
+        if (!conflictSnapshot || syncInFlight || !isCloudReady()) return;
+        const operationSession = captureCloudSession();
+        syncMeta.remoteVersion = Number(conflictSnapshot.version || 0);
+        saveSyncMeta();
+        syncInFlight = true;
+        renderSyncStatus("syncing");
+        try {
+          const saved = await writeCloudSnapshot({ force: true });
+          if (!isCloudSessionCurrent(operationSession)) return;
+          rememberRemote(saved, { clearDirty: true });
+          conflictSnapshot = null;
+          renderSyncStatus("synced");
+          showToast("이 기기의 내용으로 클라우드를 갱신했습니다.");
+        } catch (error) {
+          if (!isCloudSessionCurrent(operationSession)) return;
+          syncMeta.lastError = friendlyCloudError(error);
+          saveSyncMeta();
+          renderSyncStatus("error");
+          showToast(`덮어쓰기 실패: ${syncMeta.lastError}`);
+        } finally {
+          syncInFlight = false;
+          renderSyncStatus();
+          scheduleNextSync();
+        }
+      }
+
+      function scheduleNextSync() {
+        clearInterval(syncIntervalTimer);
+        clearInterval(syncCountdownTimer);
+        nextSyncAt = null;
+
+        if (!syncConfig.autoSync || !isCloudReady()) {
+          renderSyncStatus();
+          return;
+        }
+
+        nextSyncAt = Date.now() + SYNC_INTERVAL_MS;
+        syncIntervalTimer = setInterval(() => {
+          nextSyncAt = Date.now() + SYNC_INTERVAL_MS;
+          syncNow();
+        }, SYNC_INTERVAL_MS);
+        syncCountdownTimer = setInterval(renderSyncCountdown, 250);
+        renderSyncCountdown();
+      }
+
+      function renderSyncCountdown() {
+        if (!isSyncConfigured()) {
+          $("#syncCountdown").textContent = "클라우드 연결 확인 중";
+          $("#cloudNextCheck").textContent = "연결 확인";
+          return;
+        }
+        if (!isAuthenticated()) {
+          $("#syncCountdown").textContent = "Google 로그인 대기";
+          $("#cloudNextCheck").textContent = "로그인 후";
+          return;
+        }
+        if (!authAccess.checked) {
+          $("#syncCountdown").textContent = "접근 권한 확인 중";
+          $("#cloudNextCheck").textContent = "확인 중";
+          return;
+        }
+        if (!authAccess.allowed) {
+          $("#syncCountdown").textContent = "화이트리스트 접근 불가";
+          $("#cloudNextCheck").textContent = "접근 불가";
+          return;
+        }
+        if (!syncConfig.autoSync) {
+          $("#syncCountdown").textContent = "자동 동기화 꺼짐";
+          $("#cloudNextCheck").textContent = "수동";
+          return;
+        }
+        if (syncInFlight) {
+          $("#syncCountdown").textContent = "지금 확인 중…";
+          $("#cloudNextCheck").textContent = "확인 중";
+          return;
+        }
+        const seconds = nextSyncAt ? Math.max(0, Math.ceil((nextSyncAt - Date.now()) / 1000)) : 10;
+        $("#syncCountdown").textContent = `${seconds}초 뒤 자동 확인`;
+        $("#cloudNextCheck").textContent = `${seconds}초 뒤`;
+      }
+
+      function renderAuthStatus() {
+        const identity = $("#authUserIdentity");
+        const help = $("#authAccessText");
+        const badge = $("#authAccessBadge");
+        if (!identity || !help || !badge) return;
+        if (!authUser) {
+          identity.textContent = "로그인 세션 없음";
+          help.textContent = "로그인 화면으로 돌아갑니다.";
+          badge.className = "sync-badge danger";
+          badge.textContent = "로그아웃";
+          return;
+        }
+        const metadataName = authUser.user_metadata?.full_name || authUser.user_metadata?.name || "";
+        const displayName = authAccess.displayName || metadataName;
+        identity.textContent = displayName ? `${displayName} · ${authUser.email || authAccess.email || ""}` : (authUser.email || authAccess.email || "Google 사용자");
+        if (!authAccess.checked) {
+          help.textContent = "화이트리스트 등록 여부를 확인하고 있습니다.";
+          badge.className = "sync-badge busy";
+          badge.textContent = "확인 중";
+        } else if (authAccess.allowed) {
+          help.textContent = "허용된 계정이며 다른 허용 계정과 같은 예산 데이터를 공유합니다.";
+          badge.className = "sync-badge good";
+          badge.textContent = "접근 허용";
+        } else {
+          help.textContent = "이 이메일은 Supabase 화이트리스트에 없습니다.";
+          badge.className = "sync-badge danger";
+          badge.textContent = "접근 불가";
+        }
+      }
+
+      function renderSyncStatus(forcedState = "") {
+        let mode = forcedState;
+        if (!mode) {
+          if (!isSyncConfigured()) {
+            if (!syncMeta.lastError) syncMeta.lastError = "가계관리판 클라우드 연결에 문제가 있어요.";
+            mode = "error";
+          }
+          else if (!isAuthenticated()) mode = "needs-login";
+          else if (!authAccess.checked) mode = "checking-access";
+          else if (!authAccess.allowed) mode = "denied";
+          else if (conflictSnapshot) mode = "conflict";
+          else if (syncInFlight) mode = "syncing";
+          else if (syncMeta.lastError) mode = "error";
+          else if (syncMeta.dirty) mode = "dirty";
+          else if (syncMeta.remoteVersion > 0) mode = "synced";
+          else mode = "ready";
+        }
+
+        const map = {
+          "needs-login": { badge: "로그인 필요", cls: "wait", title: "Google 로그인이 필요합니다.", text: "로그인 화면으로 이동합니다.", strip: "Google 로그인 필요", stripText: "로그인 후 10초마다 자동 동기화합니다." },
+          "checking-access": { badge: "권한 확인", cls: "busy", title: "로그인 계정의 접근 권한을 확인하고 있어요.", text: "Supabase 화이트리스트와 Google 이메일을 대조하고 있습니다.", strip: "화이트리스트 확인 중", stripText: "계정 접근 권한을 확인하고 있습니다." },
+          denied: { badge: "접근 불가", cls: "danger", title: "이 Google 계정은 허용 목록에 없어요.", text: "SQL Editor의 couple_budget_allowed_users 테이블에 로그인 이메일을 추가한 뒤 다시 동기화해 주세요.", strip: "화이트리스트 접근 불가", stripText: "로그인 이메일을 화이트리스트에 추가해야 합니다." },
+          ready: { badge: "연결 준비", cls: "wait", title: "로그인과 접근 권한 확인이 끝났어요.", text: "새로고침·동기화를 누르거나 잠시 기다리면 공용 예산을 불러옵니다.", strip: "동기화 준비", stripText: "허용된 Google 계정으로 연결되었습니다." },
+          syncing: { badge: "동기화 중", cls: "busy", title: "클라우드와 예산을 맞추고 있어요.", text: "최신 버전과 이 기기의 변경 상태를 비교하고 있습니다.", strip: "클라우드 확인 중", stripText: "Supabase와 통신하고 있습니다." },
+          dirty: { badge: "저장 대기", cls: "wait", title: "이 기기의 변경이 로컬에 저장됐어요.", text: "다음 10초 자동 확인 때 클라우드에 반영됩니다. 지금 바로 동기화해도 됩니다.", strip: "클라우드 저장 대기", stripText: "로컬 변경이 있으며 다음 자동 확인 때 업로드됩니다." },
+          synced: { badge: "동기화됨", cls: "good", title: "허용된 모든 계정이 같은 예산을 보고 있어요.", text: `클라우드 버전 ${Number(syncMeta.remoteVersion || 0)} · 마지막 수정자 ${syncMeta.remoteUpdatedBy || "알 수 없음"}`, strip: "클라우드 동기화됨", stripText: `최근 확인 ${formatDateTime(syncMeta.lastSyncedAt)}` },
+          conflict: { badge: "선택 필요", cls: "danger", title: "서로 다른 기기의 변경이 겹쳤어요.", text: "아래에서 클라우드 최신 내용 또는 이 기기의 내용을 선택해야 자동 동기화가 다시 이어집니다.", strip: "동기화 충돌", stripText: "두 변경 중 유지할 버전을 선택해 주세요." },
+          error: { badge: "연결 확인", cls: "danger", title: "이번 클라우드 확인에 실패했어요.", text: syncMeta.lastError || "인터넷 연결을 확인한 뒤 다시 시도해 주세요.", strip: "클라우드 연결 실패", stripText: syncMeta.lastError || "잠시 후 다시 확인해 주세요." }
+        };
+        const view = map[mode] || map.ready;
+
+        const badge = $("#cloudStatusBadge");
+        badge.className = `sync-badge ${view.cls}`.trim();
+        badge.textContent = view.badge;
+        $("#cloudStatusTitle").textContent = view.title;
+        $("#cloudStatusText").textContent = view.text;
+
+        const strip = $("#cloudStripStatus");
+        strip.className = `status ${view.cls || "neutral"}`.trim();
+        strip.textContent = view.strip;
+        $("#cloudStripText").textContent = view.stripText;
+
+        $("#cloudLastSynced").textContent = formatDateTime(syncMeta.lastSyncedAt);
+        $("#cloudVersion").textContent = syncMeta.remoteVersion > 0 ? `v${syncMeta.remoteVersion}` : "—";
+        $("#cloudUpdatedBy").textContent = syncMeta.remoteUpdatedBy || "—";
+        $("#syncConflict").hidden = mode !== "conflict";
+        renderAuthStatus();
+        renderSyncCountdown();
+      }
+
+      async function initializeCloudAuth() {
+        renderAccessGate("loading");
+        if (!isSyncConfigured()) { renderAccessGate("error", "가계관리판에 연결하지 못했어요. 잠시 후 다시 확인해 주세요."); return; }
+        try {
+          await ensureSupabaseClient({ force: true });
+          if (!authUser) renderAccessGate("signed-out");
+        } catch (error) {
+          syncMeta.lastError = friendlyCloudError(error);
+          saveSyncMeta();
+          renderAccessGate("error", syncMeta.lastError);
+        }
+      }
+
+      function sum(items) {
+        return items.reduce((total, item) => total + positiveNumber(item.amount), 0);
+      }
+
+      function calcPerson(person) {
+        const dayCount = person.dayMode === "average" ? 365 / 12 : Number(person.dayMode);
+        const living = positiveNumber(person.dailyBudget) * dayCount;
+        const special = positiveNumber(person.specialBudget);
+        const coreTotal = sum(person.coreFixed);
+        const subscriptionTotal = sum(person.subscriptions);
+        const fixedTotal = coreTotal + subscriptionTotal;
+        const directSavings = [...person.coreFixed, ...person.subscriptions]
+          .filter((item) => item.saving)
+          .reduce((total, item) => total + positiveNumber(item.amount), 0);
+        const nonSavingFixed = Math.max(0, fixedTotal - directSavings);
+        const rawBudget = living + special + fixedTotal;
+        const unit = Math.max(1, positiveNumber(person.roundUnit));
+        const roundedBudget = rawBudget === 0 ? 0 : Math.ceil(rawBudget / unit) * unit;
+        const buffer = roundedBudget - rawBudget;
+        const netPay = positiveNumber(person.netPay);
+        const contribution = netPay - roundedBudget;
+        const budgetRate = netPay > 0 ? (roundedBudget / netPay) * 100 : 0;
+        const contributionRate = netPay > 0 ? (contribution / netPay) * 100 : 0;
+        const nonSavingSpend = living + special + nonSavingFixed + buffer;
+
+        return {
+          dayCount,
+          living,
+          special,
+          coreTotal,
+          subscriptionTotal,
+          fixedTotal,
+          directSavings,
+          nonSavingFixed,
+          rawBudget,
+          roundedBudget,
+          buffer,
+          netPay,
+          contribution,
+          budgetRate,
+          contributionRate,
+          nonSavingSpend
+        };
+      }
+
+      function calc() {
+        const husband = calcPerson(state.husband);
+        const wife = calcPerson(state.wife);
+        const householdIncome = husband.netPay + wife.netPay;
+        const sharedFixed = sum(state.sharedFixed);
+        const householdPool = husband.contribution + wife.contribution;
+        const sharedSavings = householdPool - sharedFixed;
+        const directSavings = husband.directSavings + wife.directSavings;
+        const householdSavings = sharedSavings + directSavings;
+        const annualSavings = householdSavings * 12;
+        const nonSavingFixed = husband.nonSavingFixed + wife.nonSavingFixed + sharedFixed;
+        const living = husband.living + wife.living;
+        const special = husband.special + wife.special;
+        const buffer = husband.buffer + wife.buffer;
+        const nonSavingSpending = nonSavingFixed + living + special + buffer;
+        const savingRate = householdIncome > 0 ? (householdSavings / householdIncome) * 100 : 0;
+        const fixedRate = householdIncome > 0 ? (nonSavingFixed / householdIncome) * 100 : 0;
+        const livingRate = householdIncome > 0 ? (living / householdIncome) * 100 : 0;
+        const specialRate = householdIncome > 0 ? (special / householdIncome) * 100 : 0;
+        const bufferRate = householdIncome > 0 ? (buffer / householdIncome) * 100 : 0;
+        const sharedFixedRate = householdIncome > 0 ? (sharedFixed / householdIncome) * 100 : 0;
+        const essentialMonthly = nonSavingFixed + living;
+        const emergencyLow = Math.max(0, essentialMonthly * 3);
+        const emergencyHigh = Math.max(0, essentialMonthly * 6);
+        const stressIncome = householdIncome * 0.9;
+        const stressSavings = householdSavings - householdIncome * 0.1;
+        const stressSavingRate = stressIncome > 0 ? (stressSavings / stressIncome) * 100 : 0;
+        const maxIncomeShare = householdIncome > 0
+          ? Math.max(husband.netPay, wife.netPay) / householdIncome * 100
+          : 0;
+        const budgetRateGap = husband.netPay > 0 && wife.netPay > 0
+          ? Math.abs(husband.budgetRate - wife.budgetRate)
+          : 0;
+        const goal = positiveNumber(state.householdSavingsGoal);
+        const goalRate = goal > 0 ? householdSavings / goal * 100 : 0;
+        const balanceCheck = householdIncome - nonSavingSpending - householdSavings;
+
+        return {
+          husband,
+          wife,
+          householdIncome,
+          sharedFixed,
+          householdPool,
+          sharedSavings,
+          directSavings,
+          householdSavings,
+          annualSavings,
+          nonSavingFixed,
+          living,
+          special,
+          buffer,
+          nonSavingSpending,
+          savingRate,
+          fixedRate,
+          livingRate,
+          specialRate,
+          bufferRate,
+          sharedFixedRate,
+          essentialMonthly,
+          emergencyLow,
+          emergencyHigh,
+          stressIncome,
+          stressSavings,
+          stressSavingRate,
+          maxIncomeShare,
+          budgetRateGap,
+          goal,
+          goalRate,
+          balanceCheck
+        };
+      }
+
+      function saveStatusText(dateValue) {
+        const date = dateValue ? new Date(dateValue) : null;
+        if (!date || Number.isNaN(date.getTime())) return "아직 저장 기록이 없습니다.";
+        return `마지막 저장 ${date.toLocaleString("ko-KR", {
+          month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit"
+        })}`;
+      }
+
+      function persistNow({ toast = false } = {}) {
+        if (!appUnlocked || !initialCloudLoaded) return false;
+        state.meta.lastSavedAt = new Date().toISOString();
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+          $("#saveStatus").textContent = "로컬 저장 완료";
+          $("#lastSavedText").textContent = saveStatusText(state.meta.lastSavedAt);
+          if (toast) showToast("현재 예산을 이 브라우저에 저장했습니다.");
+          return true;
+        } catch {
+          $("#saveStatus").textContent = "자동 저장 제한";
+          $("#lastSavedText").textContent = "브라우저 저장소를 사용할 수 없어 백업 파일 기능을 이용해 주세요.";
+          if (toast) showToast("로컬 저장에 실패했습니다. 백업 파일을 이용해 주세요.");
+          return false;
+        }
+      }
+
+      function scheduleSave() {
+        if (!appUnlocked || !initialCloudLoaded) return;
+        clearTimeout(saveTimer);
+        $("#saveStatus").textContent = "저장 중…";
+        saveTimer = setTimeout(() => persistNow(), 220);
+      }
+
+      function makeBaseline(c) {
+        return {
+          savedAt: new Date().toISOString(),
+          householdSavings: c.householdSavings,
+          savingRate: c.savingRate,
+          fixedRate: c.fixedRate,
+          annualSavings: c.annualSavings,
+          householdIncome: c.householdIncome
+        };
+      }
+
+      function saveBaseline(c) {
+        baseline = makeBaseline(c);
+        try {
+          localStorage.setItem(BASELINE_STORAGE_KEY, JSON.stringify(baseline));
+        } catch {
+          // 기준 비교는 현재 창에서 계속 동작합니다.
+        }
+      }
+
+      function toneClass(element, tone) {
+        if (!element) return;
+        element.classList.remove("good", "watch", "danger", "neutral", "positive", "negative");
+        element.classList.add(tone);
+      }
+
+      function valueTone(element, value) {
+        if (!element) return;
+        element.classList.remove("is-negative", "is-positive");
+        if (value < 0) element.classList.add("is-negative");
+        else if (value > 0) element.classList.add("is-positive");
+      }
+
+      function savingAssessment(c) {
+        if (c.householdSavings < 0) {
+          return { tone: "danger", label: "적자", note: "부부 합산 지출이 소득을 넘어 예산 구조 조정이 필요합니다." };
+        }
+        if (c.savingRate < 10) {
+          return { tone: "danger", label: "빠듯", note: "예상치 못한 지출을 흡수할 여력이 작아 현금흐름 방어가 우선입니다." };
+        }
+        if (c.savingRate < 20) {
+          return { tone: "watch", label: "기초", note: "저축은 유지되지만 흔히 쓰는 20% 참고선에는 여유가 있습니다." };
+        }
+        if (c.savingRate < 30) {
+          return { tone: "good", label: "안정", note: "20% 참고선을 넘겨 장기 저축을 이어가기 좋은 구간입니다." };
+        }
+        return { tone: "good", label: "탄탄", note: "30% 이상으로 자산형성 속도가 탄탄한 편입니다." };
+      }
+
+      function fixedAssessment(c) {
+        if (c.fixedRate >= 60) {
+          return { tone: "danger", label: "높음", note: "소득이 줄면 생활비보다 먼저 구조 조정이 필요한 수준입니다." };
+        }
+        if (c.fixedRate >= 50) {
+          return { tone: "watch", label: "주의", note: "합산 소득 절반 이상이 고정되어 선택 가능한 예산이 좁습니다." };
+        }
+        if (c.fixedRate >= 40) {
+          return { tone: "watch", label: "관찰", note: "당장 문제는 아니지만 금리와 소득 변화에 민감한 구조입니다." };
+        }
+        return { tone: "good", label: "유연", note: "고정지출 비중이 비교적 낮아 목표 변화에 대응할 공간이 있습니다." };
+      }
+
+      function buildAdvisor(c) {
+        const saving = savingAssessment(c);
+        const fixed = fixedAssessment(c);
+        let tone = "good";
+        let icon = "✓";
+        let headline = "저축과 지출의 균형이 안정적이에요.";
+
+        if (c.householdIncome <= 0) {
+          tone = "neutral";
+          icon = "…";
+          headline = "먼저 부부의 월 실수령액을 입력해 주세요.";
+        } else if (c.householdSavings < 0 || c.householdPool < c.sharedFixed) {
+          tone = "danger";
+          icon = "!";
+          headline = "현재 계획은 월 현금흐름이 맞지 않아요.";
+        } else if (c.savingRate < 10 || c.fixedRate >= 60) {
+          tone = "danger";
+          icon = "!";
+          headline = "지금은 자산형성보다 현금흐름 방어가 우선이에요.";
+        } else if (c.savingRate < 20 || c.fixedRate >= 50) {
+          tone = "watch";
+          icon = "↗";
+          headline = "유지 가능하지만 고정비와 저축 여력을 함께 점검하세요.";
+        } else if (c.savingRate >= 30 && c.fixedRate < 40) {
+          headline = "자산형성과 지출 유연성이 모두 탄탄해요.";
+        } else if (c.sharedFixedRate >= 30 && c.savingRate >= 25) {
+          headline = "주거 중심 고정비를 저축 여력이 잘 받쳐주고 있어요.";
+        }
+
+        const missingWife = c.wife.netPay <= 0;
+        const message = missingWife
+          ? `현재는 내 실수령액만 반영되어 월 ${currency(c.householdSavings)}의 저축 여력이 보입니다. 아내 실수령액과 예산을 입력하면 합산 저축률과 스트레스 테스트가 완성됩니다.`
+          : c.householdSavings >= 0
+            ? `부부 합산 실수령액 ${currency(c.householdIncome)} 중 월 ${currency(c.householdSavings)}, 연 ${currency(c.annualSavings)}을 자산형성에 돌릴 수 있는 구조입니다.`
+            : `현재 계획은 매월 ${currency(Math.abs(c.householdSavings))}이 부족합니다. 생활비 미세 조정보다 반복되는 고정비와 개인 예산 총액부터 손보는 편이 효과적입니다.`;
+
+        const insights = [];
+
+        if (c.householdSavings < 0) {
+          insights.push({
+            tone: "danger", icon: "1", title: "우선순위는 월 적자 해소",
+            text: `합산 소득보다 비저축성 지출이 월 ${currency(Math.abs(c.householdSavings))} 많습니다. 고정비, 특별비, 개인 예산 반올림 순서로 구조를 조정해 보세요.`
+          });
+        } else if (c.goal > 0) {
+          const gap = c.householdSavings - c.goal;
+          insights.push({
+            tone: gap >= 0 ? "good" : "watch", icon: "1",
+            title: gap >= 0 ? "월 저축 목표 달성" : "저축 목표까지 남은 거리",
+            text: gap >= 0
+              ? `현재 월 저축은 목표보다 ${currency(gap)} 많습니다. 초과분의 용도를 투자·비상자금·목적자금 중 하나로 미리 정하면 흐트러짐이 적습니다.`
+              : `현재 월 저축은 목표보다 ${currency(Math.abs(gap))} 부족합니다. 목표를 지키려면 월 지출을 같은 금액만큼 줄이거나 소득 유입을 늘려야 합니다.`
+          });
+        } else if (c.savingRate >= 30) {
+          insights.push({
+            tone: "good", icon: "1", title: "지금은 과도한 절약보다 지속성이 중요",
+            text: `부부 합산 저축률이 ${percent(c.savingRate)}입니다. 생활비를 더 잘게 통제하기보다 월급일 자동이체와 분기별 점검을 유지하는 편이 효율적입니다.`
+          });
+        } else if (c.savingRate >= 20) {
+          insights.push({
+            tone: "good", icon: "1", title: "저축 기반은 안정적",
+            text: `부부 월 저축 ${currency(c.householdSavings)}으로 일반적인 20% 참고선을 넘습니다. 다음 단계는 비상자금과 장기 투자 목적을 분리하는 것입니다.`
+          });
+        } else {
+          insights.push({
+            tone: "watch", icon: "1", title: "저축률을 한 단계 올릴 여지",
+            text: `현재 저축률은 ${percent(c.savingRate)}입니다. 월 ${currency(Math.max(0, c.householdIncome * 0.2 - c.householdSavings))}을 더 확보하면 20% 참고선에 닿습니다.`
+          });
+        }
+
+        if (c.fixedRate >= 50) {
+          insights.push({
+            tone: "watch", icon: "2", title: "절약 순서는 고정비부터",
+            text: `비저축성 고정지출이 합산 소득의 ${percent(c.fixedRate)}입니다. 생활비를 매일 줄이기보다 대출이자·보험·통신·구독처럼 반복되는 항목을 먼저 검토하세요.`
+          });
+        } else if (c.fixedRate >= 40) {
+          insights.push({
+            tone: "watch", icon: "2", title: "고정비가 예산의 방향을 좌우",
+            text: `고정지출 비율은 ${percent(c.fixedRate)}입니다. 고정비를 월 10만 원 줄이면 다른 조건이 같을 때 연간 저축 여력이 120만 원 늘어납니다.`
+          });
+        } else {
+          insights.push({
+            tone: "good", icon: "2", title: "고정비 탄력성이 좋은 편",
+            text: `고정지출이 ${percent(c.fixedRate)}라 소득이나 저축 목표가 바뀌어도 예산을 조정할 공간이 비교적 남아 있습니다.`
+          });
+        }
+
+        if (c.stressSavings < 0) {
+          insights.push({
+            tone: "watch", icon: "3", title: "합산 소득 −10% 스트레스 테스트",
+            text: `지출이 그대로라면 월 ${currency(Math.abs(c.stressSavings))}이 부족해집니다. 비상자금은 최소한 이 감소분과 필수 유지비를 함께 버틸 수 있게 준비하는 편이 안전합니다.`
+          });
+        } else {
+          insights.push({
+            tone: c.stressSavingRate >= 20 ? "good" : "watch", icon: "3",
+            title: "합산 소득 −10%에도 월 흑자",
+            text: `부부 합산 소득이 10% 줄어도 월 ${currency(c.stressSavings)}을 남길 수 있습니다. 다만 이 수치는 지출을 전혀 줄이지 않는 보수적 가정입니다.`
+          });
+        }
+
+        if (missingWife) {
+          insights.push({
+            tone: "watch", icon: "4", title: "아내 예산 입력이 아직 비어 있어요",
+            text: "아내 실수령액과 개인 예산을 입력하면 합산 저축률, 소득 집중도, 개인 예산 비율 차이를 실제 가계 기준으로 다시 계산합니다."
+          });
+        } else if (c.maxIncomeShare >= 75) {
+          insights.push({
+            tone: "watch", icon: "4", title: "한쪽 소득 의존도가 높은 편",
+            text: `더 큰 소득이 합산 실수령액의 ${percent(c.maxIncomeShare)}를 차지합니다. 해당 소득이 흔들릴 때를 가정해 비상자금과 보험·고용 안정성을 함께 점검해 두는 편이 좋습니다.`
+          });
+        } else if (c.budgetRateGap >= 12) {
+          insights.push({
+            tone: "watch", icon: "4", title: "개인 예산 비율 차이가 보여요",
+            text: `각자의 소득 대비 개인 예산 비율 차이가 ${c.budgetRateGap.toFixed(1)}%p입니다. 잘못된 구조라는 뜻은 아니며, 역할과 필요에 맞춘 의도된 합의인지 한 번 확인하면 충분합니다.`
+          });
+        } else {
+          insights.push({
+            tone: "good", icon: "4", title: "각자 예산 규칙이 비교적 균형적",
+            text: `각자의 소득 대비 개인 예산 비율 차이가 ${c.budgetRateGap.toFixed(1)}%p로 크지 않습니다. 절대 금액보다 이 비율과 실제 만족도를 함께 점검하세요.`
+          });
+        }
+
+        return { tone, icon, headline, message, saving, fixed, insights };
+      }
+
+      function renderItemRows(containerId, personKey, listKey) {
+        const container = $(containerId);
+        const items = state[personKey][listKey];
+        container.innerHTML = "";
+
+        if (items.length === 0) {
+          container.innerHTML = '<div class="empty-items">아직 등록된 항목이 없습니다.</div>';
+          return;
+        }
+
+        items.forEach((item, index) => {
+          const row = document.createElement("div");
+          row.className = "item-row saving-row";
+          row.innerHTML = `
+            <input type="text" value="${escapeHtml(item.name)}" aria-label="항목 이름" data-field="name" />
+            <input class="row-amount" type="number" min="0" step="100" value="${positiveNumber(item.amount)}" aria-label="항목 금액" data-field="amount" />
+            <label class="saving-toggle" title="저축으로 계산">
+              <input type="checkbox" data-field="saving" ${item.saving ? "checked" : ""} aria-label="저축으로 계산" />
+            </label>
+            <button class="icon-btn" type="button" aria-label="항목 삭제" title="삭제">×</button>
+          `;
+
+          row.querySelectorAll("input").forEach((input) => {
+            const handler = (event) => {
+              const field = event.target.dataset.field;
+              if (field === "amount") item.amount = positiveNumber(event.target.value);
+              else if (field === "saving") item.saving = event.target.checked;
+              else item.name = event.target.value;
+              update(false);
+            };
+            input.addEventListener("input", handler);
+            if (input.type === "checkbox") input.addEventListener("change", handler);
+          });
+
+          row.querySelector(".icon-btn").addEventListener("click", () => {
+            items.splice(index, 1);
+            renderLists();
+            update(false);
+          });
+
+          container.appendChild(row);
+        });
+      }
+
+      function renderSharedRows() {
+        const container = $("#sharedFixedItems");
+        container.innerHTML = "";
+
+        if (state.sharedFixed.length === 0) {
+          container.innerHTML = '<div class="empty-items">아직 등록된 공동 고정비가 없습니다.</div>';
+          return;
+        }
+
+        state.sharedFixed.forEach((item, index) => {
+          const row = document.createElement("div");
+          row.className = "item-row no-saving";
+          row.innerHTML = `
+            <input type="text" value="${escapeHtml(item.name)}" aria-label="공동 고정비 이름" data-field="name" />
+            <input class="row-amount" type="number" min="0" step="100" value="${positiveNumber(item.amount)}" aria-label="공동 고정비 금액" data-field="amount" />
+            <button class="icon-btn" type="button" aria-label="항목 삭제" title="삭제">×</button>
+          `;
+
+          row.querySelectorAll("input").forEach((input) => {
+            input.addEventListener("input", (event) => {
+              if (event.target.dataset.field === "amount") item.amount = positiveNumber(event.target.value);
+              else item.name = event.target.value;
+              update(false);
+            });
+          });
+
+          row.querySelector(".icon-btn").addEventListener("click", () => {
+            state.sharedFixed.splice(index, 1);
+            renderLists();
+            update(false);
+          });
+
+          container.appendChild(row);
+        });
+      }
+
+      function renderLists() {
+        renderItemRows("#husbandCoreItems", "husband", "coreFixed");
+        renderItemRows("#husbandSubscriptionItems", "husband", "subscriptions");
+        renderItemRows("#wifeCoreItems", "wife", "coreFixed");
+        renderItemRows("#wifeSubscriptionItems", "wife", "subscriptions");
+        renderSharedRows();
+      }
+
+      function syncBaseInputs() {
+        ["husband", "wife"].forEach((personKey) => {
+          const person = state[personKey];
+          $(`#${personKey}NetPay`).value = person.netPay;
+          $(`#${personKey}DailyBudget`).value = person.dailyBudget;
+          $(`#${personKey}DayMode`).value = person.dayMode;
+          $(`#${personKey}SpecialBudget`).value = person.specialBudget;
+          $(`#${personKey}RoundUnit`).value = person.roundUnit;
+        });
+        $("#householdSavingsGoal").value = state.householdSavingsGoal;
+      }
+
+      function renderPerson(personKey, data) {
+        $(`#${personKey}LivingResult`).textContent = currency(data.living);
+        $(`#${personKey}SpecialResult`).textContent = currency(data.special);
+        $(`#${personKey}FixedResult`).textContent = currency(data.fixedTotal);
+        $(`#${personKey}DirectSavingResult`).textContent = currency(data.directSavings);
+        $(`#${personKey}BufferResult`).textContent = currency(data.buffer);
+        $(`#${personKey}BudgetResult`).textContent = currency(data.roundedBudget);
+        $(`#${personKey}ContributionResult`).textContent = currency(data.contribution);
+        valueTone($(`#${personKey}ContributionResult`), data.contribution);
+
+        $(`#${personKey}CoreTotal`).textContent = currency(data.coreTotal);
+        $(`#${personKey}SubscriptionTotal`).textContent = currency(data.subscriptionTotal);
+
+        const useRate = data.netPay > 0 ? Math.min(100, Math.max(0, data.budgetRate)) : 0;
+        const contributionRate = data.netPay > 0 ? Math.min(100, Math.max(0, data.contributionRate)) : 0;
+        $(`#${personKey}UseBar`).style.width = `${useRate}%`;
+        $(`#${personKey}ContributionBar`).style.width = `${contributionRate}%`;
+        $(`#${personKey}UseRate`).textContent = data.netPay > 0 ? percent(data.budgetRate) : "입력 전";
+        $(`#${personKey}ContributionRate`).textContent = data.netPay > 0 ? percent(data.contributionRate) : "입력 전";
+
+        const warning = $(`#${personKey}Warning`);
+        if (data.netPay <= 0) {
+          warning.className = "person-warning";
+          warning.textContent = `${personKey === "wife" ? "아내의" : "내"} 월 실수령액을 입력해 주세요.`;
+        } else if (data.contribution < 0) {
+          warning.className = "person-warning danger";
+          warning.textContent = `개인 예산이 실수령액보다 ${currency(Math.abs(data.contribution))} 많습니다.`;
+        } else if (data.contribution === 0) {
+          warning.className = "person-warning";
+          warning.textContent = "실수령액이 개인 예산에 모두 배분되어 공동가계 기여금이 없습니다.";
+        } else {
+          warning.className = "person-warning good";
+          warning.textContent = `현재 계획으로 공동가계에 ${currency(data.contribution)}을 배분할 수 있습니다.`;
+        }
+      }
+
+      function renderComparison(c) {
+        const rows = [
+          ["월 실수령액", c.husband.netPay, c.wife.netPay, c.householdIncome, false],
+          ["월 생활비", c.husband.living, c.wife.living, c.living, false],
+          ["귀한일·특별비", c.husband.special, c.wife.special, c.special, false],
+          ["개인 고정비", c.husband.fixedTotal, c.wife.fixedTotal, c.husband.fixedTotal + c.wife.fixedTotal, false],
+          ["그중 직접 저축", c.husband.directSavings, c.wife.directSavings, c.directSavings, false],
+          ["개인 예산", c.husband.roundedBudget, c.wife.roundedBudget, c.husband.roundedBudget + c.wife.roundedBudget, true],
+          ["공동가계 기여금", c.husband.contribution, c.wife.contribution, c.householdPool, true]
+        ];
+
+        const rateCell = (value, income) => income > 0
+          ? `${currency(value)} <span style="color:var(--muted);font-size:10px;">(${percent(value / income * 100)})</span>`
+          : currency(value);
+
+        $("#comparisonBody").innerHTML = rows.map(([label, h, w, total, emphasis]) => `
+          <tr>
+            <td>${label}</td>
+            <td class="${emphasis ? "emphasis-cell" : ""}">${rateCell(h, c.husband.netPay)}</td>
+            <td class="${emphasis ? "emphasis-cell" : ""}">${rateCell(w, c.wife.netPay)}</td>
+            <td class="${emphasis ? "emphasis-cell" : ""}">${currency(total)}</td>
+          </tr>
+        `).join("");
+
+        if (c.wife.netPay <= 0) {
+          $("#comparisonNote").textContent = "아내 실수령액을 입력하면 각자의 소득 대비 개인 예산 비율과 공동가계 기여 비율을 함께 비교할 수 있습니다.";
+        } else if (c.budgetRateGap >= 12) {
+          $("#comparisonNote").textContent = `각자의 소득 대비 개인 예산 비율 차이는 ${c.budgetRateGap.toFixed(1)}%p입니다. 역할과 필요에 따라 의도한 구조인지 확인하는 참고값으로만 보세요.`;
+        } else {
+          $("#comparisonNote").textContent = `각자의 소득 대비 개인 예산 비율 차이는 ${c.budgetRateGap.toFixed(1)}%p입니다. 절대 금액보다 각자가 체감하는 충분함과 공동 목표를 함께 보는 편이 좋습니다.`;
+        }
+      }
+
+      function renderCashflow(c) {
+        const positiveSavings = Math.max(0, c.householdSavings);
+        const denominator = c.householdSavings >= 0
+          ? Math.max(1, c.householdIncome)
+          : Math.max(1, c.nonSavingSpending);
+
+        const setWidth = (selector, amount) => {
+          $(selector).style.width = `${Math.max(0, Math.min(100, amount / denominator * 100))}%`;
+        };
+
+        setWidth("#flowFixed", c.nonSavingFixed);
+        setWidth("#flowLiving", c.living);
+        setWidth("#flowSpecial", c.special);
+        setWidth("#flowBuffer", c.buffer);
+        setWidth("#flowSaving", positiveSavings);
+
+        $("#flowFixedValue").textContent = currency(c.nonSavingFixed);
+        $("#flowLivingValue").textContent = currency(c.living);
+        $("#flowSpecialValue").textContent = currency(c.special);
+        $("#flowBufferValue").textContent = currency(c.buffer);
+        $("#flowSavingValue").textContent = currency(c.householdSavings);
+        valueTone($("#flowSavingValue"), c.householdSavings);
+
+        $("#flowFixedRate").textContent = percent(c.fixedRate);
+        $("#flowLivingRate").textContent = percent(c.livingRate);
+        $("#flowSpecialRate").textContent = percent(c.specialRate);
+        $("#flowBufferRate").textContent = percent(c.bufferRate);
+        $("#flowSavingRate").textContent = percent(c.savingRate);
+
+        $("#flowIncomeSide").textContent = currency(c.householdIncome);
+        $("#flowSpendingSide").textContent = currency(c.nonSavingSpending);
+        $("#flowSavingsSide").textContent = currency(c.householdSavings);
+        $("#flowStressSide").textContent = currency(c.stressSavings);
+        valueTone($("#flowSavingsSide"), c.householdSavings);
+        valueTone($("#flowStressSide"), c.stressSavings);
+
+        const badge = $("#cashflowBalanceBadge");
+        if (c.householdSavings < 0) {
+          badge.textContent = `월 ${currency(Math.abs(c.householdSavings))} 초과 지출`;
+          badge.style.color = "#9b2e42";
+          badge.style.background = "var(--danger-soft)";
+        } else if (Math.abs(c.balanceCheck) > 1000) {
+          badge.textContent = `배분 차이 ${currency(c.balanceCheck)}`;
+          badge.style.color = "#8f5d08";
+          badge.style.background = "var(--amber-soft)";
+        } else {
+          badge.textContent = "수입과 배분 일치";
+          badge.style.color = "#167b68";
+          badge.style.background = "var(--teal-soft)";
+        }
+      }
+
+      function signedPercentPoint(value, inverse = false) {
+        const rounded = Math.abs(value) < 0.05 ? 0 : value;
+        if (rounded === 0) return { text: "변화 없음", tone: "neutral" };
+        const good = inverse ? rounded < 0 : rounded > 0;
+        return {
+          text: `${rounded > 0 ? "+" : "−"}${Math.abs(rounded).toFixed(1)}%p`,
+          tone: good ? "positive" : "negative"
+        };
+      }
+
+      function renderAdvisor(c, advisor) {
+        const signal = $("#coachSignal");
+        signal.textContent = advisor.icon;
+        toneClass(signal, advisor.tone);
+        $("#coachHeadline").textContent = advisor.headline;
+        $("#coachMessage").textContent = advisor.message;
+
+        $("#coachSavingRate").textContent = percent(c.savingRate);
+        $("#coachSavingStatus").textContent = advisor.saving.label;
+        toneClass($("#coachSavingStatus"), advisor.saving.tone);
+        $("#coachSavingNote").textContent = advisor.saving.note;
+        $("#coachSavingProgress").style.width = `${Math.min(100, Math.max(0, c.savingRate / 40 * 100))}%`;
+        toneClass($("#coachSavingProgress"), advisor.saving.tone);
+
+        $("#coachFixedRate").textContent = percent(c.fixedRate);
+        $("#coachFixedStatus").textContent = advisor.fixed.label;
+        toneClass($("#coachFixedStatus"), advisor.fixed.tone);
+        $("#coachFixedNote").textContent = advisor.fixed.note;
+        $("#coachFixedProgress").style.width = `${Math.min(100, Math.max(0, c.fixedRate / 60 * 100))}%`;
+        toneClass($("#coachFixedProgress"), advisor.fixed.tone);
+
+        $("#coachEmergencyTarget").textContent = `${compactCurrency(c.emergencyLow)}~${compactCurrency(c.emergencyHigh)}`;
+        $("#coachEmergencyNote").textContent = `월 필수 유지비 ${currency(c.essentialMonthly)}의 3~6개월분입니다.`;
+
+        $("#coachAnnualSavings").textContent = currency(c.annualSavings);
+        valueTone($("#coachAnnualSavings"), c.annualSavings);
+        const annualStatus = $("#coachAnnualStatus");
+        if (c.annualSavings < 0) {
+          annualStatus.textContent = "마이너스";
+          toneClass(annualStatus, "danger");
+          $("#coachAnnualNote").textContent = "현재 구조가 유지되면 연간 부족분이 누적됩니다.";
+        } else {
+          annualStatus.textContent = c.savingRate >= 20 ? "플러스" : "완만";
+          toneClass(annualStatus, c.savingRate >= 20 ? "good" : "watch");
+          $("#coachAnnualNote").textContent = `부부 월 저축 ${currency(c.householdSavings)}을 12개월로 단순 환산했습니다.`;
+        }
+
+        $("#coachInsights").innerHTML = advisor.insights.map((item) => `
+          <div class="insight-item">
+            <span class="insight-icon ${item.tone}">${item.icon}</span>
+            <div>
+              <div class="insight-title">${item.title}</div>
+              <div class="insight-text">${item.text}</div>
+            </div>
+          </div>
+        `).join("");
+
+        if (!baseline) {
+          $("#coachTrendValue").textContent = "기준 설정 전";
+          toneClass($("#coachTrendValue"), "neutral");
+          $("#baselineMeta").textContent = "‘현재 상태를 비교 기준으로 저장’을 누르면 이후 변화가 표시됩니다.";
+          ["#deltaMonthlySavings", "#deltaSavingRate", "#deltaFixedRate", "#deltaAnnualSavings"].forEach((selector) => {
+            $(selector).textContent = "기준 없음";
+            toneClass($(selector), "neutral");
+          });
+          return;
+        }
+
+        const savingDelta = c.householdSavings - positiveNumber(baseline.householdSavings);
+        const savingRateDelta = c.savingRate - Number(baseline.savingRate || 0);
+        const fixedDelta = c.fixedRate - Number(baseline.fixedRate || 0);
+        const annualDelta = c.annualSavings - Number(baseline.annualSavings || 0);
+
+        $("#coachTrendValue").textContent = Math.abs(savingDelta) < 1000
+          ? "변화 없음"
+          : `월 저축 ${signedCurrency(savingDelta)}`;
+        toneClass($("#coachTrendValue"), savingDelta > 999 ? "positive" : savingDelta < -999 ? "negative" : "neutral");
+
+        const date = new Date(baseline.savedAt);
+        $("#baselineMeta").textContent = Number.isNaN(date.getTime())
+          ? "저장한 기준 상태와 비교합니다."
+          : `${date.toLocaleDateString("ko-KR")}에 저장한 상태와 비교합니다.`;
+
+        $("#deltaMonthlySavings").textContent = signedCurrency(savingDelta);
+        toneClass($("#deltaMonthlySavings"), savingDelta > 999 ? "positive" : savingDelta < -999 ? "negative" : "neutral");
+
+        const savingRateInfo = signedPercentPoint(savingRateDelta, false);
+        $("#deltaSavingRate").textContent = savingRateInfo.text;
+        toneClass($("#deltaSavingRate"), savingRateInfo.tone);
+
+        const fixedRateInfo = signedPercentPoint(fixedDelta, true);
+        $("#deltaFixedRate").textContent = fixedRateInfo.text;
+        toneClass($("#deltaFixedRate"), fixedRateInfo.tone);
+
+        $("#deltaAnnualSavings").textContent = signedCurrency(annualDelta);
+        toneClass($("#deltaAnnualSavings"), annualDelta > 11999 ? "positive" : annualDelta < -11999 ? "negative" : "neutral");
+      }
+
+      function listText(items) {
+        if (!items.length) return "- 없음";
+        return items.map((item) =>
+          `- ${item.name || "이름 없는 항목"} ${currency(item.amount)}${item.saving ? " (직접 저축)" : ""}`
+        ).join("\n");
+      }
+
+      function personSummary(title, personState, personCalc, contributionLabel) {
+        const dayText = personState.dayMode === "average"
+          ? `하루 ${currency(personState.dailyBudget)} × 365일 ÷ 12개월`
+          : `하루 ${currency(personState.dailyBudget)} × ${personState.dayMode}일`;
+
+        return `${title}
+
+월 실수령액 ${currency(personCalc.netPay)}
+개인 예산 ${currency(personCalc.roundedBudget)}
+${contributionLabel} ${currency(personCalc.contribution)}
+
+① 생활비 ${currency(personCalc.living)}
+- ${dayText}
+
+② 귀한일·개인 특별비 ${currency(personCalc.special)}
+
+③ 개인 고정비 ${currency(personCalc.fixedTotal)}
+[개인 고정비]
+${listText(personState.coreFixed)}
+
+[구독료]
+${listText(personState.subscriptions)}
+
+④ 반올림 여유금 ${currency(personCalc.buffer)}
+⑤ 개인 직접 저축 ${currency(personCalc.directSavings)}`;
+      }
+
+      function generateSummary(c, advisor) {
+        const goalText = c.goal > 0
+          ? `월 저축 목표 ${currency(c.goal)} / 달성률 ${percent(c.goalRate)}\n`
+          : "";
+
+        return `[우리 부부 월급 관리 기준]
+
+부부 합산 월 실수령액 ${currency(c.householdIncome)}
+- 나 ${currency(c.husband.netPay)}
+- 아내 ${currency(c.wife.netPay)}
+
+부부 월 저축 ${currency(c.householdSavings)} (${percent(c.savingRate)})
+부부 연간 자산형성 단순 환산 ${currency(c.annualSavings)}
+${goalText}
+────────────────────
+1. 내 예산
+────────────────────
+
+${personSummary("내가 관리하는 금액", state.husband, c.husband, "공동가계로 보낼 돈")}
+
+
+────────────────────
+2. 아내 예산
+────────────────────
+
+${personSummary("아내가 관리하는 금액", state.wife, c.wife, "공동가계에 남길 돈")}
+
+
+────────────────────
+3. 공동가계
+────────────────────
+
+내 기여금 ${currency(c.husband.contribution)}
+아내 기여금 ${currency(c.wife.contribution)}
+공동가계 총 유입 ${currency(c.householdPool)}
+
+[공동 고정비]
+${listText(state.sharedFixed)}
+
+공동 고정비 합계 ${currency(c.sharedFixed)}
+공동 저축·투자 가능액 ${currency(c.sharedSavings)}
+
+
+────────────────────
+4. 부부 저축 합계
+────────────────────
+
+내 직접 저축 ${currency(c.husband.directSavings)}
+아내 직접 저축 ${currency(c.wife.directSavings)}
+공동 저축·투자 가능액 ${currency(c.sharedSavings)}
+
+부부 월 저축 합계 ${currency(c.householdSavings)}
+부부 연간 자산형성 단순 환산 ${currency(c.annualSavings)}
+
+
+────────────────────
+5. 가계 재무 참고 지표
+────────────────────
+
+현재 진단: ${advisor.headline}
+부부 합산 저축률 ${percent(c.savingRate)}
+비저축성 고정지출 부담 ${percent(c.fixedRate)}
+월 필수 유지비 ${currency(c.essentialMonthly)}
+비상자금 참고 범위 ${currency(c.emergencyLow)} ~ ${currency(c.emergencyHigh)}
+합산 소득 10% 감소 시 월 저축 ${currency(c.stressSavings)}
+
+운영 원칙
+- 각자는 개인 예산과 직접 납부 항목을 관리한다.
+- 각자의 개인 예산을 제외한 금액은 공동가계 기여금으로 본다.
+- 공동 고정비 납부 후 잔액과 각자의 직접 저축을 부부 저축으로 합산한다.
+- 입력값은 현재 브라우저에 자동 저장하며, 다른 기기 이동 시 백업 파일을 이용한다.
+
+※ 위 지표는 일반적인 가계 현금흐름 참고용이며 세무·투자·대출 상담을 대신하지 않는다.`;
+      }
+
+      function renderGoal(c) {
+        const progress = $("#goalProgress");
+        if (c.goal <= 0) {
+          progress.style.width = "0%";
+          toneClass(progress, "neutral");
+          $("#goalText").textContent = "목표를 입력하면 달성률을 보여줍니다.";
+          $("#goalRate").textContent = "—";
+          return;
+        }
+
+        const rate = c.goalRate;
+        progress.style.width = `${Math.min(100, Math.max(0, rate))}%`;
+        toneClass(progress, rate >= 100 ? "good" : rate >= 80 ? "watch" : "danger");
+        $("#goalRate").textContent = percent(rate);
+        $("#goalText").textContent = rate >= 100
+          ? `목표보다 ${currency(c.householdSavings - c.goal)} 더 저축 가능`
+          : `목표까지 ${currency(Math.max(0, c.goal - c.householdSavings))} 남음`;
+      }
+
+      function update(syncInputs = false, save = true) {
+        if (syncInputs) syncBaseInputs();
+
+        const c = calc();
+        const advisor = buildAdvisor(c);
+
+        $("#heroSavings").textContent = currency(c.householdSavings);
+        valueTone($("#heroSavings"), c.householdSavings);
+        $("#heroSavingsRate").textContent = `합산 실수령액의 ${percent(c.savingRate)}`;
+        $("#heroSavingsFormula").textContent = `${currency(c.sharedSavings)} 공동 잔액 + ${currency(c.directSavings)} 직접 저축`;
+
+        $("#metricHouseholdIncome").textContent = currency(c.householdIncome);
+        $("#metricIncomeBreakdown").textContent = `나 ${currency(c.husband.netPay)} + 아내 ${currency(c.wife.netPay)}`;
+        $("#metricHusbandBudget").textContent = currency(c.husband.roundedBudget);
+        $("#metricWifeBudget").textContent = currency(c.wife.roundedBudget);
+        $("#metricSharedFixed").textContent = currency(c.sharedFixed);
+        $("#metricHouseholdSavings").textContent = currency(c.householdSavings);
+        valueTone($("#metricHouseholdSavings"), c.householdSavings);
+        $("#metricSavingsBreakdown").textContent = `공동 ${currency(c.sharedSavings)} + 직접 저축 ${currency(c.directSavings)}`;
+
+        $("#husbandBudgetPill").textContent = c.husband.netPay > 0 ? percent(c.husband.budgetRate) : "입력 전";
+        $("#wifeBudgetPill").textContent = c.wife.netPay > 0 ? percent(c.wife.budgetRate) : "입력 전";
+        $("#sharedFixedPill").textContent = percent(c.sharedFixedRate);
+        $("#householdSavingPill").textContent = percent(c.savingRate);
+
+        renderPerson("husband", c.husband);
+        renderPerson("wife", c.wife);
+
+        $("#jointHusbandContribution").textContent = currency(c.husband.contribution);
+        $("#jointWifeContribution").textContent = currency(c.wife.contribution);
+        $("#jointPool").textContent = currency(c.householdPool);
+        valueTone($("#jointHusbandContribution"), c.husband.contribution);
+        valueTone($("#jointWifeContribution"), c.wife.contribution);
+        valueTone($("#jointPool"), c.householdPool);
+
+        $("#sharedFixedTotal").textContent = currency(c.sharedFixed);
+        $("#jointPoolResult").textContent = currency(c.householdPool);
+        $("#jointFixedResult").textContent = currency(c.sharedFixed);
+        $("#jointSavingResult").textContent = currency(c.sharedSavings);
+        valueTone($("#jointSavingResult"), c.sharedSavings);
+
+        const jointWarning = $("#jointWarning");
+        if (c.householdPool < 0) {
+          jointWarning.className = "note-box danger";
+          jointWarning.textContent = `각자의 개인 예산이 합산 실수령액보다 ${currency(Math.abs(c.householdPool))} 많아 공동가계 유입이 마이너스입니다.`;
+        } else if (c.sharedSavings < 0) {
+          jointWarning.className = "note-box danger";
+          jointWarning.textContent = `공동가계 기여금이 공동 고정비보다 ${currency(Math.abs(c.sharedSavings))} 부족합니다.`;
+        } else {
+          jointWarning.className = "note-box";
+          jointWarning.textContent = `공동 고정비를 납부한 뒤 ${currency(c.sharedSavings)}을 공동 저축·투자 가능액으로 남길 수 있습니다.`;
+        }
+
+        $("#householdSavingsHighlight").textContent = currency(c.householdSavings);
+        valueTone($("#householdSavingsHighlight"), c.householdSavings);
+        $("#householdSavingsHighlightSub").textContent = `합산 실수령액의 ${percent(c.savingRate)}`;
+        $("#savingHusbandDirect").textContent = currency(c.husband.directSavings);
+        $("#savingWifeDirect").textContent = currency(c.wife.directSavings);
+        $("#savingShared").textContent = currency(c.sharedSavings);
+        $("#savingAnnual").textContent = currency(c.annualSavings);
+        valueTone($("#savingShared"), c.sharedSavings);
+        valueTone($("#savingAnnual"), c.annualSavings);
+
+        renderGoal(c);
+        renderCashflow(c);
+        renderComparison(c);
+        renderAdvisor(c, advisor);
+        $("#summaryText").value = generateSummary(c, advisor);
+
+        if (save) {
+          markCloudDirty();
+          scheduleSave();
+        }
+      }
+
+      function bindPersonInputs(personKey) {
+        const bindings = [
+          [`#${personKey}NetPay`, "netPay", "number"],
+          [`#${personKey}DailyBudget`, "dailyBudget", "number"],
+          [`#${personKey}DayMode`, "dayMode", "text"],
+          [`#${personKey}SpecialBudget`, "specialBudget", "number"],
+          [`#${personKey}RoundUnit`, "roundUnit", "number"]
+        ];
+
+        bindings.forEach(([selector, key, type]) => {
+          const handler = (event) => {
+            state[personKey][key] = type === "number"
+              ? positiveNumber(event.target.value)
+              : event.target.value;
+            update(false);
+          };
+          $(selector).addEventListener("input", handler);
+          $(selector).addEventListener("change", handler);
+        });
+      }
+
+      function addPersonItem(personKey, listKey) {
+        state[personKey][listKey].push({
+          name: listKey === "subscriptions" ? "새 구독" : "새 개인 고정비",
+          amount: 0,
+          saving: false
+        });
+        renderLists();
+        update(false);
+      }
+
+      function addSharedItem() {
+        state.sharedFixed.push({ name: "새 공동 고정비", amount: 0 });
+        renderLists();
+        update(false);
+      }
+
+      function copyHusbandStructureToWife() {
+        const approved = window.confirm("내 개인 고정비와 구독 항목의 이름만 아내 쪽에 복사할까요? 아내의 기존 항목은 유지됩니다.");
+        if (!approved) return;
+
+        const mergeNames = (target, source) => {
+          const existing = new Set(target.map((item) => item.name.trim()));
+          source.forEach((item) => {
+            const name = item.name.trim();
+            if (name && !existing.has(name)) {
+              target.push({ name, amount: 0, saving: Boolean(item.saving) });
+              existing.add(name);
+            }
+          });
+        };
+
+        mergeNames(state.wife.coreFixed, state.husband.coreFixed);
+        mergeNames(state.wife.subscriptions, state.husband.subscriptions);
+        renderLists();
+        update(false);
+        showToast("내 항목 이름을 아내 예산에 복사했습니다.");
+      }
+
+      function setCurrentAsBaseline() {
+        const c = calc();
+        saveBaseline(c);
+        markCloudDirty();
+        renderAdvisor(c, buildAdvisor(c));
+        showToast("현재 가계 상태를 비교 기준으로 저장했습니다.");
+      }
+
+      async function copySummary() {
+        const text = $("#summaryText").value;
+        try {
+          await navigator.clipboard.writeText(text);
+        } catch {
+          $("#summaryText").focus();
+          $("#summaryText").select();
+          document.execCommand("copy");
+          window.getSelection()?.removeAllRanges();
+        }
+        showToast("요약문을 복사했습니다.");
+      }
+
+      function exportBackup() {
+        persistNow();
+        const payload = {
+          app: "우리 부부 월급 관리판",
+          version: APP_VERSION,
+          exportedAt: new Date().toISOString(),
+          state,
+          baseline
+        };
+        const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const anchor = document.createElement("a");
+        const date = new Date().toISOString().slice(0, 10);
+        anchor.href = url;
+        anchor.download = `부부-월급-관리판-백업-${date}.json`;
+        document.body.appendChild(anchor);
+        anchor.click();
+        anchor.remove();
+        URL.revokeObjectURL(url);
+        showToast("백업 파일을 만들었습니다.");
+      }
+
+      async function importBackup(file) {
+        try {
+          const text = await file.text();
+          const parsed = JSON.parse(text);
+          const importedState = parsed?.state ?? parsed;
+          state = normalizeState(importedState);
+          baseline = parsed?.baseline && typeof parsed.baseline === "object" ? parsed.baseline : null;
+          if (baseline) {
+            try {
+              localStorage.setItem(BASELINE_STORAGE_KEY, JSON.stringify(baseline));
+            } catch {}
+          }
+          renderLists();
+          update(true, false);
+          markCloudDirty();
+          persistNow();
+          showToast("백업 데이터를 불러왔습니다. 다음 동기화 때 클라우드에도 반영됩니다.");
+        } catch {
+          showToast("백업 파일을 읽지 못했습니다.");
+        } finally {
+          $("#importFile").value = "";
+        }
+      }
+
+      function resetAll() {
+        const approved = window.confirm("남편·아내·공동가계의 모든 입력값과 비교 기준을 기본값으로 되돌릴까요?");
+        if (!approved) return;
+        state = deepClone(defaults);
+        baseline = null;
+        try {
+          localStorage.removeItem(STORAGE_KEY);
+          localStorage.removeItem(LEGACY_STORAGE_KEY);
+          localStorage.removeItem(BASELINE_STORAGE_KEY);
+        } catch {}
+        renderLists();
+        update(true, false);
+        markCloudDirty();
+        persistNow();
+        showToast("기본값으로 초기화했습니다. 다음 동기화 때 클라우드에도 반영됩니다.");
+      }
+
+      function showToast(message) {
+        const toast = $("#toast");
+        clearTimeout(toastTimer);
+        toast.textContent = message;
+        toast.classList.add("show");
+        toastTimer = setTimeout(() => toast.classList.remove("show"), 1900);
+      }
+
+      bindPersonInputs("husband");
+      bindPersonInputs("wife");
+
+      $("#householdSavingsGoal").addEventListener("input", (event) => {
+        state.householdSavingsGoal = positiveNumber(event.target.value);
+        update(false);
+      });
+
+      $$("[data-person][data-list]").forEach((button) => {
+        button.addEventListener("click", () => addPersonItem(button.dataset.person, button.dataset.list));
+      });
+
+      $$("[data-shared-list]").forEach((button) => {
+        button.addEventListener("click", addSharedItem);
+      });
+
+      $("#authGateLoginButton").addEventListener("click", signInWithGoogle);
+      $("#authGateRetryButton").addEventListener("click", initializeCloudAuth);
+      $("#authGateLogoutButton").addEventListener("click", signOutGoogle);
+      $("#googleLogoutButton").addEventListener("click", signOutGoogle);
+      $("#syncNowButton").addEventListener("click", () => syncNow({ manual: true }));
+      $("#syncNowButtonTop").addEventListener("click", () => syncNow({ manual: true }));
+      $("#pullCloudButton").addEventListener("click", forcePullCloud);
+      $("#useCloudVersionButton").addEventListener("click", useCloudConflictVersion);
+      $("#overwriteCloudButton").addEventListener("click", overwriteCloudFromConflict);
+
+      $("#copyStructureButton").addEventListener("click", copyHusbandStructureToWife);
+      $("#setBaselineButton").addEventListener("click", setCurrentAsBaseline);
+      $("#saveNowButton").addEventListener("click", () => persistNow({ toast: true }));
+      $("#exportButton").addEventListener("click", exportBackup);
+      $("#importButton").addEventListener("click", () => $("#importFile").click());
+      $("#importFile").addEventListener("change", (event) => {
+        const [file] = event.target.files;
+        if (file) importBackup(file);
+      });
+      $("#copyButton").addEventListener("click", copySummary);
+      $("#copyButtonInline").addEventListener("click", copySummary);
+      $("#printButton").addEventListener("click", () => window.print());
+      $("#resetButton").addEventListener("click", resetAll);
+
+      window.addEventListener("beforeunload", () => {
+        clearTimeout(saveTimer);
+        clearInterval(syncIntervalTimer);
+        clearInterval(syncCountdownTimer);
+        try { authSubscription?.unsubscribe(); } catch {}
+        if (appUnlocked && initialCloudLoaded) persistNow();
+      });
+
+      window.addEventListener("storage", (event) => {
+        try {
+          if (appUnlocked && event.key === STORAGE_KEY && event.newValue) {
+            state = normalizeState(JSON.parse(event.newValue));
+            renderLists();
+            update(true, false);
+            $("#saveStatus").textContent = "다른 탭 변경 반영";
+            $("#lastSavedText").textContent = saveStatusText(state.meta.lastSavedAt);
+          }
+          if (event.key === SYNC_META_STORAGE_KEY) {
+            syncMeta = loadSyncMeta();
+            renderSyncStatus();
+          }
+        } catch {}
+      });
+
+      renderLists();
+      update(true, false);
+      $("#saveStatus").textContent = "로그인 후 자동 저장";
+      $("#lastSavedText").textContent = "클라우드 원본을 불러온 뒤 이 브라우저에도 캐시합니다.";
+      renderSyncStatus();
+      renderAccessGate("loading");
+      initializeCloudAuth();
+    })();
+  </script>
+
+</html>

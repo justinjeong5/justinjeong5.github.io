@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+    <meta name="author" content="정경하" />
+    <meta property="og:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://github.com/justinjeong5.png?size=512" />
+    <meta name="description" content="내부 노출 기록과 실제 SDK 실행이 어긋난 제품을 조사했습니다. 후보를 소비하는 FE의 누락 분기를 찾아 실행과 결과 처리까지 연결했습니다." />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="광고 노출은 기록됐는데 SDK는 왜 실행되지 않았을까 | 정경하" />
+    <meta property="og:description" content="내부 노출 기록과 실제 SDK 실행이 어긋난 제품을 조사했습니다. 후보를 소비하는 FE의 누락 분기를 찾아 실행과 결과 처리까지 연결했습니다." />
+    <meta property="og:url" content="https://justinjeong5.github.io/cases/shared-ad-execution-delivery/" />
+    <meta name="twitter:title" content="광고 노출은 기록됐는데 SDK는 왜 실행되지 않았을까 | 정경하" />
+    <meta name="twitter:description" content="내부 노출 기록과 실제 SDK 실행이 어긋난 제품을 조사했습니다. 후보를 소비하는 FE의 누락 분기를 찾아 실행과 결과 처리까지 연결했습니다." />
+    <link rel="canonical" href="https://justinjeong5.github.io/cases/shared-ad-execution-delivery/" />
+    <title>광고 노출은 기록됐는데 SDK는 왜 실행되지 않았을까 | 정경하</title>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "광고 노출은 기록됐는데 SDK는 왜 실행되지 않았을까 | 정경하",
+  "description": "내부 노출 기록과 실제 SDK 실행이 어긋난 제품을 조사했습니다. 후보를 소비하는 FE의 누락 분기를 찾아 실행과 결과 처리까지 연결했습니다.",
+  "url": "https://justinjeong5.github.io/cases/shared-ad-execution-delivery/",
+  "mainEntityOfPage": "https://justinjeong5.github.io/cases/shared-ad-execution-delivery/",
+  "author": {
+    "@type": "Person",
+    "name": "정경하",
+    "url": "https://justinjeong5.github.io/",
+    "jobTitle": "Product-minded Frontend Engineer",
+    "sameAs": [
+      "https://github.com/justinjeong5"
+    ]
+  },
+  "dateModified": "2026-10-20"
+}
+</script>
+    <script>
+      // 테마 사전 설정 — prerender된 HTML에 data-theme를 즉시 적용해 CSS flash를 막는다.
+      // (다른 스크립트보다 먼저 실행되어야 한다.)
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages — restore deep-link path written by 404.html
+      // https://github.com/rafgraph/spa-github-pages
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
+    </script>
+    <script type="module" crossorigin src="/assets/index-DjIQmEyV.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-QTnfLwEv.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-cases-D_TfuSxE.js">
+    <link rel="modulepreload" crossorigin href="/assets/router-lwbG19Va.js">
+    <link rel="modulepreload" crossorigin href="/assets/search-CiN4C8Nu.js">
+    <link rel="modulepreload" crossorigin href="/assets/icons-Crli1vn6.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-BbNIzE68.js">
+    <link rel="modulepreload" crossorigin href="/assets/content-essays-N3-kLlfV.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-B3ywgLiK.css">
+    <link rel="stylesheet" crossorigin href="/assets/pretendard-NPFyShNs.css">
+  </head>
+  <body>
+    <div id="root"><a href="#main-content" class="skip-link">본문 바로가기</a><header class="site-nav" aria-label="주메뉴"><div class="site-nav-inner"><a class="brand" aria-label="정경하 홈" href="/" data-discover="true">JKH</a><nav class="primary-nav"><a class="nav-link" href="/" data-discover="true">대표 작업</a><a class="nav-link" href="/about" data-discover="true">경력·소개</a><a class="nav-link is-active" aria-current="page" href="/writing" data-discover="true">글</a></nav><div class="nav-actions"><button type="button" class="search-trigger" aria-label="검색" title="검색 (⌘K 또는 /)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg><span>검색</span><kbd>⌘K</kbd></button><button type="button" class="icon-button" aria-label="테마: 라이트. 클릭하여 변경" title="테마: 라이트 · T 키로도 전환"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg></button><button type="button" class="icon-button desktop-only" aria-label="키보드 단축키" aria-expanded="false" aria-haspopup="dialog" title="키보드 단축키 (? 키)"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-keyboard" aria-hidden="true"><path d="M10 8h.01"></path><path d="M12 12h.01"></path><path d="M14 8h.01"></path><path d="M16 12h.01"></path><path d="M18 8h.01"></path><path d="M6 8h.01"></path><path d="M7 16h10"></path><path d="M8 12h.01"></path><rect width="20" height="16" x="2" y="4" rx="2"></rect></svg></button><button type="button" class="icon-button menu-trigger" aria-label="메뉴 열기" aria-expanded="false" aria-haspopup="dialog" title="메뉴"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button></div></div></header><main id="main-content" tabindex="-1"><article class="page case-detail"><header class="page-header case-detail-header"><p class="eyebrow"><a href="/writing#reward-products" data-discover="true">광고·리워드 제품</a></p><h1>광고 노출은 기록됐는데 SDK는 왜 실행되지 않았을까</h1><p class="page-lead">내부 노출 기록과 실제 SDK 실행이 어긋난 제품을 조사했습니다. 후보를 소비하는 FE의 누락 분기를 찾아 실행과 결과 처리까지 연결했습니다.</p><dl class="case-meta"><div><dt>담당</dt><dd>공급사 실행 경로 조사·타제품 FE 연동·소유 팀과 QA·배포</dd></div><div><dt>시기</dt><dd>2026.01–2026.04</dd></div><div><dt>주제</dt><dd>#광고 연동 #공용 인터페이스 #팀 간 전달</dd></div></dl></header><div class="prose"><p>다른 팀의 제품에서 광고 노출은 내부에 기록됐는데 공급사에는 SDK 실행 흔적이 없었습니다. 제가 추적한 질문은 하나였습니다. <strong>서버의 광고 후보가 제품 FE의 실제 SDK 호출까지 도달했는가?</strong> 내부 tracker 호출은 이 질문의 답이 아니었습니다.</p>
+<h2>같은 후보를 받아도 같은 실행이 일어나지는 않았다</h2>
+<p>서버 응답의 광고 source·provider와 해당 제품 FE의 유형 분기를 순서대로 대조했습니다. 서버는 후보를 내려줬지만, 소비 FE에는 이 source를 처리할 handler가 없었습니다. 제품은 기본 fallback으로 내려갔고, 이 경로에서도 내부 노출 기록은 남을 수 있었습니다. <strong>서버 응답 정상, 내부 기록 정상이라는 두 신호가 실제 광고 실행을 보증하지 않는 반례</strong>였습니다.</p>
+<p>1월에 제가 만든 공용 광고 흐름은 후보 선택과 공급사 SDK 신호 해석을 분리했습니다. 그러나 공용 adapter가 존재해도 각 제품 FE의 후보 순회가 호출하지 않으면 실행되지 않습니다. 4월의 수정은 공용 구조를 다시 만드는 일이 아니라 <strong>소비 제품의 빠진 호출 경로</strong>를 완성하는 일이었습니다.</p>
+<h2>실행 가능한 입력부터 제품의 결과까지 연결했다</h2>
+<p>후보의 source·provider와 필수 SDK parameter를 확인한 뒤, 유효한 입력만 공급사 실행 함수로 보냈습니다. 입력이 중첩되거나 최상위에 놓인 두 형태도 구분했습니다. SDK 정보·provider·필수값이 잘못되면 실행 가능한 광고로 취급하지 않도록 테스트했습니다.</p>
+<p>함수만 추가하고 후보 순회 분기를 그대로 두면 여전히 fallback이 선택됩니다. 그래서 <strong>후보 분기 → adapter 호출 → SDK callback·timeout → 제품의 완료 결과</strong>까지 연결했습니다. 공용 adapter가 돌려주는 상태와 이 제품이 읽는 boolean 결과는 동일한 의미가 아니어서 변환 경계를 명시했습니다. 공급사의 닫힘을 곧바로 광고 완료로 간주하지 않는 조건도 지켰습니다.</p>
+<pre><code class="language-text">서버의 후보 → source·입력 확인 → 공급사 SDK 실행
+                                  → 제품의 완료 결과 → 다음 후보 또는 참여
+</code></pre>
+<h2>제품 소유 팀과 끝까지 확인했다</h2>
+<p>4월 17일 누락 경로와 검증 환경을 제품 소유 팀에 공유하고 로컬 진입과 전체 QA를 함께 확인했습니다. SDK가 실제 호출되는 것까지 확인했고, 21일에는 담당자들과 광고 및 기존 콘텐츠의 동작을 점검한 뒤 배포했습니다. 다른 팀 제품의 회귀 위험까지 제가 단독으로 보증하지 않고 소유 팀의 검증을 포함한 이유입니다.</p>
+<p>확인된 결과는 누락된 handler 경유로 <strong>공급사 SDK가 실행되고 제품이 그 결과를 읽는 경로를 배포한 것</strong>입니다. 공급사 측 실제 노출 집계나 매출 회복량은 별도 확인이 필요합니다. 공용 기능을 만들었는지보다 <strong>소비 제품이 그 기능까지 도달해 어떤 결과로 처리하는지</strong>를 확인한 일이 이 사례의 핵심입니다.</p></div><footer class="page-footer"><a class="see-all-link" href="/writing#reward-products" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg> 글 목록으로</a></footer></article></main><footer class="site-footer"><div class="site-footer-inner"><div class="footer-identity"><p class="footer-name">정경하</p><p class="footer-role"><a aria-label="경력·소개 보기" href="/about" data-discover="true">Frontend Engineer</a></p></div><div class="footer-aside"><address class="footer-contact"><span>justin.jeong5@gmail.com</span><a class="footer-github-link" href="https://github.com/justinjeong5"><svg aria-hidden="true" viewBox="0 0 16 16" fill="currentColor"><path d="M6.766 11.328c-2.063-.25-3.516-1.734-3.516-3.656 0-.781.281-1.625.75-2.188-.203-.515-.172-1.609.063-2.062.625-.078 1.468.25 1.968.703.594-.187 1.219-.281 1.985-.281.765 0 1.39.094 1.953.265.484-.437 1.344-.765 1.969-.687.218.422.25 1.515.046 2.047.5.593.766 1.39.766 2.203 0 1.922-1.453 3.375-3.547 3.64.531.344.89 1.094.89 1.954v1.625c0 .468.391.734.86.547C13.781 14.359 16 11.53 16 8.03 16 3.61 12.406 0 7.984 0 3.563 0 0 3.61 0 8.031a7.88 7.88 0 0 0 5.172 7.422c.422.156.828-.125.828-.547v-1.25c-.219.094-.5.156-.75.156-1.031 0-1.64-.562-2.078-1.609-.172-.422-.36-.672-.719-.719-.187-.015-.25-.093-.25-.187 0-.188.313-.328.625-.328.453 0 .844.281 1.25.86.313.452.64.655 1.031.655s.641-.14 1-.5c.266-.265.47-.5.657-.656"></path></svg><span>github.com/justinjeong5</span></a></address></div></div></footer></div>
+  </body>
+</html>
