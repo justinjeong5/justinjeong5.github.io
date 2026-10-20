@@ -4,6 +4,7 @@ import mdx from '@mdx-js/rollup';
 import remarkFrontmatter from 'remark-frontmatter';
 import remarkMdxFrontmatter from 'remark-mdx-frontmatter';
 import remarkGfm from 'remark-gfm';
+import rehypeHighlight from 'rehype-highlight';
 
 export default defineConfig({
   plugins: [
@@ -16,6 +17,7 @@ export default defineConfig({
           remarkFrontmatter,
           [remarkMdxFrontmatter, { name: 'frontmatter' }],
         ],
+        rehypePlugins: [[rehypeHighlight, { plainText: ['text'] }]],
       }),
     },
     react({ include: /\.(jsx|js|mdx|md|tsx|ts)$/ }),

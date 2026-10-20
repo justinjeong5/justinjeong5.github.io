@@ -892,6 +892,26 @@
   background: transparent;
   color: inherit;
 }
+.prose pre .hljs-comment {
+  color: #a1a1aa;
+}
+.prose pre .hljs-keyword,
+.prose pre .hljs-literal {
+  color: #c4b5fd;
+}
+.prose pre .hljs-string {
+  color: #86efac;
+}
+.prose pre .hljs-number,
+.prose pre .hljs-attr,
+.prose pre .hljs-property {
+  color: #93c5fd;
+}
+.prose pre .hljs-title,
+.prose pre .hljs-type,
+.prose pre .hljs-built_in {
+  color: #fcd34d;
+}
 .prose blockquote {
   margin: 0 0 16px;
   padding: 12px 18px;

@@ -25,7 +25,7 @@ function entries(type) {
     });
 }
 
-test('public career articles stay live while retired cases, essays, and notes leave discovery', () => {
+test('public career articles and the new technical essay stay live while retired content leaves discovery', () => {
   const cases = entries('cases');
   const essays = entries('essays');
   const notes = entries('notes');
@@ -35,12 +35,13 @@ test('public career articles stay live while retired cases, essays, and notes le
 
   assert.equal(liveCases.length, 15);
   assert.deepEqual(new Set(liveCases.map((entry) => entry.slug)), new Set(protectedSlugs));
-  assert.equal(essays.filter((entry) => !entry.archived).length, 0);
+  const liveEssaySlugs = essays.filter((entry) => !entry.archived).map((entry) => entry.slug);
+  assert.deepEqual(liveEssaySlugs, ['tanstack-query-server-state-boundaries']);
   assert.equal(notes.filter((entry) => !entry.archived).length, 0);
   assert.deepEqual(new Set(PRIMARY_ARTICLES.map(([, slug]) => slug)), new Set(protectedSlugs));
   const discoverable = [...selectEditorialArticles(cases, essays), ...selectEditorialArticles(cases, essays, true)];
-  assert.deepEqual(new Set(discoverable.map((entry) => entry.slug)), new Set(protectedSlugs));
-  assert.equal(selectEditorialArticles(cases, essays, true).length, 1);
+  assert.deepEqual(new Set(discoverable.map((entry) => entry.slug)), new Set([...protectedSlugs, ...liveEssaySlugs]));
+  assert.equal(selectEditorialArticles(cases, essays, true).length, 2);
 });
 
 test('writing home lists exactly the direct article links in submitted PDFs', () => {
