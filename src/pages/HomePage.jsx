@@ -19,7 +19,7 @@ function HomePage() {
       <header className="career-intro">
         <h1>{siteData.name} <span>Justin Jeong</span></h1>
         <p className="career-positioning">버즈빌에서 앱과 웹의 광고·리워드 제품 프론트엔드를 개발했습니다.</p>
-        <p className="career-lead">여러 작업에서 서버 상태와 광고 SDK·WebView 복귀를 사용자의 다음 행동으로 연결하고, QA·출시와 출시 뒤 진단까지 맡았습니다.</p>
+        <p className="career-lead">광고 운영 도구와 CS 제품에서 시작해 PlayHub 초기 허브와 파트너 앱 안의 리워드 참여 화면까지 만들었습니다. 서버·SDK·WebView의 서로 다른 완료 시점을 사용자 행동과 연결하고, QA와 출시 뒤에도 문제를 고쳤습니다.</p>
       </header>
 
       <section id="selected-work" className="career-section" aria-labelledby="selected-work-title">
@@ -36,9 +36,9 @@ function HomePage() {
               <p className="eyebrow">{card.label}</p>
               <h3><Link to={ROUTES.caseDetail(card.slug)}>{card.title}</Link></h3>
               <dl>
+                <div className="career-work-result"><dt>결과</dt><dd>{card.result}</dd></div>
                 <div><dt>문제</dt><dd>{card.problem}</dd></div>
                 <div><dt>선택</dt><dd>{card.decision}</dd></div>
-                <div><dt>변화</dt><dd>{card.result}</dd></div>
               </dl>
               <Link className="career-detail-link" to={ROUTES.caseDetail(card.slug)}>사례 읽기 →</Link>
             </article>

@@ -44,12 +44,12 @@
     {
       "title": "영상 최적화의 대상은 영상만이 아니었다",
       "url": "https://tech.buzzvil.com/blog/playhub-webview-video-optimization",
-      "description": "PlayHub의 WebView 영상 재생과 대체 경로"
+      "description": "거위 영상이 늦거나 전체화면으로 열렸습니다. 스틸 이미지와 스프라이트로 진행 안내가 끊기지 않게 했습니다."
     },
     {
       "title": "프리로드 API 없는 광고 SDK에 프리로딩을 적용하며 배운 것",
       "url": "https://tech.buzzvil.com/blog/playhub-ad-preloading",
-      "description": "PlayHub의 광고 준비와 실제 노출 사이의 경계"
+      "description": "광고 대기를 줄이려 SDK 실행을 앞당겼습니다. 대신 노출·집계·종료 시점을 직접 관리해야 했습니다."
     }
   ],
   "featuredEssaySlugs": [],
