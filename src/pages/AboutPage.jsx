@@ -47,11 +47,19 @@ function AboutPage() {
               <div className="about-work-content">
                 <h3>{work.title}</h3>
                 <dl>
-                  <div><dt>문제</dt><dd>{work.problem}</dd></div>
+                  <div><dt>담당</dt><dd>{work.scope}</dd></div>
                   <div><dt>선택</dt><dd>{work.decision}</dd></div>
                   <div><dt>결과</dt><dd>{work.result}</dd></div>
                 </dl>
                 <Link className="about-work-link" to={work.to} aria-label={`${work.title} 자세한 글 읽기`}>자세한 글 읽기 →</Link>
+                {work.companyWriting ? (
+                  <div className="about-work-publications">
+                    <span>회사 기술블로그 기고</span>
+                    {siteData.homeWriting.map((article) => (
+                      <a key={article.url} href={article.url} aria-label={`버즈빌 기술블로그 기고: ${article.title}`}>{article.title} ↗</a>
+                    ))}
+                  </div>
+                ) : null}
               </div>
             </li>
           ))}

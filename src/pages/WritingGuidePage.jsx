@@ -12,7 +12,7 @@ function WritingGuidePage() {
       <header className="writing-intro">
         <p className="eyebrow">개발 기록</p>
         <h1>글</h1>
-        <p>제품을 만들고 고치면서 마주한 문제와 그때 내린 선택을 적었습니다.</p>
+        <p>회사에서 맡은 일과 개인 작업을 최근에 한 일부터 놓았습니다. 만들면서 부딪힌 문제와 고친 과정을 적었습니다.</p>
       </header>
 
       <ul id="all-writing" className="writing-all-list" aria-label="글 목록">

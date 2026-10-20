@@ -28,7 +28,7 @@ function HomePage() {
             <p className="eyebrow">버즈빌에서 맡은 일</p>
             <h2 id="selected-work-title">대표 작업</h2>
           </div>
-          <Link to={ROUTES.writing}>다른 글 보기 →</Link>
+          <Link to={ROUTES.writing}>글 목록 보기 →</Link>
         </div>
         <div className="career-work-grid">
           {featured.map((card) => (
@@ -46,6 +46,23 @@ function HomePage() {
         </div>
       </section>
 
+      <section className="career-section" aria-labelledby="career-writing-title">
+        <div className="career-section-heading">
+          <div>
+            <p className="eyebrow">버즈빌 공식 기술블로그 · tech.buzzvil.com</p>
+            <h2 id="career-writing-title">회사 기술블로그에 쓴 글</h2>
+          </div>
+        </div>
+        <ul className="career-writing-list">
+          {siteData.homeWriting.map((article) => (
+            <li key={article.url}>
+              <a href={article.url}>{article.title} ↗</a>
+              <span>{article.description}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
       <section className="career-section" aria-labelledby="career-personal-title">
         <div className="career-section-heading">
           <div>
@@ -59,23 +76,6 @@ function HomePage() {
               <p className="eyebrow">{entry.name} · {entry.statusLabel}</p>
               <h3><Link to={ROUTES.caseDetail(entry.slug)}>{entry.title}</Link></h3>
               <p>{entry.summary}</p>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section className="career-section" aria-labelledby="career-writing-title">
-        <div className="career-section-heading">
-          <div>
-            <p className="eyebrow">버즈빌 공식 기술블로그 · tech.buzzvil.com</p>
-            <h2 id="career-writing-title">회사 기술블로그에 쓴 글</h2>
-          </div>
-        </div>
-        <ul className="career-writing-list">
-          {siteData.homeWriting.map((article) => (
-            <li key={article.url}>
-              <a href={article.url}>{article.title} ↗</a>
-              <span>{article.description}</span>
             </li>
           ))}
         </ul>
