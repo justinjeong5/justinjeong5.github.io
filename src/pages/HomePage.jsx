@@ -18,7 +18,8 @@ function HomePage() {
     <div className="story-home career-home portfolio-page">
       <header className="career-intro">
         <h1>{siteData.name} <span>Justin Jeong</span></h1>
-        <p className="career-lead">버즈빌에서 광고·리워드 제품의 주요 화면을 만들었습니다. 앱과 웹에서 참여하고 보상을 확인하는 과정에는 서버의 참여 상태, 광고 SDK의 완료 신호, 앱으로 돌아오는 시점이 맞물립니다. 이 과정에서 사용자가 무엇을 보고 다음에 무엇을 할 수 있는지 정하고, QA와 출시 뒤 문제 확인까지 맡아 왔습니다.</p>
+        <p className="career-positioning">버즈빌에서 앱과 웹의 광고·리워드 제품 프론트엔드를 개발했습니다.</p>
+        <p className="career-lead">여러 작업에서 서버 상태와 광고 SDK·WebView 복귀를 사용자의 다음 행동으로 연결하고, QA·출시와 출시 뒤 진단까지 맡았습니다.</p>
       </header>
 
       <section id="selected-work" className="career-section" aria-labelledby="selected-work-title">
