@@ -10,14 +10,14 @@ import {
   findDeadContentLinks,
 } from './check-content-links.mjs';
 
-test('classifyRef: 상세/로그앵커만 분류하고 정적·외부는 null', () => {
+test('classifyRef: 상세와 삭제한 로그 경로를 분류하고 다른 정적·외부는 null', () => {
   assert.deepEqual(classifyRef('/cases/home-radar-system'), { kind: 'detail', type: 'cases', slug: 'home-radar-system' });
   assert.deepEqual(classifyRef('/notes/my-note/'), { kind: 'detail', type: 'notes', slug: 'my-note' });
-  assert.deepEqual(classifyRef('/logs#2026-06-09-x'), { kind: 'logAnchor', slug: '2026-06-09-x' });
+  assert.deepEqual(classifyRef('/logs#2026-06-09-x'), { kind: 'retiredRoute', target: '/logs#2026-06-09-x' });
   assert.equal(classifyRef('/cases'), null); // 정적 목록 라우트
   assert.equal(classifyRef('/about'), null);
   assert.equal(classifyRef('https://example.com/cases/x'), null); // 외부
-  assert.equal(classifyRef('/logs'), null);
+  assert.deepEqual(classifyRef('/logs'), { kind: 'retiredRoute', target: '/logs' });
 });
 
 test('extractMarkdownTargets: 마크다운 링크 타깃만 추출', () => {
@@ -55,9 +55,8 @@ const homeCard = (slug) => ({ slug, label: '업무', problem: '문제', decision
 
 test('findDeadContentLinks: 모든 참조가 유효하면 dead link 0', async () => {
   const dir = await makeFixture({
-    'cases/good-case.mdx': '본문 [노트로](/notes/live-note) 그리고 [로그](/logs#2026-01-01-ok)',
+    'cases/good-case.mdx': '본문 [노트로](/notes/live-note)',
     'notes/live-note.mdx': '노트',
-    'logs/2026-01-01-ok.mdx': '로그',
     'essays/live-essay.mdx': '에세이',
     'site.json': JSON.stringify({ featuredEssaySlugs: ['live-essay'] }),
     'about.json': JSON.stringify({ highlights: [{ to: '/cases/good-case' }] }),
@@ -69,9 +68,9 @@ test('findDeadContentLinks: 모든 참조가 유효하면 dead link 0', async ()
   }
 });
 
-test('findDeadContentLinks: mdx 내부 링크의 삭제된 slug와 로그 앵커를 검출', async () => {
+test('findDeadContentLinks: mdx 내부 링크의 삭제된 slug와 로그 경로를 검출', async () => {
   const dir = await makeFixture({
-    'cases/c.mdx': '[없는 노트](/notes/deleted-note) [없는 로그](/logs#2099-12-31-gone)',
+    'cases/c.mdx': '[없는 노트](/notes/deleted-note) [삭제한 로그](/logs#2099-12-31-gone)',
     'notes/live-note.mdx': '노트',
     'site.json': JSON.stringify({}),
     'about.json': JSON.stringify({}),

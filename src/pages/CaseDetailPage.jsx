@@ -1,4 +1,4 @@
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, Navigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 
 import { getCase } from '../lib/content';
@@ -11,17 +11,7 @@ function CaseDetailPage() {
   const { slug } = useParams();
   const study = getCase(slug);
 
-  if (!study) {
-    return (
-      <div className="page page-empty">
-        <p className="eyebrow">404</p>
-        <h1>찾을 수 없는 케이스</h1>
-        <Link to={ROUTES.writing} className="see-all-link">
-          <ArrowLeft size={16} aria-hidden="true" /> 글 목록
-        </Link>
-      </div>
-    );
-  }
+  if (!study) return <Navigate to={ROUTES.home} replace />;
 
   const { Component } = study;
   const collection = articleCollection(study);

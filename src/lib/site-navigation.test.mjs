@@ -16,7 +16,7 @@ test('main navigation gives home, career and every writing route one active sect
   const active = (pathname) => PRIMARY_NAV.filter((item) => isPrimaryNavActive(item, pathname)).map((item) => item.label);
   assert.deepEqual(active('/'), ['대표 작업']);
   assert.deepEqual(active('/about'), ['경력·소개']);
-  for (const pathname of ['/writing', '/cases', '/cases/', '/cases/example', '/essays/example', '/notes', '/notes/example', '/logs']) {
+  for (const pathname of ['/writing', '/cases', '/cases/', '/cases/example', '/essays/example', '/notes', '/notes/example']) {
     assert.deepEqual(active(pathname), ['글']);
   }
   assert.deepEqual(PRIMARY_NAV.filter((item) => isPrimaryNavActive(item, '/cases/missing', false)), []);
@@ -24,9 +24,8 @@ test('main navigation gives home, career and every writing route one active sect
 });
 
 test('retired navigation does not remove legacy direct URLs', () => {
-  assert.ok(PRIMARY_NAV.every((item) => item.to !== ROUTES.notes && item.to !== ROUTES.logs));
+  assert.ok(PRIMARY_NAV.every((item) => item.to !== ROUTES.notes));
   assert.equal(ROUTES.notes, '/notes');
-  assert.equal(ROUTES.logs, '/logs');
   assert.equal(ROUTES.cases, '/cases');
   assert.equal(ROUTES.uses, '/uses');
   assert.equal(ROUTES.now, '/now');

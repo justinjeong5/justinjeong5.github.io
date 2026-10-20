@@ -66,7 +66,7 @@ test('STATIC_META: 홈은 DEFAULT_META를 재사용한다', () => {
 });
 
 test('이전 정적 페이지는 직접 URL을 유지하되 검색 색인에서 제외한다', () => {
-  for (const path of ['/logs', '/uses', '/now', '/reading']) {
+  for (const path of ['/uses', '/now', '/reading']) {
     const meta = resolveMeta(path, {});
     assert.equal(meta.robots, 'noindex, follow');
     assert.equal(meta.canonical, `${SITE_URL}${path}/`);

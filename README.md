@@ -5,9 +5,7 @@
 ## 구조
 
 - `src/content/cases/*.mdx`: 경험 기록과 개인 프로젝트
-- `src/content/notes/*.mdx`: 기술 개념과 검증 조건
 - `src/content/essays/*.mdx`: 여러 기록을 연결하는 관점
-- `src/content/logs/*.mdx`: 날짜별 짧은 기록
 - `src/content/site.json`, `about.json`: 홈과 소개
 - `src/lib/work-paths.js`: 읽기 방향과 순서
 - `src/lib/search-docs.js`: 검색 문서 구성
@@ -17,7 +15,7 @@
 
 MDX의 frontmatter와 본문을 함께 편집합니다. 사례는 문제, 선택지, 직접 기여, 구현·협업 과정, 확인된 변화와 미확인 범위를 구분합니다. 작성 시점의 해석을 당시의 의도로 단정하지 않습니다.
 
-통합된 글은 `archived: true`와 `supersededBy`로 표시합니다. 기존 상세 URL은 유지하고 목록·검색에서만 제외합니다. [편집 기록](docs/content-curation.md)에 통합 내역을 정리했습니다.
+현재 공개 콘텐츠는 사례 15편과 기술 에세이 1편입니다. 2026-10-20에 목록·검색에서 빠져 있던 이전 글 82편과 로그 30편을 소스와 배포 경로에서 제거했습니다. 이전 원문은 Git 이력에서 확인할 수 있습니다. [편집 기록](docs/content-curation.md)에 변경 범위를 정리했습니다.
 
 ## 실행과 검증
 

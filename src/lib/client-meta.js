@@ -7,21 +7,25 @@
 // 순수 모듈로 유지(React·content.js 비의존)해 node 단위 테스트가 가능하다.
 // document는 호출부에서 주입한다(SSR-safe: 모듈 로드 시 DOM에 접근하지 않는다).
 
-import { resolveMeta, DEFAULT_META, toCanonical } from './seo.js';
+import { resolveMeta, DEFAULT_META, STATIC_META, normalizePath, isDetailPath, toCanonical } from './seo.js';
 
 // resolveMeta는 알 수 없는 상세 slug에 throw한다(빌드 시 콘텐츠 삭제 회귀를 조기 검출).
 // 클라이언트 런타임에서는 잘못된 URL로 직접 진입해도 네비게이션이 깨지면 안 되므로
-// throw를 잡아 사이트 기본 메타로 폴백한다(해당 상세 라우트는 자체 404 UI를 렌더).
+// throw를 잡아 색인 제외 메타로 폴백한다(해당 라우트는 홈으로 이동).
 export function resolveMetaSafe(url, getters) {
+  const path = normalizePath(url);
+  const missing = {
+    title: DEFAULT_META.title,
+    description: DEFAULT_META.description,
+    canonical: toCanonical(url),
+    robots: 'noindex, follow',
+    ogType: 'website',
+  };
+  if (!isDetailPath(path) && !STATIC_META[path]) return missing;
   try {
     return resolveMeta(url, getters);
   } catch {
-    return {
-      title: DEFAULT_META.title,
-      description: DEFAULT_META.description,
-      canonical: toCanonical(url),
-      ogType: 'website',
-    };
+    return missing;
   }
 }
 

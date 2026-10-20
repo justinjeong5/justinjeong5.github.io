@@ -48,11 +48,6 @@ export const STATIC_META = {
     robots: 'noindex, follow',
     canonical: toCanonical('/writing'),
   },
-  '/logs': {
-    title: '지난 작업 기록 | 정경하',
-    description: '예전에 남긴 짧은 작업 기록입니다. 최근 글은 개발 경험에서 볼 수 있습니다.',
-    robots: 'noindex, follow',
-  },
   '/uses': {
     title: '2026년 5월의 도구 기록 | 정경하',
     description: '2026년 5월에 적어 둔 도구 목록입니다. 현재 사용 여부는 확인하지 않았습니다.',

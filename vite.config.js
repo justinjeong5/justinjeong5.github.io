@@ -36,9 +36,7 @@ export default defineConfig({
             return 'vendor';
           }
           if (id.includes('/src/content/cases/')) return 'content-cases';
-          if (id.includes('/src/content/notes/')) return 'content-notes';
           if (id.includes('/src/content/essays/')) return 'content-essays';
-          if (id.includes('/src/content/logs/')) return 'content-logs';
         },
       },
     },

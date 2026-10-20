@@ -1,11 +1,13 @@
 import assert from 'node:assert/strict';
-import { readFileSync, readdirSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { test } from 'node:test';
 
 import { PRIMARY_ARTICLES, SUBMITTED_ARTICLE_SLUGS, WRITING_SECTIONS, articleCollection, selectEditorialArticles, selectTechnicalRecords, selectWritingIndex, selectWritingSections, writingSectionForSlug, consolidationTarget } from './editorial.js';
 
 function entries(type) {
-  return readdirSync(new URL(`../content/${type}/`, import.meta.url))
+  const dir = new URL(`../content/${type}/`, import.meta.url);
+  if (!existsSync(dir)) return [];
+  return readdirSync(dir)
     .filter((name) => name.endsWith('.mdx'))
     .map((name) => {
       const source = readFileSync(new URL(`../content/${type}/${name}`, import.meta.url), 'utf8');
@@ -108,19 +110,12 @@ test('classification follows article metadata for independent inputs', () => {
   assert.equal(articleCollection({ collection: 'unknown' }), undefined);
 });
 
-test('retired pages keep a readable source and point directly to current content or the writing home', () => {
-  const byUrl = new Map(['cases', 'essays', 'notes'].flatMap((type) => entries(type).map((entry) => [`/${type}/${entry.slug}`, entry])));
-  const retired = [...byUrl.values()].filter((entry) => entry.archived);
-  assert.ok(retired.length > 50);
-  for (const entry of retired) {
-    const target = consolidationTarget(entry);
-    assert.ok(target, entry.slug);
-    if (target !== '/writing') {
-      assert.ok(byUrl.has(target), entry.slug);
-      assert.equal(byUrl.get(target).archived, false, entry.slug);
-    }
-    assert.ok(entry.source.split('---').slice(2).join('---').trim().length > 0, entry.slug);
-  }
+test('removed archive content leaves only the current case and essay files', () => {
+  assert.equal(entries('cases').length, 15);
+  assert.equal(entries('essays').length, 1);
+  assert.deepEqual(entries('notes'), []);
+  assert.deepEqual(entries('logs'), []);
+  assert.ok([...entries('cases'), ...entries('essays')].every((entry) => !entry.archived));
 });
 
 test('consolidation notices reject external and executable URLs', () => {

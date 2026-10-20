@@ -2,7 +2,7 @@
 // Sitemap generator — 빌드 타임 public/sitemap.xml 생성 (의존성 0).
 //
 // 정적 라우트 + cases/notes/essays 슬러그(src/content/*/*.mdx 파일명)를 순회해
-// sitemap 0.9 스키마 XML을 출력한다. 로그는 /logs 단일 페이지만 (개별 URL 없음).
+// sitemap 0.9 스키마 XML을 출력한다.
 // <lastmod>는 frontmatter의 lastTendedAt > plantedAt > date 우선순위로 파싱, 없으면 생략.
 //
 // 안전 경계: public/ 밖으로 절대 쓰지 않는다(assertInsidePublic).
@@ -31,7 +31,6 @@ export const STATIC_PATHS = [
   '/cases',
   '/notes',
   '/essays',
-  '/logs',
   '/uses',
   '/now',
   '/reading',
@@ -39,7 +38,7 @@ export const STATIC_PATHS = [
   '/cv',
 ];
 
-// 개별 URL을 가지는 콘텐츠 타입 (logs는 /logs 단일 페이지라 제외).
+// 개별 URL을 가지는 콘텐츠 타입.
 const DETAIL_TYPES = ['cases', 'notes', 'essays'];
 
 function assertInsidePublic(target) {

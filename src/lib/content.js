@@ -9,7 +9,6 @@ import { compareContextDates } from './article-dates.js';
 const caseModules = import.meta.glob('../content/cases/*.mdx', { eager: true });
 const noteModules = import.meta.glob('../content/notes/*.mdx', { eager: true });
 const essayModules = import.meta.glob('../content/essays/*.mdx', { eager: true });
-const logModules = import.meta.glob('../content/logs/*.mdx', { eager: true });
 
 function extractSlug(path) {
   const match = path.match(/\/([^/]+)\.mdx$/);
@@ -39,7 +38,6 @@ export const getNote = (slug) => getAllNotes().find((entry) => entry.slug === sl
 export const getAllEssays = () => toEntries(essayModules, true);
 export const getEssay = (slug) => getAllEssays().find((entry) => entry.slug === slug);
 
-export const getAllLogs = () => toEntries(logModules);
 
 export function hasContentAt(pathname) {
   const detail = pathname.match(/^\/(cases|notes|essays)\/([^/]+)\/?$/);

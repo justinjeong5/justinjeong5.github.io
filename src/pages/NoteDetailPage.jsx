@@ -1,4 +1,4 @@
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, Navigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 
 import { getNote, getAllNotes } from '../lib/content';
@@ -25,17 +25,7 @@ function NoteDetailPage() {
   const { slug } = useParams();
   const note = getNote(slug);
 
-  if (!note) {
-    return (
-      <div className="page page-empty">
-        <p className="eyebrow">404</p>
-        <h1>찾을 수 없는 노트</h1>
-        <Link to={ROUTES.writing} className="see-all-link">
-          <ArrowLeft size={16} aria-hidden="true" /> 글 목록
-        </Link>
-      </div>
-    );
-  }
+  if (!note) return <Navigate to={ROUTES.home} replace />;
 
   const { Component } = note;
   const related = findRelated(note);

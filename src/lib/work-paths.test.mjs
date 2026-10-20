@@ -6,7 +6,7 @@ import { WORK_SERIES, WORK_CASE_SLUGS, WORK_PATHS, WORK_TOPICS, RECOMMENDED_READ
 
 const entries = WORK_CASE_SLUGS.map((slug) => ({ slug, series: WORK_SERIES }));
 
-test('legacy topic map retains every article URL, including consolidated originals', () => {
+test('topic map contains every remaining work case once', () => {
   const cases = WORK_TOPICS.flatMap((topic) => topic.caseSlugs);
   const essays = WORK_TOPICS.flatMap((topic) => topic.essaySlugs);
   assert.deepEqual([...cases].sort(), [...WORK_CASE_SLUGS].sort());
@@ -19,44 +19,42 @@ test('legacy topic map retains every article URL, including consolidated origina
   assert.equal(new Set(essays).size, essays.length);
 });
 
-test('topics combine article kinds in date order and exclude missing or archived entries', () => {
+test('topics sort current articles by context date and exclude missing or archived entries', () => {
   const cases = [
-    { slug: 'ai-cross-functional-delivery', dateBasis: 'context', date: '2026-08', period: '2026.08' },
+    { slug: 'playhub-product-architecture', dateBasis: 'context', date: '2026-08', period: '2026.08' },
+    { slug: 'selectable-mission-product', dateBasis: 'context', date: '2026-09', period: '2026.09' },
+    { slug: 'advertiser-integration-workflow', dateBasis: 'context', date: '2026-10', archived: true },
     { slug: 'unrelated', date: '2026-10' },
   ];
-  const essays = [
-    { slug: 'ai-coding-tools-six-months', dateBasis: 'context', date: '2026-09' },
-    { slug: 'self-persona-blocking', dateBasis: 'context', date: '2026-10', archived: true },
-  ];
-  const selected = selectTopicArticles(cases, essays, 'collaboration');
-  assert.deepEqual(selected.map((entry) => [entry.slug, entry.kind]), [['ai-coding-tools-six-months', 'essay'], ['ai-cross-functional-delivery', 'case']]);
+  const selected = selectTopicArticles(cases, [], 'product');
+  assert.deepEqual(selected.map((entry) => [entry.slug, entry.kind]), [['selectable-mission-product', 'case'], ['playhub-product-architecture', 'case']]);
   assert.equal(cases[0].kind, undefined);
-  assert.deepEqual(selectTopicArticles(cases, essays, 'unknown'), []);
+  assert.deepEqual(selectTopicArticles(cases, [], 'unknown'), []);
   assert.equal(resolveWorkTopic('unknown'), undefined);
 });
 
 test('case detail keeps only a topic that contains the article', () => {
   assert.equal(workPathUrl('runtime'), '/cases?view=runtime');
-  assert.equal(caseStudyUrl('latest-request-boundaries', 'runtime'), '/cases/latest-request-boundaries?view=runtime');
-  assert.equal(caseStudyUrl('latest-request-boundaries', 'product'), '/cases/latest-request-boundaries');
+  assert.equal(caseStudyUrl('gateway-rendering-context', 'runtime'), '/cases/gateway-rendering-context?view=runtime');
+  assert.equal(caseStudyUrl('gateway-rendering-context', 'product'), '/cases/gateway-rendering-context');
 });
 
 test('all work includes both article kinds, not unrelated projects or archives', () => {
-  const source = [{ slug: 'playhub-product-flow', series: WORK_SERIES, dateBasis: 'context', date: '2026-06' }, { slug: 'personal', date: '2026-10' }];
+  const source = [{ slug: 'playhub-product-architecture', series: WORK_SERIES, dateBasis: 'context', date: '2026-06' }, { slug: 'personal', date: '2026-10' }];
   const essays = [{ slug: 'current', dateBasis: 'context', date: '2026-09' }, { slug: 'retired', archived: true }];
-  assert.deepEqual(selectAllWorkArticles(source, essays).map((entry) => [entry.slug, entry.kind]), [['current', 'essay'], ['playhub-product-flow', 'case']]);
+  assert.deepEqual(selectAllWorkArticles(source, essays).map((entry) => [entry.slug, entry.kind]), [['current', 'essay'], ['playhub-product-architecture', 'case']]);
 });
 
 test('essay navigation preserves the actual all/topic/essay-list origin', () => {
-  const slug = 'self-persona-blocking';
-  assert.equal(essayStudyUrl(slug, 'all'), '/essays/self-persona-blocking?view=all');
+  const slug = 'tanstack-query-server-state-boundaries';
+  assert.equal(essayStudyUrl(slug, 'all'), '/essays/tanstack-query-server-state-boundaries?view=all');
   assert.equal(essayListUrl(slug, 'all'), '/cases');
-  assert.equal(essayStudyUrl(slug, 'collaboration'), '/essays/self-persona-blocking?view=collaboration');
-  assert.equal(essayListUrl(slug, 'collaboration'), '/cases?view=collaboration');
-  assert.equal(essayStudyUrl(slug, 'product'), '/essays/self-persona-blocking');
+  assert.equal(essayStudyUrl(slug, 'collaboration'), '/essays/tanstack-query-server-state-boundaries');
+  assert.equal(essayListUrl(slug, 'collaboration'), '/essays');
+  assert.equal(essayStudyUrl(slug, 'product'), '/essays/tanstack-query-server-state-boundaries');
   assert.equal(essayListUrl(slug, 'product'), '/essays');
   assert.equal(essayListUrl(slug), '/essays');
-  assert.equal(essayStudyUrl(slug, 'https://example.com'), '/essays/self-persona-blocking');
+  assert.equal(essayStudyUrl(slug, 'https://example.com'), '/essays/tanstack-query-server-state-boundaries');
 });
 
 test('recommended reading stays separate from chronology and matches actual article titles', () => {
@@ -98,12 +96,12 @@ test('home presents Pull-up 30 and PokeTokenBar as equal personal reads', () => 
 
 test('all and reading paths show the latest context first, not curation or editing date', () => {
   const source = [
-    { slug: 'bulk-partial-results', series: WORK_SERIES, dateBasis: 'context', date: '2022', updated: '2026-10-09' },
-    { slug: 'playhub-product-flow', series: WORK_SERIES, dateBasis: 'context', date: '2026-06' },
+    { slug: 'playhub-product-architecture', series: WORK_SERIES, dateBasis: 'context', date: '2022', updated: '2026-10-09' },
+    { slug: 'gateway-rendering-context', series: WORK_SERIES, dateBasis: 'context', date: '2026-06' },
     { slug: 'article-content-integration', series: WORK_SERIES, dateBasis: 'context', date: '2026-09' },
   ];
   for (const view of ['all', 'operator']) {
-    assert.deepEqual(selectWorkCases(source, view).map((entry) => entry.slug), ['article-content-integration', 'playhub-product-flow', 'bulk-partial-results']);
+    assert.deepEqual(selectWorkCases(source, view).map((entry) => entry.slug), ['article-content-integration', 'gateway-rendering-context', 'playhub-product-architecture']);
   }
 });
 
@@ -130,9 +128,9 @@ test('missing records do not introduce legacy fallback entries', () => {
 });
 
 test('detail links retain a valid reading path and previous-record context', () => {
-  assert.equal(caseStudyUrl('bulk-partial-results', 'operator'), '/cases/bulk-partial-results?view=operator');
-  assert.equal(caseStudyUrl('j-chat-first-production', 'previous'), '/cases/j-chat-first-production?view=previous');
-  assert.equal(caseStudyUrl('bulk-partial-results', 'unknown'), '/cases/bulk-partial-results');
+  assert.equal(caseStudyUrl('article-content-integration', 'operator'), '/cases/article-content-integration?view=operator');
+  assert.equal(caseStudyUrl('old', 'previous'), '/cases/old?view=previous');
+  assert.equal(caseStudyUrl('article-content-integration', 'unknown'), '/cases/article-content-integration');
 });
 
 test('archive selection hides aliases without changing the raw entries', () => {
@@ -142,10 +140,10 @@ test('archive selection hides aliases without changing the raw entries', () => {
 });
 
 test('detail context must actually contain the record', () => {
-  assert.equal(caseStudyUrl('build-cache-compatibility', 'operator'), '/cases/build-cache-compatibility');
-  assert.equal(caseStudyUrl('bulk-partial-results', 'previous'), '/cases/bulk-partial-results');
+  assert.equal(caseStudyUrl('deployment-config-contracts', 'operator'), '/cases/deployment-config-contracts');
+  assert.equal(caseStudyUrl('article-content-integration', 'previous'), '/cases/article-content-integration');
   assert.equal(caseListUrl({ slug: 'old', archived: true }, 'previous'), '/cases');
-  assert.equal(caseListUrl({ slug: 'j-chat-first-production' }, 'previous'), '/cases?view=previous');
+  assert.equal(caseListUrl({ slug: 'old' }, 'previous'), '/cases?view=previous');
 });
 
 test('an archived canonical record is excluded from curated paths too', () => {

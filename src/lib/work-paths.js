@@ -11,20 +11,20 @@ export const RECOMMENDED_READS = [
 
 export const WORK_TOPICS = [
   { id: 'product', label: '제품 구축·상태 설계', description: '새 제품의 핵심 FE와 운영 흐름을 만들고 출시하기',
-    caseSlugs: ['report-data-user-workflow', 'playhub-bonus-session', 'advertiser-integration-workflow', 'selectable-mission-product', 'inapp-content-participation', 'campaign-hub-supply', 'playhub-product-architecture', 'playhub-product-flow', 'cs-workflow-product', 'article-content-integration', 'bulk-partial-results', 'budget-rule-compatibility', 'automation-unknown-state', 'date-filter-preset-state', 'experiment-routing-context', 'operator-next-inquiry'],
-    essaySlugs: ['two-sided-market-decisions', 'why-not-traditional-resume'] },
+    caseSlugs: ['advertiser-integration-workflow', 'selectable-mission-product', 'inapp-content-participation', 'playhub-product-architecture', 'cs-workflow-product', 'article-content-integration', 'experiment-routing-context'],
+    essaySlugs: [] },
   { id: 'runtime', label: '비동기·SDK·브라우저', description: '외부 실행과 복귀, 입력·요청의 수명을 다루기',
-    caseSlugs: ['shared-ad-execution-delivery', 'gateway-rendering-context', 'latest-request-boundaries', 'ad-preload-lifecycle', 'canvas-input-lifecycle', 'playhub-reward-reveal', 'ad-response-recovery', 'external-entry-viewport', 'shared-popup-locale'],
-    essaySlugs: ['context-before-preference', 'same-defect-class-across-repos', 'silent-truncation-recurrence'] },
+    caseSlugs: ['shared-ad-execution-delivery', 'gateway-rendering-context'],
+    essaySlugs: [] },
   { id: 'observability', label: '관측·데이터', description: '조사에 필요한 정보와 제품 지표의 의미를 지키기',
-    caseSlugs: ['journey-analytics-contract', 'playhub-diagnostic-sampling', 'bridge-observation-contract', 'diagnostic-error-information', 'retention-report-boundaries'],
-    essaySlugs: ['data-trust-two-sided'] },
+    caseSlugs: ['playhub-diagnostic-sampling'],
+    essaySlugs: [] },
   { id: 'tooling', label: '개발환경·검증·배포', description: '개발 구조의 전환과 기존 동작을 보존하는 검증',
-    caseSlugs: ['frontend-delivery-boundary', 'deployment-config-contracts', 'build-cache-compatibility', 'http-test-boundary', 'grouped-response-positions'],
-    essaySlugs: ['automation-doesnt-reduce-work', 'deterministic-design-loop'] },
+    caseSlugs: ['frontend-delivery-boundary', 'deployment-config-contracts'],
+    essaySlugs: [] },
   { id: 'collaboration', label: 'AI·협업', description: '팀의 병목을 맡고 동료의 판단을 구현에 연결하기',
-    caseSlugs: ['ai-product-analysis', 'ai-cross-functional-delivery'],
-    essaySlugs: ['ai-coding-tools-six-months', 'self-persona-blocking', 'delegation-autonomy-calibration', 'ai-workflow-chains'] },
+    caseSlugs: ['ai-cross-functional-delivery'],
+    essaySlugs: [] },
 ];
 
 export function resolveWorkTopic(id) {
@@ -50,43 +50,19 @@ export function selectAllWorkArticles(cases, essays) {
 }
 
 export const WORK_CASE_SLUGS = [
-  'ai-product-analysis',
-  'journey-analytics-contract',
   'shared-ad-execution-delivery',
-  'report-data-user-workflow',
   'gateway-rendering-context',
-  'playhub-bonus-session',
   'advertiser-integration-workflow',
   'selectable-mission-product',
   'inapp-content-participation',
-  'campaign-hub-supply',
   'playhub-product-architecture',
-  'playhub-product-flow',
   'playhub-diagnostic-sampling',
   'deployment-config-contracts',
   'ai-cross-functional-delivery',
   'article-content-integration',
-  'playhub-reward-reveal',
-  'ad-preload-lifecycle',
-  'canvas-input-lifecycle',
   'cs-workflow-product',
-  'bulk-partial-results',
-  'automation-unknown-state',
-  'budget-rule-compatibility',
-  'retention-report-boundaries',
-  'ad-response-recovery',
-  'bridge-observation-contract',
-  'latest-request-boundaries',
-  'build-cache-compatibility',
   'frontend-delivery-boundary',
   'experiment-routing-context',
-  'external-entry-viewport',
-  'diagnostic-error-information',
-  'shared-popup-locale',
-  'date-filter-preset-state',
-  'operator-next-inquiry',
-  'http-test-boundary',
-  'grouped-response-positions',
 ];
 
 export const WORK_PATHS = [
@@ -95,23 +71,23 @@ export const WORK_PATHS = [
     label: '제품과 운영자',
     question: '사용자가 상태를 이해하고 행동할 수 있게 했는가?',
     description: '제품의 참여 규칙, 운영자의 판단, 실제 출시와 후속 개선을 연결한 기록.',
-    caseSlugs: ['playhub-bonus-session', 'advertiser-integration-workflow', 'selectable-mission-product', 'inapp-content-participation', 'campaign-hub-supply', 'playhub-product-flow', 'article-content-integration', 'cs-workflow-product', 'playhub-reward-reveal', 'ai-cross-functional-delivery', 'canvas-input-lifecycle', 'bulk-partial-results', 'automation-unknown-state', 'budget-rule-compatibility', 'retention-report-boundaries', 'experiment-routing-context', 'ad-response-recovery', 'date-filter-preset-state', 'operator-next-inquiry', 'shared-popup-locale'],
+    caseSlugs: ['advertiser-integration-workflow', 'selectable-mission-product', 'inapp-content-participation', 'article-content-integration', 'cs-workflow-product', 'ai-cross-functional-delivery', 'experiment-routing-context'],
   },
   {
     id: 'contracts',
     label: '외부 응답과 상태',
     question: '통제할 수 없는 응답과 기존 계약을 어떻게 다뤘는가?',
     description: '광고 준비와 완료, 복귀 상태, 진단 수집과 최신 요청의 경계를 설계한 기록.',
-    caseSlugs: ['playhub-diagnostic-sampling', 'ad-preload-lifecycle', 'playhub-reward-reveal', 'playhub-product-flow', 'article-content-integration', 'deployment-config-contracts', 'bridge-observation-contract', 'latest-request-boundaries', 'ad-response-recovery', 'automation-unknown-state', 'budget-rule-compatibility', 'diagnostic-error-information', 'http-test-boundary', 'grouped-response-positions'],
+    caseSlugs: ['playhub-diagnostic-sampling', 'article-content-integration', 'deployment-config-contracts'],
   },
   {
     id: 'delivery',
     label: '기술 선택과 변경',
     question: '도입 이후의 호환·회귀·전환 비용까지 설명할 수 있는가?',
     description: '배포 도구의 설정 계약, FE 전환, 입력 경로, AI 위임 뒤 실제 전달까지 다룬 기록.',
-    caseSlugs: ['deployment-config-contracts', 'ai-cross-functional-delivery', 'canvas-input-lifecycle', 'playhub-product-flow', 'ad-preload-lifecycle', 'article-content-integration', 'build-cache-compatibility', 'frontend-delivery-boundary', 'experiment-routing-context', 'bridge-observation-contract', 'external-entry-viewport', 'shared-popup-locale', 'http-test-boundary', 'diagnostic-error-information'],
+    caseSlugs: ['deployment-config-contracts', 'ai-cross-functional-delivery', 'article-content-integration', 'frontend-delivery-boundary', 'experiment-routing-context'],
   },
-].map((path) => ({ ...path, caseSlugs: ['playhub-product-architecture', 'ai-product-analysis', 'journey-analytics-contract', 'shared-ad-execution-delivery', 'report-data-user-workflow', 'gateway-rendering-context', ...path.caseSlugs] }));
+].map((path) => ({ ...path, caseSlugs: ['playhub-product-architecture', 'shared-ad-execution-delivery', 'gateway-rendering-context', ...path.caseSlugs] }));
 
 export function resolveWorkPath(id) {
   return WORK_PATHS.find((path) => path.id === id);

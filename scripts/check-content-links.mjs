@@ -17,11 +17,10 @@ const frontmatterOf = (source) => /^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/.exec(
 const DETAIL_TYPES = ['cases', 'notes', 'essays'];
 const isArchived = (source) => /^archived:\s*true(?:\s*#.*)?\s*$/m.test(source);
 
-// 콘텐츠 디렉터리에서 타입별 slug 집합과 로그 앵커(파일명) 집합을 수집한다.
+// 콘텐츠 디렉터리에서 타입별 slug 집합을 수집한다.
 async function collectSlugs(contentDir) {
   const slugs = { cases: new Set(), notes: new Set(), essays: new Set() };
-  const logs = new Set();
-  for (const type of [...DETAIL_TYPES, 'logs']) {
+  for (const type of DETAIL_TYPES) {
     let entries;
     try {
       entries = await readdir(path.join(contentDir, type));
@@ -31,22 +30,20 @@ async function collectSlugs(contentDir) {
     for (const f of entries) {
       if (!f.endsWith('.mdx')) continue;
       const slug = f.slice(0, -4);
-      if (type === 'logs') logs.add(slug);
-      else slugs[type].add(slug);
+      slugs[type].add(slug);
     }
   }
-  return { slugs, logs };
+  return slugs;
 }
 
 // 경로 문자열을 내부 콘텐츠 참조로 분류한다. 콘텐츠 삭제로 깨질 수 있는 것만 대상:
 // - /cases|notes|essays/<slug> (상세 페이지)
-// - /logs#<anchor> (로그 앵커 = 로그 파일명)
+// - 삭제한 /logs 주소
 // 정적 라우트(/cases, /about 등)나 외부 링크는 콘텐츠 큐레이션과 무관하므로 null.
 export function classifyRef(target) {
   const detail = target.match(/^\/(cases|notes|essays)\/([a-z0-9-]+)\/?$/);
   if (detail) return { kind: 'detail', type: detail[1], slug: detail[2] };
-  const logAnchor = target.match(/^\/logs#([a-z0-9-]+)$/);
-  if (logAnchor) return { kind: 'logAnchor', slug: logAnchor[1] };
+  if (/^\/logs\/?(?:#[a-z0-9-]+)?$/.test(target)) return { kind: 'retiredRoute', target };
   return null;
 }
 
@@ -62,7 +59,7 @@ export function extractMarkdownTargets(text) {
 // 콘텐츠 전체(mdx 내부 링크 + site.json/about.json 대표 참조)에서 dead link를 찾는다.
 // 반환: [{ source, ref }] — source는 참조 위치, ref는 존재하지 않는 대상.
 export async function findDeadContentLinks(contentDir = DEFAULT_CONTENT_DIR) {
-  const { slugs, logs } = await collectSlugs(contentDir);
+  const slugs = await collectSlugs(contentDir);
   const dead = [];
   const sourceByPath = new Map();
   const refsByPath = new Map();
@@ -71,13 +68,13 @@ export async function findDeadContentLinks(contentDir = DEFAULT_CONTENT_DIR) {
     if (!ref) return;
     if (ref.kind === 'detail' && !slugs[ref.type].has(ref.slug)) {
       dead.push({ source, ref: `/${ref.type}/${ref.slug}` });
-    } else if (ref.kind === 'logAnchor' && !logs.has(ref.slug)) {
-      dead.push({ source, ref: `/logs#${ref.slug}` });
+    } else if (ref.kind === 'retiredRoute') {
+      dead.push({ source, ref: ref.target });
     }
   };
 
   // 1) mdx 내부 링크
-  for (const type of [...DETAIL_TYPES, 'logs']) {
+  for (const type of DETAIL_TYPES) {
     let entries;
     try {
       entries = await readdir(path.join(contentDir, type));
@@ -89,10 +86,8 @@ export async function findDeadContentLinks(contentDir = DEFAULT_CONTENT_DIR) {
       const text = await readFile(path.join(contentDir, type, f), 'utf8');
       const sourcePath = `/${type}/${f.slice(0, -4)}`;
       const targets = extractMarkdownTargets(text);
-      if (type !== 'logs') {
-        sourceByPath.set(sourcePath, frontmatterOf(text));
-        refsByPath.set(sourcePath, targets);
-      }
+      sourceByPath.set(sourcePath, frontmatterOf(text));
+      refsByPath.set(sourcePath, targets);
       for (const target of targets) {
         check(`${type}/${f}`, classifyRef(target));
       }

@@ -28,8 +28,6 @@ function makeFixtureContent() {
   write('notes', 'a-note.mdx', '---\ntitle: N2\nplantedAt: 2026-05-02\n---\nbody');
   write('essays', 'my-essay.mdx', "---\ntitle: E\ndate: '2026-05-29'\n---\nbody");
   write('essays', 'draft-essay.mdx', '---\ntitle: Draft\nstatus: Draft\n---\nbody');
-  // 로그는 개별 URL이 없어야 한다 — fixture에 넣어도 sitemap에 안 나와야 함.
-  write('logs', '2026-05-17-x.mdx', '---\ntitle: L\ndate: 2026-05-17\n---\nbody');
   // mdx가 아닌 파일은 무시되어야 한다.
   write('notes', 'README.md', 'not mdx');
   return root;
@@ -74,7 +72,7 @@ test('collectUrls는 정적 라우트를 모두 포함하고 BASE prefix를 붙�
     for (const path of STATIC_PATHS.filter((path) => STATIC_META[path]?.robots !== 'noindex, follow')) {
       assert.ok(locs.includes(toCanonical(path)), `정적 URL 누락: ${path}`);
     }
-    for (const archived of ['/cases', '/notes', '/essays', '/logs', '/uses', '/now', '/reading', '/cv']) {
+    for (const archived of ['/cases', '/notes', '/essays', '/uses', '/now', '/reading', '/cv']) {
       assert.ok(!locs.includes(toCanonical(archived)));
     }
     for (const loc of locs) {
@@ -96,21 +94,6 @@ test('collectUrls는 cases/notes/essays 상세 URL을 포함한다', () => {
     assert.ok(locs.includes(`${BASE}/essays/my-essay/`));
     assert.ok(!locs.includes(`${BASE}/essays/draft-essay/`));
     assert.ok(!locs.includes(`${BASE}/cases/old-case/`));
-  } finally {
-    rmSync(root, { recursive: true, force: true });
-  }
-});
-
-test('로그 아카이브는 사이트맵에 싣지 않는다', () => {
-  const root = makeFixtureContent();
-  try {
-    const locs = collectUrls({ contentDir: root }).map((u) => u.loc);
-    assert.ok(!locs.includes(`${BASE}/logs/`), '/logs는 직접 경로만 유지');
-    assert.ok(
-      // /logs/ 정본은 허용하되, /logs/{slug}/ 같은 개별 로그 URL은 없어야 한다.
-      !locs.some((l) => l.startsWith(`${BASE}/logs/`) && l !== `${BASE}/logs/`),
-      '로그 개별 URL이 생성되면 안 됨',
-    );
   } finally {
     rmSync(root, { recursive: true, force: true });
   }

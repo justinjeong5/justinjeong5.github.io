@@ -34,6 +34,13 @@ test('resolveMetaSafe: 알 수 없는 상세 slug는 throw하지 않고 기본 �
   assert.equal(m.description, DEFAULT_META.description);
   assert.equal(m.ogType, 'website');
   assert.equal(m.canonical, `${SITE_URL}/essays/missing/`);
+  assert.equal(m.robots, 'noindex, follow');
+});
+
+test('resolveMetaSafe: 삭제한 로그 경로도 색인에서 제외한다', () => {
+  const m = resolveMetaSafe('/logs', stubGetters);
+  assert.equal(m.robots, 'noindex, follow');
+  assert.equal(m.canonical, `${SITE_URL}/logs/`);
 });
 
 // ---- applyMetaToDom: fake document로 DOM 변이 검증 (jsdom 없이) ----

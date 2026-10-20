@@ -7,7 +7,6 @@ export const ROUTES = {
   noteDetail: (slug) => `/notes/${slug}`,
   essays: '/essays',
   essayDetail: (slug) => `/essays/${slug}`,
-  logs: '/logs',
   uses: '/uses',
   now: '/now',
   reading: '/reading',
@@ -24,7 +23,7 @@ export const PRIMARY_NAV = [
 export function isPrimaryNavActive(item, pathname, hasContent = true) {
   const path = pathname.replace(/\/+$/, '') || '/';
   if (item.to === ROUTES.writing) {
-    return [ROUTES.writing, ROUTES.cases, ROUTES.notes, ROUTES.essays, ROUTES.logs].includes(path)
+    return [ROUTES.writing, ROUTES.cases, ROUTES.notes, ROUTES.essays].includes(path)
       || (hasContent && /^\/(cases|notes|essays)\/[^/]+$/.test(path));
   }
   return path === item.to;

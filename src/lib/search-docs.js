@@ -5,7 +5,6 @@
 // search.js(buildDocs)가 맡고 매핑 규칙만 독립 검증한다. (seo.js↔entry-server와 같은 분리 패턴.)
 
 import { ROUTES } from './routes.js';
-import { logUrl } from './log-url.js';
 import { visibleEntries } from './work-paths.js';
 
 export function buildCurrentDocsFrom({ cases = [], essays = [] } = {}) {
@@ -14,7 +13,7 @@ export function buildCurrentDocsFrom({ cases = [], essays = [] } = {}) {
 
 // 타입별 콘텐츠 엔트리 컬렉션을 공통 검색 문서 shape로 변환한다.
 // 타입별 필드 차이(topics 소스, growth, date)와 기본값, url 규칙을 한곳에 고정한다.
-export function buildDocsFrom({ cases = [], notes = [], essays = [], logs = [] } = {}) {
+export function buildDocsFrom({ cases = [], notes = [], essays = [] } = {}) {
   return [
     ...visibleEntries(cases).map((entry) => ({
       type: 'case',
@@ -44,22 +43,12 @@ export function buildDocsFrom({ cases = [], notes = [], essays = [], logs = [] }
       topics: entry.tags || [],
       url: ROUTES.essayDetail(entry.slug),
     })),
-    ...visibleEntries(logs).map((entry) => ({
-      type: 'log',
-      typeLabel: 'Log',
-      slug: entry.slug,
-      title: entry.title,
-      summary: entry.summary || '',
-      topics: [],
-      date: entry.date,
-      url: logUrl(entry.slug, ROUTES.logs),
-    })),
   ];
 }
 
 // 검색 결과를 타입별로 그룹핑한다. 알 수 없는 타입은 조용히 무시한다.
 export function groupByType(results) {
-  const groups = { case: [], note: [], essay: [], log: [] };
+  const groups = { case: [], note: [], essay: [] };
   for (const item of results) {
     if (groups[item.type]) groups[item.type].push(item);
   }
