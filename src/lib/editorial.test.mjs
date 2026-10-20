@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
 import { test } from 'node:test';
 
-import { PRIMARY_ARTICLES, SUBMITTED_ARTICLE_SLUGS, articleCollection, selectEditorialArticles, selectTechnicalRecords, selectWritingIndex, consolidationTarget } from './editorial.js';
+import { PRIMARY_ARTICLES, SUBMITTED_ARTICLE_SLUGS, WRITING_SECTIONS, articleCollection, selectEditorialArticles, selectTechnicalRecords, selectWritingIndex, selectWritingSections, writingSectionForSlug, consolidationTarget } from './editorial.js';
 
 function entries(type) {
   return readdirSync(new URL(`../content/${type}/`, import.meta.url))
@@ -84,6 +84,20 @@ test('technical records add a separate reading path without changing submitted a
     { slug: 'draft', status: 'Draft', collection: 'records' },
     { slug: 'archived', archived: true, collection: 'records' },
   ]), []);
+});
+
+test('submitted articles appear once across product and personal writing sections', () => {
+  const sections = selectWritingSections(entries('cases'));
+  const articles = sections.flatMap((section) => section.articles);
+
+  assert.deepEqual(sections.map((section) => section.id), WRITING_SECTIONS.map((section) => section.id));
+  assert.deepEqual(sections.map((section) => section.articles.length), [9, 2]);
+  assert.equal(new Set(articles.map((entry) => entry.slug)).size, 11);
+  assert.deepEqual(new Set(articles.map((entry) => entry.slug)), new Set(selectWritingIndex(entries('cases')).map((entry) => entry.slug)));
+  assert.equal(writingSectionForSlug('gateway-rendering-context')?.id, 'reward-products');
+  assert.equal(writingSectionForSlug('cs-workflow-product')?.id, 'reward-products');
+  assert.equal(writingSectionForSlug('pullup-record-driven-coach')?.id, 'personal-and-open-source');
+  assert.equal(writingSectionForSlug('unlisted'), undefined);
 });
 
 test('classification follows article metadata for independent inputs', () => {

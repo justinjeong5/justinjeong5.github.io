@@ -5,7 +5,7 @@ import { getCase } from '../lib/content';
 import { displayWorkPeriod } from '../lib/article-dates.js';
 import { ROUTES } from '../lib/routes';
 import ConsolidationNotice from '../components/ui/ConsolidationNotice';
-import { articleCollection } from '../lib/editorial';
+import { articleCollection, writingSectionForSlug } from '../lib/editorial';
 
 function CaseDetailPage() {
   const { slug } = useParams();
@@ -25,11 +25,13 @@ function CaseDetailPage() {
 
   const { Component } = study;
   const collection = articleCollection(study);
+  const section = study.archived ? undefined : writingSectionForSlug(slug);
+  const sectionUrl = section ? `${ROUTES.writing}#${section.id}` : null;
 
   return (
     <article className="page case-detail">
       <header className="page-header case-detail-header">
-        <p className="eyebrow">{study.archived ? '이전 글' : collection ? <Link to={collection.url}>{collection.label}</Link> : study.statusLabel || study.status}</p>
+        <p className="eyebrow">{study.archived ? '이전 글' : section || collection ? <Link to={sectionUrl || collection.url}>{section?.label || collection.label}</Link> : study.statusLabel || study.status}</p>
         <h1>{study.title}</h1>
         <p className="page-lead">{study.summary}</p>
         <dl className="case-meta">
@@ -61,7 +63,7 @@ function CaseDetailPage() {
       </div>
 
       <footer className="page-footer">
-        <Link to={ROUTES.writing} className="see-all-link">
+        <Link to={sectionUrl || ROUTES.writing} className="see-all-link">
           <ArrowLeft size={16} aria-hidden="true" /> 글 목록으로
         </Link>
       </footer>
