@@ -56,11 +56,11 @@ test('writing home lists exactly the direct article links in submitted PDFs', ()
   assert.deepEqual(new Set(slugs), new Set(expected));
   assert.deepEqual(slugs, [
     'pullup-record-driven-coach',
-    'playhub-product-architecture',
     'playhub-diagnostic-sampling',
     'article-content-integration',
     'poketokenbar-account-cache',
     'ai-cross-functional-delivery',
+    'playhub-product-architecture',
     'gateway-rendering-context',
     'shared-ad-execution-delivery',
     'experiment-routing-context',
