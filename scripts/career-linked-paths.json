@@ -28,7 +28,7 @@
     "/cases/deployment-config-contracts/": "여러 팀이 쓰는 배포 도구를 제품에 묶이지 않게 개선하기",
     "/cases/experiment-routing-context/": "다음 캠페인 참여를 만드는 추천·보너스 흐름 개발",
     "/cases/frontend-delivery-boundary/": "일부 참여 화면부터 시작한 프론트엔드 개발·배포 분리",
-    "/cases/gateway-rendering-context/": "Quest의 흰 화면은 응답 뒤에 남았다: 라우트 전환을 없앤 이유",
+    "/cases/gateway-rendering-context/": "WebView의 빈 화면을 추적해 라우트 전환을 없앤 과정",
     "/cases/inapp-content-participation/": "외부 웹에서 앱 안으로 콘텐츠 참여 경험 확장하기",
     "/cases/playhub-diagnostic-sampling/": "운영에 필요한 관측은 남기고 로그 처리량 줄이기",
     "/cases/playhub-product-architecture/": "앱과 웹에서 이어지는 리워드 제품 만들기",
