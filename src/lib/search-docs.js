@@ -41,7 +41,7 @@ export function buildDocsFrom({ cases = [], notes = [], essays = [], logs = [] }
       slug: entry.slug,
       title: entry.title,
       summary: entry.summary || '',
-      topics: [],
+      topics: entry.tags || [],
       url: ROUTES.essayDetail(entry.slug),
     })),
     ...visibleEntries(logs).map((entry) => ({

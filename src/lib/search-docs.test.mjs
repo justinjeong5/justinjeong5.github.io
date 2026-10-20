@@ -6,7 +6,7 @@ import { buildDocsFrom, buildCurrentDocsFrom, groupByType } from './search-docs.
 const sample = {
   cases: [{ slug: 'c1', title: '케이스1', summary: '케summary', tags: ['a', 'b'] }],
   notes: [{ slug: 'n1', title: '노트1', summary: '노summary', topics: ['t1'], growth: 'Evergreen' }],
-  essays: [{ slug: 'e1', title: '에세이1', summary: '에summary' }],
+  essays: [{ slug: 'e1', title: '에세이1', summary: '에summary', tags: ['캐시'] }],
   logs: [{ slug: '2026-01-01-x', title: '로그1', summary: '로summary', date: '2026-01-01' }],
 };
 
@@ -34,6 +34,7 @@ test('buildDocsFrom: 타입별 문서 shape·라벨·url을 만든다', () => {
   assert.equal(byType.note.growth, 'Evergreen');
 
   assert.equal(byType.essay.url, '/essays/e1');
+  assert.deepEqual(byType.essay.topics, ['캐시']);
   assert.equal(byType.log.date, '2026-01-01');
   assert.match(byType.log.url, /^\/logs/); // logUrl(slug, /logs)
 });
@@ -63,6 +64,10 @@ test('buildDocsFrom: 인자 없으면 빈 배열', () => {
 test('buildDocsFrom: archived aliases are not searchable', () => {
   const archived = { slug: 'old', title: 'Old', archived: true };
   assert.deepEqual(buildDocsFrom({ cases: [archived], notes: [archived], essays: [archived], logs: [archived] }), []);
+});
+
+test('buildDocsFrom: Draft essay is not searchable', () => {
+  assert.deepEqual(buildDocsFrom({ essays: [{ slug: 'draft', status: 'Draft', title: '초안' }] }), []);
 });
 
 test('groupByType: 타입별로 그룹핑하고 알 수 없는 타입은 무시', () => {

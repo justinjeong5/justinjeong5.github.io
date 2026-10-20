@@ -843,6 +843,9 @@
   font-size: 1.6rem;
   line-height: 1.25;
 }
+.prose h2[id] {
+  scroll-margin-top: 96px;
+}
 .prose h3 {
   margin: 28px 0 10px;
   color: var(--text);
@@ -891,6 +894,36 @@
   padding: 0;
   background: transparent;
   color: inherit;
+}
+.prose table code {
+  white-space: nowrap;
+}
+.prose .article-toc {
+  margin: 24px 0 32px;
+  padding: 18px 22px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-alt);
+}
+.prose .article-toc p {
+  margin: 0 0 10px;
+  color: var(--text);
+  font-weight: 650;
+}
+.prose .article-toc ol {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px 28px;
+  margin: 0;
+  padding-left: 20px;
+}
+.prose .article-toc li {
+  margin: 0;
+}
+@media (max-width: 600px) {
+  .prose .article-toc ol {
+    grid-template-columns: 1fr;
+  }
 }
 .prose pre .hljs-comment {
   color: #a1a1aa;

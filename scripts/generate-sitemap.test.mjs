@@ -27,6 +27,7 @@ function makeFixtureContent() {
   write('notes', 'b-note.mdx', '---\ntitle: N\nplantedAt: 2026-05-01\nlastTendedAt: 2026-05-28\n---\nbody');
   write('notes', 'a-note.mdx', '---\ntitle: N2\nplantedAt: 2026-05-02\n---\nbody');
   write('essays', 'my-essay.mdx', "---\ntitle: E\ndate: '2026-05-29'\n---\nbody");
+  write('essays', 'draft-essay.mdx', '---\ntitle: Draft\nstatus: Draft\n---\nbody');
   // 로그는 개별 URL이 없어야 한다 — fixture에 넣어도 sitemap에 안 나와야 함.
   write('logs', '2026-05-17-x.mdx', '---\ntitle: L\ndate: 2026-05-17\n---\nbody');
   // mdx가 아닌 파일은 무시되어야 한다.
@@ -93,6 +94,7 @@ test('collectUrls는 cases/notes/essays 상세 URL을 포함한다', () => {
     assert.ok(locs.includes(`${BASE}/notes/a-note/`));
     assert.ok(locs.includes(`${BASE}/notes/b-note/`));
     assert.ok(locs.includes(`${BASE}/essays/my-essay/`));
+    assert.ok(!locs.includes(`${BASE}/essays/draft-essay/`));
     assert.ok(!locs.includes(`${BASE}/cases/old-case/`));
   } finally {
     rmSync(root, { recursive: true, force: true });

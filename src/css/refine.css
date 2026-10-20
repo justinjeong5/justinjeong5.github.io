@@ -757,9 +757,15 @@ main {
 .writing-entry-label { font-size: .8rem; font-weight: 650; line-height: 1.5; }
 .writing-entry-period { color: var(--text-muted); font-size: .75rem; line-height: 1.55; }
 .writing-entry-content h2 { margin: 0 0 10px; font-size: clamp(1.08rem, 1.8vw, 1.25rem); line-height: 1.5; word-break: keep-all; }
+.writing-entry-content h3 { margin: 0 0 10px; font-size: clamp(1.08rem, 1.8vw, 1.25rem); line-height: 1.5; word-break: keep-all; }
 .writing-entry-summary { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; margin: 0; color: var(--text-soft); font-size: .9rem; line-height: 1.65; word-break: keep-all; }
 .writing-entry-arrow { padding-top: 3px; color: var(--text-muted); font-size: 1rem; }
 .writing-entry:hover h2, .writing-entry:hover .writing-entry-arrow { color: var(--accent-blue); }
+.writing-entry:hover h3 { color: var(--accent-blue); }
+.writing-records { margin-top: 64px; scroll-margin-top: 84px; }
+.writing-records-heading { margin-bottom: 24px; }
+.writing-records-heading h2 { margin: 8px 0 10px; font-size: clamp(1.5rem, 2.5vw, 2rem); line-height: 1.3; }
+.writing-records-heading > p:last-child { margin: 0; color: var(--text-soft); line-height: 1.7; }
 .case-detail .page-footer, .essay-detail .page-footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px; }
 @media (max-width: 700px) {
   .writing-intro { margin-bottom: 28px; }

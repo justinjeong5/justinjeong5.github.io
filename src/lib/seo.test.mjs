@@ -19,6 +19,13 @@ test('merged archives preserve an accessible URL without inviting indexing', () 
   assert.equal(invalid.canonical, toCanonical('/notes/old'));
 });
 
+test('Draft essay keeps a preview URL but does not invite indexing', () => {
+  const meta = resolveMeta('/essays/draft', { essays: () => ({ title: '초안', status: 'Draft' }) });
+  assert.equal(meta.robots, 'noindex, follow');
+  assert.equal(meta.ogType, 'website');
+  assert.doesNotMatch(buildHeadMeta(meta), /"@type": "Article"/);
+});
+
 import { SITE_URL, DEFAULT_META, STATIC_META, toCanonical, normalizePath, resolveMeta, isDetailPath } from './seo.js';
 import { ROUTES } from './routes.js';
 

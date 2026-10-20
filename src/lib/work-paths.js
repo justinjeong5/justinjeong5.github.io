@@ -152,7 +152,7 @@ export function essayStudyUrl(slug, view) {
 }
 
 export function visibleEntries(entries) {
-  return entries.filter((entry) => entry.archived !== true);
+  return entries.filter((entry) => entry.archived !== true && entry.status !== 'Draft');
 }
 
 export function readingPathsFor(slug) {

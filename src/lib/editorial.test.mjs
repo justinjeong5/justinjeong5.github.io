@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
 import { test } from 'node:test';
 
-import { PRIMARY_ARTICLES, SUBMITTED_ARTICLE_SLUGS, articleCollection, selectEditorialArticles, selectWritingIndex, consolidationTarget } from './editorial.js';
+import { PRIMARY_ARTICLES, SUBMITTED_ARTICLE_SLUGS, articleCollection, selectEditorialArticles, selectTechnicalRecords, selectWritingIndex, consolidationTarget } from './editorial.js';
 
 function entries(type) {
   return readdirSync(new URL(`../content/${type}/`, import.meta.url))
@@ -73,6 +73,17 @@ test('writing home lists exactly the direct article links in submitted PDFs', ()
   assert.ok(articles.some((entry) => entry.slug === 'pullup-record-driven-coach' && entry.series === 'personal-projects'));
   assert.throws(() => selectWritingIndex(entries('cases').filter((entry) => entry.slug !== 'cs-workflow-product')), /cs-workflow-product/);
   assert.throws(() => selectWritingIndex(entries('cases').map((entry) => entry.slug === 'cs-workflow-product' ? { ...entry, summary: '' } : entry)), /요약.*cs-workflow-product/);
+});
+
+test('technical records add a separate reading path without changing submitted articles', () => {
+  const records = selectTechnicalRecords(entries('essays'));
+  assert.deepEqual(records.map((entry) => entry.slug), ['tanstack-query-server-state-boundaries']);
+  assert.equal(records[0].collection, 'records');
+  assert.equal(selectWritingIndex(entries('cases')).length, 11);
+  assert.deepEqual(selectTechnicalRecords([
+    { slug: 'draft', status: 'Draft', collection: 'records' },
+    { slug: 'archived', archived: true, collection: 'records' },
+  ]), []);
 });
 
 test('classification follows article metadata for independent inputs', () => {

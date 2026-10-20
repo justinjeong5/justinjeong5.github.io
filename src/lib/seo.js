@@ -113,8 +113,8 @@ export function resolveMeta(url, getters) {
       title: `${entry.title} | 정경하`,
       description: entry.summary || DEFAULT_META.description,
       canonical: entry.archived === true && (entry.supersededBy === '/writing' || /^\/(cases|notes|essays)\/[^/?#]+$/.test(entry.supersededBy || '')) ? toCanonical(entry.supersededBy) : canonical,
-      robots: entry.archived === true ? 'noindex, follow' : 'index, follow',
-      ogType: entry.archived === true ? 'website' : 'article',
+      robots: entry.archived === true || entry.status === 'Draft' ? 'noindex, follow' : 'index, follow',
+      ogType: entry.archived === true || entry.status === 'Draft' ? 'website' : 'article',
       datePublished: entry.dateBasis === 'context' ? undefined : entry.date || undefined,
       dateModified: entry.updated || entry.lastTendedAt || (entry.dateBasis === 'context' ? undefined : entry.date) || undefined,
     };

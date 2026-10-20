@@ -21,7 +21,7 @@ export const PRIMARY_ARTICLES = [
 
 export const ARTICLE_COLLECTIONS = [
   { id: 'stories', label: '개발 경험', url: '/writing#all-writing' },
-  { id: 'records', label: '기술 기록', url: '/writing' },
+  { id: 'records', label: '기술 기록', url: '/writing#all-writing' },
 ];
 
 export const WRITING_ARTICLES = [
@@ -93,6 +93,12 @@ export function selectWritingIndex(cases) {
     if (!entry.summary?.trim()) throw new Error(`글 목록의 요약을 찾을 수 없습니다: ${slug}`);
     return { ...entry, kind: 'case', label };
   }).sort(compareContextDates);
+}
+
+export function selectTechnicalRecords(essays) {
+  return visibleEntries(essays)
+    .filter((entry) => entry.collection === 'records')
+    .sort(compareContextDates);
 }
 
 export function consolidationTarget(entry) {

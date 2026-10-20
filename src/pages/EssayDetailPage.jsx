@@ -25,11 +25,12 @@ function EssayDetailPage() {
 
   const { Component } = essay;
   const collection = articleCollection(essay);
+  const collectionUrl = essay.collection === 'records' && !essay.archived ? '/writing#technical-records' : collection?.url;
 
   return (
     <article className="page essay-detail">
       <header className="page-header">
-        <p className="eyebrow">{essay.archived ? essay.supersededBy === ROUTES.writing ? '이전 글' : '통합한 이전 글' : collection ? <Link to={collection.url}>{collection.label}</Link> : '기술 에세이'} · {displayContextDate(essay)}</p>
+        <p className="eyebrow">{essay.archived ? essay.supersededBy === ROUTES.writing ? '이전 글' : '통합한 이전 글' : collection ? <Link to={collectionUrl}>{collection.label}</Link> : '기술 에세이'} · {displayContextDate(essay)}</p>
         <h1>{essay.title}</h1>
         {essay.summary ? <p className="page-lead">{essay.summary}</p> : null}
       </header>
@@ -45,7 +46,7 @@ function EssayDetailPage() {
       </div>
 
       <footer className="page-footer">
-        <Link to={ROUTES.writing} className="see-all-link">
+        <Link to={collectionUrl || ROUTES.writing} className="see-all-link">
           <ArrowLeft size={16} aria-hidden="true" /> 글 목록으로
         </Link>
       </footer>

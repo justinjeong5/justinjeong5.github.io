@@ -76,7 +76,8 @@ export function collectSlugs(type, { contentDir = CONTENT_DIR } = {}) {
       const metadata = frontmatter(readFileSync(join(dir, f), 'utf8'));
       const lastmod = parseLastmod(metadata);
       const archived = /^archived:\s*true\s*$/m.test(metadata);
-      return { slug, lastmod, archived };
+      const draft = /^status:\s*['"]?Draft['"]?\s*$/m.test(metadata);
+      return { slug, lastmod, archived, draft };
     });
 }
 
@@ -88,8 +89,8 @@ export function collectUrls({ contentDir = CONTENT_DIR } = {}) {
     .filter((path) => STATIC_META[path]?.robots !== 'noindex, follow')
     .map((path) => ({ loc: toCanonical(path), lastmod: null }));
   for (const type of DETAIL_TYPES) {
-    for (const { slug, lastmod, archived } of collectSlugs(type, { contentDir })) {
-      if (archived) continue;
+    for (const { slug, lastmod, archived, draft } of collectSlugs(type, { contentDir })) {
+      if (archived || draft) continue;
       urls.push({ loc: toCanonical(`/${type}/${slug}`), lastmod });
     }
   }
